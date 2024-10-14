@@ -69,3 +69,28 @@
 .clickable {
 	@apply cursor-pointer transition-transform duration-300 hover:duration-100 hover:translate-y-[-2px] active:translate-y-[2px];
 }
+
+/* Scrollbar styles */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: hsl(var(--color-neutral)) hsl(var(--color-section));
+}
+
+/* Webkit scrollbar styles */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: hsl(var(--color-section));
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: hsl(var(--color-neutral));
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: hsl(var(--color-neutral) / 0.8);
+}

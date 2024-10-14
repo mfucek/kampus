@@ -6,7 +6,7 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 		<div className="w-screen h-screen overflow-hidden flex flex-col">
 			<Navbar />
 			<div className="flex-1 bg-background md:p-2">
-				<div className="w-full h-full flex flex-colrounded-lg bg-section justify-center">
+				<div className="w-full h-full flex flex-col rounded-lg bg-section items-center">
 					{children}
 				</div>
 			</div>

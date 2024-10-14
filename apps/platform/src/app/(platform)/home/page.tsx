@@ -1,5 +1,5 @@
 const Page = () => {
-  return <div>Homepage</div>;
+	return <main className="w-full h-full flex rounded-lg bg-section">asd</main>;
 };
 
 export default Page;

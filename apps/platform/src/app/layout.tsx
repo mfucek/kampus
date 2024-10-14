@@ -18,7 +18,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="en" className={`${GeistSans.variable}`}>
-			<body>
+			<body className="w-screen h-screen overflow-hidden">
 				<TRPCReactProvider>{children}</TRPCReactProvider>
 			</body>
 		</html>

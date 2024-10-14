@@ -8,5 +8,9 @@ export const strings = {
 	register: {
 		en: 'Register',
 		hr: 'Registriraj se'
+	},
+	goToPlatform: {
+		en: 'Go to platform',
+		hr: 'Idi na platformu'
 	}
 } satisfies TranslationList;

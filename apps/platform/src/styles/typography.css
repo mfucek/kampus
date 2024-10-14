@@ -4,80 +4,91 @@
 
 /* Typography */
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;500;600;700;800;900&display=swap');
+/* Note: Gilroy font needs to be added separately as it's not available on Google Fonts */
 
 /* Custom font classes */
 @layer utilities {
 	.font-nunito {
 		font-family: 'Nunito Sans', sans-serif;
 	}
-	.font-open {
-		font-family: 'Open Sans', sans-serif;
+	.font-gilroy {
+		font-family: 'Gilroy', sans-serif;
 	}
 }
 
 /* Display */
 
 .display-1 {
-	@apply font-open text-[44px] font-extrabold leading-[44px] tracking-[-2.64px] md:text-[100px] md:leading-[100px] md:tracking-[-6px];
+	@apply font-gilroy text-[48px] font-extrabold leading-[48px] sm:text-[64px] sm:leading-[64px];
 }
 
 .display-2 {
-	@apply font-open text-[32px] font-extrabold leading-[32px] tracking-[-1.92px] md:text-[64px] md:leading-[64px] md:tracking-[-3.84px];
+	@apply font-gilroy text-[32px] font-extrabold leading-[32px] sm:text-[48px] sm:leading-[48px];
 }
 
 .display-3 {
-	@apply font-open text-[28px] font-extrabold leading-[28px] tracking-[-1.68px] md:text-[48px] md:leading-[48px] md:tracking-[-2.88px];
+	@apply font-gilroy text-[28px] font-extrabold leading-[28px] sm:text-[32px] sm:leading-[32px];
 }
 
 /* Title */
 
 .title-1 {
-	@apply font-open text-[18px] font-bold leading-[24px] tracking-[-3%] md:text-[22px] md:leading-[24px];
+	@apply font-nunito text-[18px] font-bold leading-[24px] tracking-[-0.54px] sm:text-[22px] sm:leading-[24px] sm:tracking-[-0.66px];
 }
 
 .title-2 {
-	@apply font-open text-[16px] font-bold leading-[24px] tracking-[-3%] md:text-[18px] md:leading-[24px];
+	@apply font-nunito text-[16px] font-bold leading-[24px] tracking-[-0.48px] sm:text-[18px] sm:leading-[24px] sm:tracking-[-0.54px];
 }
 
 .title-3 {
-	@apply font-open text-[15px] font-bold leading-[20px] tracking-[-3%] md:text-[14px] md:leading-[20px];
+	@apply font-nunito text-[15px] font-bold leading-[20px] tracking-[-0.45px] sm:text-[14px] sm:leading-[20px] sm:tracking-[-0.42px];
 }
 
 /* Body */
 
 .body-1 {
-	@apply font-nunito text-[16px] font-normal leading-[24px] tracking-[-3%] md:text-[18px] md:leading-[24px];
+	@apply font-nunito text-[16px] font-normal leading-[24px] sm:text-[18px] sm:leading-[24px];
 }
 
 .body-2 {
-	@apply font-nunito text-[13px] font-normal leading-[20px] tracking-[-3%] md:text-[14px] md:leading-[20px];
+	@apply font-nunito text-[13px] font-normal leading-[20px] sm:text-[14px] sm:leading-[20px];
 }
 
 .body-3 {
-	@apply font-nunito text-[11px] font-normal leading-[16px] tracking-[-3%] md:text-[12px] md:leading-[16px];
+	@apply font-nunito text-[11px] font-normal leading-[16px] sm:text-[12px] sm:leading-[16px];
 }
+
+/* Caption */
 
 .caption {
-	@apply font-nunito text-[11px] font-bold leading-[16px] tracking-[-3%] md:text-[11px] md:leading-[16px];
+	@apply font-nunito text-[11px] font-extrabold leading-[16px];
 }
 
-/* Input and Buttons */
+/* Overline */
+
+.overline {
+	@apply font-nunito text-[8px] font-black leading-[8px] tracking-[0.4px] uppercase;
+}
+
+/* Input */
 
 .input {
-	@apply font-nunito text-[16px] font-normal leading-[24px] tracking-[-3%] md:text-[16px] md:leading-[24px];
+	@apply font-nunito text-[16px] font-normal leading-[24px] sm:text-[14px] sm:leading-[24px];
 }
 
+/* Buttons */
+
 .button-lg {
-	@apply font-nunito text-[15px] font-bold leading-[20px] tracking-[-3%] md:text-[15px] md:leading-[20px];
+	@apply font-nunito text-[15px] font-bold leading-[20px];
 }
 
 .button-md {
-	@apply font-nunito text-[12px] font-bold leading-[16px] tracking-[-3%] md:text-[13px] md:leading-[16px];
+	@apply font-nunito text-[12px] font-bold leading-[16px] sm:text-[13px] sm:leading-[16px];
 }
 
 .button-sm {
-	@apply font-nunito text-[11px] font-normal leading-[16px] tracking-[-3%] md:text-[11px] md:leading-[16px];
+	@apply font-nunito text-[11px] font-bold leading-[16px];
 }
 
 /* HTML Tags */
@@ -109,4 +120,10 @@ h6 {
 span,
 p {
 	@apply body-1;
+}
+
+/* Default overrides */
+
+* {
+	@apply text-neutral;
 }

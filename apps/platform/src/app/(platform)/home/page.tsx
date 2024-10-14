@@ -1,10 +1,11 @@
 import { CollegeGrid } from '@/modules/college/components/college-grid';
+import { Container } from '@/modules/global/components/container';
 
 const Page = () => {
 	return (
-		<main className="w-full h-full flex rounded-lg bg-section">
+		<Container>
 			<CollegeGrid />
-		</main>
+		</Container>
 	);
 };
 

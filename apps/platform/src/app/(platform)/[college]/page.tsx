@@ -17,7 +17,7 @@ const Page: FC<PageProps> = ({ params }) => {
 	const { data, isLoading } = api.college.getBySlug.useQuery(college);
 
 	return (
-		<Container className="flex flex-col gap-4 py-10">
+		<Container className="flex flex-col gap-10 py-10">
 			<PageHeader title={data?.name ?? ''} icon="https://picsum.photos/48/48" />
 		</Container>
 	);

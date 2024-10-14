@@ -1,5 +1,5 @@
+import { Navbar } from "@/modules/global/components/navbar";
 import type { FC, PropsWithChildren } from "react";
-import { Navbar } from "~/modules/global/components/navbar";
 
 const PublicLayout: FC<PropsWithChildren> = ({ children }) => {
   return (

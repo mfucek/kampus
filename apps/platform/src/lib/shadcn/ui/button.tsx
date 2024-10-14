@@ -26,10 +26,10 @@ const buttonVariants = cva(
 				'ghost-weak': 'text-theme-strong hover:text-theme hover:bg-neutral-weak'
 			},
 			size: {
-				lg: 'h-[52px] px-[20px] gap-[8px]',
-				md: 'h-[40px] px-[16px] gap-[6px]',
-				sm: 'h-[32px] px-[12px] gap-[4px]',
-				xs: 'h-[24px] px-[8px] gap-[4px]'
+				lg: 'h-[52px] px-[20px] gap-[8px] button-lg',
+				md: 'h-[40px] px-[16px] gap-[6px] button-md',
+				sm: 'h-[32px] px-[12px] gap-[4px] button-md',
+				xs: 'h-[24px] px-[8px] gap-[4px] button-sm'
 			},
 			loading: {
 				true: '!text-transparent',

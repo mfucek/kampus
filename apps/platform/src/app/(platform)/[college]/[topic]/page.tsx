@@ -1,21 +1,26 @@
-import type { FC } from "react";
+import { PageHeader } from '@/modules/college/components/page-header';
+import { Container } from '@/modules/global/components/container';
+import type { FC } from 'react';
 
 interface PageProps {
-  params: {
-    college: string;
-    topic: string;
-  };
+	params: {
+		college: string;
+		topic: string;
+	};
 }
 
 const Page: FC<PageProps> = ({ params }) => {
-  const { topic, college } = params;
+	const { topic, college } = params;
 
-  return (
-    <div>
-      <h1>College: {college}</h1>
-      <h1>Topic: {topic}</h1>
-    </div>
-  );
+	return (
+		<Container className="flex flex-col gap-4 py-10">
+			<PageHeader
+				title={college}
+				subtitle={topic}
+				icon="https://picsum.photos/48/48"
+			/>
+		</Container>
+	);
 };
 
 export default Page;

@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { CollegeCard } from './college-card';
 
 export const CollegeGrid = () => {
-	const { data, isLoading } = api.college.hello.useQuery();
+	const { data, isLoading } = api.college.listAll.useQuery();
 
 	const [search, setSearch] = useState('');
 

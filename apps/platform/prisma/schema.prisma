@@ -2,19 +2,111 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(cuid())
+
+  posts Post[]
+
+  Vote Vote[]
+}
+
+model Topic {
+  id String @id @default(cuid())
+
+  Summary Summary[]
+}
+
+model College {
+  id String @id @default(cuid())
+
+  Staff Staff[]
+
+  Subject Subject[]
+}
+
+model Staff {
+  id String @id @default(cuid())
+
+  collegeId String
+  college   College @relation(fields: [collegeId], references: [id])
+
+  subjects StaffSubject[]
+}
+
+model StaffSubject {
+  id String @id @default(cuid())
+
+  staffId String
+  staff   Staff  @relation(fields: [staffId], references: [id])
+
+  Subject Subject[]
+}
+
+model Subject {
+  id String @id @default(cuid())
+
+  staffs StaffSubject[]
+
+  collegeId String
+  college   College @relation(fields: [collegeId], references: [id])
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@index([name])
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  replyToId String?
+  replyTo   Post?   @relation(fields: [replyToId], references: [id], name: "PostReplies")
+
+  replies Post[] @relation("PostReplies")
+
+  votes Vote[]
+
+  @@index([name])
+}
+
+enum VoteType {
+  UP
+  DOWN
+}
+
+model Vote {
+  id String @id @default(cuid())
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+enum SentimentType {
+  POSITIVE
+  NEGATIVE
+  NEUTRAL
+  WARNING
+}
+
+model Summary {
+  id String @id @default(cuid())
+
+  topic   Topic  @relation(fields: [topicId], references: [id])
+  topicId String
+
+  title     String
+  content   String
+  sentiment SentimentType
 }

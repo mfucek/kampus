@@ -1,18 +1,29 @@
 import { Button } from '@/lib/shadcn/ui/button';
+import { cn } from '@/lib/shadcn/utils';
 import { Icon } from '@/modules/global/components/icon';
+import { useEffect, useState } from 'react';
+
+const MAX_CHARACTERS = 2000;
 
 export const Composer = () => {
+	const [remaining, setRemaining] = useState(MAX_CHARACTERS);
+	const [value, setValue] = useState('');
+
+	useEffect(() => {
+		setRemaining(MAX_CHARACTERS - value.length);
+	}, [value]);
+
 	const Toolbar = () => {
 		return (
-			<div className="flex flex-row gap-3">
+			<div className="flex flex-row gap-3 px-3">
 				<div className="flex flex-row gap-2">
-					<Button size="xs" theme="accent" variant="solid" iconOnly>
+					<Button size="xs" theme="neutral" variant="ghost" iconOnly disabled>
 						<Icon icon="text-bold" />
 					</Button>
-					<Button size="xs" theme="neutral" variant="ghost" iconOnly>
+					<Button size="xs" theme="neutral" variant="ghost" iconOnly disabled>
 						<Icon icon="text-italic" />
 					</Button>
-					<Button size="xs" theme="neutral" variant="ghost" iconOnly>
+					<Button size="xs" theme="neutral" variant="ghost" iconOnly disabled>
 						<Icon icon="text-strikethrough" />
 					</Button>
 				</div>
@@ -20,7 +31,7 @@ export const Composer = () => {
 				<div className="self-stretch w-px bg-neutral-medium my-1" />
 
 				<div className="flex flex-row gap-2">
-					<Button size="xs" theme="neutral" variant="ghost" iconOnly>
+					<Button size="xs" theme="neutral" variant="ghost" iconOnly disabled>
 						<Icon icon="link" />
 					</Button>
 				</div>
@@ -28,10 +39,10 @@ export const Composer = () => {
 				<div className="self-stretch w-px bg-neutral-medium my-1" />
 
 				<div className="flex flex-row gap-2">
-					<Button size="xs" theme="neutral" variant="ghost" iconOnly>
+					<Button size="xs" theme="neutral" variant="ghost" iconOnly disabled>
 						<Icon icon="image" />
 					</Button>
-					<Button size="xs" theme="neutral" variant="ghost" iconOnly>
+					<Button size="xs" theme="neutral" variant="ghost" iconOnly disabled>
 						<Icon icon="file" />
 					</Button>
 				</div>
@@ -39,7 +50,7 @@ export const Composer = () => {
 				<div className="self-stretch w-px bg-neutral-medium my-1" />
 
 				<div className="flex flex-row gap-2">
-					<Button size="xs" theme="neutral" variant="ghost" iconOnly>
+					<Button size="xs" theme="neutral" variant="ghost" iconOnly disabled>
 						<Icon icon="ellipsis" />
 					</Button>
 				</div>
@@ -50,10 +61,19 @@ export const Composer = () => {
 	const Footer = () => {
 		return (
 			<div className="flex flex-row gap-2 items-center">
-				<p className="w-full text-neutral-strong body-3">
-					1789 znakova preostalo.
+				<p
+					className={cn('w-full text-neutral-strong body-3', {
+						'text-danger': remaining < 0
+					})}
+				>
+					{remaining} znakova preostalo.
 				</p>
-				<Button theme="accent" variant="solid" size="sm">
+				<Button
+					theme="accent"
+					variant="solid"
+					size="sm"
+					disabled={remaining < 0}
+				>
 					Objavi
 				</Button>
 			</div>
@@ -62,9 +82,14 @@ export const Composer = () => {
 
 	return (
 		<div className="flex flex-col gap-3">
-			<div className="p-3 border border-neutral-medium rounded-lg">
+			<div className="flex flex-col gap-3 pt-3 border border-neutral-medium rounded-lg overflow-hidden">
 				<Toolbar />
-				<input className="w-full" placeholder="Add a comment" />
+				<textarea
+					className="input w-full px-3 pb-3"
+					placeholder="Napisi komentar ovdje."
+					value={value}
+					onChange={(e) => setValue(e.target.value)}
+				/>
 			</div>
 			<Footer />
 		</div>

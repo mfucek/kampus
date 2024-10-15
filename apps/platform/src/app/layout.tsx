@@ -6,6 +6,7 @@ import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
 
 import { TRPCReactProvider } from '@/lib/trpc/react';
+import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
 	title: 'Create T3 App',
@@ -19,7 +20,9 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={`${GeistSans.variable}`}>
 			<body className="w-screen h-screen overflow-hidden">
-				<TRPCReactProvider>{children}</TRPCReactProvider>
+				<ClerkProvider>
+					<TRPCReactProvider>{children}</TRPCReactProvider>
+				</ClerkProvider>
 			</body>
 		</html>
 	);

@@ -1,6 +1,12 @@
 import { postRouter } from '@/server/api/routers/post';
-import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
+import {
+	createCallerFactory,
+	createTRPCRouter,
+	protectedProcedure
+} from '@/server/api/trpc';
+import { TRPCError } from '@trpc/server';
 import { collegeRouter } from './routers/college';
+import { stripeRouter } from './routers/stripe';
 
 /**
  * This is the primary router for your server.
@@ -9,7 +15,26 @@ import { collegeRouter } from './routers/college';
  */
 export const appRouter = createTRPCRouter({
 	post: postRouter,
-	college: collegeRouter
+	college: collegeRouter,
+	stripe: stripeRouter,
+	me: protectedProcedure.query(async ({ ctx }) => {
+		const { db, auth } = ctx;
+		const userId = auth.userId;
+
+		if (!userId) {
+			throw new TRPCError({
+				code: 'NOT_FOUND',
+				message: 'User not found'
+			});
+		}
+
+		const account = await db.account.findFirst({
+			where: {
+				userId: ctx.auth.userId!
+			}
+		});
+		return { userId: ctx.auth.userId, account };
+	})
 });
 
 // export type definition of API

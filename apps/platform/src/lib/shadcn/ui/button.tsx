@@ -149,7 +149,7 @@ const iconClassVariants = cva('shrink-0', {
 	}
 });
 
-const iconSizeVariants = cva('shrink-0', {
+const iconSizeVariants = cva('', {
 	variants: {
 		size: {
 			lg: '',
@@ -249,7 +249,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					</div>
 				)}
 				<IconSizeContext.Provider
-					value={Number(iconSizeVariants({ size, iconOnly }))}
+					value={Number(
+						iconSizeVariants({ size, iconOnly: iconOnly ?? false })
+					)}
 				>
 					<IconClassnameContext.Provider
 						value={iconClassVariants({ theme, variant })}

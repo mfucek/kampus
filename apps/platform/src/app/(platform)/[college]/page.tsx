@@ -3,6 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/lib/shadcn/ui/tabs';
 import { api } from '@/lib/trpc/react';
 import { PageHeader } from '@/modules/college/components/page-header';
+import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
 import { Container } from '@/modules/global/components/container';
 import type { FC } from 'react';
@@ -29,8 +30,13 @@ const Page: FC<PageProps> = ({ params }) => {
 					<TabsTrigger value="staff">Profesori</TabsTrigger>
 				</TabsList>
 				<TabsContent value="discussion">
-					<Post />
-					<Post />
+					<div className="flex flex-col gap-10">
+						<Composer />
+						<div className="flex flex-col">
+							<Post />
+							<Post />
+						</div>
+					</div>
 				</TabsContent>
 				<TabsContent value="subjects">Predmeti</TabsContent>
 				<TabsContent value="staff">Profesori</TabsContent>

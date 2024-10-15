@@ -1,11 +1,20 @@
+'use client';
+
 import { cn } from '@/lib/shadcn/utils';
 import { Spinner } from '@/modules/global/components/spinner';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
+export const IconSizeContext = React.createContext<number | undefined>(
+	undefined
+);
+export const IconClassnameContext = React.createContext<string | undefined>(
+	undefined
+);
+
 const buttonVariants = cva(
-	'inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background duration-300 hover:duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:opacity-50',
+	'inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background duration-300 hover:duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:opacity-50 group',
 	{
 		variants: {
 			theme: {
@@ -22,8 +31,9 @@ const buttonVariants = cva(
 				outline: 'border border-theme-medium text-theme hover:bg-theme-medium',
 				'outline-weak':
 					'border border-theme-weak text-theme-strong hover:bg-theme-medium hover:text-theme',
-				ghost: 'text-theme hover:bg-theme-weak',
-				'ghost-weak': 'text-theme-strong hover:text-theme hover:bg-neutral-weak'
+				ghost: 'text-theme hover:bg-theme-medium',
+				'ghost-weak':
+					'text-theme-strong hover:text-theme hover:bg-neutral-medium'
 			},
 			size: {
 				lg: 'h-[52px] px-[20px] gap-[8px] button-lg',
@@ -40,7 +50,7 @@ const buttonVariants = cva(
 				false: ''
 			},
 			rounded: {
-				true: 'rounded-full',
+				true: '',
 				false: ''
 			}
 		},
@@ -92,10 +102,103 @@ const buttonVariants = cva(
 				rounded: false,
 				size: 'xs',
 				class: 'rounded-[8px]'
+			},
+			{
+				rounded: true,
+				class: 'rounded-full'
 			}
 		]
 	}
 );
+
+const iconClassVariants = cva('shrink-0', {
+	variants: {
+		theme: {
+			accent: 'theme-accent',
+			neutral: 'theme-neutral',
+			info: 'theme-info',
+			success: 'theme-success',
+			warning: 'theme-warning',
+			danger: 'theme-danger'
+		},
+		variant: {
+			solid: 'bg-theme-contrast group-hover:bg-theme-contrast',
+			'solid-weak': 'bg-theme group-hover:bg-theme',
+			outline: 'bg-theme group-hover:bg-theme-contrast',
+			'outline-weak': 'bg-theme-strong group-hover:bg-theme',
+			ghost: 'bg-theme group-hover:bg-theme',
+			'ghost-weak': 'bg-theme-strong group-hover:bg-theme'
+		}
+	},
+	compoundVariants: [
+		{
+			variant: [
+				'solid',
+				'solid-weak',
+				'outline',
+				'outline-weak',
+				'ghost',
+				'ghost-weak'
+			],
+			class: 'group-active:opacity-50'
+		}
+	],
+	defaultVariants: {
+		variant: 'solid',
+		theme: 'accent'
+	}
+});
+
+const iconSizeVariants = cva('shrink-0', {
+	variants: {
+		size: {
+			lg: '',
+			md: '',
+			sm: '',
+			xs: ''
+		},
+		iconOnly: {
+			true: '',
+			false: ''
+		}
+	},
+	compoundVariants: [
+		{
+			size: 'lg',
+			class: '24'
+		},
+		{
+			size: 'md',
+			iconOnly: false,
+			class: '16'
+		},
+		{
+			size: 'md',
+			iconOnly: true,
+			class: '24'
+		},
+		{
+			size: 'sm',
+			iconOnly: false,
+			class: '16'
+		},
+		{
+			size: 'sm',
+			iconOnly: true,
+			class: '20'
+		},
+		{
+			size: 'xs',
+			iconOnly: false,
+			class: '12'
+		},
+		{
+			size: 'xs',
+			iconOnly: true,
+			class: '16'
+		}
+	]
+});
 
 export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -113,6 +216,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			iconOnly,
 			asChild = false,
 			children,
+			theme,
+			rounded,
 			...props
 		},
 		ref
@@ -121,7 +226,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		return (
 			<Comp
 				className={cn(
-					buttonVariants({ variant, size, loading, iconOnly, className })
+					buttonVariants({
+						variant,
+						size,
+						loading,
+						iconOnly,
+						theme,
+						rounded,
+						className
+					}),
+					rounded && 'rounded-full',
+					'group'
 				)}
 				ref={ref}
 				{...props}
@@ -133,11 +248,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 						/>
 					</div>
 				)}
-				{children}
+				<IconSizeContext.Provider
+					value={Number(iconSizeVariants({ size, iconOnly }))}
+				>
+					<IconClassnameContext.Provider
+						value={iconClassVariants({ theme, variant })}
+					>
+						{children}
+					</IconClassnameContext.Provider>
+				</IconSizeContext.Provider>
 			</Comp>
 		);
 	}
 );
+
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };

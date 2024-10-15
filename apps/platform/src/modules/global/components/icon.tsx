@@ -1,3 +1,7 @@
+'use client';
+
+import { IconClassnameContext, IconSizeContext } from '@/lib/shadcn/ui/button';
+import { cn } from '@/lib/shadcn/utils';
 import React from 'react';
 
 const icons = {
@@ -46,7 +50,9 @@ const icons = {
 	email: '/assets/icons/email.svg',
 	sun: '/assets/icons/sun.svg',
 	moon: '/assets/icons/moon.svg',
-	delivery: '/assets/icons/delivery.svg'
+	delivery: '/assets/icons/delivery.svg',
+	like: '/assets/icons/like.svg',
+	dislike: '/assets/icons/dislike.svg'
 };
 
 export type IconName = keyof typeof icons;
@@ -56,14 +62,19 @@ export const Icon: React.FC<{
 	size?: string | number;
 	className?: string;
 }> = ({ icon, size, className }) => {
+	const iconSize = React.useContext(IconSizeContext);
+	const iconClass = React.useContext(IconClassnameContext);
+
 	return (
 		<div
-			className={'transition-all ease-in duration-200 '.concat(
-				className ? className : 'bg-neutral'
+			className={cn(
+				'transition-all ease-in duration-200 shrink-0',
+				className ? className : 'bg-neutral',
+				iconClass
 			)}
 			style={{
-				height: size ? size : '24px',
-				width: size ? size : '24px',
+				height: size ? size : (iconSize ?? '24px'),
+				width: size ? size : (iconSize ?? '24px'),
 				WebkitMaskImage: `url('${icons[icon]}')`,
 				maskImage: `url('${icons[icon]}')`,
 				WebkitMaskRepeat: 'no-repeat',

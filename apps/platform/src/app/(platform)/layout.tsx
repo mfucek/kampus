@@ -1,4 +1,4 @@
-import { ClientPanels } from '@/components/ClientPanels';
+import { ClientPanels } from '@/components/client-panels';
 import { Navbar } from '@/modules/global/components/navbar';
 import { Suspense, type FC, type PropsWithChildren } from 'react';
 

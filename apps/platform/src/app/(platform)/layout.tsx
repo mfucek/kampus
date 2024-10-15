@@ -1,12 +1,14 @@
 import { ClientPanels } from '@/components/ClientPanels';
 import { Navbar } from '@/modules/global/components/navbar';
-import type { FC, PropsWithChildren } from 'react';
+import { Suspense, type FC, type PropsWithChildren } from 'react';
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<div className="w-screen h-screen overflow-hidden flex flex-col">
 			<Navbar />
-			<ClientPanels>{children}</ClientPanels>
+			<Suspense fallback={<></>}>
+				<ClientPanels>{children}</ClientPanels>
+			</Suspense>
 		</div>
 	);
 };

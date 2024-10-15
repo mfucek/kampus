@@ -8,17 +8,17 @@
 	--color-neutral-default: #000000;
 	--color-neutral-strong: color-mix(
 		in srgb,
-		var(--color-neutral-default) 70%,
+		var(--color-neutral-default) 55%,
 		var(--color-section)
 	);
 	--color-neutral-medium: color-mix(
 		in srgb,
-		var(--color-neutral-default) 30%,
+		var(--color-neutral-default) 18%,
 		var(--color-section)
 	);
 	--color-neutral-weak: color-mix(
 		in srgb,
-		var(--color-neutral-default) 10%,
+		var(--color-neutral-default) 4%,
 		var(--color-section)
 	);
 	--color-neutral-contrast: #ffffff;

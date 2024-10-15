@@ -10,103 +10,145 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+// model User {
+//   id String @id @default(cuid())
+
+//   // posts Post[]
+
+//   // Vote Vote[]
+
+//   Account Account[]
+// }
+
+model Account {
   id String @id @default(cuid())
 
-  posts Post[]
+  userId String @unique
+  // user   User   @relation(fields: [userId], references: [id])
 
-  Vote Vote[]
-}
-
-model Topic {
-  id String @id @default(cuid())
-
-  Summary Summary[]
-}
-
-model College {
-  id String @id @default(cuid())
-
-  Staff Staff[]
-
-  Subject Subject[]
-}
-
-model Staff {
-  id String @id @default(cuid())
-
-  collegeId String
-  college   College @relation(fields: [collegeId], references: [id])
-
-  subjects StaffSubject[]
-}
-
-model StaffSubject {
-  id String @id @default(cuid())
-
-  staffId String
-  staff   Staff  @relation(fields: [staffId], references: [id])
-
-  Subject Subject[]
-}
-
-model Subject {
-  id String @id @default(cuid())
-
-  staffs StaffSubject[]
-
-  collegeId String
-  college   College @relation(fields: [collegeId], references: [id])
-}
-
-model Post {
-  id        String   @id @default(cuid())
-  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String
+  stripeCustomerId String?
 
-  replyToId String?
-  replyTo   Post?   @relation(fields: [replyToId], references: [id], name: "PostReplies")
-
-  replies Post[] @relation("PostReplies")
-
-  votes Vote[]
-
-  @@index([name])
+  package PackageType?
+  status  AccountStatus @default(INACTIVE)
 }
 
-enum VoteType {
-  UP
-  DOWN
+// model User {
+//   id String @id @default(cuid())
+
+//   displayName String
+//   imageUrl    String?
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   accountId String  @unique
+//   account   Account @relation(fields: [accountId], references: [id])
+// }
+
+enum PackageType {
+  MONTHLY_CHEAP
+  MONTHLY_PRO
+  LIFETIME
 }
 
-model Vote {
-  id String @id @default(cuid())
-
-  postId String
-  post   Post   @relation(fields: [postId], references: [id])
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
 }
 
-enum SentimentType {
-  POSITIVE
-  NEGATIVE
-  NEUTRAL
-  WARNING
-}
+// model Topic {
+//   id String @id @default(cuid())
 
-model Summary {
-  id String @id @default(cuid())
+//   Summary Summary[]
+// }
 
-  topic   Topic  @relation(fields: [topicId], references: [id])
-  topicId String
+// model College {
+//   id String @id @default(cuid())
 
-  title     String
-  content   String
-  sentiment SentimentType
-}
+//   Staff Staff[]
+
+//   Subject Subject[]
+// }
+
+// model Staff {
+//   id String @id @default(cuid())
+
+//   collegeId String
+//   college   College @relation(fields: [collegeId], references: [id])
+
+//   subjects StaffSubject[]
+// }
+
+// model StaffSubject {
+//   id String @id @default(cuid())
+
+//   staffId String
+//   staff   Staff  @relation(fields: [staffId], references: [id])
+
+//   Subject Subject[]
+// }
+
+// model Subject {
+//   id String @id @default(cuid())
+
+//   staffs StaffSubject[]
+
+//   collegeId String
+//   college   College @relation(fields: [collegeId], references: [id])
+// }
+
+// model Post {
+//   id        String   @id @default(cuid())
+//   name      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   author   User   @relation(fields: [authorId], references: [id])
+//   authorId String
+
+//   replyToId String?
+//   replyTo   Post?   @relation(fields: [replyToId], references: [id], name: "PostReplies")
+
+//   replies Post[] @relation("PostReplies")
+
+//   votes Vote[]
+
+//   @@index([name])
+// }
+
+// enum VoteType {
+//   UP
+//   DOWN
+// }
+
+// model Vote {
+//   id String @id @default(cuid())
+
+//   postId String
+//   post   Post   @relation(fields: [postId], references: [id])
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id])
+// }
+
+// enum SentimentType {
+//   POSITIVE
+//   NEGATIVE
+//   NEUTRAL
+//   WARNING
+// }
+
+// model Summary {
+//   id String @id @default(cuid())
+
+//   topic   Topic  @relation(fields: [topicId], references: [id])
+//   topicId String
+
+//   title     String
+//   content   String
+//   sentiment SentimentType
+// }

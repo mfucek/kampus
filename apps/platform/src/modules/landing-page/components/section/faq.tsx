@@ -31,9 +31,7 @@ export const FaqSection = () => {
 						</AccordionContent>
 					</AccordionItem>
 					<AccordionItem value="item-3">
-						<AccordionTrigger>
-							Kako mogu doprinijeti zajednici?
-						</AccordionTrigger>
+						<AccordionTrigger>Kako mogu doprinijeti?</AccordionTrigger>
 						<AccordionContent>
 							Možeš sudjelovati u raspravama, dijeliti korisne materijale,
 							odgovarati na pitanja drugih studenata i dijeliti svoja iskustva.

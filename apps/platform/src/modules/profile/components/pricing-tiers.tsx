@@ -4,7 +4,7 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { useUser } from '@clerk/nextjs';
 
-export const Stripe = () => {
+export const PricingTiers = () => {
 	const { isLoaded } = useUser();
 
 	const { data: subscriptionSessionData } =

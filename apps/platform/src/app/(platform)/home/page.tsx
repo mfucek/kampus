@@ -1,5 +1,5 @@
+import { Container } from '@/global/components/container';
 import { CollegeGrid } from '@/modules/college/components/college-grid';
-import { Container } from '@/modules/global/components/container';
 
 const Page = () => {
 	return (

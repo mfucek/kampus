@@ -1,14 +1,10 @@
 'use client';
 
-import { TopicLayout } from '@/modules/global/layouts/topic-layout';
-import { ReactNode } from 'react';
+import { type PropsWithChildren } from 'react';
 import { Panel, PanelGroup } from 'react-resizable-panels';
+import { TopicLayout } from '../layouts/topic-layout';
 
-interface ClientPanelsProps {
-	children: ReactNode;
-}
-
-export const ClientPanels: React.FC<ClientPanelsProps> = ({ children }) => {
+export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<div className="flex-1 bg-background md:p-2 flex flex-row gap-2">
 			<PanelGroup

@@ -7,8 +7,8 @@ import {
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 
+import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
-import { Icon } from '@/modules/global/components/icon';
 import { useEffect, useRef, useState } from 'react';
 import { Sentiment, SummaryCard } from './summary-card';
 

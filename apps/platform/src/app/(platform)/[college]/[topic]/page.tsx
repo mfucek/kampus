@@ -1,5 +1,5 @@
+import { Container } from '@/global/components/container';
 import { PageHeader } from '@/modules/college/components/page-header';
-import { Container } from '@/modules/global/components/container';
 import { SummarySection } from '@/modules/summary/components/summary-section';
 import type { FC } from 'react';
 

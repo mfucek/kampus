@@ -1,5 +1,5 @@
 import { api } from '@/lib/trpc/server';
-import { Navbar } from '@/modules/global/components/navbar';
+import { PricingTiers } from '@/modules/profile/components/pricing-tiers';
 import {
 	SignedIn,
 	SignedOut,
@@ -8,7 +8,6 @@ import {
 	UserButton
 } from '@clerk/nextjs';
 import type { FC } from 'react';
-import { Stripe } from './stripe';
 
 const Page: FC = async () => {
 	const { userId, account } = await api.me();
@@ -17,7 +16,6 @@ const Page: FC = async () => {
 		<div>
 			<p>Landing Page</p>
 
-			<Navbar />
 			<SignedOut>
 				<SignInButton />
 				<SignUpButton />
@@ -32,7 +30,7 @@ const Page: FC = async () => {
 
 			{account?.status === 'INACTIVE' && (
 				<>
-					<Stripe />
+					<PricingTiers />
 				</>
 			)}
 		</div>

@@ -1,6 +1,6 @@
+import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
-import { Icon } from '@/modules/global/components/icon';
 import { useEffect, useState } from 'react';
 
 const MAX_CHARACTERS = 2000;

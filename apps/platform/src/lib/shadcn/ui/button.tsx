@@ -1,7 +1,7 @@
 'use client';
 
+import { Spinner } from '@/global/components/spinner';
 import { cn } from '@/lib/shadcn/utils';
-import { Spinner } from '@/modules/global/components/spinner';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';

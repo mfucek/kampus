@@ -5,6 +5,7 @@ import {
 	protectedProcedure
 } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
+import { accountRouter } from './routers/account';
 import { collegeRouter } from './routers/college';
 import { stripeRouter } from './routers/stripe';
 
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
 	post: postRouter,
 	college: collegeRouter,
 	stripe: stripeRouter,
+	account: accountRouter,
 	me: protectedProcedure.query(async ({ ctx }) => {
 		const { db, auth } = ctx;
 		const userId = auth.userId;

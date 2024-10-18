@@ -2,6 +2,7 @@ import { env } from '@/env';
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 import Stripe from 'stripe';
+import { z } from 'zod';
 
 export const stripeRouter = createTRPCRouter({
 	getSubscriptionCheckoutURL: protectedProcedure.query(async ({ ctx }) => {
@@ -65,5 +66,49 @@ export const stripeRouter = createTRPCRouter({
 		}
 
 		return { redirectURL: checkoutSession.url };
-	})
+	}),
+
+	cancelSubscription: protectedProcedure
+		.input(z.object({ stripeCustomerId: z.string() }))
+		.mutation(async ({ ctx, input }) => {
+			const { stripeCustomerId } = input;
+
+			const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+				apiVersion: '2024-09-30.acacia'
+			});
+
+			const subscription = await stripe.subscriptions.list({
+				customer: stripeCustomerId
+			});
+
+			const subscriptionId = subscription.data[0]!.id;
+
+			await stripe.subscriptions.update(subscriptionId, {
+				cancel_at_period_end: true
+			});
+
+			return { success: true };
+		}),
+
+	resumeSubscription: protectedProcedure
+		.input(z.object({ stripeCustomerId: z.string() }))
+		.mutation(async ({ ctx, input }) => {
+			const { stripeCustomerId } = input;
+
+			const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+				apiVersion: '2024-09-30.acacia'
+			});
+
+			const subscription = await stripe.subscriptions.list({
+				customer: stripeCustomerId
+			});
+
+			const subscriptionId = subscription.data[0]!.id;
+
+			await stripe.subscriptions.update(subscriptionId, {
+				cancel_at_period_end: false
+			});
+
+			return { success: true };
+		})
 });

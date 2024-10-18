@@ -1,6 +1,6 @@
+import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
-import { Icon } from '@/modules/global/components/icon';
 import Image from 'next/image';
 
 type Reaction = 'like' | 'dislike' | 'nothing';

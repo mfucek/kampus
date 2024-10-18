@@ -48,6 +48,49 @@ export async function POST(request: Request) {
 					break;
 				}
 			}
+
+			case 'customer.subscription.updated': {
+				const subscription = event.data.object as Stripe.Subscription;
+
+				if (subscription.cancel_at_period_end) {
+					await db.account.update({
+						where: {
+							userId: subscription.metadata.userId
+						},
+						data: {
+							status: 'CANCELLED'
+						}
+					});
+				} else {
+					await db.account.update({
+						where: {
+							userId: subscription.metadata.userId
+						},
+						data: {
+							status: 'ACTIVE'
+						}
+					});
+				}
+
+				break;
+			}
+
+			case 'customer.subscription.deleted': {
+				const subscription = event.data.object;
+
+				await db.account.update({
+					where: {
+						userId: subscription.metadata.userId
+					},
+					data: {
+						status: 'INACTIVE',
+						package: null,
+						stripeCustomerId: null
+					}
+				});
+
+				break;
+			}
 		}
 
 		return NextResponse.json({ success: true }, { status: 200 });

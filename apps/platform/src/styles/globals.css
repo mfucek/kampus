@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Base styles */
 @layer base {
 	:root {
 		--background: 0 0% 100%;
@@ -66,6 +67,7 @@
 	}
 }
 
+/* Clickable elements */
 .clickable {
 	@apply cursor-pointer transition-transform duration-300 hover:duration-100 hover:translate-y-[-2px] active:translate-y-[2px];
 }

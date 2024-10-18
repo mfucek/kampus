@@ -1,11 +1,11 @@
 'use client';
 
+import { Container } from '@/global/components/container';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/lib/shadcn/ui/tabs';
 import { api } from '@/lib/trpc/react';
 import { PageHeader } from '@/modules/college/components/page-header';
 import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
-import { Container } from '@/modules/global/components/container';
 import type { FC } from 'react';
 
 interface PageProps {

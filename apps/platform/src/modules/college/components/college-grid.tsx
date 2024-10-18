@@ -1,7 +1,7 @@
 'use client';
 
+import { Container } from '@/global/components/container';
 import { api } from '@/lib/trpc/react';
-import { Container } from '@/modules/global/components/container';
 import Link from 'next/link';
 import { useState } from 'react';
 import { CollegeCard } from './college-card';

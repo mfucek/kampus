@@ -14,37 +14,37 @@ export const FeaturesSection = () => {
 				<h2 className="display-2 text-center mb-12">Zašto Kampus.hr?</h2>
 				<div className="grid gap-2 md:grid-cols-3">
 					<Card>
-						<CardHeader>
-							<CardTitle>
-								<Icon icon="chat-single" />
-								Forumi za svaki faks
-							</CardTitle>
-						</CardHeader>
 						<CardContent>
+							<CardHeader>
+								<CardTitle>
+									<Icon icon="chat-single" />
+									Forumi za svaki faks
+								</CardTitle>
+							</CardHeader>
 							Posebni forumi za svaki fakultet, profesora i predmet. Raspravljaj
 							o svemu što te zanima!
 						</CardContent>
 					</Card>
 					<Card>
-						<CardHeader>
-							<CardTitle>
-								<Icon icon="file-textual" />
-								Dijeljenje materijala
-							</CardTitle>
-						</CardHeader>
 						<CardContent>
+							<CardHeader>
+								<CardTitle>
+									<Icon icon="file-textual" />
+									Dijeljenje materijala
+								</CardTitle>
+							</CardHeader>
 							Dijeli i preuzimaj skripte, riješene ispite i ostale korisne
 							materijale za učenje.
 						</CardContent>
 					</Card>
 					<Card>
-						<CardHeader>
-							<CardTitle>
-								<Icon icon="users" />
-								Studentska zajednica
-							</CardTitle>
-						</CardHeader>
 						<CardContent>
+							<CardHeader>
+								<CardTitle>
+									<Icon icon="users" />
+									Studentska zajednica
+								</CardTitle>
+							</CardHeader>
 							Poveži se s kolegama, razmjenjuj iskustva i pronađi podršku u
 							studentskoj zajednici.
 						</CardContent>

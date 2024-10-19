@@ -1,41 +1,52 @@
+'use client';
+
 import { Button } from '@/lib/shadcn/ui/button';
 import { useTranslation } from '@/utils/translations/use-translation';
+import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 
 export const Navbar = () => {
 	const { t } = useTranslation('hr');
+	const { isSignedIn, signOut } = useAuth();
+	const { openSignIn } = useClerk();
 
-	const isLoggedIn = true;
+	const handleSignOut = () => {
+		signOut();
+	};
 
-	if (isLoggedIn) {
-		return (
-			<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2">
-				<div className="title-3">Kampus.hr</div>
-				<div className="flex flex-row gap-2">
+	const Actions = () => {
+		if (isSignedIn) {
+			return (
+				<>
 					<Link href="/home">
 						<Button theme="accent" size="md" variant="solid">
-							{t.goToPlatform}
+							Profile
 						</Button>
 					</Link>
-				</div>
-			</div>
+					<Button onClick={handleSignOut} size="md" variant="outline">
+						Sign Out
+					</Button>
+				</>
+			);
+		}
+
+		return (
+			<Button
+				onClick={() => openSignIn()}
+				theme="accent"
+				size="md"
+				variant="solid"
+			>
+				Sign In
+			</Button>
 		);
-	}
+	};
 
 	return (
 		<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2">
 			<div className="title-3">Kampus.hr</div>
-			<div className="flex flex-row gap-2">
-				<Link href="/register">
-					<Button theme="accent" size="md" variant="solid-weak">
-						{t.register}
-					</Button>
-				</Link>
-				<Link href="/login">
-					<Button theme="accent" size="md" variant="solid">
-						{t.login}
-					</Button>
-				</Link>
+			<div className="flex flex-row gap-4 items-center">
+				<Actions />
 			</div>
 		</div>
 	);

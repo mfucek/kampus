@@ -2,6 +2,8 @@ import '@/styles/colors.css';
 import '@/styles/globals.css';
 import '@/styles/typography.css';
 
+import '@/styles/tiptap.css';
+
 import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
 

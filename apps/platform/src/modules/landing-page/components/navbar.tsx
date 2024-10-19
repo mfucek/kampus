@@ -2,12 +2,14 @@
 
 import { Button } from '@/lib/shadcn/ui/button';
 import { useTranslation } from '@/utils/translations/use-translation';
+import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 
 export const Navbar = () => {
 	const { t } = useTranslation('hr');
+	const { openSignIn } = useClerk();
 
-	const isLoggedIn = true;
+	const { isSignedIn } = useAuth();
 
 	const Nav = () => {
 		const scrollToSection = (id: string) => {
@@ -48,7 +50,7 @@ export const Navbar = () => {
 	};
 
 	const Actions = () => {
-		if (isLoggedIn) {
+		if (isSignedIn) {
 			return (
 				<Link href="/home">
 					<Button theme="accent" size="md" variant="solid">
@@ -59,17 +61,22 @@ export const Navbar = () => {
 		}
 
 		return (
-			<Link href="/register">
-				<Button theme="accent" size="md" variant="solid-weak">
-					{t.register}
-				</Button>
-			</Link>
+			<Button
+				onClick={() => openSignIn({ afterSignInUrl: '/home' })}
+				theme="accent"
+				size="md"
+				variant="solid"
+			>
+				{t.register}
+			</Button>
 		);
 	};
 
 	return (
 		<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2">
-			<div className="title-3">Kampus.hr</div>
+			<Link href="/">
+				<div className="title-3">Kampus.hr</div>
+			</Link>
 			<div className="flex flex-row gap-4 items-center">
 				<Nav />
 				<Actions />

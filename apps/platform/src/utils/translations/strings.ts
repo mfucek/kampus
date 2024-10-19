@@ -7,7 +7,7 @@ export const strings = {
 	},
 	register: {
 		en: 'Register',
-		hr: 'Registriraj se'
+		hr: 'Kreiraj acc'
 	},
 	goToPlatform: {
 		en: 'Go to platform',

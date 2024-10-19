@@ -1,7 +1,46 @@
+'use client';
+
 import { Container } from '@/global/components/container';
 import { Button } from '@/lib/shadcn/ui/button';
+import { useAuth, useClerk } from '@clerk/nextjs';
+import Link from 'next/link';
 
 export const HeroSection = () => {
+	const { isSignedIn } = useAuth();
+	const { openSignIn } = useClerk();
+
+	const scrollToSection = (id: string) => {
+		const element = document.getElementById(id);
+		if (element) {
+			element.scrollIntoView({ behavior: 'smooth' });
+		}
+	};
+
+	const Actions = () => {
+		if (isSignedIn) {
+			return (
+				<Link href="/home">
+					<Button>Odi na platformu</Button>
+				</Link>
+			);
+		}
+		return (
+			<>
+				<Button
+					onClick={() => openSignIn()}
+					theme="accent"
+					size="md"
+					variant="solid"
+				>
+					Pridruži se besplatno
+				</Button>
+				<Button onClick={() => scrollToSection('features')} variant="outline">
+					Saznaj više
+				</Button>
+			</>
+		);
+	};
+
 	return (
 		<section className="flex flex-col items-center py-40" id="hero">
 			<Container>
@@ -14,8 +53,7 @@ export const HeroSection = () => {
 						</p>
 					</div>
 					<div className="flex flex-row gap-4">
-						<Button>Pridruži se besplatno</Button>
-						<Button variant="outline">Saznaj više</Button>
+						<Actions />
 					</div>
 				</div>
 			</Container>

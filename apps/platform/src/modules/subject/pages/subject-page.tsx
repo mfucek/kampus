@@ -39,9 +39,10 @@ export const SubjectPage: FC<{
 				</TabsList>
 				<TabsContent value="discussion">
 					<div className="flex flex-col gap-10">
-						<Composer />
+						<Composer collegeId={subject.college.id} topicId={subject.id} />
 						<div className="flex flex-col">
 							<Post
+								postId="1"
 								content={{
 									type: 'doc',
 									content: [
@@ -58,7 +59,8 @@ export const SubjectPage: FC<{
 								}}
 								votes={{
 									likes: 12,
-									dislikes: 0
+									dislikes: 0,
+									userVote: null
 								}}
 								author={{
 									displayName: 'John Doe'
@@ -66,6 +68,7 @@ export const SubjectPage: FC<{
 							/>
 
 							<Post
+								postId="2"
 								content={{
 									type: 'doc',
 									content: [
@@ -82,7 +85,8 @@ export const SubjectPage: FC<{
 								}}
 								votes={{
 									likes: 0,
-									dislikes: 4
+									dislikes: 4,
+									userVote: null
 								}}
 								author={{
 									displayName: 'John Doe'

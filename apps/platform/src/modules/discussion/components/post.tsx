@@ -8,6 +8,9 @@ import {
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
+import { api } from '@/lib/trpc/react';
+import { useAuth, useClerk } from '@clerk/nextjs';
+import { Vote, VoteType } from '@prisma/client';
 import { Bold } from '@tiptap/extension-bold';
 import { Code } from '@tiptap/extension-code';
 import { Document } from '@tiptap/extension-document';
@@ -19,13 +22,12 @@ import { Text } from '@tiptap/extension-text';
 import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
 import Image from 'next/image';
 import { FC } from 'react';
-type Reaction = 'like' | 'dislike' | 'nothing';
 
-const reactionToTheme = (reaction?: Reaction) => {
+const reactionToTheme = (reaction?: VoteType) => {
 	switch (reaction) {
-		case 'like':
+		case VoteType.UP:
 			return 'success';
-		case 'dislike':
+		case VoteType.DOWN:
 			return 'danger';
 		default:
 			return 'neutral';
@@ -82,36 +84,78 @@ const AngleLine = () => {
 	);
 };
 
-const Reactions = ({
-	reaction,
-	votes
-}: {
-	reaction?: Reaction;
+const Reactions: FC<{
 	votes: {
 		likes: number;
 		dislikes: number;
+		userVote: Vote | null;
 	};
-}) => {
-	const { likes, dislikes } = votes;
+	postId: string;
+}> = ({ votes, postId }) => {
+	const { isSignedIn } = useAuth();
+	const { openSignIn } = useClerk();
+
+	const userVoteAfterCheck = api.vote.getVotesByPostIdWithUser.useMutation();
+	const createVote = api.vote.createVote.useMutation({
+		onSuccess: () => {
+			userVoteAfterCheck.mutateAsync({ postId });
+		}
+	});
+
+	const likes = userVoteAfterCheck.data?.likes ?? votes.likes;
+	const dislikes = userVoteAfterCheck.data?.dislikes ?? votes.dislikes;
+
+	let reaction: VoteType | null = null;
+	if (userVoteAfterCheck.data) {
+		reaction = userVoteAfterCheck.data.userVote?.type ?? null;
+	} else {
+		reaction = votes.userVote?.type ?? null;
+	}
+
 	const count = likes - dislikes;
+
+	const handleUpvote = () => {
+		if (!isSignedIn) {
+			openSignIn();
+			return;
+		}
+		if (reaction) {
+			createVote.mutateAsync({ postId, type: null });
+			return;
+		}
+		createVote.mutateAsync({ postId, type: VoteType.UP });
+	};
+
+	const handleDownvote = () => {
+		if (!isSignedIn) {
+			openSignIn();
+			return;
+		}
+		if (reaction) {
+			createVote.mutateAsync({ postId, type: null });
+			return;
+		}
+		createVote.mutateAsync({ postId, type: VoteType.DOWN });
+	};
 
 	return (
 		<div
 			className={cn(
 				'flex flex-row gap-2 rounded-full items-center bg-neutral-weak',
-				reaction == 'like' && 'bg-success-medium',
-				reaction == 'dislike' && 'bg-danger-medium'
+				reaction == VoteType.UP && 'bg-success-medium',
+				reaction == VoteType.DOWN && 'bg-danger-medium'
 			)}
 		>
 			<Button
 				theme={reactionToTheme(reaction)}
 				variant={
-					reaction == 'like' ? 'solid' : !reaction ? 'ghost' : 'ghost-weak'
+					reaction == VoteType.UP ? 'solid' : !reaction ? 'ghost' : 'ghost-weak'
 				}
 				className="px-2 w-auto"
 				size="xs"
 				iconOnly
 				rounded
+				onClick={handleUpvote}
 			>
 				<Icon icon="like" size={18} />
 			</Button>
@@ -138,12 +182,17 @@ const Reactions = ({
 			<Button
 				theme={reactionToTheme(reaction)}
 				variant={
-					reaction == 'dislike' ? 'solid' : !reaction ? 'ghost' : 'ghost-weak'
+					reaction == VoteType.DOWN
+						? 'solid'
+						: !reaction
+							? 'ghost'
+							: 'ghost-weak'
 				}
 				className="px-2 w-auto"
 				size="xs"
 				iconOnly
 				rounded
+				onClick={handleDownvote}
 			>
 				<Icon icon="dislike" size={18} />
 			</Button>
@@ -165,12 +214,14 @@ export const Post: FC<{
 	votes: {
 		likes: number;
 		dislikes: number;
+		userVote: Vote | null;
 	};
-}> = ({ content, threadDepth = [], votes, author }) => {
+	postId: string;
+}> = ({ content, threadDepth = [], votes, author, postId }) => {
 	const Actions = () => {
 		return (
 			<div className="flex flex-row gap-2">
-				<Reactions votes={votes} />
+				<Reactions votes={votes} postId={postId} />
 			</div>
 		);
 	};

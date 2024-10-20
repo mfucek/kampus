@@ -31,11 +31,12 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 				</TabsList>
 				<TabsContent value="discussion">
 					<div className="flex flex-col gap-10">
-						<Composer />
+						<Composer collegeId={college.id} />
 						<div className="flex flex-col">
 							{posts.map((post) => (
 								<Post
 									key={post.id}
+									postId={post.id}
 									content={post.body as JSONContent}
 									votes={post.votes}
 									author={{

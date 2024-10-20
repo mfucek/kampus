@@ -3,37 +3,31 @@
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
-import { ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
+import { type FC } from 'react';
 
-type Payment = {
-	id: string;
-	title: string;
-	slug: string;
-	semester: number;
-	ects: number;
+type Subject = {
+	topic: {
+		id: string;
+		slug: string;
+		name: string;
+		collegeId: string;
+		college: {
+			id: string;
+			slug: string;
+			name: string;
+			iconSrc: string | null;
+		};
+	};
+	topicId: string;
+	semester: number | null;
+	ects: number | null;
 };
 
-export const payments: Payment[] = [
+export const columns: ColumnDef<Subject>[] = [
 	{
-		id: '728ed52f',
-		title: 'Programiranje 1',
-		slug: 'programiranje-1',
-		semester: 1,
-		ects: 5
-	},
-	{
-		id: '489e1d42',
-		title: 'Programiranje 2',
-		slug: 'programiranje-2',
-		semester: 2,
-		ects: 5
-	}
-];
-
-export const columns: ColumnDef<Payment>[] = [
-	{
-		accessorKey: 'title',
+		accessorKey: 'topic.name',
 		header: 'Predmet'
 	},
 	{
@@ -47,11 +41,16 @@ export const columns: ColumnDef<Payment>[] = [
 	{
 		id: 'actions-open',
 		cell: ({ row }) => {
-			const { slug } = row.original;
+			const {
+				topic: {
+					slug: topicSlug,
+					college: { slug: collegeSlug }
+				}
+			} = row.original;
 
 			return (
 				<div className="flex flex-row gap-1 justify-end">
-					<Link href={`/fer/subject/${slug}`}>
+					<Link href={`/${collegeSlug}/subject/${topicSlug}`}>
 						<Button theme="neutral" variant="solid-weak" size="sm">
 							<Icon icon="chat-single" />3 topics
 						</Button>
@@ -62,6 +61,6 @@ export const columns: ColumnDef<Payment>[] = [
 	}
 ];
 
-export const SubjectsTable = () => {
-	return <DataTable columns={columns} data={payments} loading={false} />;
+export const SubjectsTable: FC<{ subjects: Subject[] }> = ({ subjects }) => {
+	return <DataTable columns={columns} data={subjects} loading={false} />;
 };

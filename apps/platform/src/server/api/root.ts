@@ -7,7 +7,9 @@ import {
 import { TRPCError } from '@trpc/server';
 import { accountRouter } from './routers/account';
 import { collegeRouter } from './routers/college';
+import { staffRouter } from './routers/staff';
 import { stripeRouter } from './routers/stripe';
+import { subjectRouter } from './routers/subject';
 
 /**
  * This is the primary router for your server.
@@ -19,6 +21,8 @@ export const appRouter = createTRPCRouter({
 	college: collegeRouter,
 	stripe: stripeRouter,
 	account: accountRouter,
+	subject: subjectRouter,
+	staff: staffRouter,
 	me: protectedProcedure.query(async ({ ctx }) => {
 		const { db, auth } = ctx;
 		const userId = auth.userId;

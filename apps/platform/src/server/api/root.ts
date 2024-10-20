@@ -32,10 +32,10 @@ export const appRouter = createTRPCRouter({
 
 		const account = await db.account.findFirst({
 			where: {
-				userId: ctx.auth.userId!
+				clerkUserId: ctx.auth.userId!
 			}
 		});
-		return { userId: ctx.auth.userId, account };
+		return { clerkUserId: ctx.auth.userId, account };
 	})
 });
 

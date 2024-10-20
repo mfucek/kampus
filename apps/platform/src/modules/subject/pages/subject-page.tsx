@@ -1,5 +1,6 @@
 import { Container } from '@/global/components/container';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/lib/shadcn/ui/tabs';
+import { api } from '@/lib/trpc/server';
 import { PageHeader } from '@/modules/college/components/page-header';
 import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
@@ -8,13 +9,27 @@ import { StaffsTable } from '@/modules/staff/components/staffs-table';
 import { SummarySection } from '@/modules/summary/components/summary-section';
 import type { FC } from 'react';
 
-export const SubjectPage: FC<{ subjectSlug: string; collegeSlug: string }> = ({
-	subjectSlug,
-	collegeSlug
-}) => {
+export const SubjectPage: FC<{
+	subjectSlug: string;
+	collegeSlug: string;
+}> = async ({ subjectSlug, collegeSlug }) => {
+	const subject = await api.subject.getBySlug({
+		subjectSlug,
+		collegeSlug
+	});
+
+	const staffs = await api.staff.listBySubjectSlug({
+		subjectSlug,
+		collegeSlug
+	});
+
 	return (
 		<Container className="flex flex-col gap-10 py-10">
-			<PageHeader collegeSlug={collegeSlug} topicSlug={subjectSlug} />
+			<PageHeader
+				collegeSlug={collegeSlug}
+				collegeName={subject.college.name}
+				topicName={subject.name}
+			/>
 			<SummarySection />
 			<Tabs defaultValue="discussion">
 				<TabsList>
@@ -66,7 +81,7 @@ export const SubjectPage: FC<{ subjectSlug: string; collegeSlug: string }> = ({
 					<MaterialsTable />
 				</TabsContent>
 				<TabsContent value="staff">
-					<StaffsTable />
+					<StaffsTable staffs={staffs} />
 				</TabsContent>
 			</Tabs>
 		</Container>

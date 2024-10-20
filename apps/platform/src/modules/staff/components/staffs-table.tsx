@@ -7,37 +7,32 @@ import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
 
 type Staff = {
-	id: string;
-	name: string;
-	slug: string;
+	topic: {
+		slug: string;
+		college: {
+			slug: string;
+		};
+	};
 };
-
-export const payments: Staff[] = [
-	{
-		id: '728ed52f',
-		name: 'Miljenko Mikic',
-		slug: 'miljenko-mikic'
-	},
-	{
-		id: '489e1d42',
-		name: 'Miljenko Mikic',
-		slug: 'miljenko-mikic'
-	}
-];
 
 export const columns: ColumnDef<Staff>[] = [
 	{
-		accessorKey: 'name',
+		accessorKey: 'topic.name',
 		header: 'Ime'
 	},
 	{
 		id: 'actions-open',
 		cell: ({ row }) => {
-			const { slug } = row.original;
+			const {
+				topic: {
+					slug: staffSlug,
+					college: { slug: collegeSlug }
+				}
+			} = row.original;
 
 			return (
 				<div className="flex flex-row gap-1 justify-end">
-					<Link href={`/fer/staff/${slug}`}>
+					<Link href={`/${collegeSlug}/staff/${staffSlug}`}>
 						<Button theme="neutral" variant="solid-weak" size="sm">
 							<Icon icon="chat-single" />2 topics
 						</Button>
@@ -48,6 +43,6 @@ export const columns: ColumnDef<Staff>[] = [
 	}
 ];
 
-export const StaffsTable = () => {
-	return <DataTable columns={columns} data={payments} loading={false} />;
+export const StaffsTable = ({ staffs }: { staffs: Staff[] }) => {
+	return <DataTable columns={columns} data={staffs} loading={false} />;
 };

@@ -17,11 +17,20 @@ export const TopicLayout = () => {
 				<div className="w-full h-full flex flex-col rounded-lg bg-section items-center">
 					<p>{postId}</p>
 					<Post
-						content="U JNA su većina visokopozicioniranih oficira bili Srbi. Zato su tako
-					lako i preuzeli kontrolu nad JNA u 91. Srbi i polupismeni Crnogorci su
-					upadali u vojne škole bez ikakvih problema. U isto vrijeme su Hrvati
-					morali prolaziti rigorozne testove znanja i fizičke spreme da bi upali
-					u te iste škole. Pričam iz iskustva."
+						content={{
+							type: 'doc',
+							content: [
+								{
+									type: 'paragraph',
+									content: [
+										{
+											type: 'text',
+											text: 'U JNA su većina visokopozicioniranih oficira bili Srbi. Zato su tako lako i preuzeli kontrolu nad JNA u 91. Srbi i polupismeni Crnogorci su upadali u vojne škole bez ikakvih problema. U isto vrijeme su Hrvati morali prolaziti rigorozne testove znanja i fizičke spreme da bi upali u te iste škole. Pričam iz iskustva.'
+										}
+									]
+								}
+							]
+						}}
 					/>
 				</div>
 			</Panel>

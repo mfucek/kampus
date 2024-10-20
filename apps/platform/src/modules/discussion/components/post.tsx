@@ -137,7 +137,10 @@ const Reactions = ({
 type ThreadDepth = 'past' | 'last' | 'middle';
 const threadDepth: ThreadDepth[] = ['middle', 'past', 'last', 'middle'];
 
-export const Post: FC<{ content: JSONContent }> = ({ content }) => {
+export const Post: FC<{
+	content: JSONContent;
+	threadDepth?: ThreadDepth[];
+}> = ({ content, threadDepth = [] }) => {
 	const Actions = () => {
 		return (
 			<div className="flex flex-row gap-2">
@@ -186,7 +189,7 @@ export const Post: FC<{ content: JSONContent }> = ({ content }) => {
 	const PostBody = () => {
 		return (
 			<div className="flex flex-col gap-2 pb-6">
-				<div className="flex flex-row gap-2">
+				<div className="flex flex-row gap-2 h-6 items-center">
 					<span className="caption">John Doe</span>
 					<span className="body-3 text-neutral-strong">6h ago</span>
 				</div>
@@ -198,6 +201,17 @@ export const Post: FC<{ content: JSONContent }> = ({ content }) => {
 	};
 
 	const PostThreading = () => {
+		if (threadDepth.length === 0)
+			return (
+				<div className="flex flex-row">
+					<div className="w-6 h-full flex flex-col overflow-hidden">
+						<div className="w-6 h-6 rounded-full overflow-hidden relative shrink-0">
+							<Image src="https://picsum.photos/48/48" alt="John Doe" fill />
+						</div>
+					</div>
+				</div>
+			);
+
 		return (
 			<div className="flex flex-row">
 				{threadDepth.slice(0, -2).map((depth, index) => (

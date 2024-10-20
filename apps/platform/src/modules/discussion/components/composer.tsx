@@ -131,27 +131,7 @@ export const Composer = () => {
 	const [textValue, setTextValue] = useState('');
 	const [value, setValue] = useState<JSONContent>({
 		type: 'doc',
-		content: [
-			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasd' }] },
-			{
-				type: 'paragraph',
-				content: [
-					{
-						type: 'text',
-						marks: [{ type: 'bold' }, { type: 'italic' }],
-						text: 'asdasd'
-					}
-				]
-			},
-			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasda' }] },
-			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasd' }] },
-			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasdasdasd' }] },
-			{
-				type: 'paragraph',
-				content: [{ type: 'text', text: 'sasdasdasdasdasd' }]
-			},
-			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasd' }] }
-		]
+		content: [{ type: 'paragraph', content: [{ type: 'text', text: '' }] }]
 	});
 
 	const remaining = MAX_CHARACTERS - textValue.length;
@@ -237,7 +217,7 @@ export const Composer = () => {
 				</div>
 			</div>
 			<Footer />
-			{memoizedPreviewPost}
+			{/* {memoizedPreviewPost} */}
 		</div>
 	);
 };

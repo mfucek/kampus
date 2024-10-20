@@ -50,14 +50,14 @@ export async function POST(req: Request) {
 		case 'user.created':
 			const count = await db.account.count({
 				where: {
-					userId: id!
+					clerkUserId: id!
 				}
 			});
 
 			if (!count) {
 				await db.account.create({
 					data: {
-						userId: id!
+						clerkUserId: id!
 					}
 				});
 			}

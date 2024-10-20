@@ -10,21 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model User {
-//   id String @id @default(cuid())
-
-//   // posts Post[]
-
-//   // Vote Vote[]
-
-//   Account Account[]
-// }
+// Clerk account
 
 model Account {
   id String @id @default(cuid())
 
-  userId String @unique
-  // user   User   @relation(fields: [userId], references: [id])
+  clerkUserId String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -33,7 +24,23 @@ model Account {
 
   package PackageType?
   status  AccountStatus @default(INACTIVE)
+
+  // user User
 }
+
+enum PackageType {
+  MONTHLY_CHEAP
+  MONTHLY_PRO
+  LIFETIME
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+}
+
+// User
 
 // model User {
 //   id String @id @default(cuid())
@@ -47,18 +54,6 @@ model Account {
 //   accountId String  @unique
 //   account   Account @relation(fields: [accountId], references: [id])
 // }
-
-enum PackageType {
-  MONTHLY_CHEAP
-  MONTHLY_PRO
-  LIFETIME
-}
-
-enum AccountStatus {
-  ACTIVE
-  INACTIVE
-  CANCELLED
-}
 
 // model Topic {
 //   id String @id @default(cuid())

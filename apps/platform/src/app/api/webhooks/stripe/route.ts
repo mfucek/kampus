@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 				const subscription = event.data.object;
 				await db.account.update({
 					where: {
-						userId: subscription.metadata.userId
+						clerkUserId: subscription.metadata.userId
 					},
 					data: {
 						status: 'ACTIVE',
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 				if (payment.mode === 'payment') {
 					await db.account.update({
 						where: {
-							userId: payment.metadata!.userId
+							clerkUserId: payment.metadata!.userId
 						},
 						data: {
 							status: 'ACTIVE',
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 				if (subscription.cancel_at_period_end) {
 					await db.account.update({
 						where: {
-							userId: subscription.metadata.userId
+							clerkUserId: subscription.metadata.userId
 						},
 						data: {
 							status: 'CANCELLED'
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
 				} else {
 					await db.account.update({
 						where: {
-							userId: subscription.metadata.userId
+							clerkUserId: subscription.metadata.userId
 						},
 						data: {
 							status: 'ACTIVE'
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
 
 				await db.account.update({
 					where: {
-						userId: subscription.metadata.userId
+						clerkUserId: subscription.metadata.userId
 					},
 					data: {
 						status: 'INACTIVE',

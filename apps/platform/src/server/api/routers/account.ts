@@ -6,7 +6,7 @@ export const accountRouter = createTRPCRouter({
 
 		const account = await db.account.findFirst({
 			where: {
-				userId: auth.userId!
+				clerkUserId: auth.userId!
 			}
 		});
 

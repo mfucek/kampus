@@ -31,7 +31,7 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 				</TabsList>
 				<TabsContent value="discussion">
 					<div className="flex flex-col gap-10">
-						<Composer collegeId={college.id} />
+						<Composer collegeId={college.id} collegeSlug={collegeSlug} />
 						<div className="flex flex-col">
 							{posts.map((post) => (
 								<Post

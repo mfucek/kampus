@@ -23,7 +23,7 @@ import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
 import Image from 'next/image';
 import { FC } from 'react';
 
-const reactionToTheme = (reaction?: VoteType) => {
+const reactionToTheme = (reaction: VoteType | null) => {
 	switch (reaction) {
 		case VoteType.UP:
 			return 'success';
@@ -228,6 +228,7 @@ export const Post: FC<{
 
 	const editor = useEditor({
 		shouldRerenderOnTransaction: true,
+		immediatelyRender: false,
 		editable: false,
 		content: content,
 		extensions: [

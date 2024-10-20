@@ -43,7 +43,7 @@ export const Navbar = () => {
 	};
 
 	return (
-		<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2">
+		<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0">
 			<div className="title-3">Kampus.hr</div>
 			<div className="flex flex-row gap-4 items-center">
 				<Actions />

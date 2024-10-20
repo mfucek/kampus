@@ -1,8 +1,19 @@
+'use client';
+
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
+import { Bold } from '@tiptap/extension-bold';
+import { Code } from '@tiptap/extension-code';
+import { Document } from '@tiptap/extension-document';
+import { Italic } from '@tiptap/extension-italic';
+import { Link } from '@tiptap/extension-link';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Strike } from '@tiptap/extension-strike';
+import { Text } from '@tiptap/extension-text';
+import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
 import Image from 'next/image';
-
+import { FC } from 'react';
 type Reaction = 'like' | 'dislike' | 'nothing';
 
 const reactionToTheme = (reaction?: Reaction) => {
@@ -14,6 +25,56 @@ const reactionToTheme = (reaction?: Reaction) => {
 		default:
 			return 'neutral';
 	}
+};
+
+const Angle = () => {
+	return (
+		<svg
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				d="M12 0V8C12 12.4183 15.5817 16 20 16H24"
+				className="stroke-neutral-medium"
+			/>
+		</svg>
+	);
+};
+
+const Line = () => {
+	return (
+		<svg
+			width="24"
+			height="24"
+			className="h-full"
+			viewBox="0 0 24 240"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path d="M12 0V2400" className="stroke-neutral-medium" />
+		</svg>
+	);
+};
+
+const AngleLine = () => {
+	return (
+		<svg
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				d="M12 0V8C12 12.4183 15.5817 16 20 16H24"
+				className="stroke-neutral-medium"
+			/>
+			<path d="M12 0V24" className="stroke-neutral-medium" />
+		</svg>
+	);
 };
 
 const Reactions = ({
@@ -72,57 +133,11 @@ const Reactions = ({
 	);
 };
 
-const Angle = () => {
-	return (
-		<svg
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				d="M12 0V8C12 12.4183 15.5817 16 20 16H24"
-				className="stroke-neutral-medium"
-			/>
-		</svg>
-	);
-};
+// thread depth with leaf check for each level
+type ThreadDepth = 'past' | 'last' | 'middle';
+const threadDepth: ThreadDepth[] = ['middle', 'past', 'last', 'middle'];
 
-const Line = () => {
-	return (
-		<svg
-			width="24"
-			height="24"
-			className="h-full"
-			viewBox="0 0 24 240"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path d="M12 0V2400" className="stroke-neutral-medium" />
-		</svg>
-	);
-};
-
-const AngleLine = () => {
-	return (
-		<svg
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				d="M12 0V8C12 12.4183 15.5817 16 20 16H24"
-				className="stroke-neutral-medium"
-			/>
-			<path d="M12 0V24" className="stroke-neutral-medium" />
-		</svg>
-	);
-};
-
-export const Post = () => {
+export const Post: FC<{ content: JSONContent }> = ({ content }) => {
 	const Actions = () => {
 		return (
 			<div className="flex flex-row gap-2">
@@ -131,6 +146,43 @@ export const Post = () => {
 		);
 	};
 
+	const editor = useEditor({
+		shouldRerenderOnTransaction: true,
+		editable: false,
+		content: content,
+		extensions: [
+			Document,
+			Paragraph.configure({
+				HTMLAttributes: {
+					class: 'element-paragraph'
+				}
+			}),
+			Text,
+			Bold,
+			Italic,
+			Strike,
+			Code.configure({
+				HTMLAttributes: {
+					class: 'element-code'
+				}
+			}),
+			Link.configure({
+				openOnClick: false,
+				autolink: true,
+				defaultProtocol: 'https',
+				protocols: ['http', 'https'],
+				HTMLAttributes: {
+					class: 'element-link'
+				}
+			})
+		],
+		editorProps: {
+			attributes: {
+				class: 'flex flex-col gap-1'
+			}
+		}
+	});
+
 	const PostBody = () => {
 		return (
 			<div className="flex flex-col gap-2 pb-6">
@@ -138,21 +190,12 @@ export const Post = () => {
 					<span className="caption">John Doe</span>
 					<span className="body-3 text-neutral-strong">6h ago</span>
 				</div>
-				<p className="body-2">
-					U JNA su većina visokopozicioniranih oficira bili Srbi. Zato su tako
-					lako i preuzeli kontrolu nad JNA u 91. Srbi i polupismeni Crnogorci su
-					upadali u vojne škole bez ikakvih problema. U isto vrijeme su Hrvati
-					morali prolaziti rigorozne testove znanja i fizičke spreme da bi upali
-					u te iste škole. Pričam iz iskustva.
-				</p>
+				{/* <p className="body-2">{content}</p> */}
+				{editor && <EditorContent editor={editor} />}
 				<Actions />
 			</div>
 		);
 	};
-
-	// thread depth with leaf check for each level
-	type ThreadDepth = 'past' | 'last' | 'middle';
-	const threadDepth: ThreadDepth[] = ['middle', 'past', 'last', 'middle'];
 
 	const PostThreading = () => {
 		return (

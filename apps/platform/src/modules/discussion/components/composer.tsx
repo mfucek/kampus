@@ -1,3 +1,5 @@
+'use client';
+
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
@@ -9,14 +11,11 @@ import { Link } from '@tiptap/extension-link';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Strike } from '@tiptap/extension-strike';
 import { Text } from '@tiptap/extension-text';
-import { Editor, EditorContent, useEditor } from '@tiptap/react';
-import { useCallback, useEffect, useState } from 'react';
+import { Editor, EditorContent, JSONContent, useEditor } from '@tiptap/react';
+import { useCallback, useMemo, useState } from 'react';
+import { Post } from './post';
 
-const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
-	if (!editor) {
-		return null;
-	}
-
+const EditorToolbar = ({ editor }: { editor: Editor }) => {
 	const setLink = useCallback(() => {
 		const previousUrl = editor.getAttributes('link').href;
 		const url = window.prompt('URL', previousUrl);
@@ -44,6 +43,10 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 			setLink();
 		}
 	}, [editor, setLink]);
+
+	if (!editor) {
+		return null;
+	}
 
 	return (
 		<div className="flex flex-row gap-3 px-3">
@@ -122,13 +125,39 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 	);
 };
 
-export const TipTap = ({
-	onChange,
-	content
-}: {
-	onChange?: (richText: string) => void;
-	content?: string;
-}) => {
+const MAX_CHARACTERS = 2000;
+
+export const Composer = () => {
+	const [textValue, setTextValue] = useState('');
+	const [value, setValue] = useState<JSONContent>({
+		type: 'doc',
+		content: [
+			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasd' }] },
+			{
+				type: 'paragraph',
+				content: [
+					{
+						type: 'text',
+						marks: [{ type: 'bold' }, { type: 'italic' }],
+						text: 'asdasd'
+					}
+				]
+			},
+			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasda' }] },
+			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasd' }] },
+			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasdasdasd' }] },
+			{
+				type: 'paragraph',
+				content: [{ type: 'text', text: 'sasdasdasdasdasd' }]
+			},
+			{ type: 'paragraph', content: [{ type: 'text', text: 'asdasd' }] }
+		]
+	});
+
+	const remaining = MAX_CHARACTERS - textValue.length;
+
+	const [contentKey, setContentKey] = useState(0);
+
 	const editor = useEditor({
 		extensions: [
 			Document,
@@ -156,38 +185,18 @@ export const TipTap = ({
 				}
 			})
 		],
-		content: content,
+		content: value,
 		editorProps: {
 			attributes: {
 				class: 'rounded-md p-3 outline-none flex flex-col gap-1'
 			}
 		},
 		onUpdate({ editor }) {
-			onChange?.(editor.getHTML());
+			setValue(editor.getJSON());
+			setTextValue(editor.getText());
+			setContentKey((prev) => prev + 1); // Increment the key
 		}
 	});
-
-	return (
-		<div className="flex flex-col">
-			<EditorToolbar editor={editor} />
-			<EditorContent editor={editor} />
-		</div>
-	);
-};
-
-const MAX_CHARACTERS = 2000;
-
-export const Composer = () => {
-	const [remaining, setRemaining] = useState(MAX_CHARACTERS);
-	const [value, setValue] = useState('');
-
-	const submit = useCallback(() => {
-		console.log(value);
-	}, [value]);
-
-	useEffect(() => {
-		setRemaining(MAX_CHARACTERS - value.length);
-	}, [value]);
 
 	const Footer = () => {
 		return (
@@ -211,20 +220,24 @@ export const Composer = () => {
 		);
 	};
 
+	const memoizedPreviewPost = useMemo(() => {
+		return <Post content={value} key={contentKey} />;
+	}, [value, contentKey]);
+
 	return (
 		<div className="flex flex-col gap-3">
 			<div className="flex flex-col gap-3 pt-3 border border-neutral-medium rounded-lg overflow-hidden">
-				{/* <Toolbar editor={editor} />
-				<textarea
-					className="input w-full px-3 pb-3"
-					placeholder="Napisi komentar ovdje."
-					value={value}
-					onChange={(e) => setValue(e.target.value)}
-				/> */}
-				<TipTap onChange={setValue} content={value} />
+				<div className="flex flex-col">
+					{editor && (
+						<>
+							<EditorToolbar editor={editor} />
+							<EditorContent editor={editor} />
+						</>
+					)}
+				</div>
 			</div>
-			<pre className="w-full whitespace-pre-wrap">{value}</pre>
 			<Footer />
+			{memoizedPreviewPost}
 		</div>
 	);
 };

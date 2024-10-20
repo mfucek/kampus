@@ -3,7 +3,6 @@
 import {
 	Tooltip,
 	TooltipContent,
-	TooltipProvider,
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 
@@ -50,18 +49,12 @@ const SectionTitle = ({
 		<div className="flex flex-row gap-1">
 			<h3 className="title-3">{title}</h3>
 			{tooltip && (
-				<TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger>
-							<Icon
-								icon="status-info"
-								size={16}
-								className="bg-neutral-strong"
-							/>
-						</TooltipTrigger>
-						<TooltipContent>{tooltip}</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
+				<Tooltip>
+					<TooltipTrigger>
+						<Icon icon="status-info" size={16} className="bg-neutral-strong" />
+					</TooltipTrigger>
+					<TooltipContent>{tooltip}</TooltipContent>
+				</Tooltip>
 			)}
 		</div>
 	);

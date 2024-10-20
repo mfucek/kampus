@@ -31,6 +31,10 @@ export const TopicLayout = () => {
 								}
 							]
 						}}
+						votes={{
+							likes: 4,
+							dislikes: 0
+						}}
 					/>
 				</div>
 			</Panel>

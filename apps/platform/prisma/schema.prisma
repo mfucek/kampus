@@ -69,6 +69,7 @@ model College {
   iconSrc String?
 
   Topic Topic[]
+  Post  Post[]
 }
 
 // Subjects & Staff
@@ -126,16 +127,17 @@ model Post {
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
 
-  // subject or staff this post belongs to
-  topicId String
-  topic   Topic  @relation(fields: [topicId], references: [id])
+  // college this post belongs to
+  collegeId String
+  college   College @relation(fields: [collegeId], references: [id])
 
-  // top level post this post is in the thread of
-  topLevelPostId String?
-  topLevelPost   Post?   @relation(fields: [topLevelPostId], references: [id], name: "TopLevelPost")
-  subPosts       Post[]  @relation(name: "TopLevelPost")
+  // subject or staff this post belongs to
+  // if empty, this is college-specific post
+  topicId String?
+  topic   Topic?  @relation(fields: [topicId], references: [id])
 
   // direct replies
+  // if empty, this is top level post
   replyToId String?
   replyTo   Post?   @relation(fields: [replyToId], references: [id], name: "PostReplies")
   replies   Post[]  @relation("PostReplies")
@@ -153,6 +155,8 @@ enum VoteType {
 
 model Vote {
   id String @id @default(cuid())
+
+  type VoteType
 
   postId String
   post   Post   @relation(fields: [postId], references: [id])

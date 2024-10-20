@@ -56,6 +56,13 @@ export const SubjectPage: FC<{
 										}
 									]
 								}}
+								votes={{
+									likes: 12,
+									dislikes: 0
+								}}
+								author={{
+									displayName: 'John Doe'
+								}}
 							/>
 
 							<Post
@@ -72,6 +79,13 @@ export const SubjectPage: FC<{
 											]
 										}
 									]
+								}}
+								votes={{
+									likes: 0,
+									dislikes: 4
+								}}
+								author={{
+									displayName: 'John Doe'
 								}}
 							/>
 						</div>

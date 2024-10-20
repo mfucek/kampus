@@ -2,6 +2,11 @@
 
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger
+} from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
 import { Bold } from '@tiptap/extension-bold';
 import { Code } from '@tiptap/extension-code';
@@ -79,11 +84,17 @@ const AngleLine = () => {
 
 const Reactions = ({
 	reaction,
-	count
+	votes
 }: {
 	reaction?: Reaction;
-	count: number;
+	votes: {
+		likes: number;
+		dislikes: number;
+	};
 }) => {
+	const { likes, dislikes } = votes;
+	const count = likes - dislikes;
+
 	return (
 		<div
 			className={cn(
@@ -104,19 +115,26 @@ const Reactions = ({
 			>
 				<Icon icon="like" size={18} />
 			</Button>
-			<span
-				className={cn(
-					'button-sm',
-					!reaction &&
-						(count < 0
-							? 'text-danger'
-							: count > 0
-								? 'text-success'
-								: 'text-neutral')
-				)}
-			>
-				{count}
-			</span>
+			<Tooltip>
+				<TooltipTrigger>
+					<span
+						className={cn(
+							'button-sm',
+							!reaction &&
+								(count < 0
+									? 'text-danger'
+									: count > 0
+										? 'text-success'
+										: 'text-neutral')
+						)}
+					>
+						{count}
+					</span>
+				</TooltipTrigger>
+				<TooltipContent>
+					<span className="body-2">{count}</span>
+				</TooltipContent>
+			</Tooltip>
 			<Button
 				theme={reactionToTheme(reaction)}
 				variant={
@@ -140,11 +158,19 @@ const threadDepth: ThreadDepth[] = ['middle', 'past', 'last', 'middle'];
 export const Post: FC<{
 	content: JSONContent;
 	threadDepth?: ThreadDepth[];
-}> = ({ content, threadDepth = [] }) => {
+	author: {
+		displayName: string;
+		imageUrl?: string;
+	};
+	votes: {
+		likes: number;
+		dislikes: number;
+	};
+}> = ({ content, threadDepth = [], votes, author }) => {
 	const Actions = () => {
 		return (
 			<div className="flex flex-row gap-2">
-				<Reactions count={12} />
+				<Reactions votes={votes} />
 			</div>
 		);
 	};
@@ -190,7 +216,7 @@ export const Post: FC<{
 		return (
 			<div className="flex flex-col gap-2 pb-6">
 				<div className="flex flex-row gap-2 h-6 items-center">
-					<span className="caption">John Doe</span>
+					<span className="caption">{author.displayName}</span>
 					<span className="body-3 text-neutral-strong">6h ago</span>
 				</div>
 				{/* <p className="body-2">{content}</p> */}
@@ -255,7 +281,9 @@ export const Post: FC<{
 				<div className="w-6 h-full flex flex-col overflow-hidden">
 					{/* show profile image on last level */}
 					<div className="w-6 h-6 rounded-full overflow-hidden relative shrink-0">
-						<Image src="https://picsum.photos/48/48" alt="John Doe" fill />
+						{author.imageUrl && (
+							<Image src={author.imageUrl} alt={author.displayName} fill />
+						)}
 					</div>
 					{/* check if 'middle' node on last level */}
 					{threadDepth[threadDepth.length - 1] === 'middle' ? <Line /> : null}

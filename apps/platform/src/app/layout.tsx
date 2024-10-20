@@ -7,6 +7,7 @@ import '@/styles/tiptap.css';
 import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
 
+import { TooltipProvider } from '@/lib/shadcn/ui/tooltip';
 import { TRPCReactProvider } from '@/lib/trpc/react';
 import { ClerkProvider } from '@clerk/nextjs';
 
@@ -23,7 +24,9 @@ export default function RootLayout({
 		<html lang="en" className={`${GeistSans.variable}`}>
 			<body className="w-screen h-screen overflow-hidden">
 				<ClerkProvider>
-					<TRPCReactProvider>{children}</TRPCReactProvider>
+					<TRPCReactProvider>
+						<TooltipProvider>{children}</TooltipProvider>
+					</TRPCReactProvider>
 				</ClerkProvider>
 			</body>
 		</html>

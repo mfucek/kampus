@@ -6,6 +6,7 @@ import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
 import { StaffsTable } from '@/modules/staff/components/staffs-table';
 import { SubjectsTable } from '@/modules/subject/components/subjects-table';
+import { JSONContent } from '@tiptap/react';
 import type { FC } from 'react';
 
 export const CollegePage: FC<{ collegeSlug: string }> = async ({
@@ -15,6 +16,8 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 
 	const subjects = await api.subject.listByCollegeSlug({ collegeSlug });
 	const staffs = await api.staff.listByCollegeSlug({ collegeSlug });
+
+	const posts = await api.post.getCollegePostsByCollegeSlug({ collegeSlug });
 
 	return (
 		<Container className="flex flex-col gap-10 py-10">
@@ -30,39 +33,17 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 					<div className="flex flex-col gap-10">
 						<Composer />
 						<div className="flex flex-col">
-							<Post
-								content={{
-									type: 'doc',
-									content: [
-										{
-											type: 'paragraph',
-											content: [
-												{
-													type: 'text',
-													text: 'U JNA su većina visokopozicioniranih oficira bili Srbi. Zato su tako lako i preuzeli kontrolu nad JNA u 91. Srbi i polupismeni Crnogorci su upadali u vojne škole bez ikakvih problema. U isto vrijeme su Hrvati morali prolaziti rigorozne testove znanja i fizičke spreme da bi upali u te iste škole. Pričam iz iskustva.'
-												}
-											]
-										}
-									]
-								}}
-							/>
-
-							<Post
-								content={{
-									type: 'doc',
-									content: [
-										{
-											type: 'paragraph',
-											content: [
-												{
-													type: 'text',
-													text: 'U JNA su većina visokopozicioniranih oficira bili Srbi. Zato su tako lako i preuzeli kontrolu nad JNA u 91. Srbi i polupismeni Crnogorci su upadali u vojne škole bez ikakvih problema. U isto vrijeme su Hrvati morali prolaziti rigorozne testove znanja i fizičke spreme da bi upali u te iste škole. Pričam iz iskustva.'
-												}
-											]
-										}
-									]
-								}}
-							/>
+							{posts.map((post) => (
+								<Post
+									key={post.id}
+									content={post.body as JSONContent}
+									votes={post.votes}
+									author={{
+										displayName: post.author.displayName,
+										imageUrl: post.author.imageUrl ?? undefined
+									}}
+								/>
+							))}
 						</div>
 					</div>
 				</TabsContent>

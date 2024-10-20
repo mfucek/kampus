@@ -38,6 +38,13 @@ export const StaffPage: FC<{
 								}
 							]
 						}}
+						votes={{
+							likes: 0,
+							dislikes: 0
+						}}
+						author={{
+							displayName: 'John Doe'
+						}}
 					/>
 
 					<Post
@@ -54,6 +61,13 @@ export const StaffPage: FC<{
 									]
 								}
 							]
+						}}
+						votes={{
+							likes: 0,
+							dislikes: 0
+						}}
+						author={{
+							displayName: 'John Doe'
 						}}
 					/>
 				</div>

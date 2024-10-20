@@ -3,6 +3,7 @@
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
+import { api } from '@/lib/trpc/react';
 import { Bold } from '@tiptap/extension-bold';
 import { Code } from '@tiptap/extension-code';
 import { Document } from '@tiptap/extension-document';
@@ -12,8 +13,7 @@ import { Paragraph } from '@tiptap/extension-paragraph';
 import { Strike } from '@tiptap/extension-strike';
 import { Text } from '@tiptap/extension-text';
 import { Editor, EditorContent, JSONContent, useEditor } from '@tiptap/react';
-import { useCallback, useMemo, useState } from 'react';
-import { Post } from './post';
+import { FC, useCallback, useState } from 'react';
 
 const EditorToolbar = ({ editor }: { editor: Editor }) => {
 	const setLink = useCallback(() => {
@@ -127,7 +127,11 @@ const EditorToolbar = ({ editor }: { editor: Editor }) => {
 
 const MAX_CHARACTERS = 2000;
 
-export const Composer = () => {
+export const Composer: FC<{
+	collegeId: string;
+	topicId?: string;
+	replyToId?: string;
+}> = ({ collegeId, topicId, replyToId }) => {
 	const [textValue, setTextValue] = useState('');
 	const [value, setValue] = useState<JSONContent>({
 		type: 'doc',
@@ -179,6 +183,15 @@ export const Composer = () => {
 	});
 
 	const Footer = () => {
+		const utils = api.useUtils();
+
+		const { mutateAsync: createPost, isPending } =
+			api.post.createPost.useMutation({
+				onSuccess: () => {
+					utils.post.invalidate();
+				}
+			});
+
 		return (
 			<div className="flex flex-row gap-2 items-center">
 				<p
@@ -193,6 +206,10 @@ export const Composer = () => {
 					variant="solid"
 					size="sm"
 					disabled={remaining < 0}
+					onClick={() =>
+						createPost({ body: value, collegeId, topicId, replyToId })
+					}
+					loading={isPending}
 				>
 					Objavi
 				</Button>
@@ -200,9 +217,9 @@ export const Composer = () => {
 		);
 	};
 
-	const memoizedPreviewPost = useMemo(() => {
-		return <Post content={value} key={contentKey} />;
-	}, [value, contentKey]);
+	// const memoizedPreviewPost = useMemo(() => {
+	// 	return <Post content={value} key={contentKey} />;
+	// }, [value, contentKey]);
 
 	return (
 		<div className="flex flex-col gap-3">

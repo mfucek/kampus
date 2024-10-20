@@ -33,8 +33,13 @@ export const TopicLayout = () => {
 						}}
 						votes={{
 							likes: 4,
-							dislikes: 0
+							dislikes: 0,
+							userVote: null
 						}}
+						author={{
+							displayName: 'John Doe'
+						}}
+						postId={postId}
 					/>
 				</div>
 			</Panel>

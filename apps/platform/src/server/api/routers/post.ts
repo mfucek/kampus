@@ -1,4 +1,8 @@
-import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
+import {
+	createTRPCRouter,
+	protectedProcedure,
+	publicProcedure
+} from '@/server/api/trpc';
 import { VoteType } from '@prisma/client';
 import { z } from 'zod';
 
@@ -29,6 +33,20 @@ export const postRouter = createTRPCRouter({
 				}
 			});
 
+			let userId = null;
+			if (ctx.clerkUserId) {
+				const account = await db.account.findUnique({
+					where: {
+						clerkUserId: ctx.clerkUserId
+					},
+					include: {
+						user: true
+					}
+				});
+
+				userId = account?.user?.id;
+			}
+
 			const postsWithVotes = await Promise.all(
 				posts.map(async (post) => {
 					const votes = await db.vote.findMany({
@@ -44,11 +62,15 @@ export const postRouter = createTRPCRouter({
 						(vote) => vote.type === VoteType.DOWN
 					).length;
 
+					const userVote = votes.find((vote) => vote.userId === userId) ?? null;
+					console.log(userVote);
+
 					return {
 						...post,
 						votes: {
 							likes,
-							dislikes
+							dislikes,
+							userVote
 						}
 					};
 				})
@@ -81,5 +103,36 @@ export const postRouter = createTRPCRouter({
 			});
 
 			return posts;
+		}),
+
+	createPost: protectedProcedure
+		.input(
+			z.object({
+				body: z.any(),
+				collegeId: z.string(),
+				topicId: z.string().optional(),
+				replyToId: z.string().optional()
+			})
+		)
+		.mutation(async ({ input, ctx }) => {
+			const { db, user } = ctx;
+
+			console.log(input);
+
+			try {
+				JSON.parse(input.body);
+			} catch (error) {
+				console.error(error);
+			}
+
+			const post = await db.post.create({
+				data: {
+					body: input.body,
+					collegeId: input.collegeId,
+					topicId: input.topicId,
+					replyToId: input.replyToId,
+					authorId: user.id
+				}
+			});
 		})
 });

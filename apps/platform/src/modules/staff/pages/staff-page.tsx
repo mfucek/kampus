@@ -21,9 +21,10 @@ export const StaffPage: FC<{
 			/>
 			<SummarySection />
 			<div className="flex flex-col gap-10">
-				<Composer />
+				<Composer collegeId={staff.college.id} topicId={staff.id} />
 				<div className="flex flex-col">
 					<Post
+						postId="1"
 						content={{
 							type: 'doc',
 							content: [
@@ -40,7 +41,8 @@ export const StaffPage: FC<{
 						}}
 						votes={{
 							likes: 0,
-							dislikes: 0
+							dislikes: 0,
+							userVote: null
 						}}
 						author={{
 							displayName: 'John Doe'
@@ -48,6 +50,7 @@ export const StaffPage: FC<{
 					/>
 
 					<Post
+						postId="2"
 						content={{
 							type: 'doc',
 							content: [
@@ -64,7 +67,8 @@ export const StaffPage: FC<{
 						}}
 						votes={{
 							likes: 0,
-							dislikes: 0
+							dislikes: 0,
+							userVote: null
 						}}
 						author={{
 							displayName: 'John Doe'

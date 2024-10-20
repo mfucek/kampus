@@ -33,7 +33,7 @@ export const createTRPCContext = async (opts: {
 }) => {
 	return {
 		db,
-		userId: opts.auth.userId,
+		clerkUserId: opts.auth.userId,
 		...opts
 	};
 };
@@ -112,12 +112,26 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
-const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-	if (!ctx.userId) {
+const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
+	if (!ctx.clerkUserId) {
 		throw new TRPCError({ code: 'UNAUTHORIZED' });
 	}
+
+	const account = await db.account.findUnique({
+		where: {
+			clerkUserId: ctx.clerkUserId
+		},
+		include: {
+			user: true
+		}
+	});
+
+	if (!account) {
+		throw new TRPCError({ code: 'UNAUTHORIZED' });
+	}
+
 	// Make ctx.userId non-nullable in protected procedures
-	return next({ ctx: { userId: ctx.userId } });
+	return next({ ctx: { clerkUserId: ctx.clerkUserId, user: account.user! } });
 });
 
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);

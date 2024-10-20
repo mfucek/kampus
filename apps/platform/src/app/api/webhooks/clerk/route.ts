@@ -57,7 +57,12 @@ export async function POST(req: Request) {
 			if (!count) {
 				await db.account.create({
 					data: {
-						clerkUserId: id!
+						clerkUserId: id!,
+						user: {
+							create: {
+								displayName: 'John Doe'
+							}
+						}
 					}
 				});
 			}

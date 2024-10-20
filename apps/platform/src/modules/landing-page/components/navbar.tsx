@@ -73,7 +73,7 @@ export const Navbar = () => {
 	};
 
 	return (
-		<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2">
+		<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0">
 			<Link href="/">
 				<div className="title-3">Kampus.hr</div>
 			</Link>

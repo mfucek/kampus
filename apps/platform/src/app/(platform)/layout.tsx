@@ -4,12 +4,14 @@ import { Suspense, type FC, type PropsWithChildren } from 'react';
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {
 	return (
-		<div className="w-screen h-screen overflow-hidden flex flex-col">
-			<Navbar />
-			<Suspense fallback={<></>}>
-				<ClientPanels>{children}</ClientPanels>
-			</Suspense>
-		</div>
+		<>
+			<div className="flex flex-col w-screen h-screen overflow-hidden">
+				<Navbar />
+				<Suspense fallback={<></>}>
+					<ClientPanels>{children}</ClientPanels>
+				</Suspense>
+			</div>
+		</>
 	);
 };
 

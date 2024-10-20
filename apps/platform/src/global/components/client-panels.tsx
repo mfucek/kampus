@@ -6,16 +6,13 @@ import { TopicLayout } from '../layouts/topic-layout';
 
 export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 	return (
-		<div className="flex-1 bg-background md:p-2 flex flex-row gap-2">
-			<PanelGroup
-				autoSaveId="example"
-				direction="horizontal"
-				className="w-full h-full"
-			>
-				<Panel>
-					<div className="w-full h-full flex flex-col rounded-lg bg-section items-center">
-						{children}
-					</div>
+		<div className="bg-background md:p-2 w-full h-full overflow-hidden">
+			<PanelGroup autoSaveId="example" direction="horizontal">
+				<Panel
+					className="rounded-lg bg-section flex flex-col items-center"
+					style={{ overflow: 'hidden', overflowY: 'scroll' }}
+				>
+					{children}
 				</Panel>
 				<TopicLayout />
 			</PanelGroup>

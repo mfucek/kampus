@@ -13,6 +13,7 @@ import { Paragraph } from '@tiptap/extension-paragraph';
 import { Strike } from '@tiptap/extension-strike';
 import { Text } from '@tiptap/extension-text';
 import { Editor, EditorContent, JSONContent, useEditor } from '@tiptap/react';
+import { useRouter } from 'next/navigation';
 import { FC, useCallback, useState } from 'react';
 
 const EditorToolbar = ({ editor }: { editor: Editor }) => {
@@ -129,13 +130,14 @@ const MAX_CHARACTERS = 2000;
 
 export const Composer: FC<{
 	collegeId: string;
+	collegeSlug: string; // Add this prop
 	topicId?: string;
 	replyToId?: string;
-}> = ({ collegeId, topicId, replyToId }) => {
+}> = ({ collegeId, collegeSlug, topicId, replyToId }) => {
 	const [textValue, setTextValue] = useState('');
 	const [value, setValue] = useState<JSONContent>({
 		type: 'doc',
-		content: [{ type: 'paragraph', content: [{ type: 'text', text: '' }] }]
+		content: [{ type: 'paragraph', content: [] }]
 	});
 
 	const remaining = MAX_CHARACTERS - textValue.length;
@@ -143,6 +145,7 @@ export const Composer: FC<{
 	const [contentKey, setContentKey] = useState(0);
 
 	const editor = useEditor({
+		immediatelyRender: false,
 		extensions: [
 			Document,
 			Paragraph.configure({
@@ -184,11 +187,24 @@ export const Composer: FC<{
 
 	const Footer = () => {
 		const utils = api.useUtils();
+		const router = useRouter();
 
 		const { mutateAsync: createPost, isPending } =
 			api.post.createPost.useMutation({
-				onSuccess: () => {
-					utils.post.invalidate();
+				onSuccess: async () => {
+					editor?.commands.clearContent();
+
+					// Invalidate and refetch relevant queries
+					await utils.post.invalidate();
+
+					if (topicId) {
+						await utils.post.getTopicPostsById.invalidate();
+					} else {
+						await utils.post.getCollegePostsByCollegeSlug.invalidate();
+					}
+
+					// Force a re-render of the page
+					router.refresh();
 				}
 			});
 

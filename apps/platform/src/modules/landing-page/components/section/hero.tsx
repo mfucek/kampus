@@ -46,7 +46,7 @@ export const HeroSection = () => {
 			<Container>
 				<div className="flex flex-col items-center space-y-4 text-center">
 					<div className="flex flex-col items-center gap-6">
-						<h1 className="display-1">Dobrodošli na Kampus.hr</h1>
+						<h1 className="display-1">Dobrodošli na Referada.hr</h1>
 						<p className="max-w-[640px] text-neutral-strong">
 							Tvoj virtualni kampus za razmjenu znanja, iskustava i materijala.
 							Spojimo sve studente u Hrvatskoj!

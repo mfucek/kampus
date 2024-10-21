@@ -11,7 +11,7 @@ export const FeaturesSection = () => {
 			className="flex flex-col items-center py-20 bg-neutral-weak"
 		>
 			<Container wide>
-				<h2 className="display-2 text-center mb-12">Zašto Kampus.hr?</h2>
+				<h2 className="display-2 text-center mb-12">Zašto Referada.hr?</h2>
 				<div className="grid gap-2 md:grid-cols-3">
 					<Card>
 						<CardContent>

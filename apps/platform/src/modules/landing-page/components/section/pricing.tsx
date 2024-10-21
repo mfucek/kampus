@@ -55,7 +55,7 @@ export const PricingSection = () => {
 		>
 			<Container>
 				<div className="space-y-2">
-					<h2 className="display-2 text-center mb-4">Podrži Kampus.hr</h2>
+					<h2 className="display-2 text-center mb-4">Podrži Referada.hr</h2>
 					<p className="body-1 text-neutral-strong text-center">
 						Buraz, ova pretplata te dođe manje nego potrošiš na kavu. Podrži
 						stranicu i osiguraj si sve pogodnosti!

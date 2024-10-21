@@ -17,19 +17,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 	children
 }) => {
 	const [theme, setTheme] = useState<Theme>(() => {
-		// Check localStorage and system preference on initial render
+		// Check localStorage on initial render
 		if (typeof window !== 'undefined') {
 			const storedTheme = localStorage.getItem('theme') as Theme | null;
-			if (storedTheme) {
-				return storedTheme;
-			}
-			return window.matchMedia('(prefers-color-scheme: dark)').matches
-				? 'dark'
-				: 'light';
+			return storedTheme || 'light';
 		}
 		return 'light'; // Default for server-side rendering
 	});
-	const [canToggleTheme, setCanToggleTheme] = useState(false);
+	const [canToggleTheme, setCanToggleTheme] = useState(true);
 	const { data: account } = api.account.getAccount.useQuery();
 
 	useEffect(() => {
@@ -39,6 +34,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 			);
 		}
 	}, [account]);
+
+	useEffect(() => {
+		if (!canToggleTheme) {
+			setTheme('light');
+		}
+	}, [canToggleTheme]);
 
 	useEffect(() => {
 		if (theme === 'dark') {

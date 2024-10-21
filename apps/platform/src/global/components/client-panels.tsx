@@ -10,7 +10,7 @@ export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 			<PanelGroup autoSaveId="example" direction="horizontal">
 				<Panel
 					className="rounded-lg bg-section flex flex-col items-center"
-					style={{ overflow: 'hidden', overflowY: 'scroll' }}
+					style={{ overflow: 'hidden', overflowY: 'auto' }}
 				>
 					{children}
 				</Panel>

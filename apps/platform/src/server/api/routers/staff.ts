@@ -21,16 +21,17 @@ export const staffRouter = createTRPCRouter({
 				});
 			}
 
-			const staffs = await db.staff.findMany({
+			const staffs = await db.topic.findMany({
 				where: {
-					topic: {
-						collegeId: college.id
-					}
+					collegeId: college.id,
+					type: 'STAFF'
 				},
 				include: {
-					topic: {
-						include: {
-							college: true
+					college: true,
+					staff: true,
+					_count: {
+						select: {
+							Post: true
 						}
 					}
 				}
@@ -74,18 +75,14 @@ export const staffRouter = createTRPCRouter({
 			return staff;
 		}),
 
-	listBySubjectSlug: publicProcedure
-		.input(z.object({ subjectSlug: z.string(), collegeSlug: z.string() }))
+	listBySubjectId: publicProcedure
+		.input(z.object({ subjectId: z.string() }))
 		.query(async ({ input, ctx }) => {
 			const { db } = ctx;
 
 			const subject = await db.subject.findFirst({
 				where: {
-					topic: {
-						slug: input.subjectSlug,
-						type: 'SUBJECT',
-						college: { slug: input.collegeSlug }
-					}
+					topicId: input.subjectId
 				}
 			});
 
@@ -96,18 +93,22 @@ export const staffRouter = createTRPCRouter({
 				});
 			}
 
-			const staffs = await db.staff.findMany({
+			const staffs = await db.topic.findMany({
 				where: {
-					subjects: {
-						some: {
-							topicId: subject.topicId
+					type: 'STAFF',
+					staff: {
+						subjects: {
+							some: {
+								topicId: subject.topicId
+							}
 						}
 					}
 				},
 				include: {
-					topic: {
-						include: {
-							college: true
+					college: true,
+					_count: {
+						select: {
+							Post: true
 						}
 					}
 				}

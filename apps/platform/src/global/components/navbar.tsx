@@ -4,6 +4,7 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { useTranslation } from '@/utils/translations/use-translation';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
 
 export const Navbar = () => {
 	const { t } = useTranslation('hr');
@@ -13,6 +14,9 @@ export const Navbar = () => {
 	const handleSignOut = () => {
 		signOut();
 	};
+
+	const router = useRouter();
+	const collegeSlug = useParams().collegeSlug;
 
 	const Actions = () => {
 		if (isSignedIn) {
@@ -44,7 +48,17 @@ export const Navbar = () => {
 
 	return (
 		<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0">
-			<div className="title-3">Kampus.hr</div>
+			<Link href="/home">
+				<div className="flex flex-row gap-2 items-center">
+					<div className="title-3">Kampus.hr</div>
+					{collegeSlug && (
+						<>
+							<div className="title-3 text-neutral-strong">/</div>
+							<div className="title-3">{collegeSlug}</div>
+						</>
+					)}
+				</div>
+			</Link>
 			<div className="flex flex-row gap-4 items-center">
 				<Actions />
 			</div>

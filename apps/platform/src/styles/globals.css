@@ -69,7 +69,7 @@
 
 /* Clickable elements */
 .clickable {
-	@apply cursor-pointer transition-transform duration-300 hover:duration-100 hover:translate-y-[-2px] active:translate-y-[2px];
+	@apply cursor-pointer transition-transform duration-300 hover:duration-200 sm:hover:translate-y-[-2px] sm:active:translate-y-[1px];
 }
 
 /* Scrollbar styles */

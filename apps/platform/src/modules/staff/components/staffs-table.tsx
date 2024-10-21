@@ -7,34 +7,35 @@ import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
 
 type Staff = {
-	topic: {
+	slug: string;
+	college: {
 		slug: string;
-		college: {
-			slug: string;
-		};
+	};
+	_count: {
+		Post: number;
 	};
 };
 
 export const columns: ColumnDef<Staff>[] = [
 	{
-		accessorKey: 'topic.name',
+		accessorKey: 'name',
 		header: 'Ime'
 	},
 	{
 		id: 'actions-open',
 		cell: ({ row }) => {
 			const {
-				topic: {
-					slug: staffSlug,
-					college: { slug: collegeSlug }
-				}
+				slug: staffSlug,
+				college: { slug: collegeSlug },
+				_count: { Post: postCount }
 			} = row.original;
 
 			return (
 				<div className="flex flex-row gap-1 justify-end">
 					<Link href={`/${collegeSlug}/staff/${staffSlug}`}>
 						<Button theme="neutral" variant="solid-weak" size="sm">
-							<Icon icon="chat-single" />2 topics
+							<Icon icon="chat-single" />
+							{postCount} topics
 						</Button>
 					</Link>
 				</div>

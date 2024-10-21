@@ -3,7 +3,8 @@ import {
 	protectedProcedure,
 	publicProcedure
 } from '@/server/api/trpc';
-import { VoteType } from '@prisma/client';
+import { Prisma, VoteType } from '@prisma/client';
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 export const postRouter = createTRPCRouter({
@@ -102,7 +103,50 @@ export const postRouter = createTRPCRouter({
 				}
 			});
 
-			return posts;
+			let userId = null;
+			if (ctx.clerkUserId) {
+				const account = await db.account.findUnique({
+					where: {
+						clerkUserId: ctx.clerkUserId
+					},
+					include: {
+						user: true
+					}
+				});
+
+				userId = account?.user?.id;
+			}
+
+			const postsWithVotes = await Promise.all(
+				posts.map(async (post) => {
+					const votes = await db.vote.findMany({
+						where: {
+							postId: post.id
+						}
+					});
+
+					const likes = votes.filter(
+						(vote) => vote.type === VoteType.UP
+					).length;
+					const dislikes = votes.filter(
+						(vote) => vote.type === VoteType.DOWN
+					).length;
+
+					const userVote = votes.find((vote) => vote.userId === userId) ?? null;
+					console.log(userVote);
+
+					return {
+						...post,
+						votes: {
+							likes,
+							dislikes,
+							userVote
+						}
+					};
+				})
+			);
+
+			return postsWithVotes;
 		}),
 
 	createPost: protectedProcedure
@@ -134,5 +178,115 @@ export const postRouter = createTRPCRouter({
 					authorId: user.id
 				}
 			});
+
+			return post;
+		}),
+
+	deletePost: protectedProcedure
+		.input(z.object({ postId: z.string() }))
+		.mutation(async ({ input, ctx }) => {
+			const { db } = ctx;
+
+			const post = await db.post.findUnique({
+				where: {
+					id: input.postId
+				}
+			});
+
+			if (!post) {
+				throw new TRPCError({ code: 'NOT_FOUND', message: 'Post not found' });
+			}
+
+			if (post.authorId !== ctx.user.id) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+					message: 'You are not allowed to delete this post'
+				});
+			}
+
+			const replyCount = await db.post.count({
+				where: {
+					replyToId: input.postId
+				}
+			});
+
+			if (replyCount > 0) {
+				await db.post.update({
+					where: {
+						id: input.postId
+					},
+					data: {
+						body: Prisma.DbNull
+					}
+				});
+
+				return;
+			}
+
+			await db.vote.deleteMany({
+				where: {
+					postId: input.postId
+				}
+			});
+
+			await db.post.delete({
+				where: {
+					id: input.postId
+				}
+			});
+		}),
+
+	getPostById: publicProcedure
+		.input(z.object({ postId: z.string() }))
+		.query(async ({ input, ctx }) => {
+			const { db } = ctx;
+
+			const post = await db.post.findUnique({
+				where: {
+					id: input.postId
+				},
+				include: {
+					_count: {
+						select: {
+							replies: true
+						}
+					},
+					author: true
+				}
+			});
+
+			if (!post) {
+				throw new TRPCError({ code: 'NOT_FOUND', message: 'Post not found' });
+			}
+
+			let userId = null;
+			if (ctx.clerkUserId) {
+				const account = await db.account.findUnique({
+					where: {
+						clerkUserId: ctx.clerkUserId
+					},
+					include: {
+						user: true
+					}
+				});
+
+				userId = account?.user?.id;
+			}
+
+			const votes = await db.vote.findMany({
+				where: {
+					postId: post.id
+				}
+			});
+
+			const likes = votes.filter((vote) => vote.type === VoteType.UP).length;
+			const dislikes = votes.filter(
+				(vote) => vote.type === VoteType.DOWN
+			).length;
+
+			const userVote = votes.find((vote) => vote.userId === userId) ?? null;
+			console.log(userVote);
+
+			return { ...post, votes: { likes, dislikes, userVote } };
 		})
 });

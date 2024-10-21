@@ -3,9 +3,51 @@
 import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
+import { api } from '@/lib/trpc/react';
+import { useAuth, useClerk, useUser } from '@clerk/nextjs';
 import { Card, CardContent, CardHeader, CardTitle } from './Card';
 
 export const PricingSection = () => {
+	const { isLoaded } = useUser();
+	const { isSignedIn } = useAuth();
+	const { openSignIn } = useClerk();
+
+	const { data: subscriptionSessionData } =
+		api.stripe.getSubscriptionCheckoutURL.useQuery(void {}, {
+			enabled: isLoaded && isSignedIn
+		});
+
+	const { data: lifetimeSessionData } =
+		api.stripe.getLifetimeCheckoutURL.useQuery(void {}, {
+			enabled: isLoaded && isSignedIn
+		});
+
+	const handleGoToSubscriptionCheckoutSession = async () => {
+		if (!isSignedIn) {
+			openSignIn();
+			return;
+		}
+
+		const redirectURL = subscriptionSessionData?.redirectURL;
+
+		if (redirectURL) {
+			window.location.assign(redirectURL);
+		}
+	};
+
+	const handleGoToLifetimeCheckoutSession = async () => {
+		if (!isSignedIn) {
+			openSignIn();
+			return;
+		}
+
+		const redirectURL = lifetimeSessionData?.redirectURL;
+
+		if (redirectURL) {
+			window.location.assign(redirectURL);
+		}
+	};
+
 	return (
 		<section
 			id="pricing"
@@ -31,18 +73,31 @@ export const PricingSection = () => {
 							<ul className="mt-4 space-y-2">
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
-									Neograničen pristup svim materijalima
+									Neograničen pristup svim raspravama
 								</li>
-								<li className="flex items-center gap-2">
-									<Icon icon="checkmark" size={24} />2 AI sažetka po temi
+								<li className="flex items-center gap-2 text-neutral-medium">
+									<Icon
+										icon="checkmark"
+										size={24}
+										className="bg-neutral-medium"
+									/>
+									2 AI sažetka po temi
 								</li>
-								<li className="flex items-center gap-2">
-									<Icon icon="checkmark" size={24} />
+								<li className="flex items-center gap-2 text-neutral-medium">
+									<Icon
+										icon="checkmark"
+										size={24}
+										className="bg-neutral-medium"
+									/>
 									10 preuzimanja mjesecno
 								</li>
 							</ul>
 						</CardContent>
-						<Button variant={'outline'} className="w-full">
+						<Button
+							variant={'outline'}
+							className="w-full"
+							onClick={handleGoToSubscriptionCheckoutSession}
+						>
 							Odaberi
 						</Button>
 					</Card>
@@ -57,15 +112,23 @@ export const PricingSection = () => {
 							</div>
 							<ul className="mt-4 space-y-2">
 								<li className="flex items-center gap-2 text-neutral-medium">
-									<Icon icon="checkmark" size={24} />
+									<Icon
+										icon="checkmark"
+										size={24}
+										className="bg-neutral-medium"
+									/>
 									Pristup svim AI sažetcima
 								</li>
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
 									Supporter badge
 								</li>
-								<li className="flex items-center gap-2">
-									<Icon icon="checkmark" size={24} />
+								<li className="flex items-center gap-2 text-neutral-medium">
+									<Icon
+										icon="checkmark"
+										size={24}
+										className="bg-neutral-medium"
+									/>
 									30 preuzimanja mjesecno
 								</li>
 								<li className="flex items-center gap-2">
@@ -74,7 +137,12 @@ export const PricingSection = () => {
 								</li>
 							</ul>
 						</CardContent>
-						<Button className="w-full"> Odaberi </Button>
+						<Button
+							className="w-full"
+							onClick={handleGoToSubscriptionCheckoutSession}
+						>
+							Odaberi
+						</Button>
 					</Card>
 					<Card>
 						<CardContent>
@@ -92,11 +160,15 @@ export const PricingSection = () => {
 								</li>
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
-									Legenda badge
+									Make-your-own badge
 								</li>
 							</ul>
 						</CardContent>
-						<Button variant={'outline'} className="w-full">
+						<Button
+							variant={'outline'}
+							className="w-full"
+							onClick={handleGoToLifetimeCheckoutSession}
+						>
 							Odaberi
 						</Button>
 					</Card>

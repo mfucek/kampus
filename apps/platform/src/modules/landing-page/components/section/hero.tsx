@@ -42,7 +42,7 @@ export const HeroSection = () => {
 	};
 
 	return (
-		<section className="flex flex-col items-center py-40" id="hero">
+		<section className="flex flex-col items-center py-40 bg-section" id="hero">
 			<Container>
 				<div className="flex flex-col items-center space-y-4 text-center">
 					<div className="flex flex-col items-center gap-6">

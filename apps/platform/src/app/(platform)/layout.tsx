@@ -1,5 +1,5 @@
-import { ClientPanels } from '@/global/components/client-panels';
 import { Navbar } from '@/global/components/navbar';
+import { ClientPanels } from '@/modules/discussion-panel/components/client-panels';
 import { Suspense, type FC, type PropsWithChildren } from 'react';
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {

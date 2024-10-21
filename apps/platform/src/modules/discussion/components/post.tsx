@@ -9,8 +9,9 @@ import {
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
 import { api } from '@/lib/trpc/react';
+import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
 import { useAuth, useClerk } from '@clerk/nextjs';
-import { Vote, VoteType } from '@prisma/client';
+import { type Vote, VoteType } from '@prisma/client';
 import { Bold } from '@tiptap/extension-bold';
 import { Code } from '@tiptap/extension-code';
 import { Document } from '@tiptap/extension-document';
@@ -19,11 +20,11 @@ import { Link } from '@tiptap/extension-link';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Strike } from '@tiptap/extension-strike';
 import { Text } from '@tiptap/extension-text';
-import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
+import { EditorContent, type JSONContent, useEditor } from '@tiptap/react';
 import { formatDistance } from 'date-fns';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FC } from 'react';
+import { type FC } from 'react';
 
 const reactionToTheme = (reaction: VoteType | null) => {
 	switch (reaction) {
@@ -224,7 +225,7 @@ export const Post: FC<{
 }> = ({ content, threadDepth = [], votes, author, postId, createdAt }) => {
 	const Actions = () => {
 		const { data: userId } = api.account.getUser.useQuery();
-
+		const { setPostId } = usePostId();
 		const router = useRouter();
 		const utils = api.useUtils();
 		const { mutateAsync: deletePost } = api.post.deletePost.useMutation({
@@ -248,7 +249,7 @@ export const Post: FC<{
 		};
 
 		const handleReply = () => {
-			window.location.search = `?postId=${postId}`;
+			setPostId(postId);
 		};
 
 		return (

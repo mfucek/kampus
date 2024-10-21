@@ -38,8 +38,10 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 									key={post.id}
 									postId={post.id}
 									content={post.body as JSONContent}
+									createdAt={post.createdAt}
 									votes={post.votes}
 									author={{
+										id: post.author.id,
 										displayName: post.author.displayName,
 										imageUrl: post.author.imageUrl ?? undefined
 									}}

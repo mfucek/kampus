@@ -11,5 +11,11 @@ export const accountRouter = createTRPCRouter({
 		});
 
 		return account;
+	}),
+
+	getUser: protectedProcedure.query(async ({ ctx }) => {
+		const { user } = ctx;
+
+		return user.id;
 	})
 });

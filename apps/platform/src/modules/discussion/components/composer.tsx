@@ -14,7 +14,7 @@ import { Strike } from '@tiptap/extension-strike';
 import { Text } from '@tiptap/extension-text';
 import { Editor, EditorContent, JSONContent, useEditor } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
-import { FC, useCallback, useState } from 'react';
+import { FC, KeyboardEvent, useCallback, useState } from 'react';
 
 const EditorToolbar = ({ editor }: { editor: Editor }) => {
 	const setLink = useCallback(() => {
@@ -130,7 +130,7 @@ const MAX_CHARACTERS = 2000;
 
 export const Composer: FC<{
 	collegeId: string;
-	collegeSlug: string; // Add this prop
+	collegeSlug: string;
 	topicId?: string;
 	replyToId?: string;
 }> = ({ collegeId, collegeSlug, topicId, replyToId }) => {
@@ -185,29 +185,38 @@ export const Composer: FC<{
 		}
 	});
 
+	const utils = api.useUtils();
+	const router = useRouter();
+
+	const { mutateAsync: createPost, isPending } =
+		api.post.createPost.useMutation({
+			onSuccess: async () => {
+				editor?.commands.clearContent();
+
+				// Invalidate and refetch relevant queries
+				await utils.post.invalidate();
+				await utils.post.getTopicPostsById.invalidate();
+				await utils.post.getCollegePostsByCollegeSlug.invalidate();
+
+				// Force a re-render of the page
+				router.refresh();
+			}
+		});
+
+	const handleSubmit = () => {
+		if (remaining >= 0 && !isPending) {
+			createPost({ body: value, collegeId, topicId, replyToId });
+		}
+	};
+
+	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+		if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+			e.preventDefault();
+			handleSubmit();
+		}
+	};
+
 	const Footer = () => {
-		const utils = api.useUtils();
-		const router = useRouter();
-
-		const { mutateAsync: createPost, isPending } =
-			api.post.createPost.useMutation({
-				onSuccess: async () => {
-					editor?.commands.clearContent();
-
-					// Invalidate and refetch relevant queries
-					await utils.post.invalidate();
-
-					if (topicId) {
-						await utils.post.getTopicPostsById.invalidate();
-					} else {
-						await utils.post.getCollegePostsByCollegeSlug.invalidate();
-					}
-
-					// Force a re-render of the page
-					router.refresh();
-				}
-			});
-
 		return (
 			<div className="flex flex-row gap-2 items-center">
 				<p
@@ -222,9 +231,7 @@ export const Composer: FC<{
 					variant="solid"
 					size="sm"
 					disabled={remaining < 0}
-					onClick={() =>
-						createPost({ body: value, collegeId, topicId, replyToId })
-					}
+					onClick={handleSubmit}
 					loading={isPending}
 				>
 					Objavi
@@ -233,12 +240,8 @@ export const Composer: FC<{
 		);
 	};
 
-	// const memoizedPreviewPost = useMemo(() => {
-	// 	return <Post content={value} key={contentKey} />;
-	// }, [value, contentKey]);
-
 	return (
-		<div className="flex flex-col gap-3">
+		<div className="flex flex-col gap-3" onKeyDown={handleKeyDown}>
 			<div className="flex flex-col gap-3 pt-3 border border-neutral-medium rounded-lg overflow-hidden">
 				<div className="flex flex-col">
 					{editor && (

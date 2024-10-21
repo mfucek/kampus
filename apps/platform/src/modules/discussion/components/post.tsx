@@ -20,7 +20,9 @@ import { Paragraph } from '@tiptap/extension-paragraph';
 import { Strike } from '@tiptap/extension-strike';
 import { Text } from '@tiptap/extension-text';
 import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
+import { formatDistance } from 'date-fns';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
 const reactionToTheme = (reaction: VoteType | null) => {
@@ -119,7 +121,7 @@ const Reactions: FC<{
 			openSignIn();
 			return;
 		}
-		if (reaction) {
+		if (reaction === VoteType.UP) {
 			createVote.mutateAsync({ postId, type: null });
 			return;
 		}
@@ -131,7 +133,7 @@ const Reactions: FC<{
 			openSignIn();
 			return;
 		}
-		if (reaction) {
+		if (reaction === VoteType.DOWN) {
 			createVote.mutateAsync({ postId, type: null });
 			return;
 		}
@@ -205,9 +207,11 @@ type ThreadDepth = 'past' | 'last' | 'middle';
 const threadDepth: ThreadDepth[] = ['middle', 'past', 'last', 'middle'];
 
 export const Post: FC<{
-	content: JSONContent;
+	content: JSONContent | null;
 	threadDepth?: ThreadDepth[];
+	createdAt: Date;
 	author: {
+		id: string;
 		displayName: string;
 		imageUrl?: string;
 	};
@@ -217,11 +221,55 @@ export const Post: FC<{
 		userVote: Vote | null;
 	};
 	postId: string;
-}> = ({ content, threadDepth = [], votes, author, postId }) => {
+}> = ({ content, threadDepth = [], votes, author, postId, createdAt }) => {
 	const Actions = () => {
+		const { data: userId } = api.account.getUser.useQuery();
+
+		const router = useRouter();
+		const utils = api.useUtils();
+		const { mutateAsync: deletePost } = api.post.deletePost.useMutation({
+			onSuccess: async () => {
+				// Invalidate and refetch relevant queries
+				await utils.post.invalidate();
+				await utils.post.getTopicPostsById.invalidate();
+				await utils.post.getCollegePostsByCollegeSlug.invalidate();
+
+				// Force a re-render of the page
+				router.refresh();
+			}
+		});
+
+		const handleDeletePost = () => {
+			deletePost({ postId });
+		};
+
+		const handleShare = () => {
+			navigator.clipboard.writeText(window.location.href);
+		};
+
+		const handleReply = () => {
+			window.location.search = `?postId=${postId}`;
+		};
+
 		return (
 			<div className="flex flex-row gap-2">
 				<Reactions votes={votes} postId={postId} />
+				<Button theme="neutral" variant="ghost" size="xs" onClick={handleReply}>
+					Reply
+				</Button>
+				<Button theme="neutral" variant="ghost" size="xs" onClick={handleShare}>
+					Share
+				</Button>
+				{userId === author.id && (
+					<Button
+						theme="neutral"
+						variant="ghost"
+						size="xs"
+						onClick={handleDeletePost}
+					>
+						Delete
+					</Button>
+				)}
 			</div>
 		);
 	};
@@ -269,10 +317,16 @@ export const Post: FC<{
 			<div className="flex flex-col gap-2 pb-6">
 				<div className="flex flex-row gap-2 h-6 items-center">
 					<span className="caption">{author.displayName}</span>
-					<span className="body-3 text-neutral-strong">6h ago</span>
+					<span className="body-3 text-neutral-strong">
+						{formatDistance(createdAt, new Date(), { addSuffix: true })}
+					</span>
 				</div>
-				{/* <p className="body-2">{content}</p> */}
-				{editor && <EditorContent editor={editor} />}
+				{!content && (
+					<p className="body-2 text-neutral-strong">
+						[ This post has been deleted ]
+					</p>
+				)}
+				{content && editor && <EditorContent editor={editor} />}
 				<Actions />
 			</div>
 		);

@@ -37,7 +37,7 @@ export const Navbar = () => {
 					className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
 					onClick={() => scrollToSection('pricing')}
 				>
-					Cijena
+					Članstvo
 				</a>
 				<a
 					className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"

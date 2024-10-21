@@ -21,27 +21,21 @@ export const subjectRouter = createTRPCRouter({
 				});
 			}
 
-			const subjects = await db.subject.findMany({
+			const subjects = await db.topic.findMany({
 				where: {
-					topic: {
-						collegeId: college.id
-					}
+					collegeId: college.id,
+					type: 'SUBJECT'
 				},
 				include: {
-					topic: {
-						include: {
-							college: true
+					college: true,
+					subject: true,
+					_count: {
+						select: {
+							Post: true
 						}
 					}
 				}
 			});
-
-			if (!subjects) {
-				throw new TRPCError({
-					code: 'NOT_FOUND',
-					message: 'Subjects not found'
-				});
-			}
 
 			return subjects;
 		}),

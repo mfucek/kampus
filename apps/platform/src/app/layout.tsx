@@ -1,8 +1,7 @@
 import '@/styles/colors.css';
 import '@/styles/globals.css';
-import '@/styles/typography.css';
-
 import '@/styles/tiptap.css';
+import '@/styles/typography.css';
 
 import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
@@ -10,6 +9,7 @@ import { type Metadata } from 'next';
 import { TooltipProvider } from '@/lib/shadcn/ui/tooltip';
 import { TRPCReactProvider } from '@/lib/trpc/react';
 import { ClerkProvider } from '@clerk/nextjs';
+import { ThemeProvider } from '../modules/theme/providers/theme-provider';
 
 export const metadata: Metadata = {
 	title: 'Create T3 App',
@@ -21,11 +21,13 @@ export default function RootLayout({
 	children
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="en" className={`${GeistSans.variable}`}>
-			<body className="overflow-hidden">
+		<html lang="en" className={GeistSans.variable}>
+			<body className="overflow-hidden bg-background" suppressHydrationWarning>
 				<ClerkProvider>
 					<TRPCReactProvider>
-						<TooltipProvider>{children}</TooltipProvider>
+						<ThemeProvider>
+							<TooltipProvider>{children}</TooltipProvider>
+						</ThemeProvider>
 					</TRPCReactProvider>
 				</ClerkProvider>
 			</body>

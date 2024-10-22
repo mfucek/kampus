@@ -10,7 +10,7 @@ export const SettingsSection: FC<
 	const Info = () => {
 		return (
 			<div className="flex flex-col gap-2 @sm:w-[240px]">
-				<p className="title-2 text-neutral">{title}</p>
+				<p className="title-1 text-neutral">{title}</p>
 				<p className="body-2 text-neutral-strong">{description}</p>
 			</div>
 		);

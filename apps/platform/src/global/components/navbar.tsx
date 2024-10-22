@@ -60,7 +60,7 @@ export const Navbar = () => {
 		<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0">
 			<Link href="/home">
 				<div className="flex flex-row gap-2 items-center">
-					<div className="title-3">Referada.hr</div>
+					<div className="title-3">Kampus.hr</div>
 					{collegeSlug && (
 						<>
 							<div className="title-3 text-neutral-strong">/</div>

@@ -1,14 +1,15 @@
+import {
+	product_id_monthly_cheap_dev,
+	product_id_monthly_cheap_prod,
+	product_id_monthly_pro_dev,
+	product_id_monthly_pro_prod
+} from '@/constants/stripe';
 import { env } from '@/env';
 import { db } from '@/server/db';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
-
-const product_id_monthly_cheap_dev = 'prod_R2IRacoRkJEH0b';
-const product_id_monthly_pro_dev = 'prod_R2IR2R6UG5SbxF';
-const product_id_monthly_cheap_prod = 'prod_R2I2ZJvfkXF365';
-const product_id_monthly_pro_prod = 'prod_R2I3hyNhOmEgJn';
 
 const getPackageFromProductId = (productId: string) => {
 	if (

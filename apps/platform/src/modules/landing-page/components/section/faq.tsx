@@ -15,18 +15,18 @@ export const FaqSection = () => {
 				</h2>
 				<Accordion type="multiple">
 					<AccordionItem value="item-1">
-						<AccordionTrigger>Je li Referada.hr besplatna?</AccordionTrigger>
+						<AccordionTrigger>Je li Kampus.hr besplatna?</AccordionTrigger>
 						<AccordionContent>
-							Da, osnovno korištenje Referada.hr je potpuno besplatno. Premium
+							Da, osnovno korištenje Kampus.hr je potpuno besplatno. Premium
 							članstvo donosi dodatne pogodnosti, ali nije obavezno.
 						</AccordionContent>
 					</AccordionItem>
 					<AccordionItem value="item-2">
 						<AccordionTrigger>
-							Mogu li koristiti Referada.hr ako nisam student?
+							Mogu li koristiti Kampus.hr ako nisam student?
 						</AccordionTrigger>
 						<AccordionContent>
-							Referada.hr je primarno namijenjen studentima, ali dobrodošli su i
+							Kampus.hr je primarno namijenjen studentima, ali dobrodošli su i
 							budući studenti, kao i oni koji su nedavno završili studij.
 						</AccordionContent>
 					</AccordionItem>

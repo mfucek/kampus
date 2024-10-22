@@ -4,7 +4,7 @@ export const BenefitsSection = () => {
 	return (
 		<section id="how-it-works" className="py-20 flex flex-col items-center">
 			<Container>
-				<h2 className="display-2 text-center mb-12">Kako radi Referada.hr?</h2>
+				<h2 className="display-2 text-center mb-12">Kako radi Kampus.hr?</h2>
 				<div className="grid gap-6 lg:grid-cols-3 lg:gap-12">
 					<div className="flex flex-col items-center text-center">
 						<div className="flex flex-row md:flex-col items-center text-center mb-2 gap-2">

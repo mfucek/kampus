@@ -15,9 +15,6 @@ export const env = createEnv({
 		CLERK_WEBHOOK_SECRET: z.string(),
 		STRIPE_SECRET_KEY: z.string(),
 		STRIPE_WEBHOOK_SECRET: z.string(),
-		STRIPE_PRICE_MONTHLY_TIER_1: z.string(),
-		STRIPE_PRICE_MONTHLY_TIER_2: z.string(),
-		STRIPE_PRICE_LIFETIME: z.string(),
 		URL: z.string()
 	},
 
@@ -44,9 +41,6 @@ export const env = createEnv({
 			process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 		STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
 		STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-		STRIPE_PRICE_MONTHLY_TIER_1: process.env.STRIPE_PRICE_MONTHLY_TIER_1,
-		STRIPE_PRICE_MONTHLY_TIER_2: process.env.STRIPE_PRICE_MONTHLY_TIER_2,
-		STRIPE_PRICE_LIFETIME: process.env.STRIPE_PRICE_LIFETIME,
 		URL: process.env.URL
 	},
 	/**

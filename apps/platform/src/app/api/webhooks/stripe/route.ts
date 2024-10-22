@@ -5,6 +5,29 @@ import Stripe from 'stripe';
 
 const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
 
+const product_id_monthly_cheap_dev = 'prod_R2IRacoRkJEH0b';
+const product_id_monthly_pro_dev = 'prod_R2IR2R6UG5SbxF';
+const product_id_monthly_cheap_prod = 'prod_R2I2ZJvfkXF365';
+const product_id_monthly_pro_prod = 'prod_R2I3hyNhOmEgJn';
+
+const getPackageFromProductId = (productId: string) => {
+	if (
+		productId === product_id_monthly_cheap_dev ||
+		productId === product_id_monthly_cheap_prod
+	) {
+		return 'MONTHLY_CHEAP';
+	}
+
+	if (
+		productId === product_id_monthly_pro_dev ||
+		productId === product_id_monthly_pro_prod
+	) {
+		return 'MONTHLY_PRO';
+	}
+
+	return 'MONTHLY_CHEAP';
+};
+
 export async function POST(request: Request) {
 	try {
 		const body = await request.text();
@@ -19,13 +42,18 @@ export async function POST(request: Request) {
 		switch (event.type) {
 			case 'customer.subscription.created': {
 				const subscription = event.data.object;
+
+				const package_plan = getPackageFromProductId(
+					subscription.items.data[0]!.plan.product as string
+				);
+
 				await db.account.update({
 					where: {
 						clerkUserId: subscription.metadata.userId
 					},
 					data: {
 						status: 'ACTIVE',
-						package: 'MONTHLY_CHEAP',
+						package: package_plan,
 						stripeCustomerId: subscription.customer as string
 					}
 				});

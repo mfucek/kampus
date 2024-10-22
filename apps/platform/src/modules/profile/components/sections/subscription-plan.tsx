@@ -129,6 +129,15 @@ export const SubscriptionPlanSection = () => {
 		);
 	};
 
+	const RemainingTimeInfo = () => {
+		return (
+			<p className="caption text-center text-accent">
+				Ovaj ti plan nastavlja biti aktivan do{' '}
+				{formatDate(account?.activeUntil ?? new Date(), 'dd.MM.yyyy.')}
+			</p>
+		);
+	};
+
 	const CancelledSubscription = () => {
 		return (
 			<SettingsSubSection
@@ -138,28 +147,38 @@ export const SubscriptionPlanSection = () => {
 				<div className="flex flex-col gap-2 p-4 bg-accent-weak rounded-xl">
 					<p className="title-3">Sponzor</p>
 					<SponsorPlanDescription />
-					<p className="caption text-center text-accent">
-						Ovaj plan nastavlja biti aktivan do{' '}
-						{formatDate(account?.activeUntil ?? new Date(), 'dd.MM.yyyy.')}.
-					</p>
+					{planName === 'Sponzor' && <RemainingTimeInfo />}
 					<Button
-						onClick={handleResumeSubscription}
-						variant="solid"
+						onClick={
+							planName === 'Sponzor'
+								? handleResumeSubscription
+								: handleGoToSubscriptionCheckoutSessionCheap
+						}
+						variant={planName === 'Sponzor' ? 'solid' : 'outline'}
 						theme="accent"
 					>
-						Nastavi s Sponzor pretplatom
+						{planName === 'Sponzor'
+							? 'Nastavi s Sponzor pretplatom'
+							: 'Pretplati se na Sponzor plan'}
 					</Button>
 				</div>
 
 				<div className="flex flex-col gap-2 p-4 bg-accent-weak rounded-xl">
 					<p className="title-3">Legenda</p>
 					<LegendPlanDescription />
+					{planName === 'Legenda' && <RemainingTimeInfo />}
 					<Button
-						onClick={handleGoToSubscriptionCheckoutSessionPro}
-						variant="solid"
+						onClick={
+							planName === 'Legenda'
+								? handleResumeSubscription
+								: handleGoToSubscriptionCheckoutSessionPro
+						}
+						variant={planName === 'Legenda' ? 'solid' : 'outline'}
 						theme="accent"
 					>
-						Nastavi s Legenda pretplatom
+						{planName === 'Legenda'
+							? 'Nastavi s Legenda pretplatom'
+							: 'Pretplati se na Legenda plan'}
 					</Button>
 				</div>
 			</SettingsSubSection>

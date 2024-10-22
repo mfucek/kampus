@@ -15,7 +15,7 @@ export const CollegeGrid = () => {
 	return (
 		<Container>
 			<div className="py-10 text-center">
-				<h3 className="mb-10">Koji faks trazis?</h3>
+				<h3 className="mb-10">Koji faks tražiš?</h3>
 				<Input
 					type="text"
 					placeholder="Unesi fakultet"

@@ -42,7 +42,8 @@ export async function POST(request: Request) {
 						},
 						data: {
 							status: 'ACTIVE',
-							package: 'LIFETIME'
+							package: 'LIFETIME',
+							activeUntil: null
 						}
 					});
 					break;
@@ -58,7 +59,8 @@ export async function POST(request: Request) {
 							clerkUserId: subscription.metadata.userId
 						},
 						data: {
-							status: 'CANCELLED'
+							status: 'CANCELLED',
+							activeUntil: new Date(subscription.current_period_end * 1000)
 						}
 					});
 				} else {
@@ -67,7 +69,8 @@ export async function POST(request: Request) {
 							clerkUserId: subscription.metadata.userId
 						},
 						data: {
-							status: 'ACTIVE'
+							status: 'ACTIVE',
+							activeUntil: null
 						}
 					});
 				}
@@ -85,7 +88,8 @@ export async function POST(request: Request) {
 					data: {
 						status: 'INACTIVE',
 						package: null,
-						stripeCustomerId: null
+						stripeCustomerId: null,
+						activeUntil: null
 					}
 				});
 

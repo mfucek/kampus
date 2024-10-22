@@ -141,3 +141,11 @@ p {
 .tiptap .element-link {
 	@apply text-accent underline;
 }
+
+ul {
+	@apply list-disc list-inside;
+}
+
+li {
+	@apply mb-2 body-2;
+}

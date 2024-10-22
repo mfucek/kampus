@@ -1,43 +1,56 @@
 import { env } from '@/env';
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
+import { PackageType } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import Stripe from 'stripe';
 import { z } from 'zod';
 
 export const stripeRouter = createTRPCRouter({
-	getSubscriptionCheckoutURL: protectedProcedure.query(async ({ ctx }) => {
-		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-			apiVersion: '2024-09-30.acacia'
-		});
-
-		const url = env.URL;
-
-		const checkoutSession = await stripe.checkout.sessions.create({
-			mode: 'subscription',
-			line_items: [
-				{
-					price: env.STRIPE_PRICE_MONTHLY_TIER_1,
-					quantity: 1
-				}
-			],
-			success_url: `${url}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-			cancel_url: `${url}/`,
-			subscription_data: {
-				metadata: {
-					userId: ctx.auth.userId
-				}
-			}
-		});
-
-		if (!checkoutSession.url) {
-			throw new TRPCError({
-				code: 'BAD_REQUEST',
-				message: 'Could not create checkout message'
+	getSubscriptionCheckoutURL: protectedProcedure
+		.input(z.object({ package: z.nativeEnum(PackageType) }))
+		.query(async ({ ctx, input }) => {
+			const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+				apiVersion: '2024-09-30.acacia'
 			});
-		}
 
-		return { redirectURL: checkoutSession.url };
-	}),
+			const url = env.URL;
+
+			let price_key = '';
+			switch (input.package) {
+				case 'MONTHLY_CHEAP':
+					price_key = env.STRIPE_PRICE_MONTHLY_TIER_1;
+					break;
+				case 'MONTHLY_PRO':
+					price_key = env.STRIPE_PRICE_MONTHLY_TIER_2;
+					break;
+			}
+
+			const checkoutSession = await stripe.checkout.sessions.create({
+				mode: 'subscription',
+				line_items: [
+					{
+						price: price_key,
+						quantity: 1
+					}
+				],
+				success_url: `${url}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+				cancel_url: `${url}/`,
+				subscription_data: {
+					metadata: {
+						userId: ctx.auth.userId
+					}
+				}
+			});
+
+			if (!checkoutSession.url) {
+				throw new TRPCError({
+					code: 'BAD_REQUEST',
+					message: 'Could not create checkout message'
+				});
+			}
+
+			return { redirectURL: checkoutSession.url };
+		}),
 
 	getLifetimeCheckoutURL: protectedProcedure.query(async ({ ctx }) => {
 		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
@@ -68,47 +81,81 @@ export const stripeRouter = createTRPCRouter({
 		return { redirectURL: checkoutSession.url };
 	}),
 
-	cancelSubscription: protectedProcedure
-		.input(z.object({ stripeCustomerId: z.string() }))
-		.mutation(async ({ ctx, input }) => {
-			const { stripeCustomerId } = input;
+	cancelSubscription: protectedProcedure.mutation(async ({ ctx }) => {
+		const { clerkUserId, db } = ctx;
 
-			const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-				apiVersion: '2024-09-30.acacia'
-			});
+		const account = await db.account.findUnique({
+			where: {
+				clerkUserId
+			}
+		});
 
-			const subscription = await stripe.subscriptions.list({
-				customer: stripeCustomerId
-			});
+		if (!account?.stripeCustomerId) return;
 
-			const subscriptionId = subscription.data[0]!.id;
+		const stripeCustomerId = account.stripeCustomerId;
 
-			await stripe.subscriptions.update(subscriptionId, {
-				cancel_at_period_end: true
-			});
+		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+			apiVersion: '2024-09-30.acacia'
+		});
 
-			return { success: true };
-		}),
+		const subscription = await stripe.subscriptions.list({
+			customer: stripeCustomerId
+		});
 
-	resumeSubscription: protectedProcedure
-		.input(z.object({ stripeCustomerId: z.string() }))
-		.mutation(async ({ ctx, input }) => {
-			const { stripeCustomerId } = input;
+		const subscriptionId = subscription.data[0]!.id;
 
-			const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-				apiVersion: '2024-09-30.acacia'
-			});
+		await stripe.subscriptions.update(subscriptionId, {
+			cancel_at_period_end: true
+		});
 
-			const subscription = await stripe.subscriptions.list({
-				customer: stripeCustomerId
-			});
+		// await db.account.update({
+		// 	where: {
+		// 		clerkUserId
+		// 	},
+		// 	data: {
+		// 		status: 'CANCELLED'
+		// 	}
+		// });
 
-			const subscriptionId = subscription.data[0]!.id;
+		return { success: true };
+	}),
 
-			await stripe.subscriptions.update(subscriptionId, {
-				cancel_at_period_end: false
-			});
+	resumeSubscription: protectedProcedure.mutation(async ({ ctx }) => {
+		const { clerkUserId, db } = ctx;
 
-			return { success: true };
-		})
+		const account = await db.account.findUnique({
+			where: {
+				clerkUserId
+			}
+		});
+
+		if (!account?.stripeCustomerId) return;
+
+		const stripeCustomerId = account.stripeCustomerId;
+
+		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+			apiVersion: '2024-09-30.acacia'
+		});
+
+		const subscription = await stripe.subscriptions.list({
+			customer: stripeCustomerId
+		});
+
+		const subscriptionId = subscription.data[0]!.id;
+
+		await stripe.subscriptions.update(subscriptionId, {
+			cancel_at_period_end: false
+		});
+
+		// await db.account.update({
+		// 	where: {
+		// 		clerkUserId
+		// 	},
+		// 	data: {
+		// 		status: 'ACTIVE'
+		// 	}
+		// });
+
+		return { success: true };
+	})
 });

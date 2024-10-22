@@ -3,34 +3,14 @@
 import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { api } from '@/lib/trpc/react';
-import { useAuth, useClerk, useUser } from '@clerk/nextjs';
+import { useAuth, useClerk } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from './Card';
 
 export const PricingSection = () => {
-	const { isLoaded } = useUser();
+	const router = useRouter();
 	const { isSignedIn } = useAuth();
 	const { openSignIn } = useClerk();
-
-	const { data: subscriptionSessionDataCheap } =
-		api.stripe.getSubscriptionCheckoutURL.useQuery(
-			{ package: 'MONTHLY_CHEAP' },
-			{
-				enabled: isLoaded && isSignedIn
-			}
-		);
-	const { data: subscriptionSessionDataPro } =
-		api.stripe.getSubscriptionCheckoutURL.useQuery(
-			{ package: 'MONTHLY_PRO' },
-			{
-				enabled: isLoaded && isSignedIn
-			}
-		);
-
-	const { data: lifetimeSessionData } =
-		api.stripe.getLifetimeCheckoutURL.useQuery(void {}, {
-			enabled: isLoaded && isSignedIn
-		});
 
 	const handleGoToSubscriptionCheckoutSessionCheap = async () => {
 		if (!isSignedIn) {
@@ -38,11 +18,7 @@ export const PricingSection = () => {
 			return;
 		}
 
-		const redirectURL = subscriptionSessionDataCheap?.redirectURL;
-
-		if (redirectURL) {
-			window.location.assign(redirectURL);
-		}
+		router.push('/profile#subscription-plan');
 	};
 
 	const handleGoToSubscriptionCheckoutSessionPro = async () => {
@@ -51,24 +27,7 @@ export const PricingSection = () => {
 			return;
 		}
 
-		const redirectURL = subscriptionSessionDataPro?.redirectURL;
-
-		if (redirectURL) {
-			window.location.assign(redirectURL);
-		}
-	};
-
-	const handleGoToLifetimeCheckoutSession = async () => {
-		if (!isSignedIn) {
-			openSignIn();
-			return;
-		}
-
-		const redirectURL = lifetimeSessionData?.redirectURL;
-
-		if (redirectURL) {
-			window.location.assign(redirectURL);
-		}
+		router.push('/profile#subscription-plan');
 	};
 
 	const handleCreateAccount = async () => {

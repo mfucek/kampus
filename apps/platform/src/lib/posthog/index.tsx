@@ -1,0 +1,49 @@
+'use client';
+
+import { usePathname, useSearchParams } from 'next/navigation';
+import posthog from 'posthog-js';
+import { PostHogProvider } from 'posthog-js/react';
+import { FC, PropsWithChildren } from 'react';
+
+const posthog_key = 'phc_ja1RmkJI17SjamUr0rDmMmjyw8GlezvHlYm05tGCDFv';
+const posthog_host = 'https://us.i.posthog.com';
+
+if (typeof window !== 'undefined') {
+	posthog.init(posthog_key, {
+		api_host: posthog_host,
+		capture_pageview: true // Disable automatic pageview capture, as we capture manually
+	});
+}
+
+export const useCaptureEvent = () => {
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+
+	if (process.env.NODE_ENV === 'development' || typeof window === 'undefined') {
+		return {
+			capture: (...params: any[]) => {
+				console.log('[Capture]', params);
+			}
+		};
+	}
+
+	const capture = (name: string, properties: Record<string, any>) => {
+		if (window && pathname) {
+			let url = window.origin + pathname;
+			if (searchParams && searchParams.toString()) {
+				url = url + `?${searchParams.toString()}`;
+			}
+			posthog.capture(name, { url, ...properties });
+		}
+	};
+
+	return { capture };
+};
+
+export const AnalyticsProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
+	if (process.env.NODE_ENV === 'development') {
+		return <>{children}</>;
+	}
+
+	return <PostHogProvider client={posthog}>{children}</PostHogProvider>;
+};

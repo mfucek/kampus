@@ -12,9 +12,14 @@ import { Link } from '@tiptap/extension-link';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Strike } from '@tiptap/extension-strike';
 import { Text } from '@tiptap/extension-text';
-import { Editor, EditorContent, JSONContent, useEditor } from '@tiptap/react';
+import {
+	type Editor,
+	EditorContent,
+	type JSONContent,
+	useEditor
+} from '@tiptap/react';
 import { useRouter } from 'next/navigation';
-import { FC, KeyboardEvent, useCallback, useState } from 'react';
+import { type FC, type KeyboardEvent, useCallback, useState } from 'react';
 
 const EditorToolbar = ({ editor }: { editor: Editor }) => {
 	const setLink = useCallback(() => {
@@ -133,7 +138,7 @@ export const Composer: FC<{
 	collegeSlug: string;
 	topicId?: string;
 	replyToId?: string;
-}> = ({ collegeId, collegeSlug, topicId, replyToId }) => {
+}> = ({ collegeId, topicId, replyToId }) => {
 	const [textValue, setTextValue] = useState('');
 	const [value, setValue] = useState<JSONContent>({
 		type: 'doc',
@@ -196,7 +201,7 @@ export const Composer: FC<{
 				// Invalidate and refetch relevant queries
 				await utils.post.invalidate();
 				await utils.post.getTopicPostsById.invalidate();
-				await utils.post.getCollegePostsByCollegeSlug.invalidate();
+				await utils.post.listPostsByCollegeSlug.invalidate();
 
 				// Force a re-render of the page
 				router.refresh();
@@ -241,7 +246,7 @@ export const Composer: FC<{
 	};
 
 	return (
-		<div className="flex flex-col gap-3" onKeyDown={handleKeyDown}>
+		<div className="flex flex-col gap-3 w-full" onKeyDown={handleKeyDown}>
 			<div className="flex flex-col gap-3 pt-3 border border-neutral-medium rounded-lg overflow-hidden">
 				<div className="flex flex-col">
 					{editor && (

@@ -7,7 +7,6 @@ import { Post } from '@/modules/discussion/components/post';
 import { MaterialsTable } from '@/modules/materials/components/materials-table';
 import { StaffsTable } from '@/modules/staff/components/staffs-table';
 import { SummarySection } from '@/modules/summary/components/summary-section';
-import { JSONContent } from '@tiptap/react';
 import type { FC } from 'react';
 
 export const SubjectPage: FC<{
@@ -23,7 +22,7 @@ export const SubjectPage: FC<{
 		subjectId: subject.id
 	});
 
-	const posts = await api.post.getTopicPostsById({
+	const fullPosts = await api.post.getTopicPostsById({
 		topicId: subject.id
 	});
 
@@ -49,18 +48,11 @@ export const SubjectPage: FC<{
 							topicId={subject.id}
 						/>
 						<div className="flex flex-col">
-							{posts.map((post) => (
+							{fullPosts.map((fullPost) => (
 								<Post
-									key={post.id}
-									postId={post.id}
-									content={post.body as JSONContent}
-									votes={post.votes}
-									createdAt={post.createdAt}
-									author={{
-										id: post.author.id,
-										displayName: post.author.displayName,
-										imageUrl: post.author.imageUrl ?? undefined
-									}}
+									key={fullPost.post.id}
+									fullPost={fullPost}
+									depthInfo={[]}
 								/>
 							))}
 						</div>

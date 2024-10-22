@@ -13,6 +13,8 @@ export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 					<Panel
 						className="rounded-lg bg-section flex flex-col items-center"
 						style={{ overflow: 'hidden', overflowY: 'auto' }}
+						order={0}
+						id="main-panel"
 					>
 						{children}
 					</Panel>

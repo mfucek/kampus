@@ -10,6 +10,9 @@ const config = {
 		remotePatterns: [
 			{
 				hostname: 'picsum.photos'
+			},
+			{
+				hostname: '*'
 			}
 		]
 	}

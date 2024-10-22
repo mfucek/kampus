@@ -55,7 +55,7 @@ export const Post: FC<{
 		const numberOfReplies = post._count.replies;
 
 		return (
-			<div className="flex flex-row gap-2">
+			<div className="flex flex-row gap-2" suppressHydrationWarning>
 				<Reactions votes={votes} postId={post.id} />
 				<Button theme="neutral" variant="ghost" size="xs" onClick={handleReply}>
 					{numberOfReplies ? `${numberOfReplies} replies` : 'Reply'}

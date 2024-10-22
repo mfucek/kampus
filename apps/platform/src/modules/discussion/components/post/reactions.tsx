@@ -99,7 +99,7 @@ export const Reactions: FC<{
 			>
 				<Icon icon="like" size={18} />
 			</Button>
-			<Tooltip>
+			<Tooltip defaultOpen={true}>
 				<TooltipTrigger>
 					<span
 						className={cn(
@@ -115,8 +115,10 @@ export const Reactions: FC<{
 						{count}
 					</span>
 				</TooltipTrigger>
-				<TooltipContent>
-					<span className="body-2">{count}</span>
+				<TooltipContent side="top">
+					<span className="body-2">
+						{likes} / {dislikes}
+					</span>
 				</TooltipContent>
 			</Tooltip>
 			<Button

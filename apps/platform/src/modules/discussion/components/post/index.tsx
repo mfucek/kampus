@@ -114,7 +114,9 @@ export const Post: FC<{
 									</span>
 								)}
 							</TooltipTrigger>
-							<TooltipContent>Ovaj korisnik podrzava platfromu!</TooltipContent>
+							<TooltipContent side="top">
+								Ovaj korisnik podrzava platfromu!
+							</TooltipContent>
 						</Tooltip>
 					)}
 					<span className="body-3 text-neutral-strong">

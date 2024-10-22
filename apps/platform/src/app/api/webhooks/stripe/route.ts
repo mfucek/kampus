@@ -146,8 +146,5 @@ export async function POST(request: Request) {
 	}
 }
 
-export const config = {
-	api: {
-		bodyParser: false
-	}
-};
+export const dynamic = 'force-dynamic';
+export const runtime = 'edge';

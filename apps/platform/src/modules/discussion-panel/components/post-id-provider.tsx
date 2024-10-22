@@ -21,6 +21,8 @@ export const PostIdProvider: React.FC<React.PropsWithChildren> = ({
 		const postIdFromParams = searchParams.get('postId');
 		if (postIdFromParams) {
 			setPostIdState(postIdFromParams);
+		} else {
+			setPostIdState(null);
 		}
 	}, [searchParams]);
 

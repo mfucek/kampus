@@ -7,7 +7,7 @@ export const Container: FC<
 	return (
 		<div
 			className={cn(
-				'w-full px-2 md:px-10',
+				'w-full px-2 md:px-10 @container',
 				wide ? 'max-w-[1200px]' : 'max-w-[800px]',
 				className
 			)}

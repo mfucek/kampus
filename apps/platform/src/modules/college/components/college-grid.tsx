@@ -21,7 +21,7 @@ export const CollegeGrid = () => {
 					onChange={(e) => setSearch(e.target.value)}
 				/>
 			</div>
-			<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2">
+			<div className="grid grid-cols-1 @xs:grid-cols-2 @sm:grid-cols-3 gap-2">
 				{data
 					?.filter(
 						(college) =>

@@ -93,8 +93,15 @@ export default {
 			md: '768px',
 			lg: '1024px',
 			xl: '1280px'
+		},
+		containers: {
+			xs: '400px',
+			sm: '640px',
+			md: '768px',
+			lg: '1024px',
+			xl: '1280px'
 		}
 	},
-	plugins: [],
+	plugins: [require('@tailwindcss/container-queries')],
 	darkMode: ['class', 'class']
 } satisfies Config;

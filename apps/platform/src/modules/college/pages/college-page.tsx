@@ -6,7 +6,6 @@ import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
 import { StaffsTable } from '@/modules/staff/components/staffs-table';
 import { SubjectsTable } from '@/modules/subject/components/subjects-table';
-import { JSONContent } from '@tiptap/react';
 import type { FC } from 'react';
 
 export const CollegePage: FC<{ collegeSlug: string }> = async ({
@@ -17,7 +16,7 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 	const subjects = await api.subject.listByCollegeSlug({ collegeSlug });
 	const staffs = await api.staff.listByCollegeSlug({ collegeSlug });
 
-	const posts = await api.post.getCollegePostsByCollegeSlug({ collegeSlug });
+	const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
 
 	return (
 		<Container className="flex flex-col gap-10 py-10">
@@ -33,18 +32,11 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 					<div className="flex flex-col gap-10">
 						<Composer collegeId={college.id} collegeSlug={collegeSlug} />
 						<div className="flex flex-col">
-							{posts.map((post) => (
+							{fullPosts.map((fullPost) => (
 								<Post
-									key={post.id}
-									postId={post.id}
-									content={post.body as JSONContent}
-									createdAt={post.createdAt}
-									votes={post.votes}
-									author={{
-										id: post.author.id,
-										displayName: post.author.displayName,
-										imageUrl: post.author.imageUrl ?? undefined
-									}}
+									key={fullPost.post.id}
+									fullPost={fullPost}
+									depthInfo={[]}
 								/>
 							))}
 						</div>

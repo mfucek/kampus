@@ -1,0 +1,156 @@
+'use client';
+
+import { Button } from '@/lib/shadcn/ui/button';
+import { api } from '@/lib/trpc/react';
+import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
+import { FullPost } from '@/server/api/routers/post';
+import { Bold } from '@tiptap/extension-bold';
+import { Code } from '@tiptap/extension-code';
+import { Document } from '@tiptap/extension-document';
+import { Italic } from '@tiptap/extension-italic';
+import { Link } from '@tiptap/extension-link';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Strike } from '@tiptap/extension-strike';
+import { Text } from '@tiptap/extension-text';
+import { EditorContent, useEditor } from '@tiptap/react';
+import { formatDistance } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import { type FC } from 'react';
+import { PostThreading } from './post-threading';
+import { Reactions } from './reactions';
+
+export const Post: FC<{
+	fullPost: FullPost;
+	depthInfo: number[];
+	previousThreadDepth?: number[];
+	nextThreadDepth?: number[];
+}> = ({
+	fullPost: { post, votes },
+	depthInfo,
+	previousThreadDepth,
+	nextThreadDepth
+}) => {
+	const Actions = () => {
+		const { data: userId } = api.account.getUser.useQuery();
+		const { setPostId } = usePostId();
+		const router = useRouter();
+		const utils = api.useUtils();
+		const { mutateAsync: deletePost } = api.post.deletePost.useMutation({
+			onSuccess: async () => {
+				// Invalidate and refetch relevant queries
+				await utils.post.invalidate();
+				await utils.post.getTopicPostsById.invalidate();
+				await utils.post.listPostsByCollegeSlug.invalidate();
+
+				// Force a re-render of the page
+				router.refresh();
+			}
+		});
+
+		const handleDeletePost = () => {
+			deletePost({ postId: post.id });
+		};
+
+		const handleShare = () => {
+			navigator.clipboard.writeText(window.location.href);
+		};
+
+		const handleReply = () => {
+			setPostId(post.id);
+		};
+
+		return (
+			<div className="flex flex-row gap-2">
+				<Reactions votes={votes} postId={post.id} />
+				<Button theme="neutral" variant="ghost" size="xs" onClick={handleReply}>
+					Reply
+				</Button>
+				<Button theme="neutral" variant="ghost" size="xs" onClick={handleShare}>
+					Share
+				</Button>
+				{userId === post.author.id && (
+					<Button
+						theme="neutral"
+						variant="ghost"
+						size="xs"
+						onClick={handleDeletePost}
+					>
+						Delete
+					</Button>
+				)}
+			</div>
+		);
+	};
+
+	const editor = useEditor({
+		shouldRerenderOnTransaction: true,
+		immediatelyRender: false,
+		editable: false,
+		content: post.body,
+		extensions: [
+			Document,
+			Paragraph.configure({
+				HTMLAttributes: {
+					class: 'element-paragraph'
+				}
+			}),
+			Text,
+			Bold,
+			Italic,
+			Strike,
+			Code.configure({
+				HTMLAttributes: {
+					class: 'element-code'
+				}
+			}),
+			Link.configure({
+				openOnClick: false,
+				autolink: true,
+				defaultProtocol: 'https',
+				protocols: ['http', 'https'],
+				HTMLAttributes: {
+					class: 'element-link'
+				}
+			})
+		],
+		editorProps: {
+			attributes: {
+				class: 'flex flex-col gap-1'
+			}
+		}
+	});
+
+	const PostBody = () => {
+		return (
+			<div className="flex flex-col gap-2 pb-6 w-full">
+				<div className="flex flex-row gap-2 h-6 items-center">
+					<span className="caption">{post.author.displayName}</span>
+					<span className="body-3 text-neutral-strong">
+						{formatDistance(post.createdAt, new Date(), {
+							addSuffix: true
+						})}
+					</span>
+				</div>
+				{!post.body && (
+					<p className="body-2 text-neutral-strong">
+						[ This post has been deleted ]
+					</p>
+				)}
+				{post.body && editor && <EditorContent editor={editor} />}
+				<Actions />
+			</div>
+		);
+	};
+
+	return (
+		<div className="flex flex-row gap-2 w-full">
+			<PostThreading
+				threadDepth={depthInfo}
+				imageUrl={post.author.imageUrl}
+				previousThreadDepth={previousThreadDepth}
+				nextThreadDepth={nextThreadDepth}
+			/>
+			<PostBody />
+		</div>
+	);
+};

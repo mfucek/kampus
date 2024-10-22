@@ -12,9 +12,9 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '../modules/theme/providers/theme-provider';
 
 export const metadata: Metadata = {
-	title: 'Referada.hr | Platforma za sve studente',
+	title: 'Kampus.hr | Platforma za sve studente',
 	description:
-		'Referada.hr je mjesto za diskusije, dijeljenje materijala i povezivanje s kolegama.',
+		'Kampus.hr je mjesto za diskusije, dijeljenje materijala i povezivanje s kolegama.',
 	icons: [{ rel: 'icon', url: '/favicon.png' }]
 };
 

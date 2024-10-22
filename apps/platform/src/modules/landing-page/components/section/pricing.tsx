@@ -12,23 +12,46 @@ export const PricingSection = () => {
 	const { isSignedIn } = useAuth();
 	const { openSignIn } = useClerk();
 
-	const { data: subscriptionSessionData } =
-		api.stripe.getSubscriptionCheckoutURL.useQuery(void {}, {
-			enabled: isLoaded && isSignedIn
-		});
+	const { data: subscriptionSessionDataCheap } =
+		api.stripe.getSubscriptionCheckoutURL.useQuery(
+			{ package: 'MONTHLY_CHEAP' },
+			{
+				enabled: isLoaded && isSignedIn
+			}
+		);
+	const { data: subscriptionSessionDataPro } =
+		api.stripe.getSubscriptionCheckoutURL.useQuery(
+			{ package: 'MONTHLY_PRO' },
+			{
+				enabled: isLoaded && isSignedIn
+			}
+		);
 
 	const { data: lifetimeSessionData } =
 		api.stripe.getLifetimeCheckoutURL.useQuery(void {}, {
 			enabled: isLoaded && isSignedIn
 		});
 
-	const handleGoToSubscriptionCheckoutSession = async () => {
+	const handleGoToSubscriptionCheckoutSessionCheap = async () => {
 		if (!isSignedIn) {
 			openSignIn();
 			return;
 		}
 
-		const redirectURL = subscriptionSessionData?.redirectURL;
+		const redirectURL = subscriptionSessionDataCheap?.redirectURL;
+
+		if (redirectURL) {
+			window.location.assign(redirectURL);
+		}
+	};
+
+	const handleGoToSubscriptionCheckoutSessionPro = async () => {
+		if (!isSignedIn) {
+			openSignIn();
+			return;
+		}
+
+		const redirectURL = subscriptionSessionDataPro?.redirectURL;
 
 		if (redirectURL) {
 			window.location.assign(redirectURL);
@@ -46,6 +69,10 @@ export const PricingSection = () => {
 		if (redirectURL) {
 			window.location.assign(redirectURL);
 		}
+	};
+
+	const handleCreateAccount = async () => {
+		await openSignIn();
 	};
 
 	return (
@@ -96,9 +123,9 @@ export const PricingSection = () => {
 						<Button
 							variant={'outline'}
 							className="w-full"
-							onClick={handleGoToSubscriptionCheckoutSession}
+							onClick={handleCreateAccount}
 						>
-							Odaberi
+							Kreiraj račun
 						</Button>
 					</Card>
 					<Card>
@@ -139,9 +166,9 @@ export const PricingSection = () => {
 						</CardContent>
 						<Button
 							className="w-full"
-							onClick={handleGoToSubscriptionCheckoutSession}
+							onClick={handleGoToSubscriptionCheckoutSessionCheap}
 						>
-							Odaberi
+							Pretplati se
 						</Button>
 					</Card>
 					<Card>
@@ -167,9 +194,9 @@ export const PricingSection = () => {
 						<Button
 							variant={'outline'}
 							className="w-full"
-							onClick={handleGoToLifetimeCheckoutSession}
+							onClick={handleGoToSubscriptionCheckoutSessionPro}
 						>
-							Odaberi
+							Pretplati se
 						</Button>
 					</Card>
 				</div>

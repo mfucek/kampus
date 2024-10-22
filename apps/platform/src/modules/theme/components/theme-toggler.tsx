@@ -15,7 +15,7 @@ export const ThemeToggler = () => {
 
 	const handleToggleTheme = () => {
 		if (!canToggleTheme) {
-			window.location.href = '/#pricing';
+			window.location.href = '/profile#subscription-plan';
 			return;
 		}
 		toggleTheme();

@@ -22,8 +22,9 @@ model Account {
 
   stripeCustomerId String?
 
-  package PackageType?
-  status  AccountStatus @default(INACTIVE)
+  package     PackageType?
+  status      AccountStatus @default(INACTIVE)
+  activeUntil DateTime?
 
   user User?
 }

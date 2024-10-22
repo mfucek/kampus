@@ -99,7 +99,7 @@ export const Reactions: FC<{
 			>
 				<Icon icon="like" size={18} />
 			</Button>
-			<Tooltip defaultOpen={true}>
+			<Tooltip>
 				<TooltipTrigger>
 					<span
 						className={cn(

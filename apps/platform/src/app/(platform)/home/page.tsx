@@ -1,12 +1,7 @@
-import { Container } from '@/global/components/container';
-import { CollegeGrid } from '@/modules/college/components/college-grid';
+import { CollegeBrowserPage } from '@/modules/college/pages/college-browser';
 
 const Page = () => {
-	return (
-		<Container>
-			<CollegeGrid />
-		</Container>
-	);
+	return <CollegeBrowserPage />;
 };
 
 export default Page;

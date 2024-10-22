@@ -1,9 +1,11 @@
 'use client';
 
 import { Button } from '@/lib/shadcn/ui/button';
+import { api } from '@/lib/trpc/react';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
 import { useTranslation } from '@/utils/translations/use-translation';
 import { useAuth, useClerk } from '@clerk/nextjs';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 
@@ -18,20 +20,23 @@ export const Navbar = () => {
 
 	const router = useRouter();
 	const collegeSlug = useParams().collegeSlug;
+	const { data: user } = api.account.getUser.useQuery();
 
 	const Actions = () => {
 		if (isSignedIn) {
 			return (
 				<>
 					<ThemeToggler />
-					<Link href="/home">
-						<Button theme="accent" size="md" variant="solid">
-							Profile
-						</Button>
-					</Link>
 					<Button onClick={handleSignOut} size="md" variant="outline">
 						Sign Out
 					</Button>
+					<Link href="/profile">
+						<div className="w-10 h-10 rounded-full border-neutral-weak bg-neutral-weak relative overflow-hidden clickable">
+							{user?.imageUrl && (
+								<Image src={user.imageUrl} alt="User" fill sizes="40px" />
+							)}
+						</div>
+					</Link>
 				</>
 			);
 		}

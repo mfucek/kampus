@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 export const accountRouter = createTRPCRouter({
@@ -17,5 +18,43 @@ export const accountRouter = createTRPCRouter({
 		const { user } = ctx;
 
 		return user;
-	})
+	}),
+
+	updateDisplayName: protectedProcedure
+		.input(
+			z.object({
+				displayName: z.string()
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { db, user } = ctx;
+
+			await db.user.update({
+				where: {
+					id: user.id!
+				},
+				data: {
+					displayName: input.displayName
+				}
+			});
+
+			return;
+		}),
+
+	updateBadge: protectedProcedure
+		.input(z.object({ badge: z.string().nullable() }))
+		.mutation(async ({ ctx, input }) => {
+			const { db, user } = ctx;
+
+			await db.user.updateMany({
+				where: {
+					id: user.id!
+				},
+				data: {
+					badge: input.badge || null
+				}
+			});
+
+			return { success: true };
+		})
 });

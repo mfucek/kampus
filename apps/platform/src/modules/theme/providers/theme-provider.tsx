@@ -30,9 +30,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 	useEffect(() => {
 		if (account) {
 			setCanToggleTheme(
-				['MONTHLY_CHEAP', 'MONTHLY_MEDIUM', 'LIFETIME'].includes(
-					account.package!
-				)
+				['MONTHLY_CHEAP', 'MONTHLY_PRO', 'LIFETIME'].includes(account.package!)
 			);
 		}
 	}, [account]);

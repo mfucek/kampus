@@ -281,7 +281,8 @@ export const postRouter = createTRPCRouter({
 							updatedAt: post.author.updatedAt,
 							displayName: post.author.displayName,
 							imageUrl: post.author.imageUrl,
-							accountId: post.author.accountId
+							accountId: post.author.accountId,
+							badge: post.author.badge
 						},
 						_count: {
 							replies: post._count.replies
@@ -314,6 +315,7 @@ export type RecursivePost = {
 			displayName: string;
 			imageUrl: string | null;
 			accountId: string;
+			badge: string | null;
 		};
 		_count: {
 			replies: number;
@@ -340,6 +342,7 @@ export type FullPost = {
 			displayName: string;
 			imageUrl: string | null;
 			accountId: string;
+			badge: string | null;
 		};
 		_count: {
 			replies: number;

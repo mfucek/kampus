@@ -96,7 +96,8 @@ const icons = {
 	user: '/assets/icons/user.svg',
 	users: '/assets/icons/users.svg',
 	'visibility-off': '/assets/icons/visibility-off.svg',
-	visibility: '/assets/icons/visibility.svg'
+	visibility: '/assets/icons/visibility.svg',
+	crown: '/assets/icons/crown.svg'
 };
 
 export type IconName = keyof typeof icons;

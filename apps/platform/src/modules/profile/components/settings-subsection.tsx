@@ -2,7 +2,7 @@ import type { FC, PropsWithChildren } from 'react';
 
 export const SettingsSubSection: FC<
 	PropsWithChildren & {
-		title: string;
+		title: string | React.ReactNode;
 		description?: string;
 	}
 > = ({ children, title, description }) => {

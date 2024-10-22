@@ -24,7 +24,7 @@ export const Post: FC<{
 	nextThreadDepth
 }) => {
 	const Actions = () => {
-		const { data: userId } = api.account.getUser.useQuery();
+		const { data: user } = api.account.getUser.useQuery();
 		const { setPostId } = usePostId();
 		const router = useRouter();
 		const utils = api.useUtils();
@@ -63,7 +63,7 @@ export const Post: FC<{
 				<Button theme="neutral" variant="ghost" size="xs" onClick={handleShare}>
 					Share
 				</Button>
-				{userId === post.author.id && (
+				{user?.id === post.author.id && (
 					<Button
 						theme="neutral"
 						variant="ghost"

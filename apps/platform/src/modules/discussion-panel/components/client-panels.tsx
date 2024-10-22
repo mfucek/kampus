@@ -10,14 +10,14 @@ import {
 	DrawerHeader,
 	DrawerTitle
 } from '@/lib/shadcn/ui/drawer';
-import { useMediaQuery } from '@/utils/useMediaQuery';
+import { useIsMobile } from '@/utils/useMediaQuery';
 import { type PropsWithChildren } from 'react';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ThreadContent } from '../layouts/thread-content';
 import { usePostId } from './post-id-provider';
 
 export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
-	const isMobile = useMediaQuery('(max-width: 768px)');
+	const { isMobile } = useIsMobile();
 
 	const { postId, setPostId } = usePostId();
 

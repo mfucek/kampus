@@ -17,7 +17,7 @@ export const AccountInfoSection = () => {
 				<p className="body-3 text-neutral-strong">User: {user?.id}</p>
 				<p className="body-3 text-neutral-strong">Status: {account?.status}</p>
 			</div>
-			<Button variant="outline" onClick={() => signOut()}>
+			<Button variant="solid-weak" onClick={() => signOut()}>
 				Log out
 			</Button>
 		</>

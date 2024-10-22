@@ -19,7 +19,7 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 	const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
 
 	return (
-		<Container className="flex flex-col gap-10 py-10">
+		<Container className="flex flex-col gap-10 py-10 h-full">
 			<PageHeader collegeSlug={collegeSlug} collegeName={college.name} />
 
 			<Tabs defaultValue="discussion">

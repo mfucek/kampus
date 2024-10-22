@@ -20,7 +20,7 @@ export const Navbar = () => {
 		};
 
 		return (
-			<nav className="flex gap-4 sm:gap-6">
+			<nav className="hidden md:flex gap-4 sm:gap-6">
 				<a
 					className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
 					onClick={() => scrollToSection('features')}

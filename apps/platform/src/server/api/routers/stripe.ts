@@ -1,7 +1,7 @@
 import {
 	price_id_lifetime_dev,
-	product_id_monthly_cheap_dev,
-	product_id_monthly_pro_dev
+	price_id_monthly_cheap_dev,
+	price_id_monthly_pro_dev
 } from '@/constants/stripe';
 import { env } from '@/env';
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
@@ -23,10 +23,10 @@ export const stripeRouter = createTRPCRouter({
 			let price_key = '';
 			switch (input.package) {
 				case 'MONTHLY_CHEAP':
-					price_key = product_id_monthly_cheap_dev;
+					price_key = price_id_monthly_cheap_dev;
 					break;
 				case 'MONTHLY_PRO':
-					price_key = product_id_monthly_pro_dev;
+					price_key = price_id_monthly_pro_dev;
 					break;
 			}
 

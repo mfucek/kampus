@@ -6,6 +6,7 @@ import '@/styles/typography.css';
 import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
 
+import { AnalyticsProvider } from '@/lib/posthog';
 import { TooltipProvider } from '@/lib/shadcn/ui/tooltip';
 import { TRPCReactProvider } from '@/lib/trpc/react';
 import { ClerkProvider } from '@clerk/nextjs';
@@ -26,9 +27,11 @@ export default function RootLayout({
 			<body className="overflow-hidden bg-background" suppressHydrationWarning>
 				<ClerkProvider>
 					<TRPCReactProvider>
-						<ThemeProvider>
-							<TooltipProvider>{children}</TooltipProvider>
-						</ThemeProvider>
+						<AnalyticsProvider>
+							<ThemeProvider>
+								<TooltipProvider>{children}</TooltipProvider>
+							</ThemeProvider>
+						</AnalyticsProvider>
 					</TRPCReactProvider>
 				</ClerkProvider>
 			</body>

@@ -49,6 +49,8 @@ model User {
   displayName String
   imageUrl    String?
 
+  badge String? // Make sure this line is present
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

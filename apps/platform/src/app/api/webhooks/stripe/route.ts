@@ -54,7 +54,12 @@ export async function POST(request: Request) {
 					data: {
 						status: 'ACTIVE',
 						package: package_plan,
-						stripeCustomerId: subscription.customer as string
+						stripeCustomerId: subscription.customer as string,
+						user: {
+							update: {
+								badge: package_plan === 'MONTHLY_PRO' ? 'Legenda' : 'Sponzor'
+							}
+						}
 					}
 				});
 				break;
@@ -117,7 +122,12 @@ export async function POST(request: Request) {
 						status: 'INACTIVE',
 						package: null,
 						stripeCustomerId: null,
-						activeUntil: null
+						activeUntil: null,
+						user: {
+							update: {
+								badge: null
+							}
+						}
 					}
 				});
 

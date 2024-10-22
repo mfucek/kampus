@@ -9,11 +9,9 @@ export default {
 				sans: ['var(--font-geist-sans)', ...fontFamily.sans]
 			},
 			colors: {
-				section: {
-					DEFAULT: 'var(--color-section)',
-					strong: 'var(--color-section-strong)'
-				},
+				section: 'var(--color-section)',
 				background: 'var(--color-background)',
+				foreground: 'var(--color-foreground)',
 				accent: {
 					DEFAULT: 'var(--color-accent-default)',
 					strong: 'var(--color-accent-strong)',

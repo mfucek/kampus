@@ -24,7 +24,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="en" className={GeistSans.variable}>
-			<body className="overflow-hidden bg-background" suppressHydrationWarning>
+			<body className="bg-background min-h-screen">
 				<ClerkProvider>
 					<TRPCReactProvider>
 						<AnalyticsProvider>

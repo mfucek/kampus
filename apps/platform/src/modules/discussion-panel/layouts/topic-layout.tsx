@@ -39,30 +39,34 @@ export const TopicLayout = () => {
 
 		return (
 			<>
-				<Post key={fullPost.post.id} fullPost={fullPost} depthInfo={[]} />
-				<Composer
-					collegeId={fullPost.post.collegeId}
-					collegeSlug={''} // @TODO fix this
-					topicId={fullPost.post.topicId ?? undefined}
-					replyToId={fullPost.post.id}
-				/>
+				<div className="flex flex-col w-full gap-10">
+					<Post key={fullPost.post.id} fullPost={fullPost} depthInfo={[]} />
+					<Composer
+						collegeId={fullPost.post.collegeId}
+						collegeSlug={''} // @TODO fix this
+						topicId={fullPost.post.topicId ?? undefined}
+						replyToId={fullPost.post.id}
+					/>
 
-				{unpackedThread.map((fullPost, index) => {
-					return (
-						<Fragment key={fullPost.post.id}>
-							<Post
-								fullPost={fullPost}
-								depthInfo={fullPost.depthInfo}
-								previousThreadDepth={
-									unpackedThread[index - 1]?.depthInfo ?? undefined
-								}
-								nextThreadDepth={
-									unpackedThread[index + 1]?.depthInfo ?? undefined
-								}
-							/>
-						</Fragment>
-					);
-				})}
+					<div className="flex flex-col w-full">
+						{unpackedThread.map((fullPost, index) => {
+							return (
+								<Fragment key={fullPost.post.id}>
+									<Post
+										fullPost={fullPost}
+										depthInfo={fullPost.depthInfo}
+										previousThreadDepth={
+											unpackedThread[index - 1]?.depthInfo ?? undefined
+										}
+										nextThreadDepth={
+											unpackedThread[index + 1]?.depthInfo ?? undefined
+										}
+									/>
+								</Fragment>
+							);
+						})}
+					</div>
+				</div>
 			</>
 		);
 	};

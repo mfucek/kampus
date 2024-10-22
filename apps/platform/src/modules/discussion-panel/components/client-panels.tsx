@@ -11,6 +11,7 @@ import {
 	DrawerTitle
 } from '@/lib/shadcn/ui/drawer';
 import { useIsMobile } from '@/utils/useMediaQuery';
+import { useRouter } from 'next/navigation';
 import { type PropsWithChildren } from 'react';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ThreadContent } from '../layouts/thread-content';
@@ -20,6 +21,7 @@ export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 	const { isMobile } = useIsMobile();
 
 	const { postId, setPostId } = usePostId();
+	const router = useRouter();
 
 	if (isMobile) {
 		return (
@@ -35,6 +37,11 @@ export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 								This action cannot be undone.
 							</DrawerDescription>
 						</DrawerHeader>
+						<div className="absolute left-3 top-3">
+							<Button variant="ghost" iconOnly onClick={() => router.back()}>
+								<Icon icon="arrow-left" />
+							</Button>
+						</div>
 						<div className="w-full h-full overflow-y-scroll">
 							<ThreadContent />
 						</div>

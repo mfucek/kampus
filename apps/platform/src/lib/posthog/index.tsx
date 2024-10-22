@@ -8,7 +8,9 @@ import { FC, PropsWithChildren } from 'react';
 const posthog_key = 'phc_ja1RmkJI17SjamUr0rDmMmjyw8GlezvHlYm05tGCDFv';
 const posthog_host = 'https://us.i.posthog.com';
 
-if (typeof window !== 'undefined') {
+const isProduction = process.env.NODE_ENV !== 'development';
+
+if (typeof window !== 'undefined' && isProduction) {
 	posthog.init(posthog_key, {
 		api_host: posthog_host,
 		capture_pageview: true // Disable automatic pageview capture, as we capture manually
@@ -19,7 +21,7 @@ export const useCaptureEvent = () => {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	if (process.env.NODE_ENV === 'development' || typeof window === 'undefined') {
+	if (!isProduction || typeof window === 'undefined') {
 		return {
 			capture: (...params: any[]) => {
 				console.log('[Capture]', params);
@@ -41,7 +43,7 @@ export const useCaptureEvent = () => {
 };
 
 export const AnalyticsProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
-	if (process.env.NODE_ENV === 'development') {
+	if (!isProduction) {
 		return <>{children}</>;
 	}
 

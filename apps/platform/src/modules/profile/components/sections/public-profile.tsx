@@ -59,7 +59,7 @@ export const PublicProfileSection = () => {
 					</div>
 					<div className="flex flex-col gap-2">
 						<div>
-							<Button variant="outline">Upload image</Button>
+							<Button variant="solid-weak">Upload image</Button>
 						</div>
 						<p className="body-2 text-neutral-strong">
 							Max file size: 10MB, JPG, PNG
@@ -77,7 +77,7 @@ export const PublicProfileSection = () => {
 						value={displayName}
 						onChange={(e) => setDisplayName(e.target.value)}
 					/>
-					<Button variant="outline" onClick={handleUpdateDisplayName}>
+					<Button variant="solid-weak" onClick={handleUpdateDisplayName}>
 						Save
 					</Button>
 				</div>
@@ -101,7 +101,7 @@ export const PublicProfileSection = () => {
 						disabled={!isLegendPlan}
 					/>
 					<Button
-						variant="outline"
+						variant="solid-weak"
 						onClick={handleUpdateBadge}
 						disabled={!isLegendPlan}
 					>

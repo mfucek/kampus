@@ -27,7 +27,12 @@ export const Navbar = () => {
 			return (
 				<>
 					<ThemeToggler />
-					<Button onClick={handleSignOut} size="md" variant="outline">
+					<Button
+						onClick={handleSignOut}
+						size="md"
+						variant="outline"
+						className="hidden md:block"
+					>
 						Sign Out
 					</Button>
 					<Link href="/profile">

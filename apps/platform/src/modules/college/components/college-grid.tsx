@@ -1,6 +1,7 @@
 'use client';
 
 import { Container } from '@/global/components/container';
+import { Input } from '@/lib/shadcn/ui/input';
 import { api } from '@/lib/trpc/react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -14,8 +15,8 @@ export const CollegeGrid = () => {
 	return (
 		<Container>
 			<div className="py-10 text-center">
-				<h3>Koji faks trazis?</h3>
-				<input
+				<h3 className="mb-10">Koji faks trazis?</h3>
+				<Input
 					type="text"
 					placeholder="Unesi fakultet"
 					onChange={(e) => setSearch(e.target.value)}

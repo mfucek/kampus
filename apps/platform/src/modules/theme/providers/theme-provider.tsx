@@ -32,6 +32,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 			setCanToggleTheme(
 				['MONTHLY_CHEAP', 'MONTHLY_PRO', 'LIFETIME'].includes(account.package!)
 			);
+		} else {
+			setCanToggleTheme(false);
 		}
 	}, [account]);
 

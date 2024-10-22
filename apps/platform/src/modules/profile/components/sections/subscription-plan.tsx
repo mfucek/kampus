@@ -121,7 +121,7 @@ export const SubscriptionPlanSection = () => {
 				<Button
 					onClick={handleCancelSubscription}
 					theme="danger"
-					variant="outline"
+					variant="solid-weak"
 				>
 					Zaustavi pretplatu
 				</Button>
@@ -154,7 +154,7 @@ export const SubscriptionPlanSection = () => {
 								? handleResumeSubscription
 								: handleGoToSubscriptionCheckoutSessionCheap
 						}
-						variant={planName === 'Sponzor' ? 'solid' : 'outline'}
+						variant={planName === 'Sponzor' ? 'solid' : 'solid-weak'}
 						theme="accent"
 					>
 						{planName === 'Sponzor'
@@ -173,7 +173,7 @@ export const SubscriptionPlanSection = () => {
 								? handleResumeSubscription
 								: handleGoToSubscriptionCheckoutSessionPro
 						}
-						variant={planName === 'Legenda' ? 'solid' : 'outline'}
+						variant={planName === 'Legenda' ? 'solid' : 'solid-weak'}
 						theme="accent"
 					>
 						{planName === 'Legenda'

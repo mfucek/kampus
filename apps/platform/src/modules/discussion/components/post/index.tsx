@@ -52,11 +52,13 @@ export const Post: FC<{
 			setPostId(post.id);
 		};
 
+		const numberOfReplies = post._count.replies;
+
 		return (
 			<div className="flex flex-row gap-2">
 				<Reactions votes={votes} postId={post.id} />
 				<Button theme="neutral" variant="ghost" size="xs" onClick={handleReply}>
-					Reply
+					{numberOfReplies ? `${numberOfReplies} replies` : 'Reply'}
 				</Button>
 				<Button theme="neutral" variant="ghost" size="xs" onClick={handleShare}>
 					Share

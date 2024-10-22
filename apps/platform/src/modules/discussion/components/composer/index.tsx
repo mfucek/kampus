@@ -3,15 +3,8 @@
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
+import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
-import { Bold } from '@tiptap/extension-bold';
-import { Code } from '@tiptap/extension-code';
-import { Document } from '@tiptap/extension-document';
-import { Italic } from '@tiptap/extension-italic';
-import { Link } from '@tiptap/extension-link';
-import { Paragraph } from '@tiptap/extension-paragraph';
-import { Strike } from '@tiptap/extension-strike';
-import { Text } from '@tiptap/extension-text';
 import {
 	type Editor,
 	EditorContent,
@@ -151,32 +144,7 @@ export const Composer: FC<{
 
 	const editor = useEditor({
 		immediatelyRender: false,
-		extensions: [
-			Document,
-			Paragraph.configure({
-				HTMLAttributes: {
-					class: 'element-paragraph'
-				}
-			}),
-			Text,
-			Bold,
-			Italic,
-			Strike,
-			Code.configure({
-				HTMLAttributes: {
-					class: 'element-code'
-				}
-			}),
-			Link.configure({
-				openOnClick: false,
-				autolink: true,
-				defaultProtocol: 'https',
-				protocols: ['http', 'https'],
-				HTMLAttributes: {
-					class: 'element-link'
-				}
-			})
-		],
+		extensions: tiptapExtensions,
 		content: value,
 		editorProps: {
 			attributes: {

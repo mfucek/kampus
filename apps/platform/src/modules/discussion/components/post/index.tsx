@@ -29,6 +29,10 @@ export const Post: FC<{
 	previousThreadDepth,
 	nextThreadDepth
 }) => {
+	const { data: imageUrl } = api.account.getUserProfilePictureUrl.useQuery({
+		userId: post.author.id
+	});
+
 	const Actions = () => {
 		const { data: user } = api.account.getUser.useQuery();
 		const { setPostId } = usePostId();
@@ -140,7 +144,7 @@ export const Post: FC<{
 		<div className="flex flex-row gap-2 w-full">
 			<PostThreading
 				threadDepth={depthInfo}
-				imageUrl={post.author.imageUrl}
+				imageUrl={imageUrl}
 				previousThreadDepth={previousThreadDepth}
 				nextThreadDepth={nextThreadDepth}
 			/>

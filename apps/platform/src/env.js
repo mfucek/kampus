@@ -15,7 +15,11 @@ export const env = createEnv({
 		CLERK_WEBHOOK_SECRET: z.string(),
 		STRIPE_SECRET_KEY: z.string(),
 		STRIPE_WEBHOOK_SECRET: z.string(),
-		URL: z.string()
+		URL: z.string(),
+		AWS_REGION: z.string(),
+		AMPLIFY_BUCKET: z.string(),
+		AMPLIFY_ACCESS_KEY_ID: z.string(),
+		AMPLIFY_SECRET_ACCESS_KEY: z.string()
 	},
 
 	/**
@@ -41,7 +45,11 @@ export const env = createEnv({
 			process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 		STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
 		STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-		URL: process.env.URL
+		URL: process.env.URL,
+		AWS_REGION: process.env.AWS_REGION,
+		AMPLIFY_BUCKET: process.env.AMPLIFY_BUCKET,
+		AMPLIFY_ACCESS_KEY_ID: process.env.AMPLIFY_ACCESS_KEY_ID,
+		AMPLIFY_SECRET_ACCESS_KEY: process.env.AMPLIFY_SECRET_ACCESS_KEY
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

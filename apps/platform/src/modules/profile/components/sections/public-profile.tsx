@@ -5,11 +5,17 @@ import { Input } from '@/lib/shadcn/ui/input';
 import { api } from '@/lib/trpc/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useProfileImageUpload } from '../../hooks/use-profile-image-upload';
 import { SettingsSubSection } from '../settings-subsection';
 
 export const PublicProfileSection = () => {
 	const { data: user } = api.account.getUser.useQuery();
 	const { data: account } = api.account.getAccount.useQuery();
+
+	const { uploading, openFilePicker } = useProfileImageUpload();
+
+	const { data: profilePictureUrl } =
+		api.account.getCurrentUserProfilePictureUrl.useQuery();
 
 	const { mutateAsync: updateDisplayName } =
 		api.account.updateDisplayName.useMutation();
@@ -48,18 +54,25 @@ export const PublicProfileSection = () => {
 			>
 				<div className="flex flex-row gap-6 items-center">
 					<div className="h-20 w-20 rounded-full border border-neutral-weak bg-neutral-weak relative overflow-hidden">
-						{user?.imageUrl && (
+						{profilePictureUrl && (
 							<Image
-								src={user.imageUrl}
+								src={profilePictureUrl}
 								alt={'Profile Picture'}
 								fill
 								className="object-cover"
+								quality={80}
 							/>
 						)}
 					</div>
 					<div className="flex flex-col gap-2">
 						<div>
-							<Button variant="solid-weak">Upload image</Button>
+							<Button
+								variant="solid-weak"
+								onClick={openFilePicker}
+								loading={uploading}
+							>
+								Upload image
+							</Button>
 						</div>
 						<p className="body-2 text-neutral-strong">
 							Max file size: 10MB, JPG, PNG

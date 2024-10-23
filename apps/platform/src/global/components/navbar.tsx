@@ -7,7 +7,7 @@ import { useTranslation } from '@/utils/translations/use-translation';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 export const Navbar = () => {
 	const { t } = useTranslation('hr');
@@ -18,9 +18,10 @@ export const Navbar = () => {
 		signOut();
 	};
 
-	const router = useRouter();
 	const collegeSlug = useParams().collegeSlug;
 	const { data: user } = api.account.getUser.useQuery();
+	const { data: profilePictureUrl } =
+		api.account.getCurrentUserProfilePictureUrl.useQuery();
 
 	const Actions = () => {
 		if (isSignedIn) {
@@ -37,8 +38,15 @@ export const Navbar = () => {
 					</Button>
 					<Link href="/profile">
 						<div className="w-10 h-10 rounded-full border-neutral-weak bg-neutral-weak relative overflow-hidden clickable">
-							{user?.imageUrl && (
-								<Image src={user.imageUrl} alt="User" fill sizes="40px" />
+							{profilePictureUrl && (
+								<Image
+									src={profilePictureUrl}
+									alt="User"
+									className="object-cover"
+									fill
+									sizes="80px"
+									quality={80}
+								/>
 							)}
 						</div>
 					</Link>

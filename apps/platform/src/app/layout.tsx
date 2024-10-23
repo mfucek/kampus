@@ -12,6 +12,8 @@ import { TRPCReactProvider } from '@/lib/trpc/react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '../modules/theme/providers/theme-provider';
 
+import NextTopLoader from 'nextjs-toploader';
+
 export const metadata: Metadata = {
 	title: 'Kampus.hr | Platforma za sve studente',
 	description:
@@ -25,6 +27,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={GeistSans.variable}>
 			<body className="bg-background min-h-screen">
+				<NextTopLoader color="#3461ff" shadow={false} />
 				<ClerkProvider>
 					<TRPCReactProvider>
 						<AnalyticsProvider>

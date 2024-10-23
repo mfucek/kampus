@@ -4,9 +4,9 @@ import { api } from '@/lib/trpc/server';
 import { PageHeader } from '@/modules/college/components/page-header';
 import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
-import { StaffsTable } from '@/modules/staff/components/staffs-table';
 import { SubjectsTable } from '@/modules/subject/components/subjects-table';
 import type { FC } from 'react';
+import { StaffTab } from '../components/college-staff';
 
 const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
 	collegeSlug,
@@ -28,11 +28,6 @@ const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
 const SubjectsTab: FC<{ collegeSlug: string }> = async ({ collegeSlug }) => {
 	const subjects = await api.subject.listByCollegeSlug({ collegeSlug });
 	return <SubjectsTable subjects={subjects} />;
-};
-
-const StaffTab: FC<{ collegeSlug: string }> = async ({ collegeSlug }) => {
-	const staffs = await api.staff.listByCollegeSlug({ collegeSlug });
-	return <StaffsTable staffs={staffs} />;
 };
 
 export const CollegePage: FC<{ collegeSlug: string }> = async ({

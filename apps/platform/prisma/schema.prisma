@@ -26,7 +26,8 @@ model Account {
   status      AccountStatus @default(INACTIVE)
   activeUntil DateTime?
 
-  user User?
+  user                User?
+  permissionOverrides Permissions?
 }
 
 enum PackageType {
@@ -231,6 +232,44 @@ model TopicIcon {
 enum FileType {
   IMAGE
   PDF
+}
+
+// permissions
+
+model Permissions {
+  accountId String  @id
+  account   Account @relation(fields: [accountId], references: [id])
+
+  // base role
+  baseRole RoleType @default(BASE)
+
+  // overrides
+  canEnterPlatform Boolean @default(true)
+
+  canPost  Boolean @default(true)
+  canReply Boolean @default(true)
+  canVote  Boolean @default(true)
+
+  canUploadFiles  Boolean @default(true)
+  canUploadImages Boolean @default(true)
+
+  canChangeTheme      Boolean @default(false)
+  canViewAllSummaries Boolean @default(false)
+
+  canManageTopics   Boolean @default(false)
+  canManageColleges Boolean @default(false)
+
+  canDeleteOthersPosts Boolean @default(false)
+
+  canDeleteUsers       Boolean @default(false)
+  canManageUserRoles   Boolean @default(false)
+  canManagePermissions Boolean @default(false)
+}
+
+enum RoleType {
+  BASE
+  MODERATOR
+  ADMIN
 }
 
 enum SentimentType {

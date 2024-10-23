@@ -92,7 +92,7 @@ export const StaffTab: FC<{ collegeSlug: string }> = ({ collegeSlug }) => {
 	}>({
 		filters: {}
 	});
-	const [limit, setLimit] = useState(2);
+	const [limit, setLimit] = useState(5);
 	const [search, setSearch] = useState('');
 
 	useDebouncedEffect(
@@ -121,7 +121,10 @@ export const StaffTab: FC<{ collegeSlug: string }> = ({ collegeSlug }) => {
 
 				<Select onValueChange={(value) => setLimit(parseInt(value))}>
 					<SelectTrigger className="w-auto">
-						<SelectValue placeholder={limit.toString()} />
+						<SelectValue
+							placeholder={limit.toString()}
+							defaultValue={limit.toString()}
+						/>
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem value="5">5</SelectItem>

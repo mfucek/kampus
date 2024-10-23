@@ -196,7 +196,7 @@ model File {
 
 model FilePost {
   fileId String @id @unique
-  file   File   @relation(fields: [fileId], references: [id])
+  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   postId String
   post   Post   @relation(fields: [postId], references: [id])
@@ -205,16 +205,16 @@ model FilePost {
 }
 
 model ProfileIcon {
-  fileId String @id @unique
-  file   File   @relation(fields: [fileId], references: [id])
+  fileId String @unique
+  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
-  userId String
+  userId String @id @unique
   user   User   @relation(fields: [userId], references: [id])
 }
 
 model CollegeIcon {
   fileId String @id @unique
-  file   File   @relation(fields: [fileId], references: [id])
+  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   collegeId String
   college   College @relation(fields: [collegeId], references: [id])

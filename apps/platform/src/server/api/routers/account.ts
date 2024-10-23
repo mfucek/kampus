@@ -1,4 +1,4 @@
-import { getFileUrl, getS3UploadPresignedUrl } from '@/lib/s3';
+import { deleteFile, getFileUrl, getS3UploadPresignedUrl } from '@/lib/s3';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
@@ -65,30 +65,48 @@ export const accountRouter = createTRPCRouter({
 		.mutation(async ({ ctx, input }) => {
 			const { db, user } = ctx;
 
-			console.log(input.key);
-
-			await db.profileIcon.deleteMany({
+			const oldProfileIcon = await db.profileIcon.findFirst({
 				where: {
-					userId: user.id!
+					userId: user.id
+				},
+				include: {
+					file: true
 				}
 			});
 
-			console.log('deleting profile icon');
+			if (oldProfileIcon) {
+				console.log('deleting old profile picture file');
+				await deleteFile(oldProfileIcon.file.key);
+				await db.profileIcon.delete({
+					where: { userId: user.id },
+					include: {
+						file: true
+					}
+				});
+				await db.file.delete({
+					where: { id: oldProfileIcon.file.id }
+				});
+			}
 
+			console.log('creating new profile picture file');
 			const file = await db.file.create({
 				data: {
 					key: input.key,
 					type: 'IMAGE',
-					authorId: user.id!,
-					ProfileIcon: {
-						create: {
-							userId: user.id!
-						}
-					}
+					authorId: user.id!
+				}
+			});
+			console.log('created file', file.id);
+
+			console.log('creating new profile icon');
+			await db.profileIcon.create({
+				data: {
+					userId: user.id,
+					fileId: file.id
 				}
 			});
 
-			console.log('created file', file);
+			return { success: true };
 		}),
 
 	getUploadUrl: protectedProcedure.mutation(async ({ ctx, input }) => {

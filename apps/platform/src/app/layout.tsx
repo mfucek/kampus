@@ -27,7 +27,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={GeistSans.variable}>
 			<body className="bg-background min-h-screen">
-				<NextTopLoader color="#3461ff" shadow={false} />
+				<NextTopLoader color="#3461ff" shadow={false} showSpinner={false} />
 				<ClerkProvider>
 					<TRPCReactProvider>
 						<AnalyticsProvider>

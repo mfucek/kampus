@@ -1,0 +1,45 @@
+name: 'Dev - PR Close'
+on:
+  pull_request:
+    branches:
+      - develop
+    types:
+      - closed
+jobs:
+  merge_pr:
+    name: 'PR Merged'
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_ORG_PAT }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          cache: 'npm'
+      - name: Git config
+        run: |
+          git config --global user.email "${{ secrets.GH_ORG_EMAIL }}"
+          git config --global user.name "${{ secrets.GH_ORG_NAME }}"
+      - name: Apply version bump (major)
+        if: contains(github.event.pull_request.labels.*.name, 'major')
+        working-directory: ./apps/platform
+        run: npm version major
+      - name: Apply version bump (minor)
+        if: contains(github.event.pull_request.labels.*.name, 'minor')
+        working-directory: ./apps/platform
+        run: npm version minor
+      - name: Apply version bump (patch)
+        if: contains(github.event.pull_request.labels.*.name, 'patch')
+        working-directory: ./apps/platform
+        run: npm version patch
+      - name: Git push version bump
+        run: |
+          git add apps/platform/package.json
+          git commit -m "Bump version in apps/platform/package.json"
+          git push origin develop --follow-tags --force
+      - id: set-version
+        name: Output version change
+        working-directory: ./apps/platform
+        run: npm pkg get version

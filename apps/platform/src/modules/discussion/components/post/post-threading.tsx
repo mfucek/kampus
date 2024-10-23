@@ -107,7 +107,13 @@ export const PostThreading: FC<{
 			<div className="w-6 h-full flex flex-col overflow-hidden">
 				<div className="w-6 h-6 rounded-full bg-neutral-weak overflow-hidden relative shrink-0">
 					{imageUrl && (
-						<Image src={imageUrl} alt="John Doe" fill sizes="48px" />
+						<Image
+							src={imageUrl}
+							alt="John Doe"
+							objectFit="cover"
+							fill
+							sizes="48px"
+						/>
 					)}
 				</div>
 				{hasChildren && <Line />}

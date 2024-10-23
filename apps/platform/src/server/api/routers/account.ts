@@ -1,5 +1,7 @@
+import { getFileUrl, getS3UploadPresignedUrl } from '@/lib/s3';
+import { nanoid } from 'nanoid';
 import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 export const accountRouter = createTRPCRouter({
 	getAccount: protectedProcedure.query(async ({ ctx }) => {
@@ -56,5 +58,84 @@ export const accountRouter = createTRPCRouter({
 			});
 
 			return { success: true };
+		}),
+
+	uploadProfilePicture: protectedProcedure
+		.input(z.object({ key: z.string() }))
+		.mutation(async ({ ctx, input }) => {
+			const { db, user } = ctx;
+
+			console.log(input.key);
+
+			await db.profileIcon.deleteMany({
+				where: {
+					userId: user.id!
+				}
+			});
+
+			console.log('deleting profile icon');
+
+			const file = await db.file.create({
+				data: {
+					key: input.key,
+					type: 'IMAGE',
+					authorId: user.id!,
+					ProfileIcon: {
+						create: {
+							userId: user.id!
+						}
+					}
+				}
+			});
+
+			console.log('created file', file);
+		}),
+
+	getUploadUrl: protectedProcedure.mutation(async ({ ctx, input }) => {
+		const key = nanoid();
+
+		const url = await getS3UploadPresignedUrl(key);
+
+		return { url, key };
+	}),
+
+	getCurrentUserProfilePictureUrl: protectedProcedure.query(async ({ ctx }) => {
+		const { db, user } = ctx;
+
+		const profilePicture = await db.file.findFirst({
+			where: {
+				ProfileIcon: {
+					some: {
+						userId: user.id!
+					}
+				}
+			}
+		});
+
+		if (!profilePicture) return null;
+
+		const url = await getFileUrl(profilePicture.key);
+
+		return url;
+	}),
+
+	getUserProfilePictureUrl: publicProcedure
+		.input(z.object({ userId: z.string() }))
+		.query(async ({ ctx, input }) => {
+			const { db } = ctx;
+
+			const profilePicture = await db.file.findFirst({
+				where: {
+					ProfileIcon: {
+						some: { userId: input.userId }
+					}
+				}
+			});
+
+			if (!profilePicture) return null;
+
+			const url = await getFileUrl(profilePicture.key);
+
+			return url;
 		})
 });

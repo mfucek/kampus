@@ -1,7 +1,10 @@
 import {
 	price_id_lifetime_dev,
+	price_id_lifetime_prod,
 	price_id_monthly_cheap_dev,
-	price_id_monthly_pro_dev
+	price_id_monthly_cheap_prod,
+	price_id_monthly_pro_dev,
+	price_id_monthly_pro_prod
 } from '@/constants/stripe';
 import { env } from '@/env';
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
@@ -9,6 +12,8 @@ import { PackageType } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import Stripe from 'stripe';
 import { z } from 'zod';
+
+const isProd = env.NODE_ENV === 'production';
 
 export const stripeRouter = createTRPCRouter({
 	getSubscriptionCheckoutURL: protectedProcedure
@@ -23,10 +28,14 @@ export const stripeRouter = createTRPCRouter({
 			let price_key = '';
 			switch (input.package) {
 				case 'MONTHLY_CHEAP':
-					price_key = price_id_monthly_cheap_dev;
+					price_key = isProd
+						? price_id_monthly_cheap_prod
+						: price_id_monthly_cheap_dev;
 					break;
 				case 'MONTHLY_PRO':
-					price_key = price_id_monthly_pro_dev;
+					price_key = isProd
+						? price_id_monthly_pro_prod
+						: price_id_monthly_pro_dev;
 					break;
 			}
 
@@ -68,7 +77,7 @@ export const stripeRouter = createTRPCRouter({
 			mode: 'payment',
 			line_items: [
 				{
-					price: price_id_lifetime_dev,
+					price: isProd ? price_id_lifetime_prod : price_id_lifetime_dev,
 					quantity: 1
 				}
 			],

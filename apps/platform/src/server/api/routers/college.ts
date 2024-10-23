@@ -6,7 +6,13 @@ export const collegeRouter = createTRPCRouter({
 	listAll: publicProcedure.query(async ({ ctx }) => {
 		const { db } = ctx;
 
-		const colleges = await db.college.findMany();
+		const colleges = await db.college.findMany({
+			orderBy: {
+				Post: {
+					_count: 'desc'
+				}
+			}
+		});
 		return colleges;
 	}),
 

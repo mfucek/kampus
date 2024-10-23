@@ -1,21 +1,30 @@
 import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { type Prisma, type PrismaClient } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+const staffSubsetSchema = z.object({
+	collegeSlug: z.string().nullish(),
+	collegeId: z.string().nullish(),
+	subjectId: z.string().nullish()
+});
+
+const staffFiltersSchema = z.object({
+	name: z.string().nullish(),
+	subject: z.string().nullish()
+});
+
+export type TStaffSubset = z.infer<typeof staffSubsetSchema>;
+export type TStaffFilters = z.infer<typeof staffFiltersSchema>;
+
 export const staffRouter = createTRPCRouter({
-	listByCollegeSlug: publicProcedure
+	list: publicProcedure
 		.input(
 			z.object({
 				limit: z.number().min(1).max(100).nullish(),
 				cursor: z.string().nullish(),
-				collegeSlug: z.string(),
-				filters: z
-					.object({
-						name: z.string().nullish(),
-						subject: z.string().nullish()
-					})
-					.nullish()
+				filters: staffFiltersSchema.nullish(),
+				subset: staffSubsetSchema.nullish()
 			})
 		)
 		.query(async ({ input, ctx }) => {
@@ -23,11 +32,30 @@ export const staffRouter = createTRPCRouter({
 			const { cursor } = input;
 			const limit = input.limit ?? 10;
 
-			const college = await getCollegeBySlug(db, input.collegeSlug);
+			const collegeId =
+				input.subset?.collegeId ??
+				(input.subset?.collegeSlug
+					? (await getCollegeBySlug(db, input.subset?.collegeSlug)).id
+					: undefined);
+
+			const subjectId = input.subset?.subjectId;
 
 			const where: Prisma.TopicWhereInput = {
-				collegeId: college.id,
 				type: 'STAFF',
+				// subset
+				...(collegeId ? { collegeId: collegeId } : {}),
+				...(subjectId
+					? {
+							staff: {
+								subjects: {
+									some: {
+										topicId: subjectId
+									}
+								}
+							}
+						}
+					: {}),
+				// or filters
 				...(input.filters?.name && {
 					OR: [
 						{

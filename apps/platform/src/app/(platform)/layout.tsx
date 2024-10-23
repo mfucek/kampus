@@ -1,4 +1,5 @@
 import { Navbar } from '@/global/components/navbar';
+import { Spinner } from '@/global/components/spinner';
 import { ClientPanels } from '@/modules/discussion-panel/components/client-panels';
 import { PostIdProvider } from '@/modules/discussion-panel/components/post-id-provider';
 import { Suspense, type FC, type PropsWithChildren } from 'react';
@@ -11,8 +12,10 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 				<Suspense
 					fallback={
 						<>
-							<div className="bg-background md:p-2 w-full h-full">
-								<div className="rounded-lg bg-section flex flex-col items-center min-h-full"></div>
+							<div className="bg-background md:p-2 w-full h-full animate-pulse">
+								<div className="rounded-lg bg-section flex flex-col items-center justify-center min-h-full">
+									<Spinner className="w-10 h-10" />
+								</div>
 							</div>
 						</>
 					}

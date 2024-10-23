@@ -31,7 +31,12 @@ export const ThreadContent = () => {
 
 	if (!postId) return null;
 
-	if (!fullPost) return <Spinner />;
+	if (!fullPost)
+		return (
+			<div className="h-full flex flex-col items-center justify-center">
+				<Spinner className="w-8 h-8" />
+			</div>
+		);
 
 	return (
 		<>

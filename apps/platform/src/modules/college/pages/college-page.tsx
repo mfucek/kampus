@@ -8,15 +8,37 @@ import { StaffsTable } from '@/modules/staff/components/staffs-table';
 import { SubjectsTable } from '@/modules/subject/components/subjects-table';
 import type { FC } from 'react';
 
+const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
+	collegeSlug,
+	collegeId
+}) => {
+	const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
+	return (
+		<div className="flex flex-col gap-10">
+			<Composer collegeId={collegeId} collegeSlug={collegeSlug} />
+			<div className="flex flex-col">
+				{fullPosts.map((fullPost) => (
+					<Post key={fullPost.post.id} fullPost={fullPost} depthInfo={[]} />
+				))}
+			</div>
+		</div>
+	);
+};
+
+const SubjectsTab: FC<{ collegeSlug: string }> = async ({ collegeSlug }) => {
+	const subjects = await api.subject.listByCollegeSlug({ collegeSlug });
+	return <SubjectsTable subjects={subjects} />;
+};
+
+const StaffTab: FC<{ collegeSlug: string }> = async ({ collegeSlug }) => {
+	const staffs = await api.staff.listByCollegeSlug({ collegeSlug });
+	return <StaffsTable staffs={staffs} />;
+};
+
 export const CollegePage: FC<{ collegeSlug: string }> = async ({
 	collegeSlug
 }) => {
 	const college = await api.college.getBySlug({ collegeSlug });
-
-	const subjects = await api.subject.listByCollegeSlug({ collegeSlug });
-	const staffs = await api.staff.listByCollegeSlug({ collegeSlug });
-
-	const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
 
 	return (
 		<Container className="flex flex-col gap-10 py-10 h-full">
@@ -29,24 +51,13 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 					<TabsTrigger value="staff">Svi Profesori</TabsTrigger>
 				</TabsList>
 				<TabsContent value="discussion">
-					<div className="flex flex-col gap-10">
-						<Composer collegeId={college.id} collegeSlug={collegeSlug} />
-						<div className="flex flex-col">
-							{fullPosts.map((fullPost) => (
-								<Post
-									key={fullPost.post.id}
-									fullPost={fullPost}
-									depthInfo={[]}
-								/>
-							))}
-						</div>
-					</div>
+					<DiscussionTab collegeSlug={collegeSlug} collegeId={college.id} />
 				</TabsContent>
 				<TabsContent value="subjects">
-					<SubjectsTable subjects={subjects} />
+					<SubjectsTab collegeSlug={collegeSlug} />
 				</TabsContent>
 				<TabsContent value="staff">
-					<StaffsTable staffs={staffs} />
+					<StaffTab collegeSlug={collegeSlug} />
 				</TabsContent>
 			</Tabs>
 		</Container>

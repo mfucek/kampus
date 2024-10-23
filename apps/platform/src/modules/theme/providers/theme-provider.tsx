@@ -1,6 +1,7 @@
 'use client';
 
 import { api } from '@/lib/trpc/react';
+import { useAuth } from '@clerk/nextjs';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
@@ -16,16 +17,14 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 	children
 }) => {
-	const [theme, setTheme] = useState<Theme>(() => {
-		// Check localStorage on initial render
-		if (typeof window !== 'undefined') {
-			const storedTheme = localStorage.getItem('theme') as Theme | null;
-			return storedTheme || 'light';
-		}
-		return 'light'; // Default for server-side rendering
+	const [theme, setTheme] = useState<Theme>('light');
+	const [canToggleTheme, setCanToggleTheme] = useState<boolean | undefined>(
+		undefined
+	);
+	const { isSignedIn } = useAuth();
+	const { data: account } = api.account.getAccount.useQuery(void {}, {
+		enabled: isSignedIn
 	});
-	const [canToggleTheme, setCanToggleTheme] = useState(true);
-	const { data: account } = api.account.getAccount.useQuery();
 
 	useEffect(() => {
 		if (account) {
@@ -38,8 +37,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [account]);
 
 	useEffect(() => {
-		if (!canToggleTheme) {
+		if (canToggleTheme === false) {
 			setTheme('light');
+		}
+		if (canToggleTheme === true) {
+			if (typeof window !== 'undefined') {
+				const storedTheme = localStorage.getItem('theme') as Theme | null;
+				console.log('storedTheme', storedTheme);
+
+				setTheme(storedTheme || 'light');
+			}
 		}
 	}, [canToggleTheme]);
 
@@ -49,17 +56,21 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 		} else {
 			document.body.classList.remove('dark');
 		}
-		localStorage.setItem('theme', theme);
+		if (canToggleTheme !== undefined) {
+			localStorage.setItem('theme', theme);
+		}
 	}, [theme]);
 
 	const toggleTheme = () => {
-		if (canToggleTheme) {
+		if (canToggleTheme === true) {
 			setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
 		}
 	};
 
 	return (
-		<ThemeContext.Provider value={{ theme, toggleTheme, canToggleTheme }}>
+		<ThemeContext.Provider
+			value={{ theme, toggleTheme, canToggleTheme: !!canToggleTheme }}
+		>
 			{children}
 		</ThemeContext.Provider>
 	);

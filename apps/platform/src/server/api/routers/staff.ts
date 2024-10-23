@@ -29,10 +29,20 @@ export const staffRouter = createTRPCRouter({
 				collegeId: college.id,
 				type: 'STAFF',
 				...(input.filters?.name && {
-					name: {
-						contains: input.filters.name,
-						mode: 'insensitive'
-					}
+					OR: [
+						{
+							name: {
+								contains: input.filters.name,
+								mode: 'insensitive'
+							}
+						},
+						{
+							slug: {
+								contains: input.filters.name,
+								mode: 'insensitive'
+							}
+						}
+					]
 				})
 			};
 

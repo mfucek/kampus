@@ -8,7 +8,15 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 		<>
 			<div className="flex flex-col w-screen h-screen md:overflow-hidden">
 				<Navbar />
-				<Suspense fallback={<></>}>
+				<Suspense
+					fallback={
+						<>
+							<div className="bg-background md:p-2 w-full h-full">
+								<div className="rounded-lg bg-section flex flex-col items-center min-h-full"></div>
+							</div>
+						</>
+					}
+				>
 					<PostIdProvider>
 						<ClientPanels>{children}</ClientPanels>
 					</PostIdProvider>

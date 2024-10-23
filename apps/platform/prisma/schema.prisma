@@ -59,6 +59,8 @@ model User {
 
   Vote Vote[]
   Post Post[]
+
+  ProfileIcon ProfileIcon[]
 }
 
 // College
@@ -73,6 +75,8 @@ model College {
 
   Topic Topic[]
   Post  Post[]
+
+  CollegePicture CollegeIcon[]
 }
 
 // Subjects & Staff
@@ -88,9 +92,10 @@ model Topic {
 
   type TopicType
 
-  subject Subject?
-  staff   Staff?
-  Post    Post[]
+  subject   Subject?
+  staff     Staff?
+  Post      Post[]
+  TopicIcon TopicIcon[]
 
   @@unique([collegeId, slug])
 }
@@ -149,6 +154,8 @@ model Post {
   body Json?
 
   votes Vote[]
+
+  FilePost FilePost[]
 }
 
 enum VoteType {
@@ -166,6 +173,64 @@ model Vote {
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+}
+
+// Files
+
+model File {
+  id String @id @default(cuid())
+
+  key  String   @unique
+  type FileType
+
+  authorId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  FilePost    FilePost[]
+  ProfileIcon ProfileIcon[]
+  CollegeIcon CollegeIcon[]
+  TopicIcon   TopicIcon[]
+}
+
+model FilePost {
+  fileId String @id @unique
+  file   File   @relation(fields: [fileId], references: [id])
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+
+  tags String[]
+}
+
+model ProfileIcon {
+  fileId String @id @unique
+  file   File   @relation(fields: [fileId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model CollegeIcon {
+  fileId String @id @unique
+  file   File   @relation(fields: [fileId], references: [id])
+
+  collegeId String
+  college   College @relation(fields: [collegeId], references: [id])
+}
+
+model TopicIcon {
+  fileId String @id @unique
+  file   File   @relation(fields: [fileId], references: [id])
+
+  topicId String
+  topic   Topic  @relation(fields: [topicId], references: [id])
+}
+
+enum FileType {
+  IMAGE
+  PDF
 }
 
 enum SentimentType {

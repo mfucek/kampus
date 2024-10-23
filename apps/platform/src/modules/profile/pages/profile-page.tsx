@@ -1,5 +1,5 @@
 import { Container } from '@/global/components/container';
-import type { FC } from 'react';
+import { type FC } from 'react';
 
 import { AccountInfoSection } from '../components/sections/account-info';
 import { DangerZoneSection } from '../components/sections/danger-zone';

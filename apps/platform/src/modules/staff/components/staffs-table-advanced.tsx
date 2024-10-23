@@ -12,19 +12,20 @@ import {
 } from '@/lib/shadcn/ui/select';
 import { api } from '@/lib/trpc/react';
 import { StaffsTable } from '@/modules/staff/components/staffs-table';
+import type { TStaffFilters, TStaffSubset } from '@/server/api/routers/staff';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
-import { FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
-const SmartTable: FC<{
-	filters: { name?: string; subject?: string };
-	collegeSlug: string;
+const StaffsTableWithData: FC<{
+	filters?: TStaffFilters;
+	subset?: TStaffSubset;
 	limit: number;
-}> = ({ filters, collegeSlug, limit }) => {
+}> = ({ filters, subset, limit }) => {
 	const [page, setPage] = useState(0);
 
-	const query = api.staff.listByCollegeSlug.useInfiniteQuery(
+	const query = api.staff.list.useInfiniteQuery(
 		{
-			collegeSlug,
+			subset,
 			limit,
 			filters
 		},
@@ -52,6 +53,7 @@ const SmartTable: FC<{
 		query.fetchPreviousPage();
 		setPage((page) => page - 1);
 	};
+
 	return (
 		<>
 			<StaffsTable
@@ -86,26 +88,35 @@ const SmartTable: FC<{
 	);
 };
 
-export const StaffTab: FC<{ collegeSlug: string }> = ({ collegeSlug }) => {
+export const StaffsTableAdvanced: FC<{
+	subset?: TStaffSubset;
+}> = ({ subset }) => {
 	const [tableProps, setTableProps] = useState<{
-		filters: { name?: string; subject?: string };
+		filters: TStaffFilters;
+		limit: number;
 	}>({
-		filters: {}
+		filters: {},
+		limit: 5
 	});
-	const [limit, setLimit] = useState(5);
-	const [search, setSearch] = useState('');
+
+	const [viewOptions, setViewOptions] = useState<{
+		filters: TStaffFilters;
+		limit: number;
+	}>({
+		filters: {
+			name: ''
+		},
+		limit: 5
+	});
 
 	useDebouncedEffect(
 		() => {
-			console.log('asd');
-
 			setTableProps((props) => ({
 				...props,
-				filters: { name: search },
-				limit
+				...viewOptions
 			}));
 		},
-		[search, limit],
+		[viewOptions],
 		500
 	);
 
@@ -115,15 +126,27 @@ export const StaffTab: FC<{ collegeSlug: string }> = ({ collegeSlug }) => {
 				<Input
 					className="max-w-[200px]"
 					placeholder="Search"
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
+					value={viewOptions.filters.name ?? ''}
+					onChange={(e) =>
+						setViewOptions({
+							...viewOptions,
+							filters: { name: e.target.value }
+						})
+					}
 				/>
 
-				<Select onValueChange={(value) => setLimit(parseInt(value))}>
+				<Select
+					onValueChange={(value) =>
+						setViewOptions({
+							...viewOptions,
+							limit: parseInt(value)
+						})
+					}
+				>
 					<SelectTrigger className="w-auto">
 						<SelectValue
-							placeholder={limit.toString()}
-							defaultValue={limit.toString()}
+							placeholder={viewOptions.limit.toString()}
+							defaultValue={viewOptions.limit.toString()}
 						/>
 					</SelectTrigger>
 					<SelectContent>
@@ -135,11 +158,15 @@ export const StaffTab: FC<{ collegeSlug: string }> = ({ collegeSlug }) => {
 				</Select>
 			</div>
 
-			<SmartTable
-				filters={tableProps.filters}
-				collegeSlug={collegeSlug}
-				limit={limit}
-			/>
+			<StaffsTableWithData subset={subset} {...tableProps} />
 		</div>
 	);
 };
+
+/*
+<StaffsTable.Provider subset={subset}>
+	<StaffsTable.Filters />
+		<StaffsTable.Table />
+	<StaffsTable.Pagination />
+</StaffsTable.Provider>
+*/

@@ -110,9 +110,10 @@ export const PostThreading: FC<{
 						<Image
 							src={imageUrl}
 							alt="John Doe"
-							objectFit="cover"
+							className="object-cover"
 							fill
 							sizes="48px"
+							quality={50}
 						/>
 					)}
 				</div>

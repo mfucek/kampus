@@ -60,6 +60,7 @@ export const PublicProfileSection = () => {
 								alt={'Profile Picture'}
 								fill
 								className="object-cover"
+								quality={80}
 							/>
 						)}
 					</div>

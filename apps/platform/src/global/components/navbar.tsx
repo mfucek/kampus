@@ -42,9 +42,10 @@ export const Navbar = () => {
 								<Image
 									src={profilePictureUrl}
 									alt="User"
-									objectFit="cover"
+									className="object-cover"
 									fill
 									sizes="80px"
+									quality={80}
 								/>
 							)}
 						</div>

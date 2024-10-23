@@ -6,7 +6,7 @@ import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
 import { SubjectsTable } from '@/modules/subject/components/subjects-table';
 import type { FC } from 'react';
-import { StaffTab } from '../components/college-staff';
+import { StaffsTableAdvanced } from '../../staff/components/staffs-table-advanced';
 
 const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
 	collegeSlug,
@@ -28,6 +28,14 @@ const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
 const SubjectsTab: FC<{ collegeSlug: string }> = async ({ collegeSlug }) => {
 	const subjects = await api.subject.listByCollegeSlug({ collegeSlug });
 	return <SubjectsTable subjects={subjects} />;
+};
+
+export const StaffTab: FC<{ collegeSlug: string }> = ({ collegeSlug }) => {
+	return (
+		<div className="flex flex-col gap-2">
+			<StaffsTableAdvanced subset={{ collegeSlug }} />
+		</div>
+	);
 };
 
 export const CollegePage: FC<{ collegeSlug: string }> = async ({

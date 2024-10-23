@@ -5,20 +5,12 @@ import { PageHeader } from '@/modules/college/components/page-header';
 import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
 import { MaterialsTable } from '@/modules/materials/components/materials-table';
-import { StaffsTable } from '@/modules/staff/components/staffs-table';
+import { StaffsTableAdvanced } from '@/modules/staff/components/staffs-table-advanced';
 import { SummarySection } from '@/modules/summary/components/summary-section';
 import type { FC } from 'react';
 
 const MaterialsTab: FC<{ subjectId: string }> = async ({ subjectId }) => {
 	return <MaterialsTable />;
-};
-
-const StaffTab: FC<{ subjectId: string }> = async ({ subjectId }) => {
-	const staffs = await api.staff.listBySubjectId({
-		subjectId: subjectId
-	});
-
-	return <StaffsTable staffs={staffs} />;
 };
 
 const DiscussionTab: FC<{
@@ -82,7 +74,7 @@ export const SubjectPage: FC<{
 					<MaterialsTab subjectId={subject.id} />
 				</TabsContent>
 				<TabsContent value="staff">
-					<StaffTab subjectId={subject.id} />
+					<StaffsTableAdvanced subset={{ subjectId: subject.id }} />
 				</TabsContent>
 			</Tabs>
 		</Container>

@@ -33,7 +33,7 @@ export const ThreadContent = () => {
 
 	if (!fullPost)
 		return (
-			<div className="h-full flex flex-col items-center justify-center">
+			<div className="h-full min-h-[200px] flex flex-col items-center justify-center">
 				<Spinner className="w-8 h-8" />
 			</div>
 		);

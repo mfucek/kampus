@@ -2,14 +2,12 @@
 
 import { Container } from '@/global/components/container';
 import { Input } from '@/lib/shadcn/ui/input';
-import { api } from '@/lib/trpc/react';
+import { College } from '@prisma/client';
 import Link from 'next/link';
 import { useState } from 'react';
 import { CollegeCard } from './college-card';
 
-export const CollegeGrid = () => {
-	const { data, isLoading } = api.college.listAll.useQuery();
-
+export const CollegeGrid = ({ colleges }: { colleges: College[] }) => {
 	const [search, setSearch] = useState('');
 
 	return (
@@ -23,8 +21,8 @@ export const CollegeGrid = () => {
 				/>
 			</div>
 			<div className="grid grid-cols-1 @xs:grid-cols-2 @sm:grid-cols-3 gap-2">
-				{data
-					?.filter(
+				{colleges
+					.filter(
 						(college) =>
 							college.name.toLowerCase().includes(search.toLowerCase()) ||
 							college.slug.toLowerCase().includes(search.toLowerCase())

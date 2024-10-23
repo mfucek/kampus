@@ -1,31 +1,43 @@
 import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 export const staffRouter = createTRPCRouter({
 	listByCollegeSlug: publicProcedure
-		.input(z.object({ collegeSlug: z.string() }))
+		.input(
+			z.object({
+				limit: z.number().min(1).max(100).nullish(),
+				cursor: z.string().nullish(),
+				collegeSlug: z.string(),
+				filters: z
+					.object({
+						name: z.string().nullish(),
+						subject: z.string().nullish()
+					})
+					.nullish()
+			})
+		)
 		.query(async ({ input, ctx }) => {
 			const { db } = ctx;
+			const { cursor } = input;
+			const limit = input.limit ?? 10;
 
-			const college = await db.college.findUnique({
-				where: {
-					slug: input.collegeSlug
-				}
-			});
+			const college = await getCollegeBySlug(db, input.collegeSlug);
 
-			if (!college) {
-				throw new TRPCError({
-					code: 'NOT_FOUND',
-					message: 'College not found'
-				});
-			}
+			const where: Prisma.TopicWhereInput = {
+				collegeId: college.id,
+				type: 'STAFF',
+				...(input.filters?.name && {
+					name: {
+						contains: input.filters.name,
+						mode: 'insensitive'
+					}
+				})
+			};
 
 			const staffs = await db.topic.findMany({
-				where: {
-					collegeId: college.id,
-					type: 'STAFF'
-				},
+				where,
 				include: {
 					college: true,
 					staff: true,
@@ -34,8 +46,24 @@ export const staffRouter = createTRPCRouter({
 							Post: true
 						}
 					}
-				}
+				},
+				orderBy: {
+					id: 'desc'
+				},
+				take: limit,
+				skip: cursor ? 1 : 0,
+				cursor: cursor
+					? {
+							id: cursor
+						}
+					: undefined
 			});
+
+			const totalStaffs = Math.ceil(
+				(await db.topic.count({
+					where
+				})) / limit
+			);
 
 			if (!staffs) {
 				throw new TRPCError({
@@ -44,7 +72,9 @@ export const staffRouter = createTRPCRouter({
 				});
 			}
 
-			return staffs;
+			const nextCursor = staffs[staffs.length - 1]?.id;
+
+			return { staffs, nextCursor, totalStaffs };
 		}),
 
 	getBySlug: publicProcedure
@@ -117,3 +147,18 @@ export const staffRouter = createTRPCRouter({
 			return staffs;
 		})
 });
+
+const getCollegeBySlug = async (db: PrismaClient, slug: string) => {
+	const college = await db.college.findUnique({
+		where: { slug }
+	});
+
+	if (!college) {
+		throw new TRPCError({
+			code: 'NOT_FOUND',
+			message: 'College not found'
+		});
+	}
+
+	return college;
+};

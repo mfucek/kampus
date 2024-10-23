@@ -44,6 +44,12 @@ export const columns: ColumnDef<Staff>[] = [
 	}
 ];
 
-export const StaffsTable = ({ staffs }: { staffs: Staff[] }) => {
-	return <DataTable columns={columns} data={staffs} loading={false} />;
+export const StaffsTable = ({
+	staffs,
+	loading = false
+}: {
+	staffs: Staff[];
+	loading?: boolean;
+}) => {
+	return <DataTable columns={columns} data={staffs} loading={loading} />;
 };

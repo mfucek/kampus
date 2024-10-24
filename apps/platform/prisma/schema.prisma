@@ -244,26 +244,28 @@ model Permissions {
   baseRole RoleType @default(BASE)
 
   // overrides
-  canEnterPlatform Boolean @default(true)
+  canEnterPlatform Boolean?
 
-  canPost  Boolean @default(true)
-  canReply Boolean @default(true)
-  canVote  Boolean @default(true)
+  canPost  Boolean?
+  canReply Boolean?
+  canVote  Boolean?
 
-  canUploadFiles  Boolean @default(true)
-  canUploadImages Boolean @default(true)
+  canUploadFiles  Boolean?
+  canUploadImages Boolean?
 
-  canChangeTheme      Boolean @default(false)
-  canViewAllSummaries Boolean @default(false)
+  canChangeTheme      Boolean?
+  canViewAllSummaries Boolean?
 
-  canManageTopics   Boolean @default(false)
-  canManageColleges Boolean @default(false)
+  canSuggestTopics  Boolean?
+  canApproveTopics  Boolean?
+  canManageTopics   Boolean?
+  canManageColleges Boolean?
 
-  canDeleteOthersPosts Boolean @default(false)
+  canDeleteOthersPosts Boolean?
 
-  canDeleteUsers       Boolean @default(false)
-  canManageUserRoles   Boolean @default(false)
-  canManagePermissions Boolean @default(false)
+  canDeleteUsers       Boolean?
+  canManageUserRoles   Boolean?
+  canManagePermissions Boolean?
 }
 
 enum RoleType {

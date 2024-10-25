@@ -1,3 +1,4 @@
+import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
 import { useState } from 'react';
 
@@ -9,6 +10,8 @@ export const useProfileImageUpload = () => {
 
 	const { mutateAsync: uploadProfilePicture } =
 		api.account.uploadProfilePicture.useMutation();
+
+	const { toast } = useToast();
 
 	const [uploading, setUploading] = useState(false);
 
@@ -22,17 +25,26 @@ export const useProfileImageUpload = () => {
 
 		setUploading(true);
 
-		const upload = await fetch(url, {
-			method: 'PUT',
-			body: file,
-			headers: { 'Content-Type': file.type }
-		});
+		try {
+			const upload = await fetch(url, {
+				method: 'PUT',
+				body: file,
+				headers: { 'Content-Type': file.type }
+			});
 
-		setUploading(false);
+			setUploading(false);
 
-		console.log('uploading', upload);
+			console.log('uploading', upload);
 
-		onSuccess(key);
+			onSuccess(key);
+		} catch (error) {
+			console.error('Error uploading profile picture:', error);
+			toast({
+				title: 'Error uploading profile picture',
+				description: 'Please try again later',
+				variant: 'danger'
+			});
+		}
 	};
 
 	const openFilePicker = () => {

@@ -96,7 +96,7 @@ export const PublicProfileSection = () => {
 							</Button>
 						</div>
 						<p className="body-2 text-neutral-strong">
-							Max file size: 10MB, JPG, PNG
+							Max file size: 5MB, JPG, PNG
 						</p>
 					</div>
 				</div>

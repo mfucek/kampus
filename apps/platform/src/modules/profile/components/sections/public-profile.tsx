@@ -39,14 +39,14 @@ export const PublicProfileSection = () => {
 			await updateDisplayName({ displayName });
 
 			toast({
-				title: 'Display name updated',
+				title: 'Success',
 				description: 'Your display name has been updated successfully',
 				variant: 'success'
 			});
 		} catch (error) {
 			toast({
-				title: 'Error updating display name',
-				description: 'Please try again later',
+				title: 'Error',
+				description: 'An error occurred while updating your display name',
 				variant: 'danger'
 			});
 		}
@@ -58,8 +58,8 @@ export const PublicProfileSection = () => {
 		} catch (error) {
 			console.error('Error updating badge:', error);
 			toast({
-				title: 'Error updating badge',
-				description: 'Please try again later',
+				title: 'Error',
+				description: 'An error occurred while updating your badge',
 				variant: 'danger'
 			});
 		}

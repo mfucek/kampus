@@ -64,8 +64,22 @@ export const useProfileImageUpload = () => {
 	const utils = api.useUtils();
 
 	const onSuccess = async (key: string) => {
-		await uploadProfilePicture({ key });
-		await utils.account.getCurrentUserProfilePictureUrl.invalidate();
+		try {
+			await uploadProfilePicture({ key });
+			await utils.account.getCurrentUserProfilePictureUrl.invalidate();
+			toast({
+				title: 'Success',
+				description: 'Your profile picture has been updated successfully',
+				variant: 'success'
+			});
+		} catch (error) {
+			console.error('Error uploading profile picture:', error);
+			toast({
+				title: 'Error',
+				description: 'An error occurred while updating your profile picture',
+				variant: 'danger'
+			});
+		}
 	};
 
 	return { handleUpload, uploading, openFilePicker };

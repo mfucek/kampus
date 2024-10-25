@@ -50,7 +50,7 @@ export const useProfileImageUpload = () => {
 	const openFilePicker = () => {
 		const input = document.createElement('input');
 		input.type = 'file';
-		input.accept = 'image/*';
+		input.accept = 'image/png, image/jpeg';
 		input.onchange = (e) => {
 			const files = (e.target as HTMLInputElement).files;
 			const file = files?.[0];

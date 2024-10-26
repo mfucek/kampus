@@ -2,6 +2,7 @@
 
 import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
+import { feedbackFormURL } from '@/modules/feedback/constants';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
 import { useTranslation } from '@/utils/translations/use-translation';
 import { useAuth, useClerk } from '@clerk/nextjs';
@@ -28,6 +29,16 @@ export const Navbar = () => {
 			return (
 				<>
 					<ThemeToggler />
+					<a
+						href={feedbackFormURL}
+						className="hidden md:block"
+						target="_blank"
+						rel="noopener norefferer"
+					>
+						<Button size="md" variant="outline">
+							Prijavi gresku
+						</Button>
+					</a>
 					<Button
 						onClick={handleSignOut}
 						size="md"
@@ -82,7 +93,7 @@ export const Navbar = () => {
 					)}
 				</div>
 			</Link>
-			<div className="flex flex-row gap-4 items-center">
+			<div className="flex flex-row gap-2 items-center">
 				<Actions />
 			</div>
 		</div>

@@ -5,6 +5,7 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
 import { type ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
+import { FC } from 'react';
 
 type Staff = {
 	slug: string;
@@ -44,12 +45,9 @@ export const columns: ColumnDef<Staff>[] = [
 	}
 ];
 
-export const StaffsTable = ({
-	staffs,
-	loading = false
-}: {
+export const StaffsTable: FC<{
 	staffs: Staff[];
 	loading?: boolean;
-}) => {
+}> = ({ staffs, loading = false }) => {
 	return <DataTable columns={columns} data={staffs} loading={loading} />;
 };

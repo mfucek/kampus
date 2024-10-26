@@ -11,19 +11,19 @@ import {
 	SelectValue
 } from '@/lib/shadcn/ui/select';
 import { api } from '@/lib/trpc/react';
-import { StaffsTable } from '@/modules/staff/components/staffs-table';
-import type { TStaffFilters, TStaffScope } from '@/server/api/routers/staff';
+import { TSubjectFilters, TSubjectScope } from '@/server/api/routers/subject';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
 import { type FC, useEffect, useState } from 'react';
+import { SubjectsTable } from './subjects-table';
 
-const StaffsTableWithData: FC<{
-	filters?: TStaffFilters;
-	scope?: TStaffScope;
+const SubjectsTableWithData: FC<{
+	filters?: TSubjectFilters;
+	scope?: TSubjectScope;
 	limit: number;
 }> = ({ filters, scope, limit }) => {
 	const [page, setPage] = useState(0);
 
-	const query = api.staff.list.useInfiniteQuery(
+	const query = api.subject.list.useInfiniteQuery(
 		{
 			scope,
 			limit,
@@ -34,7 +34,7 @@ const StaffsTableWithData: FC<{
 		}
 	);
 
-	const numOfPages = query.data?.pages[0]?.totalStaffs ?? 0;
+	const numOfPages = query.data?.pages[0]?.totalSubjects ?? 0;
 	const canGoNext = page + 1 < numOfPages;
 	const canGoPrevious = page > 0;
 
@@ -56,8 +56,8 @@ const StaffsTableWithData: FC<{
 
 	return (
 		<>
-			<StaffsTable
-				staffs={query.data?.pages[page]?.staffs ?? []}
+			<SubjectsTable
+				subjects={query.data?.pages[page]?.subjects ?? []}
 				loading={query.isFetching}
 			/>
 
@@ -88,11 +88,11 @@ const StaffsTableWithData: FC<{
 	);
 };
 
-export const StaffsTableAdvanced: FC<{
-	scope?: TStaffScope;
+export const SubjectsTableAdvanced: FC<{
+	scope?: TSubjectScope;
 }> = ({ scope }) => {
 	const [tableProps, setTableProps] = useState<{
-		filters: TStaffFilters;
+		filters: TSubjectFilters;
 		limit: number;
 	}>({
 		filters: {},
@@ -100,7 +100,7 @@ export const StaffsTableAdvanced: FC<{
 	});
 
 	const [viewOptions, setViewOptions] = useState<{
-		filters: TStaffFilters;
+		filters: TSubjectFilters;
 		limit: number;
 	}>({
 		filters: {
@@ -158,15 +158,15 @@ export const StaffsTableAdvanced: FC<{
 				</Select>
 			</div>
 
-			<StaffsTableWithData scope={scope} {...tableProps} />
+			<SubjectsTableWithData scope={scope} {...tableProps} />
 		</div>
 	);
 };
 
 /*
-<StaffsTable.Provider scope={scope}>
-	<StaffsTable.Filters />
-		<StaffsTable.Table />
-	<StaffsTable.Pagination />
-</StaffsTable.Provider>
+<SubjectsTable.Provider scope={scope}>
+	<SubjectsTable.Filters />
+		<SubjectsTable.Table />
+	<SubjectsTable.Pagination />
+</SubjectsTable.Provider>
 */

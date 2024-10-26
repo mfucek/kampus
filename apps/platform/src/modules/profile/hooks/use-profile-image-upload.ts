@@ -1,3 +1,4 @@
+import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
 import { useState } from 'react';
 
@@ -9,6 +10,8 @@ export const useProfileImageUpload = () => {
 
 	const { mutateAsync: uploadProfilePicture } =
 		api.account.uploadProfilePicture.useMutation();
+
+	const { toast } = useToast();
 
 	const [uploading, setUploading] = useState(false);
 
@@ -22,23 +25,32 @@ export const useProfileImageUpload = () => {
 
 		setUploading(true);
 
-		const upload = await fetch(url, {
-			method: 'PUT',
-			body: file,
-			headers: { 'Content-Type': file.type }
-		});
+		try {
+			const upload = await fetch(url, {
+				method: 'PUT',
+				body: file,
+				headers: { 'Content-Type': file.type }
+			});
 
-		setUploading(false);
+			setUploading(false);
 
-		console.log('uploading', upload);
+			console.log('uploading', upload);
 
-		onSuccess(key);
+			onSuccess(key);
+		} catch (error) {
+			console.error('Error uploading profile picture:', error);
+			toast({
+				title: 'Error uploading profile picture',
+				description: 'Please try again later',
+				variant: 'danger'
+			});
+		}
 	};
 
 	const openFilePicker = () => {
 		const input = document.createElement('input');
 		input.type = 'file';
-		input.accept = 'image/*';
+		input.accept = 'image/png, image/jpeg';
 		input.onchange = (e) => {
 			const files = (e.target as HTMLInputElement).files;
 			const file = files?.[0];
@@ -52,8 +64,22 @@ export const useProfileImageUpload = () => {
 	const utils = api.useUtils();
 
 	const onSuccess = async (key: string) => {
-		await uploadProfilePicture({ key });
-		await utils.account.getCurrentUserProfilePictureUrl.invalidate();
+		try {
+			await uploadProfilePicture({ key });
+			await utils.account.getCurrentUserProfilePictureUrl.invalidate();
+			toast({
+				title: 'Success',
+				description: 'Your profile picture has been updated successfully',
+				variant: 'success'
+			});
+		} catch (error) {
+			console.error('Error uploading profile picture:', error);
+			toast({
+				title: 'Error',
+				description: 'An error occurred while updating your profile picture',
+				variant: 'danger'
+			});
+		}
 	};
 
 	return { handleUpload, uploading, openFilePicker };

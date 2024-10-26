@@ -74,7 +74,7 @@ export const SubjectPage: FC<{
 					<MaterialsTab subjectId={subject.id} />
 				</TabsContent>
 				<TabsContent value="staff">
-					<StaffsTableAdvanced subset={{ subjectId: subject.id }} />
+					<StaffsTableAdvanced scope={{ subjectId: subject.id }} />
 				</TabsContent>
 			</Tabs>
 		</Container>

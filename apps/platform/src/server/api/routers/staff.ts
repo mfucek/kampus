@@ -3,7 +3,7 @@ import { type Prisma, type PrismaClient } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-const staffSubsetSchema = z.object({
+const staffScopeSchema = z.object({
 	collegeSlug: z.string().nullish(),
 	collegeId: z.string().nullish(),
 	subjectId: z.string().nullish()
@@ -14,7 +14,7 @@ const staffFiltersSchema = z.object({
 	subject: z.string().nullish()
 });
 
-export type TStaffSubset = z.infer<typeof staffSubsetSchema>;
+export type TStaffScope = z.infer<typeof staffScopeSchema>;
 export type TStaffFilters = z.infer<typeof staffFiltersSchema>;
 
 export const staffRouter = createTRPCRouter({
@@ -24,7 +24,7 @@ export const staffRouter = createTRPCRouter({
 				limit: z.number().min(1).max(100).nullish(),
 				cursor: z.string().nullish(),
 				filters: staffFiltersSchema.nullish(),
-				subset: staffSubsetSchema.nullish()
+				scope: staffScopeSchema.nullish()
 			})
 		)
 		.query(async ({ input, ctx }) => {
@@ -33,16 +33,16 @@ export const staffRouter = createTRPCRouter({
 			const limit = input.limit ?? 10;
 
 			const collegeId =
-				input.subset?.collegeId ??
-				(input.subset?.collegeSlug
-					? (await getCollegeBySlug(db, input.subset?.collegeSlug)).id
+				input.scope?.collegeId ??
+				(input.scope?.collegeSlug
+					? (await getCollegeBySlug(db, input.scope?.collegeSlug)).id
 					: undefined);
 
-			const subjectId = input.subset?.subjectId;
+			const subjectId = input.scope?.subjectId;
 
 			const where: Prisma.TopicWhereInput = {
 				type: 'STAFF',
-				// subset
+				// scope
 				...(collegeId ? { collegeId: collegeId } : {}),
 				...(subjectId
 					? {
@@ -102,13 +102,6 @@ export const staffRouter = createTRPCRouter({
 					where
 				})) / limit
 			);
-
-			if (!staffs) {
-				throw new TRPCError({
-					code: 'NOT_FOUND',
-					message: 'Subjects not found'
-				});
-			}
 
 			const nextCursor = staffs[staffs.length - 1]?.id;
 

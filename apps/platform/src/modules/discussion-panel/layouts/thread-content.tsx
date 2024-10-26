@@ -5,7 +5,6 @@ import { api } from '@/lib/trpc/react';
 import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
 import { unpackThread } from '@/modules/discussion/utils/unpack-thread';
-import { Fragment } from 'react';
 import { Container } from '../../../global/components/container';
 import { usePostId } from '../components/post-id-provider';
 
@@ -31,7 +30,7 @@ export const ThreadContent = () => {
 
 	if (!postId) return null;
 
-	if (!fullPost)
+	if (!fullPost || !thread)
 		return (
 			<div className="h-full min-h-[200px] flex flex-col items-center justify-center">
 				<Spinner className="w-8 h-8" />
@@ -54,18 +53,17 @@ export const ThreadContent = () => {
 						<div className="flex flex-col w-full">
 							{unpackedThread.map((fullPost, index) => {
 								return (
-									<Fragment key={fullPost.post.id}>
-										<Post
-											fullPost={fullPost}
-											depthInfo={fullPost.depthInfo}
-											previousThreadDepth={
-												unpackedThread[index - 1]?.depthInfo ?? undefined
-											}
-											nextThreadDepth={
-												unpackedThread[index + 1]?.depthInfo ?? undefined
-											}
-										/>
-									</Fragment>
+									<Post
+										key={fullPost.post.id}
+										fullPost={fullPost}
+										depthInfo={fullPost.depthInfo}
+										previousThreadDepth={
+											unpackedThread[index - 1]?.depthInfo ?? undefined
+										}
+										nextThreadDepth={
+											unpackedThread[index + 1]?.depthInfo ?? undefined
+										}
+									/>
 								);
 							})}
 						</div>

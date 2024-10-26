@@ -2,6 +2,7 @@
 
 import { Button } from '@/lib/shadcn/ui/button';
 import { Input } from '@/lib/shadcn/ui/input';
+import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -25,22 +26,42 @@ export const PublicProfileSection = () => {
 	const [displayName, setDisplayName] = useState(user?.displayName ?? '');
 	const [badge, setBadge] = useState(user?.badge ?? '');
 
+	const { toast } = useToast();
+
 	useEffect(() => {
 		setDisplayName(user?.displayName ?? '');
 		setBadge(user?.badge ?? '');
 	}, [user]);
 
 	const handleUpdateDisplayName = async () => {
-		await updateDisplayName({ displayName });
+		console.log('asd');
+		try {
+			await updateDisplayName({ displayName });
+
+			toast({
+				title: 'Success',
+				description: 'Your display name has been updated successfully',
+				variant: 'success'
+			});
+		} catch (error) {
+			toast({
+				title: 'Error',
+				description: 'An error occurred while updating your display name',
+				variant: 'danger'
+			});
+		}
 	};
 
 	const handleUpdateBadge = async () => {
 		try {
 			await updateBadge({ badge: badge || null });
-			// Optionally, you can add a success message or refetch the user data here
 		} catch (error) {
 			console.error('Error updating badge:', error);
-			// Optionally, you can show an error message to the user
+			toast({
+				title: 'Error',
+				description: 'An error occurred while updating your badge',
+				variant: 'danger'
+			});
 		}
 	};
 
@@ -75,7 +96,7 @@ export const PublicProfileSection = () => {
 							</Button>
 						</div>
 						<p className="body-2 text-neutral-strong">
-							Max file size: 10MB, JPG, PNG
+							Max file size: 5MB, JPG, PNG
 						</p>
 					</div>
 				</div>

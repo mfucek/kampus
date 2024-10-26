@@ -100,6 +100,9 @@ export default {
 			xl: '1280px'
 		}
 	},
-	plugins: [require('@tailwindcss/container-queries')],
+	plugins: [
+		require('@tailwindcss/container-queries'),
+		require('tailwindcss-animate')
+	],
 	darkMode: ['class', 'class']
 } satisfies Config;

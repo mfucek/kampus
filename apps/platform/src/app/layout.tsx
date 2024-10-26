@@ -12,6 +12,7 @@ import { TRPCReactProvider } from '@/lib/trpc/react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '../modules/theme/providers/theme-provider';
 
+import { Toaster } from '@/lib/shadcn/ui/toaster';
 import NextTopLoader from 'nextjs-toploader';
 
 export const metadata: Metadata = {
@@ -32,7 +33,10 @@ export default function RootLayout({
 					<TRPCReactProvider>
 						<AnalyticsProvider>
 							<ThemeProvider>
-								<TooltipProvider>{children}</TooltipProvider>
+								<TooltipProvider>
+									{children}
+									<Toaster />
+								</TooltipProvider>
 							</ThemeProvider>
 						</AnalyticsProvider>
 					</TRPCReactProvider>

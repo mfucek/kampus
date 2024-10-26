@@ -11,7 +11,7 @@ import { cn } from '@/lib/shadcn/utils';
 import { api } from '@/lib/trpc/react';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import { VoteType } from '@prisma/client';
-import { type FC } from 'react';
+import { useState, type FC } from 'react';
 
 const reactionToTheme = (reaction: VoteType | null) => {
 	switch (reaction) {
@@ -35,35 +35,59 @@ export const Reactions: FC<{
 	const { isSignedIn } = useAuth();
 	const { openSignIn } = useClerk();
 
-	const userVoteAfterCheck = api.vote.getVotesByPostIdWithUser.useMutation();
+	// const userVoteAfterCheck = api.vote.getVotesByPostIdWithUser.useMutation();
+	const [optimisticVote, setOptimisticVote] = useState<
+		VoteType | null | undefined
+	>(undefined);
+
 	const createVote = api.vote.createVote.useMutation({
+		onMutate: ({ type }) => {
+			// optimistic updating
+			setOptimisticVote(type);
+		},
 		onSuccess: () => {
-			userVoteAfterCheck.mutateAsync({ postId });
+			// userVoteAfterCheck.mutateAsync({ postId });
+			// setOptimisticVote(undefined);
 		}
 	});
 
-	const likes = userVoteAfterCheck.data?.likes ?? votes.likes;
-	const dislikes = userVoteAfterCheck.data?.dislikes ?? votes.dislikes;
+	const likes = votes.likes;
+
+	const dislikes = votes.dislikes;
 
 	let reaction: VoteType | null = null;
-	if (userVoteAfterCheck.data) {
-		reaction = userVoteAfterCheck.data.userVote?.type ?? null;
-	} else {
-		reaction = votes.userVote ?? null;
-	}
+	reaction =
+		optimisticVote === null ? null : (optimisticVote ?? votes.userVote ?? null);
 
-	const count = likes - dislikes;
+	let count = likes - dislikes;
+	if (votes.userVote === 'UP' && optimisticVote === null) {
+		count -= 1;
+	}
+	if (votes.userVote === 'UP' && optimisticVote === 'DOWN') {
+		count -= 2;
+	}
+	if (votes.userVote === 'DOWN' && optimisticVote === null) {
+		count += 1;
+	}
+	if (votes.userVote === 'DOWN' && optimisticVote === 'UP') {
+		count += 2;
+	}
+	if (votes.userVote === null && optimisticVote === 'UP') {
+		count += 1;
+	}
+	if (votes.userVote === null && optimisticVote === 'DOWN') {
+		count -= 1;
+	}
 
 	const handleUpvote = () => {
 		if (!isSignedIn) {
 			openSignIn();
 			return;
 		}
-		if (reaction === VoteType.UP) {
-			createVote.mutateAsync({ postId, type: null });
-			return;
-		}
-		createVote.mutateAsync({ postId, type: VoteType.UP });
+		createVote.mutateAsync({
+			postId,
+			type: reaction === VoteType.UP ? null : VoteType.UP
+		});
 	};
 
 	const handleDownvote = () => {
@@ -71,11 +95,10 @@ export const Reactions: FC<{
 			openSignIn();
 			return;
 		}
-		if (reaction === VoteType.DOWN) {
-			createVote.mutateAsync({ postId, type: null });
-			return;
-		}
-		createVote.mutateAsync({ postId, type: VoteType.DOWN });
+		createVote.mutateAsync({
+			postId,
+			type: reaction === VoteType.DOWN ? null : VoteType.DOWN
+		});
 	};
 
 	return (

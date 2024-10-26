@@ -64,6 +64,9 @@ export const columns: ColumnDef<Subject>[] = [
 	}
 ];
 
-export const SubjectsTable: FC<{ subjects: Subject[] }> = ({ subjects }) => {
-	return <DataTable columns={columns} data={subjects} loading={false} />;
+export const SubjectsTable: FC<{
+	subjects: Subject[];
+	loading?: boolean;
+}> = ({ subjects, loading = false }) => {
+	return <DataTable columns={columns} data={subjects} loading={loading} />;
 };

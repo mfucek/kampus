@@ -4,7 +4,7 @@ import { api } from '@/lib/trpc/server';
 import { PageHeader } from '@/modules/college/components/page-header';
 import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
-import { SubjectsTable } from '@/modules/subject/components/subjects-table';
+import { SubjectsTableAdvanced } from '@/modules/subject/components/subjects-table-advanced';
 import type { FC } from 'react';
 import { StaffsTableAdvanced } from '../../staff/components/staffs-table-advanced';
 
@@ -26,14 +26,17 @@ const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
 };
 
 const SubjectsTab: FC<{ collegeSlug: string }> = async ({ collegeSlug }) => {
-	const subjects = await api.subject.listByCollegeSlug({ collegeSlug });
-	return <SubjectsTable subjects={subjects} />;
+	return (
+		<div className="flex flex-col gap-2">
+			<SubjectsTableAdvanced scope={{ collegeSlug }} />
+		</div>
+	);
 };
 
 export const StaffTab: FC<{ collegeSlug: string }> = ({ collegeSlug }) => {
 	return (
 		<div className="flex flex-col gap-2">
-			<StaffsTableAdvanced subset={{ collegeSlug }} />
+			<StaffsTableAdvanced scope={{ collegeSlug }} />
 		</div>
 	);
 };

@@ -2,6 +2,7 @@
 
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
+import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { cn } from '@/lib/shadcn/utils';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
@@ -160,6 +161,7 @@ export const Composer: FC<{
 
 	const utils = api.useUtils();
 	const router = useRouter();
+	const { toast } = useToast();
 
 	const { mutateAsync: createPost, isPending } =
 		api.post.createPost.useMutation({
@@ -177,8 +179,22 @@ export const Composer: FC<{
 		});
 
 	const handleSubmit = () => {
-		if (remaining >= 0 && !isPending) {
+		if (remaining >= 0 && textValue.length > 0 && !isPending) {
 			createPost({ body: value, collegeId, topicId, replyToId });
+		}
+		if (remaining < 0) {
+			toast({
+				title: 'Error',
+				content: 'Please keep the content less than 2000 characters.',
+				variant: 'danger'
+			});
+		}
+		if (textValue.length <= 0) {
+			toast({
+				title: 'Error',
+				content: 'Post cannot be empty.',
+				variant: 'danger'
+			});
 		}
 	};
 
@@ -203,7 +219,7 @@ export const Composer: FC<{
 					theme="accent"
 					variant="solid"
 					size="sm"
-					disabled={remaining < 0}
+					disabled={remaining < 0 || textValue.length <= 0}
 					onClick={handleSubmit}
 					loading={isPending}
 				>

@@ -43,7 +43,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (canToggleTheme === true) {
 			if (typeof window !== 'undefined') {
 				const storedTheme = localStorage.getItem('theme') as Theme | null;
-				console.log('storedTheme', storedTheme);
 
 				setTheme(storedTheme || 'light');
 			}

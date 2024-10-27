@@ -60,8 +60,9 @@ export const listPostsByCollegeSlugProcedure = publicProcedure
 						type: file.type,
 						documentFile: file.documentFile
 							? {
-									academicYear: file.documentFile.academicYear,
-									types: file.documentFile.types
+									academicYear: file.documentFile.academicYear ?? undefined,
+									types: file.documentFile.types,
+									title: file.documentFile.title ?? undefined
 								}
 							: null,
 						imageFile: file.imageFile ? {} : null,
@@ -80,8 +81,9 @@ export const listPostsByCollegeSlugProcedure = publicProcedure
 					...file,
 					documentFile: file.documentFile
 						? {
-								academicYear: file.documentFile.academicYear ?? '',
-								types: file.documentFile.types
+								academicYear: file.documentFile.academicYear ?? undefined,
+								types: file.documentFile.types,
+								title: file.documentFile.title ?? undefined
 							}
 						: null
 				}))

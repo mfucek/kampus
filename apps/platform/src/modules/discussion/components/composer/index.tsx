@@ -70,7 +70,6 @@ export const Composer: FC<{
 	const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
 		setDragging(false);
-		console.log(e.dataTransfer?.files);
 
 		const fileList = [];
 		for (const file of e.dataTransfer?.files ?? []) {

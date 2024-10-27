@@ -19,7 +19,6 @@ export const uploadProfilePictureProcedure = protectedProcedure
 
 		// Delete old profile picture file
 		if (oldProfileIcon) {
-			console.log('deleting old profile picture file');
 			await deleteFile(oldProfileIcon.file.key);
 			await db.imageFile.delete({
 				where: { userId: user.id },

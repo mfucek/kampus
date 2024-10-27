@@ -29,7 +29,7 @@ export default function RootLayout({
 		<html lang="en" className={GeistSans.variable}>
 			<body className="bg-background min-h-screen">
 				<NextTopLoader color="#3461ff" shadow={false} showSpinner={false} />
-				<ClerkProvider>
+				<ClerkProvider localization={{ locale: 'hr-HR' }}>
 					<TRPCReactProvider>
 						<AnalyticsProvider>
 							<ThemeProvider>

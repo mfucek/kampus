@@ -1,7 +1,7 @@
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
 import { DocumentFileType, FileType } from '@prisma/client';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 const fileTypeToFileType = (type: string): FileType => {
 	if (['image/png', 'image/jpeg'].includes(type)) return 'IMAGE';
@@ -25,16 +25,12 @@ export const useUploadToPost = () => {
 			type: FileType;
 			key?: string;
 			documentOptions?: {
-				academicYear: string;
+				academicYear?: string;
+				title?: string;
 				types: DocumentFileType[];
 			};
 		}[]
 	>([]);
-
-	useEffect(() => {
-		console.log('files');
-		console.log(files);
-	}, [files]);
 
 	const addFile = async (file: File) => {
 		const askForInput = async () => {
@@ -47,14 +43,16 @@ export const useUploadToPost = () => {
 
 			let documentOptions:
 				| {
-						academicYear: string;
+						academicYear?: string;
+						title?: string;
 						types: DocumentFileType[];
 				  }
 				| undefined = undefined;
 
 			if (type === 'PDF' || type === 'ARCHIVE') {
 				documentOptions = {
-					academicYear: (await askForInput()) ?? '',
+					academicYear: '',
+					title: (await askForInput()) ?? undefined,
 					types: []
 				};
 			}
@@ -78,11 +76,7 @@ export const useUploadToPost = () => {
 			// get s3 upload url
 			const filesWithKeys = await Promise.all(
 				files.map(async (file, i) => {
-					console.log('file nr.', i);
-
 					const { url, key } = await makeUploadUrl(void {}, {});
-					console.log('url', url);
-					console.log('key', key);
 
 					// upload file to s3
 					fetch(url, {
@@ -116,20 +110,15 @@ export const useUploadToPost = () => {
 			files: {
 				key: string;
 				type: FileType;
-				documentOptions?: { academicYear: string; types: DocumentFileType[] };
+				documentOptions?: {
+					academicYear?: string;
+					title?: string;
+					types: DocumentFileType[];
+				};
 			}[],
 			postId: string
 		) => {
 			setFiles([]);
-			console.log('linking files');
-			console.log(
-				files.map((file) => ({
-					key: file.key,
-					type: file.type,
-					postId,
-					documentOptions: file.documentOptions
-				}))
-			);
 
 			try {
 				await linkToPost({
@@ -139,6 +128,7 @@ export const useUploadToPost = () => {
 						postId,
 						documentOptions: {
 							academicYear: file.documentOptions?.academicYear ?? undefined,
+							title: file.documentOptions?.title ?? undefined,
 							types: file.documentOptions?.types ?? []
 						}
 					}))

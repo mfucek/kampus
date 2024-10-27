@@ -31,7 +31,8 @@ export type FullPost = {
 		type: FileType;
 		documentFile:
 			| {
-					academicYear: string;
+					academicYear?: string;
+					title?: string;
 					types: DocumentFileType[];
 			  }
 			| undefined

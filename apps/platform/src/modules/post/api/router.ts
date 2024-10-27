@@ -4,16 +4,14 @@ import {
 	protectedProcedure,
 	publicProcedure
 } from '@/server/api/trpc';
-import {
-	DocumentFileType,
-	FileType,
-	Prisma,
-	type PrismaClient,
-	VoteType
-} from '@prisma/client';
+import { Prisma, VoteType } from '@prisma/client';
 import { JSONContent } from '@tiptap/react';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+import { getUserId } from '../../account/api/helpers/get-user-id';
+import { FullPost } from '../types/full-post';
+import { RecursivePost } from '../types/recursive-post';
+import { getPostVotes } from './getPostVotes';
 
 export const postRouter = createTRPCRouter({
 	listPostsByCollegeSlug: publicProcedure
@@ -389,129 +387,3 @@ export const postRouter = createTRPCRouter({
 			return thread;
 		})
 });
-
-export type RecursivePost = {
-	post: {
-		id: string;
-		body: JSONContent | null;
-		createdAt: Date;
-		authorId: string;
-		author: {
-			id: string;
-			createdAt: Date;
-			updatedAt: Date;
-			displayName: string;
-			imageUrl: string | null;
-			accountId: string;
-			badge: string | null;
-		};
-		_count: {
-			replies: number;
-		};
-	};
-	replies: RecursivePost[];
-	votes: {
-		likes: number;
-		dislikes: number;
-		userVote: VoteType | null;
-	};
-	files: {
-		id: string;
-		key: string;
-		type: FileType;
-		documentFile:
-			| {
-					academicYear: string;
-					types: DocumentFileType[];
-			  }
-			| undefined
-			| null;
-		imageFile: {} | null;
-		url?: string | null;
-	}[];
-};
-
-export type FullPost = {
-	post: {
-		id: string;
-		body: JSONContent | null;
-		createdAt: Date;
-		authorId: string;
-		author: {
-			id: string;
-			createdAt: Date;
-			updatedAt: Date;
-			displayName: string;
-			imageUrl: string | null;
-			accountId: string;
-			badge: string | null;
-		};
-		_count: {
-			replies: number;
-		};
-	};
-	votes: {
-		likes: number;
-		dislikes: number;
-		userVote: VoteType | null;
-	};
-	files: {
-		id: string;
-		key: string;
-		type: FileType;
-		documentFile:
-			| {
-					academicYear: string;
-					types: DocumentFileType[];
-			  }
-			| undefined
-			| null;
-		imageFile: {} | null;
-		url?: string | null;
-	}[];
-};
-
-const getPostVotes = async (
-	postId: string,
-	userId: string | null | undefined,
-	db: PrismaClient
-) => {
-	const votes = await db.vote.findMany({
-		where: {
-			postId: postId
-		}
-	});
-
-	const likes = votes.filter((vote) => vote.type === VoteType.UP).length;
-	const dislikes = votes.filter((vote) => vote.type === VoteType.DOWN).length;
-
-	const userVote = votes.find((vote) => vote.userId === userId)?.type ?? null;
-	console.log(userVote);
-
-	return {
-		likes,
-		dislikes,
-		userVote
-	};
-};
-
-const getUserId = async (
-	clerkUserId: string | null | undefined,
-	db: PrismaClient
-) => {
-	let userId = null;
-	if (clerkUserId) {
-		const account = await db.account.findUnique({
-			where: {
-				clerkUserId: clerkUserId
-			},
-			include: {
-				user: true
-			}
-		});
-
-		userId = account?.user?.id;
-	}
-
-	return userId;
-};

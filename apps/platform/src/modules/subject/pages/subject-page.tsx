@@ -4,7 +4,7 @@ import { api } from '@/lib/trpc/server';
 import { PageHeader } from '@/modules/college/components/page-header';
 import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
-import { MaterialsTable } from '@/modules/files/components/materials-table';
+import { MaterialsTable } from '@/modules/file/components/materials-table';
 import { StaffsTableAdvanced } from '@/modules/staff/components/staffs-table-advanced';
 import { SummarySection } from '@/modules/summary/components/summary-section';
 import type { FC } from 'react';

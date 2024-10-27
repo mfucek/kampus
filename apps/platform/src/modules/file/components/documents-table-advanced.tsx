@@ -2,6 +2,9 @@
 
 import { type FC, useEffect, useState } from 'react';
 
+import { TFileFilters } from '../schemas/file-filters';
+import { TFileScope } from '../schemas/file-scope';
+
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Input } from '@/lib/shadcn/ui/input';
@@ -13,19 +16,17 @@ import {
 	SelectValue
 } from '@/lib/shadcn/ui/select';
 import { api } from '@/lib/trpc/react';
-import { type TSubjectFilters } from '@/modules/subject/schemas/subject-filters';
-import { type TSubjectScope } from '@/modules/subject/schemas/subject-scope';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
-import { SubjectsTable } from './subjects-table';
+import { DocumentsTable } from './documents-table';
 
-const SubjectsTableWithData: FC<{
-	filters?: TSubjectFilters;
-	scope?: TSubjectScope;
+const DocumentsTableWithData: FC<{
+	filters?: TFileFilters;
+	scope: TFileScope;
 	limit: number;
 }> = ({ filters, scope, limit }) => {
 	const [page, setPage] = useState(0);
 
-	const query = api.subject.list.useInfiniteQuery(
+	const query = api.file.listDocuments.useInfiniteQuery(
 		{
 			scope,
 			limit,
@@ -36,7 +37,7 @@ const SubjectsTableWithData: FC<{
 		}
 	);
 
-	const numOfPages = query.data?.pages[0]?.totalSubjects ?? 0;
+	const numOfPages = query.data?.pages[0]?.totalPages ?? 0;
 	const canGoNext = page + 1 < numOfPages;
 	const canGoPrevious = page > 0;
 
@@ -58,8 +59,8 @@ const SubjectsTableWithData: FC<{
 
 	return (
 		<>
-			<SubjectsTable
-				subjects={query.data?.pages[page]?.subjects ?? []}
+			<DocumentsTable
+				documents={query.data?.pages[page]?.files ?? []}
 				loading={query.isFetching}
 			/>
 
@@ -90,11 +91,11 @@ const SubjectsTableWithData: FC<{
 	);
 };
 
-export const SubjectsTableAdvanced: FC<{
-	scope?: TSubjectScope;
+export const DocumentsTableAdvanced: FC<{
+	scope: TFileScope;
 }> = ({ scope }) => {
 	const [tableProps, setTableProps] = useState<{
-		filters: TSubjectFilters;
+		filters: TFileFilters;
 		limit: number;
 	}>({
 		filters: {},
@@ -102,7 +103,7 @@ export const SubjectsTableAdvanced: FC<{
 	});
 
 	const [viewOptions, setViewOptions] = useState<{
-		filters: TSubjectFilters;
+		filters: TFileFilters;
 		limit: number;
 	}>({
 		filters: {
@@ -160,15 +161,7 @@ export const SubjectsTableAdvanced: FC<{
 				</Select>
 			</div>
 
-			<SubjectsTableWithData scope={scope} {...tableProps} />
+			<DocumentsTableWithData scope={scope} {...tableProps} />
 		</div>
 	);
 };
-
-/*
-<SubjectsTable.Provider scope={scope}>
-	<SubjectsTable.Filters />
-		<SubjectsTable.Table />
-	<SubjectsTable.Pagination />
-</SubjectsTable.Provider>
-*/

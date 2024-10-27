@@ -1,4 +1,5 @@
-import { type FullPost, type RecursivePost } from '@/server/api/routers/post';
+import { FullPost } from '@/modules/post/types/full-post';
+import { RecursivePost } from '@/modules/post/types/recursive-post';
 
 type UnpackedPost = FullPost & {
 	depthInfo: number[];

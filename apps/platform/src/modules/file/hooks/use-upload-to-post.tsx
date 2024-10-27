@@ -147,6 +147,7 @@ export const useUploadToPost = () => {
 	);
 
 	return {
+		files,
 		isPending,
 		addFile,
 		removeFile,

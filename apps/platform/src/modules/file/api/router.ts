@@ -61,7 +61,7 @@ export const fileRouter = createTRPCRouter({
 						postId: z.string(),
 						documentOptions: z
 							.object({
-								academicYear: z.string(),
+								academicYear: z.string().optional(),
 								types: z.array(z.nativeEnum(DocumentFileType))
 							})
 							.nullish()

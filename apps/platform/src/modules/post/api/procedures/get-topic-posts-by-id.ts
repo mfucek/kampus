@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { getFileUrl } from '@/lib/s3';
 import { getUserId } from '@/modules/account/api/helpers/get-user-id';
 import { publicProcedure } from '@/server/api/trpc';
 import { JSONContent } from '@tiptap/react';
@@ -41,10 +42,33 @@ export const getTopicPostsByIdProcedure = publicProcedure
 
 		const userId = await getUserId(ctx.clerkUserId, db);
 
+		const filesWithUrls = await Promise.all(
+			typesafePosts.map(async (post) =>
+				Promise.all(
+					post.files.map(async (file) => ({
+						id: file.id,
+						key: file.key,
+						type: file.type,
+						documentFile: file.documentFile
+							? {
+									academicYear: file.documentFile.academicYear ?? undefined,
+									types: file.documentFile.types,
+									title: file.documentFile.title ?? undefined
+								}
+							: null,
+						imageFile: file.imageFile ? {} : null,
+						url: await getFileUrl(file.key)
+					}))
+				)
+			)
+			// Start of Selection
+		);
+
 		const postsWithVotes = await Promise.all(
-			typesafePosts.map(async (post) => ({
+			typesafePosts.map(async (post, i) => ({
 				post: post,
-				votes: await getPostVotes(post.id, userId, db)
+				votes: await getPostVotes(post.id, userId, db),
+				files: filesWithUrls[i]!
 			}))
 		);
 

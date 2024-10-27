@@ -98,17 +98,16 @@ export const getThreadProcedure = publicProcedure
 					dislikes,
 					userVote
 				},
-				files: [
-					{
-						id: filesWithUrls[0]!.id,
-						key: filesWithUrls[0]!.key,
-						type: filesWithUrls[0]!.type,
-						documentFile: undefined,
-						imageFile: filesWithUrls[0]!.imageFile,
-						url: filesWithUrls[0]!.url
-					}
-				]
-				// files: filesWithUrls
+				files: filesWithUrls.map((file) => ({
+					...file,
+					documentFile: file.documentFile
+						? {
+								academicYear: file.documentFile.academicYear ?? undefined,
+								types: file.documentFile.types,
+								title: file.documentFile.title ?? undefined
+							}
+						: null
+				}))
 			};
 
 			return fullPost;

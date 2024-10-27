@@ -1,5 +1,6 @@
 'use client';
 
+import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { cn } from '@/lib/shadcn/utils';
@@ -22,7 +23,8 @@ export const Composer: FC<{
 	const utils = api.useUtils();
 	const router = useRouter();
 	const { toast } = useToast();
-	const { addFile, removeFile, commitFiles, linkFiles } = useUploadToPost();
+	const { files, addFile, removeFile, commitFiles, linkFiles } =
+		useUploadToPost();
 
 	const [textValue, setTextValue] = useState('');
 	const [value, setValue] = useState<JSONContent>({
@@ -166,8 +168,19 @@ export const Composer: FC<{
 					)}
 				</div>
 			</div>
+
+			<div className="flex flex-row gap-2">
+				{files.map((file, index) => (
+					<div className="flex flex-col" key={file.key}>
+						<p>{file.type}</p>
+						<Button variant="ghost" iconOnly onClick={() => removeFile(index)}>
+							<Icon icon="close" />
+						</Button>
+					</div>
+				))}
+			</div>
+
 			<Footer />
-			{/* {memoizedPreviewPost} */}
 		</div>
 	);
 };

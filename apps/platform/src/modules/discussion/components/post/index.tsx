@@ -1,5 +1,11 @@
 'use client';
 
+import { EditorContent, useEditor } from '@tiptap/react';
+import { formatDistance } from 'date-fns';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { type FC } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import {
@@ -10,13 +16,7 @@ import {
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
-
-import { FullPost } from '@/server/api/routers/post/router';
-import { EditorContent, useEditor } from '@tiptap/react';
-import { formatDistance } from 'date-fns';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { type FC } from 'react';
+import { type FullPost } from '@/modules/post/types/full-post';
 import { PostThreading } from './post-threading';
 import { Reactions } from './reactions';
 
@@ -138,10 +138,6 @@ export const Post: FC<{
 			</div>
 		);
 	};
-
-	if (fullPost.files.length !== 0) {
-		console.log(fullPost);
-	}
 
 	const PostFiles = () => {
 		return (

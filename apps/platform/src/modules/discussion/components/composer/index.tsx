@@ -171,7 +171,7 @@ export const Composer: FC<{
 
 			<div className="flex flex-row gap-2">
 				{files.map((file, index) => (
-					<div className="flex flex-col" key={file.key}>
+					<div className="flex flex-col" key={file.key || index}>
 						<p>{file.type}</p>
 						<Button variant="ghost" iconOnly onClick={() => removeFile(index)}>
 							<Icon icon="close" />

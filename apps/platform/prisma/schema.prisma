@@ -220,7 +220,7 @@ model DocumentFile {
   fileId String @id @unique
   file   File   @relation(fields: [fileId], references: [id])
 
-  academicYear String
+  academicYear String?
 
   types DocumentFileType[]
 }

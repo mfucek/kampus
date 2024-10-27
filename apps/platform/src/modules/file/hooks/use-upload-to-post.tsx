@@ -1,6 +1,6 @@
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
-import { FileType } from '@prisma/client';
+import { DocumentFileType, FileType } from '@prisma/client';
 import { useCallback, useEffect, useState } from 'react';
 
 const fileTypeToFileType = (type: string): FileType => {
@@ -24,6 +24,10 @@ export const useUploadToPost = () => {
 			file: File;
 			type: FileType;
 			key?: string;
+			documentOptions?: {
+				academicYear: string;
+				types: DocumentFileType[];
+			};
 		}[]
 	>([]);
 
@@ -32,11 +36,30 @@ export const useUploadToPost = () => {
 		console.log(files);
 	}, [files]);
 
-	const addFile = (file: File) => {
+	const addFile = async (file: File) => {
+		const askForInput = async () => {
+			const res = await window.prompt('Please enter the name of the file');
+			return res;
+		};
+
 		try {
 			const type = fileTypeToFileType(file.type);
 
-			setFiles((prev) => [...prev, { file, type }]);
+			let documentOptions:
+				| {
+						academicYear: string;
+						types: DocumentFileType[];
+				  }
+				| undefined = undefined;
+
+			if (type === 'PDF' || type === 'ARCHIVE') {
+				documentOptions = {
+					academicYear: (await askForInput()) ?? '',
+					types: []
+				};
+			}
+
+			setFiles((prev) => [...prev, { file, type, documentOptions }]);
 		} catch (error) {
 			toast({
 				title: 'Nedopušteni tip datoteke',
@@ -89,7 +112,14 @@ export const useUploadToPost = () => {
 	}, [files]);
 
 	const linkFiles = useCallback(
-		async (files: { key: string; type: FileType }[], postId: string) => {
+		async (
+			files: {
+				key: string;
+				type: FileType;
+				documentOptions?: { academicYear: string; types: DocumentFileType[] };
+			}[],
+			postId: string
+		) => {
 			setFiles([]);
 			console.log('linking files');
 			console.log(
@@ -97,7 +127,7 @@ export const useUploadToPost = () => {
 					key: file.key,
 					type: file.type,
 					postId,
-					documentOptions: null
+					documentOptions: file.documentOptions
 				}))
 			);
 
@@ -107,7 +137,10 @@ export const useUploadToPost = () => {
 						key: file.key!,
 						type: file.type,
 						postId,
-						documentOptions: null
+						documentOptions: {
+							academicYear: file.documentOptions?.academicYear ?? undefined,
+							types: file.documentOptions?.types ?? []
+						}
 					}))
 				});
 			} catch (error) {

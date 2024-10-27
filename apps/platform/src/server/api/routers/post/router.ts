@@ -79,13 +79,22 @@ export const postRouter = createTRPCRouter({
 						}))
 					)
 				)
+				// Start of Selection
 			);
 
 			const postsWithFiles: FullPost[] = await Promise.all(
 				postsWithVotes.map(async (post, i) => ({
 					post: post.post,
 					votes: post.votes,
-					files: filesWithUrls[i]!
+					files: filesWithUrls[i]!.map((file) => ({
+						...file,
+						documentFile: file.documentFile
+							? {
+									academicYear: file.documentFile.academicYear ?? '',
+									types: file.documentFile.types
+								}
+							: null
+					}))
 				}))
 			);
 
@@ -335,7 +344,7 @@ export const postRouter = createTRPCRouter({
 					}))
 				);
 
-				const fullPost = {
+				const fullPost: RecursivePost = {
 					post: {
 						...post,
 						id: post.id,
@@ -360,7 +369,17 @@ export const postRouter = createTRPCRouter({
 						dislikes,
 						userVote
 					},
-					files: filesWithUrls
+					files: [
+						{
+							id: filesWithUrls[0]!.id,
+							key: filesWithUrls[0]!.key,
+							type: filesWithUrls[0]!.type,
+							documentFile: undefined,
+							imageFile: filesWithUrls[0]!.imageFile,
+							url: filesWithUrls[0]!.url
+						}
+					]
+					// files: filesWithUrls
 				};
 
 				return fullPost;
@@ -400,10 +419,13 @@ export type RecursivePost = {
 		id: string;
 		key: string;
 		type: FileType;
-		documentFile: {
-			academicYear: string;
-			types: DocumentFileType[];
-		} | null;
+		documentFile:
+			| {
+					academicYear: string;
+					types: DocumentFileType[];
+			  }
+			| undefined
+			| null;
 		imageFile: {} | null;
 		url?: string | null;
 	}[];
@@ -437,10 +459,13 @@ export type FullPost = {
 		id: string;
 		key: string;
 		type: FileType;
-		documentFile: {
-			academicYear: string;
-			types: DocumentFileType[];
-		} | null;
+		documentFile:
+			| {
+					academicYear: string;
+					types: DocumentFileType[];
+			  }
+			| undefined
+			| null;
 		imageFile: {} | null;
 		url?: string | null;
 	}[];

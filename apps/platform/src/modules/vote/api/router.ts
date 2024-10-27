@@ -1,6 +1,10 @@
+import {
+	createTRPCRouter,
+	protectedProcedure,
+	publicProcedure
+} from '@/server/api/trpc';
 import { VoteType } from '@prisma/client';
 import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 export const voteRouter = createTRPCRouter({
 	getVotesByPostId: publicProcedure

@@ -1,17 +1,15 @@
-import { fileRouter } from '@/modules/file/api/router';
-import { postRouter } from '@/server/api/routers/post/router';
 import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
-import { accountRouter } from './routers/account';
-import { collegeRouter } from './routers/college';
-import { staffRouter } from './routers/staff';
-import { stripeRouter } from './routers/stripe';
-import { subjectRouter } from './routers/subject';
-import { voteRouter } from './routers/vote';
-/**
- * This is the primary router for your server.
- *
- * All routers added in /api/routers should be manually added here.
- */
+
+import { fileRouter } from '@/modules/file/api/router';
+import { postRouter } from '@/modules/post/api/router';
+import { userRouter } from '@/modules/user/api/router';
+import { voteRouter } from '@/modules/vote/api/router';
+import { stripeRouter } from '../../lib/stripe/api/router';
+import { accountRouter } from '../../modules/account/api/router';
+import { collegeRouter } from '../../modules/college/api/router';
+import { staffRouter } from '../../modules/staff/api/router';
+import { subjectRouter } from '../../modules/subject/api/subject';
+
 export const appRouter = createTRPCRouter({
 	post: postRouter,
 	college: collegeRouter,
@@ -20,10 +18,10 @@ export const appRouter = createTRPCRouter({
 	subject: subjectRouter,
 	staff: staffRouter,
 	vote: voteRouter,
-	file: fileRouter
+	file: fileRouter,
+	user: userRouter
 });
 
-// export type definition of API
 export type AppRouter = typeof appRouter;
 
 /**

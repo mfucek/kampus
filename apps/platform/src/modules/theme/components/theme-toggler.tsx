@@ -29,7 +29,7 @@ export const ThemeToggler = () => {
 	};
 
 	if (!mounted) {
-		return null; // Return null on server-side and initial client-side render
+		return null;
 	}
 
 	return (

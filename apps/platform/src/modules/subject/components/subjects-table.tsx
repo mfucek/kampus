@@ -24,7 +24,7 @@ type Subject = {
 		ects: number | null;
 	} | null;
 	_count: {
-		Post: number;
+		posts: number;
 	};
 };
 
@@ -47,7 +47,7 @@ export const columns: ColumnDef<Subject>[] = [
 			const {
 				slug: topicSlug,
 				college: { slug: collegeSlug },
-				_count: { Post: postCount }
+				_count: { posts: postCount }
 			} = row.original;
 
 			return (

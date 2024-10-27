@@ -15,7 +15,6 @@ export const getPostVotes = async (
 	const dislikes = votes.filter((vote) => vote.type === VoteType.DOWN).length;
 
 	const userVote = votes.find((vote) => vote.userId === userId)?.type ?? null;
-	console.log(userVote);
 
 	return {
 		likes,

@@ -13,8 +13,6 @@ export const createPostProcedure = protectedProcedure
 	.mutation(async ({ input, ctx }) => {
 		const { db, user } = ctx;
 
-		console.log(input);
-
 		try {
 			JSON.parse(input.body);
 		} catch (error) {

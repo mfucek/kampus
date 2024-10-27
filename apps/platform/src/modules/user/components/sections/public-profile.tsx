@@ -37,7 +37,6 @@ export const PublicProfileSection = () => {
 	}, [user]);
 
 	const handleUpdateDisplayName = async () => {
-		console.log('asd');
 		try {
 			await updateDisplayName({ displayName });
 

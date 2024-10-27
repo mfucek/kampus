@@ -32,7 +32,8 @@ export type RecursivePost = {
 		type: FileType;
 		documentFile:
 			| {
-					academicYear: string;
+					academicYear?: string;
+					title?: string;
 					types: DocumentFileType[];
 			  }
 			| undefined

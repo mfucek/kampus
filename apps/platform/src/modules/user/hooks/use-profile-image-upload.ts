@@ -26,15 +26,13 @@ export const useProfileImageUpload = () => {
 		setUploading(true);
 
 		try {
-			const upload = await fetch(url, {
+			await fetch(url, {
 				method: 'PUT',
 				body: file,
 				headers: { 'Content-Type': file.type }
 			});
 
 			setUploading(false);
-
-			console.log('uploading', upload);
 
 			onSuccess(key);
 		} catch (error) {

@@ -14,6 +14,7 @@ export const linkToPostProcedure = protectedProcedure
 					documentOptions: z
 						.object({
 							academicYear: z.string().optional(),
+							title: z.string().optional(),
 							types: z.array(z.nativeEnum(DocumentFileType))
 						})
 						.nullish()
@@ -26,8 +27,6 @@ export const linkToPostProcedure = protectedProcedure
 		const { files } = input;
 
 		for (const file of files) {
-			console.log('file', file);
-
 			const { key, postId, type, documentOptions } = file;
 
 			if (['PDF', 'ARCHIVE'].includes(type) && !documentOptions) {
@@ -36,8 +35,6 @@ export const linkToPostProcedure = protectedProcedure
 					message: 'Document options are required'
 				});
 			}
-
-			console.log('creating file');
 
 			// create file
 			try {
@@ -52,6 +49,7 @@ export const linkToPostProcedure = protectedProcedure
 							? {
 									create: {
 										academicYear: documentOptions!.academicYear,
+										title: documentOptions!.title,
 										types: documentOptions!.types
 									}
 								}

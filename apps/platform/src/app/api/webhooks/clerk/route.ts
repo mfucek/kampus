@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { db } from '@/server/db';
+import { db } from '@/lib/prisma/db';
 import { headers } from 'next/headers';
 import { Webhook } from 'svix';
 
@@ -41,10 +41,6 @@ export async function POST(req: Request) {
 
 	const { id } = evt.data;
 	const eventType = evt.type;
-	console.log('Data', evt.data);
-	console.log(' ');
-
-	console.log('Data', evt);
 
 	switch (eventType) {
 		case 'user.created':

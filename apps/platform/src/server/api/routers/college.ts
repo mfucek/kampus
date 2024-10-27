@@ -8,7 +8,7 @@ export const collegeRouter = createTRPCRouter({
 
 		const colleges = await db.college.findMany({
 			orderBy: {
-				Post: {
+				posts: {
 					_count: 'desc'
 				}
 			}

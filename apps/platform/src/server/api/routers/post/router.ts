@@ -1,9 +1,16 @@
+import { getFileUrl } from '@/lib/s3';
 import {
 	createTRPCRouter,
 	protectedProcedure,
 	publicProcedure
 } from '@/server/api/trpc';
-import { Prisma, type PrismaClient, VoteType } from '@prisma/client';
+import {
+	DocumentFileType,
+	FileType,
+	Prisma,
+	type PrismaClient,
+	VoteType
+} from '@prisma/client';
 import { JSONContent } from '@tiptap/react';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
@@ -28,7 +35,13 @@ export const postRouter = createTRPCRouter({
 							replies: true
 						}
 					},
-					author: true
+					author: true,
+					files: {
+						include: {
+							documentFile: true,
+							imageFile: true
+						}
+					}
 				},
 				orderBy: {
 					createdAt: 'desc'
@@ -48,7 +61,35 @@ export const postRouter = createTRPCRouter({
 				}))
 			);
 
-			return postsWithVotes;
+			const filesWithUrls = await Promise.all(
+				typesafePosts.map(async (post) =>
+					Promise.all(
+						post.files.map(async (file) => ({
+							id: file.id,
+							key: file.key,
+							type: file.type,
+							documentFile: file.documentFile
+								? {
+										academicYear: file.documentFile.academicYear,
+										types: file.documentFile.types
+									}
+								: null,
+							imageFile: file.imageFile ? {} : null,
+							url: await getFileUrl(file.key)
+						}))
+					)
+				)
+			);
+
+			const postsWithFiles: FullPost[] = await Promise.all(
+				postsWithVotes.map(async (post, i) => ({
+					post: post.post,
+					votes: post.votes,
+					files: filesWithUrls[i]!
+				}))
+			);
+
+			return postsWithFiles;
 		}),
 
 	getTopicPostsById: publicProcedure
@@ -67,7 +108,13 @@ export const postRouter = createTRPCRouter({
 							replies: true
 						}
 					},
-					author: true
+					author: true,
+					files: {
+						include: {
+							documentFile: true,
+							imageFile: true
+						}
+					}
 				},
 				orderBy: {
 					createdAt: 'desc'
@@ -193,7 +240,13 @@ export const postRouter = createTRPCRouter({
 							replies: true
 						}
 					},
-					author: true
+					author: true,
+					files: {
+						include: {
+							documentFile: true,
+							imageFile: true
+						}
+					}
 				}
 			});
 
@@ -241,6 +294,12 @@ export const postRouter = createTRPCRouter({
 						author: true,
 						_count: {
 							select: { replies: true }
+						},
+						files: {
+							include: {
+								documentFile: true,
+								imageFile: true
+							}
 						}
 					}
 				});
@@ -269,7 +328,14 @@ export const postRouter = createTRPCRouter({
 					replies.map((reply) => fetchReplies(reply.id))
 				);
 
-				return {
+				const filesWithUrls = await Promise.all(
+					post.files.map(async (file) => ({
+						...file,
+						url: await getFileUrl(file.key)
+					}))
+				);
+
+				const fullPost = {
 					post: {
 						...post,
 						id: post.id,
@@ -293,8 +359,11 @@ export const postRouter = createTRPCRouter({
 						likes,
 						dislikes,
 						userVote
-					}
+					},
+					files: filesWithUrls
 				};
+
+				return fullPost;
 			};
 
 			const thread = await fetchReplies(input.postId);
@@ -327,6 +396,17 @@ export type RecursivePost = {
 		dislikes: number;
 		userVote: VoteType | null;
 	};
+	files: {
+		id: string;
+		key: string;
+		type: FileType;
+		documentFile: {
+			academicYear: string;
+			types: DocumentFileType[];
+		} | null;
+		imageFile: {} | null;
+		url?: string | null;
+	}[];
 };
 
 export type FullPost = {
@@ -353,6 +433,17 @@ export type FullPost = {
 		dislikes: number;
 		userVote: VoteType | null;
 	};
+	files: {
+		id: string;
+		key: string;
+		type: FileType;
+		documentFile: {
+			academicYear: string;
+			types: DocumentFileType[];
+		} | null;
+		imageFile: {} | null;
+		url?: string | null;
+	}[];
 };
 
 const getPostVotes = async (

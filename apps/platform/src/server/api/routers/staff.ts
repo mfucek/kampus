@@ -81,7 +81,7 @@ export const staffRouter = createTRPCRouter({
 					staff: true,
 					_count: {
 						select: {
-							Post: true
+							posts: true
 						}
 					}
 				},

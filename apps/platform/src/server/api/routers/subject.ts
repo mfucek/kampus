@@ -47,7 +47,7 @@ export const subjectRouter = createTRPCRouter({
 				...(staffId
 					? {
 							subject: {
-								Staff: {
+								staffs: {
 									some: {
 										topicId: staffId
 									}
@@ -81,7 +81,7 @@ export const subjectRouter = createTRPCRouter({
 					subject: true,
 					_count: {
 						select: {
-							Post: true
+							posts: true
 						}
 					}
 				},

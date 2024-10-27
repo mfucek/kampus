@@ -15,13 +15,16 @@ export const PublicProfileSection = () => {
 
 	const { uploading, openFilePicker } = useProfileImageUpload();
 
-	const { data: profilePictureUrl } =
+	const { data: profilePictureUrl, isPending: profilePictureUrlPending } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery();
 
-	const { mutateAsync: updateDisplayName } =
-		api.account.updateDisplayName.useMutation();
+	const {
+		mutateAsync: updateDisplayName,
+		isPending: updateDisplayNamePending
+	} = api.account.updateDisplayName.useMutation();
 
-	const { mutateAsync: updateBadge } = api.account.updateBadge.useMutation();
+	const { mutateAsync: updateBadge, isPending: updateBadgePending } =
+		api.account.updateBadge.useMutation();
 
 	const [displayName, setDisplayName] = useState(user?.displayName ?? '');
 	const [badge, setBadge] = useState(user?.badge ?? '');
@@ -90,7 +93,7 @@ export const PublicProfileSection = () => {
 							<Button
 								variant="solid-weak"
 								onClick={openFilePicker}
-								loading={uploading}
+								loading={uploading || profilePictureUrlPending}
 							>
 								Upload image
 							</Button>
@@ -111,7 +114,11 @@ export const PublicProfileSection = () => {
 						value={displayName}
 						onChange={(e) => setDisplayName(e.target.value)}
 					/>
-					<Button variant="solid-weak" onClick={handleUpdateDisplayName}>
+					<Button
+						variant="solid-weak"
+						onClick={handleUpdateDisplayName}
+						loading={updateDisplayNamePending}
+					>
 						Save
 					</Button>
 				</div>
@@ -137,6 +144,7 @@ export const PublicProfileSection = () => {
 					<Button
 						variant="solid-weak"
 						onClick={handleUpdateBadge}
+						loading={updateBadgePending}
 						disabled={!isLegendPlan}
 					>
 						Save

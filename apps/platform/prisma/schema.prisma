@@ -58,10 +58,10 @@ model User {
   accountId String  @unique
   account   Account @relation(fields: [accountId], references: [id])
 
-  Vote Vote[]
-  Post Post[]
+  votes Vote[]
+  posts Post[]
 
-  ProfileIcon ProfileIcon[]
+  image ImageFile?
 }
 
 // College
@@ -74,10 +74,10 @@ model College {
 
   iconSrc String?
 
-  Topic Topic[]
-  Post  Post[]
+  topics Topic[]
+  posts  Post[]
 
-  CollegePicture CollegeIcon[]
+  image ImageFile?
 }
 
 // Subjects & Staff
@@ -93,10 +93,12 @@ model Topic {
 
   type TopicType
 
-  subject   Subject?
-  staff     Staff?
-  Post      Post[]
-  TopicIcon TopicIcon[]
+  subject Subject?
+  staff   Staff?
+  posts   Post[]
+
+  image     ImageFile?
+  summaries Summary[]
 
   @@unique([collegeId, slug])
 }
@@ -119,10 +121,14 @@ model Subject {
   topicId String @id @unique
   topic   Topic  @relation(fields: [topicId], references: [id])
 
-  semester Int?
-  ects     Int?
+  semester    Int?
+  ects        Int?
+  subjectCode String?
+  subjectLink String?
 
-  Staff Staff[]
+  tags String[]
+
+  staffs Staff[]
 }
 
 // Posts
@@ -156,7 +162,7 @@ model Post {
 
   votes Vote[]
 
-  FilePost FilePost[]
+  files File[]
 }
 
 enum VoteType {
@@ -189,49 +195,58 @@ model File {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  FilePost    FilePost[]
-  ProfileIcon ProfileIcon[]
-  CollegeIcon CollegeIcon[]
-  TopicIcon   TopicIcon[]
+  documentFile DocumentFile?
+  imageFile    ImageFile?
+
+  postId String?
+  post   Post?   @relation(fields: [postId], references: [id])
 }
 
-model FilePost {
-  fileId String @id @unique
-  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
-
-  postId String
-  post   Post   @relation(fields: [postId], references: [id])
-
-  tags String[]
-}
-
-model ProfileIcon {
-  fileId String @unique
-  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
-
-  userId String @id @unique
-  user   User   @relation(fields: [userId], references: [id])
-}
-
-model CollegeIcon {
-  fileId String @id @unique
-  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
-
-  collegeId String
-  college   College @relation(fields: [collegeId], references: [id])
-}
-
-model TopicIcon {
+model ImageFile {
   fileId String @id @unique
   file   File   @relation(fields: [fileId], references: [id])
 
-  topicId String
-  topic   Topic  @relation(fields: [topicId], references: [id])
+  topicId String? @unique
+  topic   Topic?  @relation(fields: [topicId], references: [id])
+
+  collegeId String?  @unique
+  college   College? @relation(fields: [collegeId], references: [id])
+
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
+}
+
+model DocumentFile {
+  fileId String @id @unique
+  file   File   @relation(fields: [fileId], references: [id])
+
+  academicYear String
+
+  types DocumentFileType[]
+}
+
+enum DocumentFileType {
+  EXAM
+  COLOQUIUM
+  EXERCISE
+  HOMEWORK
+  SEMINAR
+  SCRIPT
+  PAPER
+  OTHER
+  SUMMER_EXAM
+  FALL_EXAM
+  WINTER_EXAM
+  SPRING_EXAM
+  CORRECTION_EXAM
+  ORAL_EXAM
+  SOLVED
 }
 
 enum FileType {
   IMAGE
   PDF
+  ARCHIVE
 }
 
 // permissions
@@ -274,20 +289,22 @@ enum RoleType {
   ADMIN
 }
 
-enum SentimentType {
+// Summaries
+
+model Summary {
+  id String @id @default(cuid())
+
+  title     String
+  content   String
+  sentiment SummaryType
+
+  topic   Topic  @relation(fields: [topicId], references: [id])
+  topicId String
+}
+
+enum SummaryType {
   POSITIVE
   NEGATIVE
   NEUTRAL
   WARNING
 }
-
-// model Summary {
-//   id String @id @default(cuid())
-
-//   topic   Topic  @relation(fields: [topicId], references: [id])
-//   topicId String
-
-//   title     String
-//   content   String
-//   sentiment SentimentType
-// }

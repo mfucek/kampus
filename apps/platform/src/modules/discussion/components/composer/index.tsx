@@ -1,129 +1,15 @@
 'use client';
 
-import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { cn } from '@/lib/shadcn/utils';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
-import {
-	type Editor,
-	EditorContent,
-	type JSONContent,
-	useEditor
-} from '@tiptap/react';
+import { useUploadToPost } from '@/modules/file/hooks/use-upload-to-post';
+import { EditorContent, type JSONContent, useEditor } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
-import { type FC, type KeyboardEvent, useCallback, useState } from 'react';
-
-const EditorToolbar = ({ editor }: { editor: Editor }) => {
-	const setLink = useCallback(() => {
-		const previousUrl = editor.getAttributes('link').href;
-		const url = window.prompt('URL', previousUrl);
-
-		// cancelled
-		if (url === null) {
-			return;
-		}
-
-		// empty
-		if (url === '') {
-			editor.chain().focus().extendMarkRange('link').unsetLink().run();
-
-			return;
-		}
-
-		// update link
-		editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
-	}, [editor]);
-
-	const handleLink = useCallback(() => {
-		if (editor.isActive('link')) {
-			editor.chain().focus().unsetLink().run();
-		} else {
-			setLink();
-		}
-	}, [editor, setLink]);
-
-	if (!editor) {
-		return null;
-	}
-
-	return (
-		<div className="flex flex-row gap-3 px-3">
-			<div className="flex flex-row gap-2">
-				<Button
-					size="xs"
-					theme="neutral"
-					variant={editor.isActive('bold') ? 'solid' : 'ghost'}
-					iconOnly
-					onClick={() => editor.chain().focus().toggleBold().run()}
-				>
-					<Icon icon="text-bold" />
-				</Button>
-				<Button
-					size="xs"
-					theme="neutral"
-					variant={editor.isActive('italic') ? 'solid' : 'ghost'}
-					iconOnly
-					onClick={() => editor.chain().focus().toggleItalic().run()}
-				>
-					<Icon icon="text-italic" />
-				</Button>
-				<Button
-					size="xs"
-					theme="neutral"
-					variant={editor.isActive('strike') ? 'solid' : 'ghost'}
-					iconOnly
-					onClick={() => editor.chain().focus().toggleStrike().run()}
-				>
-					<Icon icon="text-strikethrough" />
-				</Button>
-			</div>
-
-			<div className="self-stretch w-px bg-neutral-medium my-1" />
-
-			<div className="flex flex-row gap-2">
-				<Button
-					size="xs"
-					theme="neutral"
-					variant={editor.isActive('link') ? 'solid' : 'ghost'}
-					iconOnly
-					onClick={handleLink}
-				>
-					<Icon icon="link" />
-				</Button>
-				<Button
-					size="xs"
-					theme="neutral"
-					variant={editor.isActive('code') ? 'solid' : 'ghost'}
-					iconOnly
-					onClick={() => editor.chain().focus().toggleCode().run()}
-				>
-					<Icon icon="code" />
-				</Button>
-			</div>
-
-			<div className="self-stretch w-px bg-neutral-medium my-1" />
-
-			<div className="flex flex-row gap-2">
-				<Button size="xs" theme="neutral" variant={'ghost'} iconOnly disabled>
-					<Icon icon="image" />
-				</Button>
-				<Button size="xs" theme="neutral" variant={'ghost'} iconOnly disabled>
-					<Icon icon="file" />
-				</Button>
-			</div>
-
-			<div className="self-stretch w-px bg-neutral-medium my-1" />
-
-			<div className="flex flex-row gap-2">
-				<Button size="xs" theme="neutral" variant={'ghost'} iconOnly disabled>
-					<Icon icon="ellipsis" />
-				</Button>
-			</div>
-		</div>
-	);
-};
+import { DragEvent, type FC, useState } from 'react';
+import { EditorToolbar } from './editor-toolbar';
 
 const MAX_CHARACTERS = 2000;
 
@@ -133,11 +19,18 @@ export const Composer: FC<{
 	topicId?: string;
 	replyToId?: string;
 }> = ({ collegeId, topicId, replyToId }) => {
+	const utils = api.useUtils();
+	const router = useRouter();
+	const { toast } = useToast();
+	const { addFile, removeFile, commitFiles, linkFiles } = useUploadToPost();
+
 	const [textValue, setTextValue] = useState('');
 	const [value, setValue] = useState<JSONContent>({
 		type: 'doc',
 		content: [{ type: 'paragraph', content: [] }]
 	});
+
+	const [dragging, setDragging] = useState(false);
 
 	const remaining = MAX_CHARACTERS - textValue.length;
 
@@ -159,11 +52,7 @@ export const Composer: FC<{
 		}
 	});
 
-	const utils = api.useUtils();
-	const router = useRouter();
-	const { toast } = useToast();
-
-	const { mutateAsync: createPost, isPending } =
+	const { mutateAsync: createPost, isPending: isCreatingPost } =
 		api.post.createPost.useMutation({
 			onSuccess: async () => {
 				editor?.commands.clearContent();
@@ -178,16 +67,25 @@ export const Composer: FC<{
 			}
 		});
 
-	const handleSubmit = () => {
-		if (remaining >= 0 && textValue.length > 0 && !isPending) {
-			createPost({ body: value, collegeId, topicId, replyToId });
+	const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		setDragging(false);
+		console.log(e.dataTransfer?.files);
+
+		for (const file of e.dataTransfer?.files ?? []) {
+			addFile(file);
 		}
+	};
+
+	const handleSubmit = async () => {
+		if (isCreatingPost) return;
 		if (remaining < 0) {
 			toast({
 				title: 'Error',
 				content: 'Please keep the content less than 2000 characters.',
 				variant: 'danger'
 			});
+			return;
 		}
 		if (textValue.length <= 0) {
 			toast({
@@ -195,13 +93,22 @@ export const Composer: FC<{
 				content: 'Post cannot be empty.',
 				variant: 'danger'
 			});
+			return;
 		}
-	};
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-		if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-			e.preventDefault();
-			handleSubmit();
+		try {
+			const files = await commitFiles();
+
+			const post = await createPost({
+				body: value,
+				collegeId,
+				topicId,
+				replyToId
+			});
+
+			await linkFiles(files!, post.id);
+		} catch (error) {
+			console.error(error);
 		}
 	};
 
@@ -221,7 +128,7 @@ export const Composer: FC<{
 					size="sm"
 					disabled={remaining < 0 || textValue.length <= 0}
 					onClick={handleSubmit}
-					loading={isPending}
+					loading={isCreatingPost}
 				>
 					Objavi
 				</Button>
@@ -230,8 +137,24 @@ export const Composer: FC<{
 	};
 
 	return (
-		<div className="flex flex-col gap-3 w-full" onKeyDown={handleKeyDown}>
-			<div className="flex flex-col gap-3 pt-3 border border-neutral-medium rounded-lg overflow-hidden">
+		<div className="flex flex-col gap-3 w-full">
+			<div
+				className={cn(
+					'flex flex-col gap-3 pt-3 border border-neutral-medium rounded-lg overflow-hidden',
+					{
+						'border-accent bg-accent-weak': dragging
+					}
+				)}
+				onDragOver={(e) => {
+					e.preventDefault();
+					setDragging(true);
+				}}
+				onDragLeave={(e) => {
+					e.preventDefault();
+					setDragging(false);
+				}}
+				onDrop={handleDrop}
+			>
 				<div className="flex flex-col">
 					{editor && (
 						<>

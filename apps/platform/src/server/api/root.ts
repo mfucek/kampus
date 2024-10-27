@@ -1,4 +1,5 @@
-import { postRouter } from '@/server/api/routers/post';
+import { fileRouter } from '@/modules/file/api/router';
+import { postRouter } from '@/server/api/routers/post/router';
 import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
 import { accountRouter } from './routers/account';
 import { collegeRouter } from './routers/college';
@@ -18,7 +19,8 @@ export const appRouter = createTRPCRouter({
 	account: accountRouter,
 	subject: subjectRouter,
 	staff: staffRouter,
-	vote: voteRouter
+	vote: voteRouter,
+	file: fileRouter
 });
 
 // export type definition of API

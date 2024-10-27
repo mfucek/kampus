@@ -65,7 +65,7 @@ export const accountRouter = createTRPCRouter({
 		.mutation(async ({ ctx, input }) => {
 			const { db, user } = ctx;
 
-			const oldProfileIcon = await db.profileIcon.findFirst({
+			const oldProfileIcon = await db.imageFile.findFirst({
 				where: {
 					userId: user.id
 				},
@@ -74,10 +74,11 @@ export const accountRouter = createTRPCRouter({
 				}
 			});
 
+			// Delete old profile picture file
 			if (oldProfileIcon) {
 				console.log('deleting old profile picture file');
 				await deleteFile(oldProfileIcon.file.key);
-				await db.profileIcon.delete({
+				await db.imageFile.delete({
 					where: { userId: user.id },
 					include: {
 						file: true
@@ -88,7 +89,7 @@ export const accountRouter = createTRPCRouter({
 				});
 			}
 
-			console.log('creating new profile picture file');
+			// Create new profile picture file
 			const file = await db.file.create({
 				data: {
 					key: input.key,
@@ -96,10 +97,9 @@ export const accountRouter = createTRPCRouter({
 					authorId: user.id!
 				}
 			});
-			console.log('created file', file.id);
 
-			console.log('creating new profile icon');
-			await db.profileIcon.create({
+			// Create new profile picture file
+			await db.imageFile.create({
 				data: {
 					userId: user.id,
 					fileId: file.id
@@ -120,19 +120,18 @@ export const accountRouter = createTRPCRouter({
 	getCurrentUserProfilePictureUrl: protectedProcedure.query(async ({ ctx }) => {
 		const { db, user } = ctx;
 
-		const profilePicture = await db.file.findFirst({
+		const profilePicture = await db.imageFile.findFirst({
 			where: {
-				ProfileIcon: {
-					some: {
-						userId: user.id!
-					}
-				}
+				userId: user.id
+			},
+			include: {
+				file: true
 			}
 		});
 
 		if (!profilePicture) return null;
 
-		const url = await getFileUrl(profilePicture.key);
+		const url = await getFileUrl(profilePicture.file.key);
 
 		return url;
 	}),
@@ -142,17 +141,18 @@ export const accountRouter = createTRPCRouter({
 		.query(async ({ ctx, input }) => {
 			const { db } = ctx;
 
-			const profilePicture = await db.file.findFirst({
+			const profilePicture = await db.imageFile.findFirst({
 				where: {
-					ProfileIcon: {
-						some: { userId: input.userId }
-					}
+					userId: input.userId
+				},
+				include: {
+					file: true
 				}
 			});
 
 			if (!profilePicture) return null;
 
-			const url = await getFileUrl(profilePicture.key);
+			const url = await getFileUrl(profilePicture.file.key);
 
 			return url;
 		})

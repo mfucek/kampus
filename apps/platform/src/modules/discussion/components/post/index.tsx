@@ -10,9 +10,11 @@ import {
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
-import { FullPost } from '@/server/api/routers/post';
+
+import { FullPost } from '@/server/api/routers/post/router';
 import { EditorContent, useEditor } from '@tiptap/react';
 import { formatDistance } from 'date-fns';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type FC } from 'react';
 import { PostThreading } from './post-threading';
@@ -23,12 +25,9 @@ export const Post: FC<{
 	depthInfo: number[];
 	previousThreadDepth?: number[];
 	nextThreadDepth?: number[];
-}> = ({
-	fullPost: { post, votes },
-	depthInfo,
-	previousThreadDepth,
-	nextThreadDepth
-}) => {
+}> = ({ fullPost, depthInfo, previousThreadDepth, nextThreadDepth }) => {
+	const { post, votes } = fullPost;
+
 	const { data: imageUrl } = api.account.getUserProfilePictureUrl.useQuery({
 		userId: post.author.id
 	});
@@ -140,6 +139,27 @@ export const Post: FC<{
 		);
 	};
 
+	if (fullPost.files.length !== 0) {
+		console.log(fullPost);
+	}
+
+	const PostFiles = () => {
+		return (
+			<div>
+				{fullPost.files?.map((file) => (
+					<Link href={file.url!} key={file.id}>
+						<div
+							key={file.id}
+							className="w-[120px] h-[80px] bg-neutral-weak rounded-xl"
+						>
+							{file.type}
+						</div>
+					</Link>
+				))}
+			</div>
+		);
+	};
+
 	return (
 		<div className="flex flex-row gap-2 w-full">
 			<PostThreading
@@ -149,6 +169,7 @@ export const Post: FC<{
 				nextThreadDepth={nextThreadDepth}
 			/>
 			<PostBody />
+			<PostFiles />
 		</div>
 	);
 };

@@ -8,7 +8,7 @@ import { stripeRouter } from '../../lib/stripe/api/router';
 import { accountRouter } from '../../modules/account/api/router';
 import { collegeRouter } from '../../modules/college/api/router';
 import { staffRouter } from '../../modules/staff/api/router';
-import { subjectRouter } from '../../modules/subject/api/subject';
+import { subjectRouter } from '../../modules/subject/api/router';
 
 export const appRouter = createTRPCRouter({
 	post: postRouter,

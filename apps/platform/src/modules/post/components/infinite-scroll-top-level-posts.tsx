@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, type FC } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { Spinner } from '@/global/components/spinner';
@@ -10,39 +10,50 @@ import { JSONContent } from '@tiptap/react';
 import { type ListPostsItem } from '../api/procedures/list';
 import { type TPostScope } from '../schemas/post-scope';
 
+type DepthInfo = number[];
+
 const DynamicPost: FC<{
 	post: ListPostsItem;
-}> = ({ post }) => {
+	depthInfo: DepthInfo;
+}> = ({ post, depthInfo }) => {
+	// const [expanded, setExpanded] = useState(false);
+
 	return (
-		<Post
-			fullPost={{
-				post: {
-					author: {
-						id: post.author.id,
-						displayName: post.author.displayName,
-						imageUrl: post.author.imageUrl,
-						badge: post.author.badge,
-						accountId: '',
-						createdAt: new Date(),
-						updatedAt: new Date()
+		<>
+			<Post
+				fullPost={{
+					post: {
+						author: {
+							id: post.author.id,
+							displayName: post.author.displayName,
+							imageUrl: post.author.imageUrl || '',
+							badge: post.author.badge || '',
+							accountId: ''
+						},
+						createdAt: post.post.createdAt,
+						authorId: post.author.id,
+						id: post.post.id,
+						body: post.post.body as JSONContent,
+						_count: {
+							replies: post.replies.count
+						}
 					},
-					authorId: '1',
-					id: '1',
-					body: post.post.body as JSONContent,
-					createdAt: new Date(),
-					_count: {
-						replies: 0
+					files: post.files,
+					votes: {
+						likes: post.votes.likes,
+						dislikes: post.votes.dislikes,
+						userVote: post.votes.userVote
 					}
-				},
-				files: [],
-				votes: {
-					likes: 0,
-					dislikes: 0,
-					userVote: null
-				}
-			}}
-			depthInfo={[]}
-		/>
+				}}
+				depthInfo={depthInfo}
+			/>
+			{/* {post.replies.count > 0 && (
+				<Button onClick={() => setExpanded(true)}>
+					View {post.replies.count} replies
+				</Button>
+			)} */}
+			{/* {expanded && (<InfiniteScrollTopLevelPosts)} */}
+		</>
 	);
 };
 
@@ -50,9 +61,9 @@ export const TopLevelPostsPage: FC<{
 	page: ListPostsItem[];
 }> = ({ page }) => {
 	return (
-		<div className="p-10 border flex flex-col">
+		<div className="flex flex-col">
 			{page.map((post) => (
-				<DynamicPost key={post.post.id} post={post} />
+				<DynamicPost key={post.post.id} post={post} depthInfo={[]} />
 			))}
 		</div>
 	);
@@ -61,8 +72,6 @@ export const TopLevelPostsPage: FC<{
 export const InfiniteScrollTopLevelPosts: FC<{
 	scope: TPostScope;
 }> = ({ scope }) => {
-	const [page, setPage] = useState(0);
-
 	const query = api.post.list.useInfiniteQuery(
 		{
 			scope,
@@ -73,24 +82,20 @@ export const InfiniteScrollTopLevelPosts: FC<{
 		}
 	);
 
-	const numOfPages = query.data?.pages[0]?.totalPages ?? 0;
-	const canGoNext = page <= numOfPages - 1;
-
 	const Loader = () => {
-		const { ref, inView, entry } = useInView({});
+		const { ref, inView } = useInView({});
 
 		useEffect(() => {
 			if (inView) {
-				console.log('in view');
-				console.log(query.hasNextPage);
 				query.fetchNextPage();
 			}
 		}, [inView]);
 
-		if (!query.hasNextPage) return null;
+		if (!query.hasNextPage)
+			return <div className="flex justify-center items-center pt-10 h-40" />;
 
 		return (
-			<div className="flex justify-center items-center" ref={ref}>
+			<div className="flex justify-center items-center pt-10 h-40" ref={ref}>
 				<Spinner />
 			</div>
 		);

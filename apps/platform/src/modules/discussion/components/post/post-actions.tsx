@@ -6,10 +6,29 @@ import { type FC } from 'react';
 import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
-import { type FullPost } from '@/modules/post/types/full-post';
+import { VoteType } from '@prisma/client';
 import { Reactions } from './reactions';
 
-export const PostActions: FC<{ fullPost: FullPost }> = ({ fullPost }) => {
+type PostActionsInterface = {
+	post: {
+		id: string;
+		_count: {
+			replies: number;
+		};
+		author: {
+			id: string;
+		};
+	};
+	votes: {
+		likes: number;
+		dislikes: number;
+		userVote: VoteType | null;
+	};
+};
+
+export const PostActions: FC<{ fullPost: PostActionsInterface }> = ({
+	fullPost
+}) => {
 	const { post, votes } = fullPost;
 	const { data: user } = api.account.getUser.useQuery();
 	const { setPostId } = usePostId();

@@ -47,6 +47,12 @@ export const listProcedure = protectedProcedure
 					votes: true
 				}
 			}
+			// files: {
+			// 	include: {
+			// 		documentFile: true,
+			// 		imageFile: true
+			// 	}
+			// },
 		};
 
 		const postsRaw = await db.post.findMany({
@@ -73,6 +79,12 @@ export const listProcedure = protectedProcedure
 					likes: 1,
 					dislikes: 1,
 					userVote: VoteType.UP
+				},
+				author: {
+					id: post.author.id,
+					displayName: post.author.displayName,
+					imageUrl: post.author.imageUrl,
+					badge: post.author.badge
 				},
 				files: files
 			};

@@ -2,21 +2,40 @@ import { z } from 'zod';
 
 import { protectedProcedure } from '@/server/api/trpc';
 import { Prisma, VoteType } from '@prisma/client';
+import { TRPCError } from '@trpc/server';
 import { postScopeSchema } from '../../schemas/post-scope';
+
+const paginationSchema = z.object({
+	limit: z.number().min(1).max(100).nullish(),
+	cursor: z.string().nullish()
+});
 
 export const listProcedure = protectedProcedure
 	.input(
-		z.object({
-			scope: postScopeSchema,
-			fields: z.object({
-				replies: z.boolean().nullish()
+		z
+			.object({
+				scope: postScopeSchema
 			})
-		})
+			.merge(paginationSchema)
 	)
-	.query(async ({ ctx }) => {
+	.query(async ({ ctx, input }) => {
 		const { db } = ctx;
+		const { scope, cursor } = input;
+		const limit = input.limit ?? 5;
 
-		const where: Prisma.PostWhereInput = {};
+		let collegeId = scope.college?.id;
+		if (!collegeId) {
+			throw new TRPCError({
+				code: 'BAD_REQUEST',
+				message: 'College ID is required'
+			});
+		}
+
+		const where: Prisma.PostWhereInput = {
+			collegeId: collegeId,
+			topicId: null,
+			replyToId: null
+		};
 
 		const include: Prisma.PostInclude = {
 			author: true,
@@ -32,13 +51,19 @@ export const listProcedure = protectedProcedure
 
 		const postsRaw = await db.post.findMany({
 			where,
-			include
+			include,
+			orderBy: {
+				createdAt: 'desc'
+			},
+			take: limit,
+			skip: cursor ? 1 : 0,
+			cursor: cursor ? { id: cursor } : undefined
 		});
 
 		const posts = postsRaw.map((post) => {
 			const files = post.files;
 
-			const output = {
+			return {
 				post: {
 					id: post.id,
 					body: post.body,
@@ -51,10 +76,28 @@ export const listProcedure = protectedProcedure
 				},
 				files: files
 			};
-
-			return output;
 		});
+
+		const totalPages = Math.ceil(
+			(await db.post.count({
+				where
+			})) / limit
+		);
+
+		const nextCursor = posts[posts.length - 1]?.post.id;
+
+		const output = {
+			posts: posts,
+			nextCursor,
+			totalPages
+		};
+
+		return output;
 	});
+
+export type ListPostsOutput = Awaited<ReturnType<typeof listProcedure>>;
+
+export type ListPostsItem = ListPostsOutput['posts'][number];
 
 // cursor logic (get more replies on same level)
 

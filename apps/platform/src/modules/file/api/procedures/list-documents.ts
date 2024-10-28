@@ -86,8 +86,8 @@ export const listDocumentsProcedure = publicProcedure
 				// document type filter
 				...(filters?.documentTypes
 					? {
-							type: {
-								in: filters.documentTypes
+							types: {
+								hasEvery: filters.documentTypes
 							}
 						}
 					: {})

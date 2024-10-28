@@ -78,11 +78,22 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'push-fade-right': {
+					from: {
+						opacity: '0',
+						transform: 'translateX(-10px)'
+					},
+					to: {
+						opacity: '1',
+						transform: 'translateX(0)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'push-fade-right': 'push-fade-right 0.5s ease-out'
 			}
 		},
 		screens: {

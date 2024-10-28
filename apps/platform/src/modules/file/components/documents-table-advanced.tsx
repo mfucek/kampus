@@ -17,6 +17,7 @@ import {
 } from '@/lib/shadcn/ui/select';
 import { api } from '@/lib/trpc/react';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
+import { DocumentFileType } from '@prisma/client';
 import { DocumentsTable } from './documents-table';
 
 const DocumentsTableWithData: FC<{
@@ -91,6 +92,118 @@ const DocumentsTableWithData: FC<{
 	);
 };
 
+const displayMap: Record<DocumentFileType, string> = {
+	EXAM: 'Ispit',
+	COLOQUIUM: 'Kolokvij',
+	COLOQUIUM_MID: 'Meduispit',
+	COLOQUIUM_FINAL: 'Zavrsni ispit',
+	EXERCISE: 'Vjezba',
+	HOMEWORK: 'Zadaca',
+	SEMINAR: 'Seminar',
+	SCRIPT: 'Skripta',
+	PAPER: 'Rad',
+	OTHER: 'Ostalo',
+	SUMMER_EXAM: 'Ljetni rok',
+	FALL_EXAM: 'Jesenski rok',
+	WINTER_EXAM: 'Zimski rok',
+	SPRING_EXAM: 'Proljetni rok',
+	CORRECTION_EXAM: 'Ispravni ispit',
+	ORAL_EXAM: 'Usmeni ispit',
+	SOLVED: 'Rijesen'
+};
+type ExpandableDocumentFileType = (
+	| DocumentFileType
+	| {
+			value: DocumentFileType;
+			expand: DocumentFileType[];
+	  }
+)[];
+
+const expandValues: ExpandableDocumentFileType = [
+	{
+		value: 'EXAM',
+		expand: [
+			'SUMMER_EXAM',
+			'FALL_EXAM',
+			'WINTER_EXAM',
+			'SPRING_EXAM',
+			'CORRECTION_EXAM',
+			'ORAL_EXAM',
+			'SOLVED'
+		]
+	},
+	{
+		value: 'COLOQUIUM',
+		expand: ['COLOQUIUM_MID', 'COLOQUIUM_FINAL', 'SOLVED']
+	},
+	'EXERCISE',
+	'HOMEWORK',
+	'SEMINAR',
+	'SCRIPT',
+	'PAPER',
+	'OTHER'
+];
+
+const DocumentTypeSelector: FC<{
+	onChange: (values: DocumentFileType[]) => void;
+}> = ({ onChange }) => {
+	const [selectedValues, setSelectedValues] = useState<DocumentFileType[]>([]);
+	const [shownOptions, setShownOptions] = useState<DocumentFileType[]>([]);
+
+	useEffect(() => {
+		setShownOptions(() => {
+			const values = expandValues
+				.map((value) => {
+					if (typeof value === 'string') return [value];
+
+					let children = selectedValues.includes(value.value)
+						? value.expand
+						: [];
+					let list = [value.value, ...children];
+					return list;
+				})
+				.flat(1);
+
+			const filteredUniqueValues = values.filter(
+				(value, index, self) => self.indexOf(value) === index
+			);
+
+			return filteredUniqueValues;
+		});
+	}, [selectedValues]);
+
+	useEffect(() => {
+		onChange?.(selectedValues);
+	}, [selectedValues]);
+
+	const handleToggle = (value: DocumentFileType) => {
+		if (selectedValues.includes(value)) {
+			setSelectedValues((prev) => prev.filter((v) => v !== value));
+		} else {
+			setSelectedValues((prev) => [...prev, value]);
+		}
+	};
+
+	return (
+		<div>
+			{shownOptions.map((option) => (
+				<Button
+					variant={selectedValues.includes(option) ? 'solid' : 'outline'}
+					size="sm"
+					className="mr-2 mb-2 animate-push-fade-right"
+					rounded
+					key={option}
+					onClick={() => {
+						handleToggle(option);
+					}}
+				>
+					{displayMap[option]}
+				</Button>
+			))}
+		</div>
+	);
+};
+
 export const DocumentsTableAdvanced: FC<{
 	scope: TFileScope;
 }> = ({ scope }) => {
@@ -98,7 +211,9 @@ export const DocumentsTableAdvanced: FC<{
 		filters: TFileFilters;
 		limit: number;
 	}>({
-		filters: {},
+		filters: {
+			documentTypes: []
+		},
 		limit: 5
 	});
 
@@ -107,7 +222,8 @@ export const DocumentsTableAdvanced: FC<{
 		limit: number;
 	}>({
 		filters: {
-			name: ''
+			name: '',
+			documentTypes: []
 		},
 		limit: 5
 	});
@@ -160,6 +276,14 @@ export const DocumentsTableAdvanced: FC<{
 					</SelectContent>
 				</Select>
 			</div>
+			<DocumentTypeSelector
+				onChange={(documentTypes) => {
+					setViewOptions({
+						...viewOptions,
+						filters: { ...viewOptions.filters, documentTypes }
+					});
+				}}
+			/>
 
 			<DocumentsTableWithData scope={scope} {...tableProps} />
 		</div>

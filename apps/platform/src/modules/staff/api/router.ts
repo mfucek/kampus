@@ -1,6 +1,6 @@
 import { createTRPCRouter } from '@/server/api/trpc';
 
-import { getBySlugProcedure } from '@/modules/college/api/procedures/get-by-slug-procedure';
+import { getBySlugProcedure } from './procedures/get-by-slug';
 import { listProcedure } from './procedures/list';
 
 export const staffRouter = createTRPCRouter({

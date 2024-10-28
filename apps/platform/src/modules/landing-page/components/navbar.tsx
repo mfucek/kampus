@@ -1,5 +1,6 @@
 'use client';
 
+import { env } from '@/env';
 import { Button } from '@/lib/shadcn/ui/button';
 import { useTranslation } from '@/utils/translations/use-translation';
 import { useAuth, useClerk } from '@clerk/nextjs';
@@ -75,7 +76,14 @@ export const Navbar = () => {
 	return (
 		<div className="bg-foreground backdrop-blur-md border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0 fixed w-full z-50">
 			<Link href="/">
-				<div className="title-3">Kampus.hr</div>
+				<div className="title-3">
+					Kampus.hr
+					{env.NEXT_PUBLIC_DEPLOYMENT === 'staging' && (
+						<span className="ml-1 px-2 bg-danger text-danger-contrast caption rounded-xl">
+							STG
+						</span>
+					)}
+				</div>
 			</Link>
 			<div className="flex flex-row gap-4 items-center">
 				<Nav />

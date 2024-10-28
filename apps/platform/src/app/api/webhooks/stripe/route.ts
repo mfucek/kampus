@@ -1,9 +1,3 @@
-import {
-	product_id_monthly_cheap_dev,
-	product_id_monthly_cheap_prod,
-	product_id_monthly_pro_dev,
-	product_id_monthly_pro_prod
-} from '@/constants/stripe';
 import { env } from '@/env';
 import { db } from '@/lib/prisma/db';
 import { NextResponse } from 'next/server';
@@ -12,17 +6,11 @@ import Stripe from 'stripe';
 const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
 
 const getPackageFromProductId = (productId: string) => {
-	if (
-		productId === product_id_monthly_cheap_dev ||
-		productId === product_id_monthly_cheap_prod
-	) {
+	if (productId === env.STRIPE_PRODUCT_ID_MONTHLY_CHEAP) {
 		return 'MONTHLY_CHEAP';
 	}
 
-	if (
-		productId === product_id_monthly_pro_dev ||
-		productId === product_id_monthly_pro_prod
-	) {
+	if (productId === env.STRIPE_PRODUCT_ID_MONTHLY_PRO) {
 		return 'MONTHLY_PRO';
 	}
 

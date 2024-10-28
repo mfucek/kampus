@@ -4,14 +4,10 @@ import { api } from '@/lib/trpc/server';
 import { PageHeader } from '@/modules/college/components/page-header';
 import { Composer } from '@/modules/discussion/components/composer';
 import { Post } from '@/modules/discussion/components/post';
-import { MaterialsTable } from '@/modules/materials/components/materials-table';
+import { DocumentsTableAdvanced } from '@/modules/file/components/documents-table-advanced';
 import { StaffsTableAdvanced } from '@/modules/staff/components/staffs-table-advanced';
 import { SummarySection } from '@/modules/summary/components/summary-section';
 import type { FC } from 'react';
-
-const MaterialsTab: FC<{ subjectId: string }> = async ({ subjectId }) => {
-	return <MaterialsTable />;
-};
 
 const DiscussionTab: FC<{
 	subjectId: string;
@@ -37,6 +33,14 @@ const DiscussionTab: FC<{
 			</div>
 		</div>
 	);
+};
+
+const MaterialsTab: FC<{ subjectId: string }> = async ({ subjectId }) => {
+	return <DocumentsTableAdvanced scope={{ topicId: subjectId }} />;
+};
+
+const StaffTab: FC<{ subjectId: string }> = async ({ subjectId }) => {
+	return <StaffsTableAdvanced scope={{ subjectId }} />;
 };
 
 export const SubjectPage: FC<{
@@ -74,7 +78,7 @@ export const SubjectPage: FC<{
 					<MaterialsTab subjectId={subject.id} />
 				</TabsContent>
 				<TabsContent value="staff">
-					<StaffsTableAdvanced scope={{ subjectId: subject.id }} />
+					<StaffTab subjectId={subject.id} />
 				</TabsContent>
 			</Tabs>
 		</Container>

@@ -1,4 +1,4 @@
-import { db } from '../src/server/db';
+import { db } from '../src/lib/prisma/db';
 
 import subjects from './subjects.json';
 
@@ -140,7 +140,7 @@ const insertSubjects = async () => {
 				topicId: newTopic.id
 			},
 			data: {
-				Staff: {
+				staffs: {
 					connect: professorIds.map((id) => ({ topicId: id }))
 				}
 			}

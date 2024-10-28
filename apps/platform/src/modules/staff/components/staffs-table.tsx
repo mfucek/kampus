@@ -13,7 +13,7 @@ type Staff = {
 		slug: string;
 	};
 	_count: {
-		Post: number;
+		posts: number;
 	};
 };
 
@@ -28,7 +28,7 @@ export const columns: ColumnDef<Staff>[] = [
 			const {
 				slug: staffSlug,
 				college: { slug: collegeSlug },
-				_count: { Post: postCount }
+				_count: { posts: postCount }
 			} = row.original;
 
 			return (

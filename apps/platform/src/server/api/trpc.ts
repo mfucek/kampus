@@ -10,7 +10,7 @@ import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
-import { db } from '@/server/db';
+import { db } from '@/lib/prisma/db';
 import { type getAuth } from '@clerk/nextjs/server';
 
 type AuthObject = ReturnType<typeof getAuth>;

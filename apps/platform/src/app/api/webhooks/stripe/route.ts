@@ -5,7 +5,7 @@ import {
 	product_id_monthly_pro_prod
 } from '@/constants/stripe';
 import { env } from '@/env';
-import { db } from '@/server/db';
+import { db } from '@/lib/prisma/db';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 

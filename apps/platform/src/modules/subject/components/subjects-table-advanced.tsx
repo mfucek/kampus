@@ -1,5 +1,7 @@
 'use client';
 
+import { type FC, useEffect, useState } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Input } from '@/lib/shadcn/ui/input';
@@ -11,9 +13,9 @@ import {
 	SelectValue
 } from '@/lib/shadcn/ui/select';
 import { api } from '@/lib/trpc/react';
-import { TSubjectFilters, TSubjectScope } from '@/server/api/routers/subject';
+import { type TSubjectFilters } from '@/modules/subject/schemas/subject-filters';
+import { type TSubjectScope } from '@/modules/subject/schemas/subject-scope';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
-import { type FC, useEffect, useState } from 'react';
 import { SubjectsTable } from './subjects-table';
 
 const SubjectsTableWithData: FC<{

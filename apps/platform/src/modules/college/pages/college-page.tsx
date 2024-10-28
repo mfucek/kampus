@@ -13,6 +13,7 @@ const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
 	collegeId
 }) => {
 	const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
+
 	return (
 		<div className="flex flex-col gap-10">
 			<Composer collegeId={collegeId} collegeSlug={collegeSlug} />

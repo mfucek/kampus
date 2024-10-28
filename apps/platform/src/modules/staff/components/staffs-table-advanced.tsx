@@ -12,7 +12,8 @@ import {
 } from '@/lib/shadcn/ui/select';
 import { api } from '@/lib/trpc/react';
 import { StaffsTable } from '@/modules/staff/components/staffs-table';
-import type { TStaffFilters, TStaffScope } from '@/server/api/routers/staff';
+import type { TStaffFilters } from '@/modules/staff/schemas/staff-filters';
+import type { TStaffScope } from '@/modules/staff/schemas/staff-scope';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
 import { type FC, useEffect, useState } from 'react';
 

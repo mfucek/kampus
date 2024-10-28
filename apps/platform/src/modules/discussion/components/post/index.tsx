@@ -1,6 +1,6 @@
 'use client';
 
-import { EditorContent, useEditor } from '@tiptap/react';
+import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
 import { formatDistance } from 'date-fns';
 import { type FC } from 'react';
 
@@ -12,13 +12,52 @@ import {
 } from '@/lib/shadcn/ui/tooltip';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
-import { type FullPost } from '@/modules/post/types/full-post';
+import { DocumentFileType, FileType, VoteType } from '@prisma/client';
 import { PostActions } from './post-actions';
 import { PostFiles } from './post-files';
 import { PostThreading } from './post-threading';
 
+type PostInterface = {
+	post: {
+		author: {
+			id: string;
+			displayName: string;
+			imageUrl: string;
+			badge: string;
+			accountId: string;
+		};
+		authorId: string;
+		id: string;
+		body: JSONContent;
+		createdAt: Date;
+		_count: {
+			replies: number;
+		};
+	};
+	files: {
+		id: string;
+		key: string;
+		type: FileType;
+		documentFile:
+			| {
+					academicYear?: string;
+					title?: string;
+					types: DocumentFileType[];
+			  }
+			| undefined
+			| null;
+		imageFile: {} | null;
+		url?: string | null;
+	}[];
+	votes: {
+		likes: number;
+		dislikes: number;
+		userVote: VoteType | null;
+	};
+};
+
 export const Post: FC<{
-	fullPost: FullPost;
+	fullPost: PostInterface;
 	depthInfo: number[];
 	previousThreadDepth?: number[];
 	nextThreadDepth?: number[];

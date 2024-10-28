@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
+import { getFileUrl } from '@/lib/s3';
 import { protectedProcedure } from '@/server/api/trpc';
-import { Prisma, VoteType } from '@prisma/client';
-import { TRPCError } from '@trpc/server';
+import { Prisma } from '@prisma/client';
 import { postScopeSchema } from '../../schemas/post-scope';
 
 const paginationSchema = z.object({
@@ -24,17 +24,15 @@ export const listProcedure = protectedProcedure
 		const limit = input.limit ?? 5;
 
 		let collegeId = scope.college?.id;
-		if (!collegeId) {
-			throw new TRPCError({
-				code: 'BAD_REQUEST',
-				message: 'College ID is required'
-			});
-		}
+		let topicId = scope.topic?.id;
+		let replyToPostId = scope.replyToPost?.id;
+		let authorId = scope.author?.id;
 
 		const where: Prisma.PostWhereInput = {
-			collegeId: collegeId,
-			topicId: null,
-			replyToId: null
+			...(collegeId ? { collegeId: collegeId } : {}),
+			...(topicId ? { topicId: topicId } : {}),
+			...(replyToPostId ? { replyToId: replyToPostId } : {}),
+			...(authorId ? { authorId: authorId } : {})
 		};
 
 		const include: Prisma.PostInclude = {
@@ -43,16 +41,9 @@ export const listProcedure = protectedProcedure
 			_count: {
 				select: {
 					files: true,
-					replies: true,
-					votes: true
+					replies: true
 				}
 			}
-			// files: {
-			// 	include: {
-			// 		documentFile: true,
-			// 		imageFile: true
-			// 	}
-			// },
 		};
 
 		const postsRaw = await db.post.findMany({
@@ -66,29 +57,64 @@ export const listProcedure = protectedProcedure
 			cursor: cursor ? { id: cursor } : undefined
 		});
 
-		const posts = postsRaw.map((post) => {
-			const files = post.files;
+		const posts = await Promise.all(
+			postsRaw.map(async (post) => {
+				const votes = {
+					likes: post.votes.filter((vote) => vote.type === 'UP').length,
+					dislikes: post.votes.filter((vote) => vote.type === 'DOWN').length,
+					userVote:
+						post.votes.find((vote) => vote.userId === ctx.user.id)?.type ?? null
+				};
 
-			return {
-				post: {
-					id: post.id,
-					body: post.body,
-					createdAt: post.createdAt
-				},
-				votes: {
-					likes: 1,
-					dislikes: 1,
-					userVote: VoteType.UP
-				},
-				author: {
-					id: post.author.id,
-					displayName: post.author.displayName,
-					imageUrl: post.author.imageUrl,
-					badge: post.author.badge
-				},
-				files: files
-			};
-		});
+				const filesRaw = await db.file.findMany({
+					where: {
+						postId: post.id
+					},
+					include: {
+						documentFile: true,
+						imageFile: true
+					}
+				});
+
+				const files = await Promise.all(
+					filesRaw.map(async (file) => ({
+						id: file.id,
+						type: file.type,
+						key: file.key,
+						documentFile: {
+							academicYear: file.documentFile?.academicYear ?? undefined,
+							title: file.documentFile?.title ?? undefined,
+							types: file.documentFile?.types || []
+						},
+						imageFile: file.imageFile,
+						url: await getFileUrl(file.key)
+					}))
+				);
+
+				return {
+					post: {
+						id: post.id,
+						body: post.body,
+						createdAt: post.createdAt
+					},
+					votes: {
+						likes: votes.likes,
+						dislikes: votes.dislikes,
+						userVote: votes.userVote
+					},
+					author: {
+						id: post.author.id,
+						displayName: post.author.displayName,
+						imageUrl: post.author.imageUrl,
+						badge: post.author.badge
+					},
+					replies: {
+						count: post._count.replies
+					},
+					files: files
+				};
+			})
+		);
 
 		const totalPages = Math.ceil(
 			(await db.post.count({

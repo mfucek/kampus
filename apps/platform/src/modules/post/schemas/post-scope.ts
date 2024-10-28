@@ -12,6 +12,16 @@ export const postScopeSchema = z.object({
 			// slug: z.string().nullish(),
 			id: z.string().nullish()
 		})
+		.nullish(),
+	replyToPost: z
+		.object({
+			id: z.string().nullish()
+		})
+		.nullish(),
+	author: z
+		.object({
+			id: z.string().nullish()
+		})
 		.nullish()
 });
 

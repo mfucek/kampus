@@ -90,7 +90,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 
 	if (process.env.NODE_ENV !== 'production') {
 		// artificial delay in dev
-		const waitMs = Math.floor(Math.random() * 400) + 1000;
+		const waitMs = Math.floor(Math.random() * 200) + 500;
 		await new Promise((resolve) => setTimeout(resolve, waitMs));
 	}
 

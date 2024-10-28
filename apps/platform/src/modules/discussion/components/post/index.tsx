@@ -22,13 +22,13 @@ type PostInterface = {
 		author: {
 			id: string;
 			displayName: string;
-			imageUrl: string;
-			badge: string;
+			imageUrl: string | null;
+			badge: string | null;
 			accountId: string;
 		};
-		authorId: string;
+		authorId: string | null;
 		id: string;
-		body: JSONContent;
+		body: JSONContent | null;
 		createdAt: Date;
 		_count: {
 			replies: number;

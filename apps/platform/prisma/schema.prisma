@@ -230,6 +230,8 @@ model DocumentFile {
 enum DocumentFileType {
   EXAM
   COLOQUIUM
+  COLOQUIUM_MID
+  COLOQUIUM_FINAL
   EXERCISE
   HOMEWORK
   SEMINAR

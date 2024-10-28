@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/lib/shadcn/ui/tabs';
 import { api } from '@/lib/trpc/server';
 import { PageHeader } from '@/modules/college/components/page-header';
 import { Composer } from '@/modules/discussion/components/composer';
-import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
+import { Post } from '@/modules/discussion/components/post';
 import { SubjectsTableAdvanced } from '@/modules/subject/components/subjects-table-advanced';
 import type { FC } from 'react';
 import { StaffsTableAdvanced } from '../../staff/components/staffs-table-advanced';
@@ -12,23 +12,23 @@ const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
 	collegeSlug,
 	collegeId
 }) => {
-	// const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
+	const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
 
 	return (
 		<div className="flex flex-col gap-10">
 			<Composer collegeId={collegeId} collegeSlug={collegeSlug} />
-			<InfiniteScrollTopLevelPosts
+			{/* <InfiniteScrollTopLevelPosts
 				scope={{
 					college: {
 						id: collegeId
 					}
 				}}
-			/>
-			{/* <div className="flex flex-col">
+			/> */}
+			<div className="flex flex-col">
 				{fullPosts.map((fullPost) => (
 					<Post key={fullPost.post.id} fullPost={fullPost} depthInfo={[]} />
 				))}
-			</div> */}
+			</div>
 		</div>
 	);
 };

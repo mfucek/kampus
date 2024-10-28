@@ -1,5 +1,6 @@
 'use client';
 
+import { env } from '@/env';
 import { usePathname, useSearchParams } from 'next/navigation';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
@@ -8,7 +9,7 @@ import { FC, PropsWithChildren } from 'react';
 const posthog_key = 'phc_ja1RmkJI17SjamUr0rDmMmjyw8GlezvHlYm05tGCDFv';
 const posthog_host = 'https://us.i.posthog.com';
 
-const isProduction = process.env.NODE_ENV !== 'development';
+const isProduction = env.NEXT_PUBLIC_DEPLOYMENT === 'production';
 
 if (typeof window !== 'undefined' && isProduction) {
 	posthog.init(posthog_key, {

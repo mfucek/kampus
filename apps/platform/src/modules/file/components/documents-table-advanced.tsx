@@ -15,6 +15,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
+import { cn } from '@/lib/shadcn/utils';
 import { api } from '@/lib/trpc/react';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
 import { DocumentFileType } from '@prisma/client';
@@ -144,6 +145,10 @@ const expandValues: ExpandableDocumentFileType = [
 	'OTHER'
 ];
 
+const baselineValues = expandValues.map((value) =>
+	typeof value === 'string' ? value : value.value
+);
+
 const DocumentTypeSelector: FC<{
 	onChange: (values: DocumentFileType[]) => void;
 }> = ({ onChange }) => {
@@ -186,20 +191,29 @@ const DocumentTypeSelector: FC<{
 
 	return (
 		<div>
-			{shownOptions.map((option) => (
-				<Button
-					variant={selectedValues.includes(option) ? 'solid' : 'outline'}
-					size="sm"
-					className="mr-2 mb-2 animate-push-fade-right"
-					rounded
-					key={option}
-					onClick={() => {
-						handleToggle(option);
-					}}
-				>
-					{displayMap[option]}
-				</Button>
-			))}
+			{shownOptions.map((option) => {
+				const isBaseline = baselineValues.includes(option);
+				const isSelected = selectedValues.includes(option);
+				return (
+					<Button
+						variant={isSelected ? 'solid' : 'outline'}
+						theme={isBaseline || isSelected ? 'accent' : 'neutral'}
+						size="sm"
+						className={cn(
+							'mr-2 mb-2',
+							!isBaseline && 'animate-push-fade-right'
+						)}
+						rounded
+						key={option}
+						onClick={() => {
+							handleToggle(option);
+						}}
+					>
+						{displayMap[option]}
+						{selectedValues.includes(option) && <Icon icon="close" />}
+					</Button>
+				);
+			})}
 		</div>
 	);
 };

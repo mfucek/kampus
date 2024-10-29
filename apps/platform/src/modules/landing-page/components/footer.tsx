@@ -4,7 +4,25 @@ export const Footer = () => {
 	return (
 		<footer className="flex flex-col md:flex-row gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-t-neutral-weak md:justify-between bg-section">
 			<p className="body-3 text-neutral-strong">
-				© {new Date().getFullYear()} Kampus.hr. Sva prava pridržana.
+				© {new Date().getFullYear()} Kampus.hr - Sva prava pridržana.
+			</p>
+			<p className="body-3 text-neutral-strong">
+				Made with ❤️ by{' '}
+				<a
+					href="https://wireframe.hr"
+					className="button-sm hover:underline underline-offset-4 text-neutral"
+					target="_blank"
+				>
+					Wireframe Studio{' '}
+				</a>
+				/{' '}
+				<a
+					href="https://mfucek.com"
+					className="button-sm hover:underline underline-offset-4 text-neutral"
+					target="_blank"
+				>
+					Matija Fućek{' '}
+				</a>
 			</p>
 			<nav className="flex gap-4 sm:gap-6">
 				<Link

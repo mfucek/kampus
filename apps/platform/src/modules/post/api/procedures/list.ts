@@ -30,9 +30,11 @@ export const listProcedure = protectedProcedure
 
 		// @TODO: needs more exclusive work to specify what kind of posts we want to get
 		const where: Prisma.PostWhereInput = {
-			...(collegeId ? { collegeId: collegeId } : {}),
-			...(topicId ? { topicId: topicId } : { topicId: null }),
-			...(replyToPostId ? { replyToId: replyToPostId } : { replyToId: null }),
+			...(collegeId
+				? { collegeId: collegeId, topicId: null, replyToId: null }
+				: {}),
+			...(topicId ? { topicId: topicId, replyToId: null } : {}),
+			...(replyToPostId ? { replyToId: replyToPostId } : {}),
 			...(authorId ? { authorId: authorId } : {})
 		};
 

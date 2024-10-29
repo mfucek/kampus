@@ -28,10 +28,11 @@ export const listProcedure = protectedProcedure
 		let replyToPostId = scope.replyToPost?.id;
 		let authorId = scope.author?.id;
 
+		// @TODO: needs more exclusive work to specify what kind of posts we want to get
 		const where: Prisma.PostWhereInput = {
 			...(collegeId ? { collegeId: collegeId } : {}),
-			...(topicId ? { topicId: topicId } : {}),
-			...(replyToPostId ? { replyToId: replyToPostId } : {}),
+			...(topicId ? { topicId: topicId } : { topicId: null }),
+			...(replyToPostId ? { replyToId: replyToPostId } : { replyToId: null }),
 			...(authorId ? { authorId: authorId } : {})
 		};
 

@@ -1,18 +1,20 @@
 'use client';
 
-import { env } from '@/env';
-import { Button } from '@/lib/shadcn/ui/button';
-import { useTranslation } from '@/utils/translations/use-translation';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 
+import { env } from '@/env';
+import { ActionsGroup } from '@/global/molecules/navbar/actions-group';
+import { Divider } from '@/global/molecules/navbar/divider';
+import { Button } from '@/lib/shadcn/ui/button';
+import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+
 export const Navbar = () => {
-	const { t } = useTranslation('hr');
-	const { openSignIn } = useClerk();
+	const { openSignIn, openSignUp } = useClerk();
 
 	const { isSignedIn } = useAuth();
 
-	const Nav = () => {
+	const Links = () => {
 		const scrollToSection = (id: string) => {
 			const element = document.getElementById(id);
 			if (element) {
@@ -53,23 +55,37 @@ export const Navbar = () => {
 	const Actions = () => {
 		if (isSignedIn) {
 			return (
-				<Link href="/home">
-					<Button theme="accent" size="md" variant="solid">
-						{t.goToPlatform}
-					</Button>
-				</Link>
+				<ActionsGroup>
+					<ThemeToggler size="sm" />
+					<Link href="/home">
+						<Button theme="accent" size="sm" variant="solid">
+							idi na platformu
+						</Button>
+					</Link>
+				</ActionsGroup>
 			);
 		}
 
 		return (
-			<Button
-				onClick={() => openSignIn({ afterSignInUrl: '/home' })}
-				theme="accent"
-				size="md"
-				variant="solid"
-			>
-				{t.register}
-			</Button>
+			<ActionsGroup>
+				<ThemeToggler size="sm" />
+				<Button
+					onClick={() => openSignUp({ afterSignInUrl: '/home' })}
+					theme="neutral"
+					size="sm"
+					variant="solid-weak"
+				>
+					Registriraj se
+				</Button>
+				<Button
+					onClick={() => openSignIn({ afterSignInUrl: '/home' })}
+					theme="accent"
+					size="sm"
+					variant="solid"
+				>
+					Ulogiraj se
+				</Button>
+			</ActionsGroup>
 		);
 	};
 
@@ -86,7 +102,8 @@ export const Navbar = () => {
 				</div>
 			</Link>
 			<div className="flex flex-row gap-4 items-center">
-				<Nav />
+				<Links />
+				<Divider />
 				<Actions />
 			</div>
 		</div>

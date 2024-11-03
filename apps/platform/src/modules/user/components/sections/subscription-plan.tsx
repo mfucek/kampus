@@ -191,7 +191,7 @@ export const SubscriptionPlanSection = () => {
 				title="Pretplati se!"
 				description="Hvala ti što koristiš stranicu! Ako želiš podržati stranicu, možeš kupiti pretplatu i dobiti pristup novim funkcionalnostima."
 			>
-				<div className="flex flex-col gap-2 p-4 border border-neutral-weak rounded-xl">
+				<div className="flex flex-col gap-2 p-4 bg-neutral-weak rounded-xl">
 					<p className="body-2">Trenutno si na Student planu:</p>
 					<FreePlanDescription />
 				</div>

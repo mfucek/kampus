@@ -50,7 +50,7 @@ model User {
   displayName String
   imageUrl    String?
 
-  badge String? // Make sure this line is present
+  badge String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -62,6 +62,9 @@ model User {
   posts Post[]
 
   image ImageFile?
+
+  notifications Notification[]
+  // subscriptions Subscription[]
 }
 
 // College
@@ -99,6 +102,8 @@ model Topic {
 
   image     ImageFile?
   summaries Summary[]
+  // notifications Notification[]
+  // Subscription Subscription[]
 
   @@unique([collegeId, slug])
 }
@@ -163,6 +168,8 @@ model Post {
   votes Vote[]
 
   files File[]
+  // notifications Notification[]
+  // subscriptions Subscription[]
 }
 
 enum VoteType {
@@ -311,4 +318,46 @@ enum SummaryType {
   NEGATIVE
   NEUTRAL
   WARNING
+}
+
+// Subscriptions
+
+// model Subscription {
+//   id String @id @default(cuid())
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id])
+
+//   postId String?
+//   post   Post?  @relation(fields: [postId], references: [id])
+
+//   topicId String?
+//   topic   Topic? @relation(fields: [topicId], references: [id])
+// }
+
+// Notifications
+
+model Notification {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+
+  type NotificationType
+  read Boolean          @default(false)
+
+  postId   String?
+  authorId String?
+  // topicId String?
+
+  recepientId String
+  recepient   User   @relation(fields: [recepientId], references: [id])
+}
+
+enum NotificationType {
+  POST_REPLY
+  POST_VOTE
+  // TOPIC_NEW_POST
+  // NEW_FEATURE
+  PACKAGE_UPGRADE
+  PACKAGE_DOWNGRADE
 }

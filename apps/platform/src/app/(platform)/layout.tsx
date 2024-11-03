@@ -1,5 +1,5 @@
-import { Navbar } from '@/global/components/navbar';
 import { Spinner } from '@/global/components/spinner';
+import { Navbar } from '@/global/molecules/navbar/navbar';
 import { ClientPanels } from '@/modules/discussion-panel/components/client-panels';
 import { PostIdProvider } from '@/modules/discussion-panel/components/post-id-provider';
 import { Suspense, type FC, type PropsWithChildren } from 'react';

@@ -1,6 +1,18 @@
 'use client';
-import type { FC, PropsWithChildren } from 'react';
+import { cn } from '@/lib/shadcn/utils';
+import type { FC, HTMLAttributes } from 'react';
 
-export const ActionsGroup: FC<PropsWithChildren> = ({ children }) => {
-	return <div className="flex flex-row gap-2 items-center">{children}</div>;
+export const ActionsGroup: FC<HTMLAttributes<HTMLDivElement>> = ({
+	children,
+	className,
+	...props
+}) => {
+	return (
+		<div
+			className={cn('flex flex-row gap-2 items-center', className)}
+			{...props}
+		>
+			{children}
+		</div>
+	);
 };

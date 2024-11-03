@@ -1,17 +1,19 @@
 'use client';
 
-import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { cn } from '@/lib/shadcn/utils';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
-import { useUploadToPost } from '@/modules/file/hooks/use-upload-to-post';
 import { EditorContent, type JSONContent, useEditor } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
-import { DragEvent, type FC, useState } from 'react';
+import { type FC, useState } from 'react';
+import { useSelectFiles } from '../hooks/use-select-files';
 import { EditorToolbar } from './editor-toolbar';
 
+import { Dialog, DialogTrigger } from '@/lib/shadcn/ui/dialog';
+import { ComposerFile } from './composer-file';
+import { FileDetailsModal } from './file-details-modal';
 const MAX_CHARACTERS = 2000;
 
 export const Composer: FC<{
@@ -23,16 +25,21 @@ export const Composer: FC<{
 	const utils = api.useUtils();
 	const router = useRouter();
 	const { toast } = useToast();
-	const { files, addFile, removeFile, commitFiles, linkFiles } =
-		useUploadToPost();
+
+	const {
+		containerProps,
+		files,
+		removeFile,
+		commitFiles,
+		linkFiles,
+		isDragging
+	} = useSelectFiles();
 
 	const [textValue, setTextValue] = useState('');
 	const [value, setValue] = useState<JSONContent>({
 		type: 'doc',
 		content: [{ type: 'paragraph', content: [] }]
 	});
-
-	const [dragging, setDragging] = useState(false);
 
 	const remaining = MAX_CHARACTERS - textValue.length;
 
@@ -55,31 +62,7 @@ export const Composer: FC<{
 	});
 
 	const { mutateAsync: createPost, isPending: isCreatingPost } =
-		api.post.createPost.useMutation({
-			onSuccess: async () => {
-				editor?.commands.clearContent();
-
-				// Invalidate and refetch relevant queries
-				await utils.post.invalidate();
-				await utils.post.getTopicPostsById.invalidate();
-				await utils.post.listPostsByCollegeSlug.invalidate();
-
-				// Force a re-render of the page
-				router.refresh();
-			}
-		});
-
-	const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
-		e.preventDefault();
-		setDragging(false);
-
-		const fileList = [];
-		for (const file of e.dataTransfer?.files ?? []) {
-			fileList.push(file);
-		}
-
-		await Promise.all(fileList.map((file) => addFile(file)));
-	};
+		api.post.createPost.useMutation();
 
 	const handleSubmit = async () => {
 		if (isCreatingPost) return;
@@ -103,6 +86,8 @@ export const Composer: FC<{
 		try {
 			const files = await commitFiles();
 
+			editor?.commands.clearContent();
+
 			const post = await createPost({
 				body: value,
 				collegeId,
@@ -111,6 +96,14 @@ export const Composer: FC<{
 			});
 
 			await linkFiles(files!, post.id);
+
+			// Invalidate and refetch relevant queries
+			await utils.post.invalidate();
+			await utils.post.getTopicPostsById.invalidate();
+			await utils.post.listPostsByCollegeSlug.invalidate();
+
+			// Force a re-render of the page
+			router.refresh();
 		} catch (error) {
 			console.error(error);
 		}
@@ -145,19 +138,9 @@ export const Composer: FC<{
 			<div
 				className={cn(
 					'flex flex-col gap-3 pt-3 border border-neutral-medium rounded-lg overflow-hidden',
-					{
-						'border-accent bg-accent-weak': dragging
-					}
+					isDragging && 'border-accent bg-accent-weak'
 				)}
-				onDragOver={(e) => {
-					e.preventDefault();
-					setDragging(true);
-				}}
-				onDragLeave={(e) => {
-					e.preventDefault();
-					setDragging(false);
-				}}
-				onDrop={handleDrop}
+				{...containerProps}
 			>
 				<div className="flex flex-col">
 					{editor && (
@@ -171,14 +154,19 @@ export const Composer: FC<{
 
 			<div className="flex flex-row gap-2">
 				{files.map((file, index) => (
-					<div className="flex flex-col" key={file.key || index}>
-						<p>{file.type}</p>
-						<Button variant="ghost" iconOnly onClick={() => removeFile(index)}>
-							<Icon icon="close" />
-						</Button>
-					</div>
+					<ComposerFile
+						onRemove={() => removeFile(index)}
+						onClick={() => {}}
+						key={file.key || index}
+					/>
 				))}
 			</div>
+			<Dialog>
+				<DialogTrigger asChild>
+					<Button>Open modal</Button>
+				</DialogTrigger>
+				<FileDetailsModal />
+			</Dialog>
 
 			<Footer />
 		</div>

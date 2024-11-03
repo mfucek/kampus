@@ -3,7 +3,6 @@
 import { useAuth, useClerk } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
 import { env } from '@/env';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -22,7 +21,6 @@ export const Navbar = () => {
 	const { isSignedIn } = useAuth();
 	const { openSignIn } = useClerk();
 
-	const collegeSlug = useParams().collegeSlug;
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery();
 
@@ -30,7 +28,7 @@ export const Navbar = () => {
 		if (isSignedIn) {
 			return (
 				<>
-					<ActionsGroup>
+					<ActionsGroup className="hidden md:flex">
 						<Button size="sm" variant="solid-weak" theme="accent">
 							Podrzi nas
 						</Button>
@@ -46,7 +44,7 @@ export const Navbar = () => {
 							</Button>
 						</a>
 					</ActionsGroup>
-					<Divider />
+					<Divider className="hidden md:block" />
 					<ActionsGroup>
 						<ThemeToggler size="sm" />
 						<NotificationsButton />
@@ -98,7 +96,9 @@ export const Navbar = () => {
 						)}
 					</div>
 				</Link>
-				<Breadcrumbs />
+				<div className="hidden md:block">
+					<Breadcrumbs />
+				</div>
 			</div>
 			<div className="flex flex-row gap-4 items-center">
 				<Actions />

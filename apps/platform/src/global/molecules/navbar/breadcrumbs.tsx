@@ -1,5 +1,6 @@
 'use client';
 
+import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
 import { api } from '@/lib/trpc/react';
 import Link from 'next/link';
@@ -31,7 +32,7 @@ export const Breadcrumbs = () => {
 	const subjectName = subject.data?.name;
 
 	return (
-		<div className="flex flex-row gap-2 items-center">
+		<div className="flex flex-row gap-0 items-center">
 			{collegeSlug && (
 				<>
 					<Link href={`/${collegeSlug}`}>
@@ -50,7 +51,7 @@ export const Breadcrumbs = () => {
 			)}
 			{topicSlug && (
 				<>
-					<div className="title-3 text-neutral-strong">/</div>
+					<Icon icon="chevron-right" className="bg-neutral-strong" size={20} />
 					<div className={cn('title-3', 'max-w-[96px] truncate')}>
 						{staffName || subjectName || topicSlug}
 					</div>

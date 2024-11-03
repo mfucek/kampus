@@ -85,9 +85,8 @@ export const SubscriptionPlanSection = () => {
 	const FreePlanDescription = () => {
 		return (
 			<ul>
-				<li>Neograničen pristup svim raspravama</li>
+				<li>Pristup svim raspravama uz reklame</li>
 				<li>2 AI sažetka po temi</li>
-				<li>10 preuzimanja mjesecno</li>
 			</ul>
 		);
 	};
@@ -95,10 +94,9 @@ export const SubscriptionPlanSection = () => {
 	const SponsorPlanDescription = () => {
 		return (
 			<ul>
+				<li>Pristup svom sadržaju bez reklama</li>
 				<li>Pristup svim AI sažetcima</li>
 				<li>Supporter badge</li>
-				<li>30 preuzimanja mjesecno</li>
-				<li>Dark mode</li>
 			</ul>
 		);
 	};

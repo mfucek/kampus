@@ -102,6 +102,9 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
 					}),
 					'group'
 				)}
+				style={{
+					textDecoration: 'none'
+				}}
 				ref={ref}
 				{...props}
 			>

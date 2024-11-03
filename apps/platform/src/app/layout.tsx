@@ -27,7 +27,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="en" className={GeistSans.variable}>
-			<body className="bg-background min-h-screen">
+			<body className="bg-background min-h-screen bg-opacity-100">
 				<NextTopLoader color="#3461ff" shadow={false} showSpinner={false} />
 				<ClerkProvider localization={{ locale: 'hr-HR' }}>
 					<TRPCReactProvider>

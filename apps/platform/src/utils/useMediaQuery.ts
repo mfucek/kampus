@@ -8,5 +8,5 @@ export const useIsMobile = () => {
 		}
 	}, []);
 
-	return { isMobile };
+	return { isMobile, isDesktop: !isMobile };
 };

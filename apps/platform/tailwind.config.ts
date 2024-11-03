@@ -9,9 +9,11 @@ export default {
 				sans: ['var(--font-geist-sans)', ...fontFamily.sans]
 			},
 			colors: {
-				section: 'var(--color-section)',
-				background: 'var(--color-background)',
-				foreground: 'var(--color-foreground)',
+				section: 'rgba(from var(--color-section) r g b / var(--tw-bg-opacity))',
+				background:
+					'rgba(from var(--color-background) r g b / var(--tw-bg-opacity))',
+				foreground:
+					'rgba(from var(--color-foreground) r g b / var(--tw-bg-opacity))',
 				accent: {
 					DEFAULT: 'var(--color-accent-default)',
 					strong: 'var(--color-accent-strong)',

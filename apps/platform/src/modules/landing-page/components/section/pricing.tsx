@@ -59,23 +59,10 @@ export const PricingSection = () => {
 							<ul className="mt-4 space-y-2">
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
-									Neograničen pristup svim raspravama
+									Pristup svom sadržaju uz reklame
 								</li>
-								<li className="flex items-center gap-2 text-neutral-medium">
-									<Icon
-										icon="checkmark"
-										size={24}
-										className="bg-neutral-medium"
-									/>
-									2 AI sažetka po temi
-								</li>
-								<li className="flex items-center gap-2 text-neutral-medium">
-									<Icon
-										icon="checkmark"
-										size={24}
-										className="bg-neutral-medium"
-									/>
-									10 preuzimanja mjesecno
+								<li className="flex items-center gap-2">
+									<Icon icon="checkmark" size={24} />2 AI sažetka po temi
 								</li>
 							</ul>
 						</CardContent>
@@ -97,29 +84,17 @@ export const PricingSection = () => {
 								<span className="text-neutral-strong title-1"> / mo</span>
 							</div>
 							<ul className="mt-4 space-y-2">
-								<li className="flex items-center gap-2 text-neutral-medium">
-									<Icon
-										icon="checkmark"
-										size={24}
-										className="bg-neutral-medium"
-									/>
+								<li className="flex items-center gap-2">
+									<Icon icon="checkmark" size={24} />
+									Pristup svom sadržaju bez reklama
+								</li>
+								<li className="flex items-center gap-2">
+									<Icon icon="checkmark" size={24} />
 									Pristup svim AI sažetcima
 								</li>
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
 									Supporter badge
-								</li>
-								<li className="flex items-center gap-2 text-neutral-medium">
-									<Icon
-										icon="checkmark"
-										size={24}
-										className="bg-neutral-medium"
-									/>
-									30 preuzimanja mjesecno
-								</li>
-								<li className="flex items-center gap-2">
-									<Icon icon="checkmark" size={24} />
-									Dark mode
 								</li>
 							</ul>
 						</CardContent>
@@ -140,13 +115,9 @@ export const PricingSection = () => {
 								<span className="text-neutral-strong title-1"> / mo</span>
 							</div>
 							<ul className="mt-4 space-y-2">
-								<li className="flex items-center gap-2 text-neutral-medium">
-									<Icon icon="checkmark" size={24} />
-									Objavljuj oglase
-								</li>
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
-									Make-your-own badge
+									Napravi svoj badge
 								</li>
 							</ul>
 						</CardContent>

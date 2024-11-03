@@ -74,3 +74,11 @@ export const deleteFile = async (key: string) => {
 
 	return await s3.send(command);
 };
+
+export const deleteFiles = async (keys: string[]) => {
+	const response = keys.map(async (key) => {
+		return await deleteFile(key);
+	});
+
+	return Promise.all(response);
+};

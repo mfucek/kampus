@@ -4,7 +4,7 @@ import { useAuth, useClerk } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 
 import { env } from '@/env';
 import { Button } from '@/lib/shadcn/ui/button';

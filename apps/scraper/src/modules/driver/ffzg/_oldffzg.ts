@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import puppeteer from 'puppeteer';
 
-import subjectsJson from './subjects.json';
+import subjectsJson from '../subjects.json';
 
 const write = async (fileName: string, data: any) => {
 	await fs.writeFile(fileName, JSON.stringify(data, null, 2));

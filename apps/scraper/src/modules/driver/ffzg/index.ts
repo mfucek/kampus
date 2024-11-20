@@ -23,6 +23,8 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 
 	// -----------------------------
 
+	callbacks?.onProgress?.(0, 0, true);
+
 	return {
 		programs: [],
 		professors: [],

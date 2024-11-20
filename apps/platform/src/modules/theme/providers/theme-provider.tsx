@@ -26,7 +26,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (typeof window !== 'undefined') {
 			const storedTheme = localStorage.getItem('theme') as Theme | null;
 
-			setTheme(storedTheme || 'light');
+			setTheme(storedTheme ?? 'light');
 		}
 	}, []);
 

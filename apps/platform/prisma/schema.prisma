@@ -88,8 +88,9 @@ model College {
 model Topic {
   id String @id @default(cuid())
 
-  slug String
-  name String
+  slug      String
+  name      String
+  shortName String?
 
   collegeId String
   college   College @relation(fields: [collegeId], references: [id])
@@ -98,7 +99,9 @@ model Topic {
 
   subject Subject?
   staff   Staff?
-  posts   Post[]
+  program Program?
+
+  posts Post[]
 
   image     ImageFile?
   summaries Summary[]
@@ -111,6 +114,7 @@ model Topic {
 enum TopicType {
   SUBJECT
   STAFF
+  PROGRAM
 }
 
 model Staff {
@@ -126,14 +130,39 @@ model Subject {
   topicId String @id @unique
   topic   Topic  @relation(fields: [topicId], references: [id])
 
-  semester    Int?
-  ects        Int?
-  subjectCode String?
-  subjectLink String?
+  ects Int?
 
-  tags String[]
+  subjectExternalCode String? @unique
+  subjectExternalLink String? @unique
 
   staffs Staff[]
+
+  programSubjects ProgramSubject[]
+}
+
+model Program {
+  topicId String @id @unique
+  topic   Topic  @relation(fields: [topicId], references: [id])
+
+  programExternalCode String? @unique
+  programExternalLink String? @unique
+
+  departments String[] @default([])
+
+  programSubjects ProgramSubject[]
+}
+
+model ProgramSubject {
+  programId String
+  program   Program @relation(fields: [programId], references: [topicId])
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [topicId])
+
+  semester Int?
+
+  @@id([programId, subjectId])
+  @@unique([programId, subjectId])
 }
 
 // Posts

@@ -110,7 +110,11 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 		enabled: debug
 	})) {
 		counter += 1;
-		callbacks?.onProgress?.(counter, Object.keys(programsList).length, false);
+		callbacks?.onProgress?.(
+			counter,
+			debug ? 5 : Object.keys(programsList).length,
+			false
+		);
 
 		await page.goto(program.externalLink);
 
@@ -182,7 +186,7 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 		await page.goto(subjectLink);
 
 		counter += 1;
-		callbacks?.onProgress?.(counter, subjectLinks.length, false);
+		callbacks?.onProgress?.(counter, debug ? 5 : subjectLinks.length, false);
 
 		const result = await page.evaluate(
 			(subjectLink, baseUrl) => {
@@ -274,7 +278,7 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 
 	callbacks?.onProgress?.(
 		Object.keys(programsList).length,
-		debug ? Object.keys(subjectLinks).length : 5,
+		Object.keys(subjectLinks).length,
 		true
 	);
 

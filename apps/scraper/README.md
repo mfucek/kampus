@@ -27,3 +27,9 @@ The scraper is built using [Puppeteer](https://pptr.dev) and [Bun](https://bun.s
 The data is linked together using the `externalLink` field.
 
 The data is then saved to a JSON file in the `out` directory.
+
+## CLI arguments
+
+- `--college`: Selects the college to scrape.
+- `--debug`: Enables debug mode - limits the number of pages scraped for each program.
+- `--list`: Lists all colleges available for scraping.

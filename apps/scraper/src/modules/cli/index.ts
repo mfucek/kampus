@@ -27,44 +27,69 @@ process.on('SIGINT', () => {
 export const cli = async () => {
 	p.intro('Kampus.hr - Topic Scraper');
 
-	const { colleges, isFullScrape } = await p.group(
-		{
-			colleges: () =>
-				p.multiselect({
-					message: 'Select colleges',
-					options: Object.keys(collegeList).map((key) => ({
-						label: collegeList[key as keyof typeof collegeList].label,
-						value: key
-					}))
-				}),
+	// -----------------------------
+	// Check CLI arguments for flags and skip prompts
+	const args = process.argv.slice(2);
 
-			isFullScrape: () =>
-				p.confirm({
-					message: 'Full scrape',
-					initialValue: false
-				})
-		},
-		{
-			onCancel: () => {
-				p.outro('Exiting...');
-				process.exit(0);
-			}
+	const argIsDebug = args.includes('--debug');
+
+	const argCollege = args
+		.find((arg) => arg.startsWith('--college='))
+		?.split('=')[1];
+
+	if (argCollege) {
+		if (!Object.keys(collegeList).includes(argCollege)) {
+			p.log.error(`Invalid college: ${argCollege}`);
+			process.exit(1);
 		}
-	);
+	}
+
+	// List out colleges available for scraping
+	const argList = args.find((arg) => arg.startsWith('--list'));
+	if (argList) {
+		p.log.info(
+			`Colleges available for scraping: ${Object.keys(collegeList).join(', ')}`
+		);
+		process.exit(0);
+	}
+
+	// -----------------------------
+
+	const colleges = argCollege
+		? [argCollege]
+		: ((await p.multiselect({
+				message: 'Select colleges',
+				options: Object.keys(collegeList).map((key) => ({
+					label: collegeList[key as keyof typeof collegeList].label,
+					value: key
+				}))
+		  })) as string[]);
+
+	const isFullScrape = argIsDebug
+		? false
+		: ((await p.confirm({
+				message: 'Full scrape',
+				initialValue: false
+		  })) as boolean);
 
 	// -----------------------------
 
 	for (const college of colleges) {
-		const spinner = p.spinner();
-		spinner.start();
+		const key = college;
 		const label = collegeList[college].label;
 		const driver = collegeList[college].driver;
+
+		// Initialize spinner
+		const spinner = p.spinner();
+		spinner.start();
 
 		const outDir = path.join(
 			process.cwd(),
 			'out',
-			label + (!isFullScrape ? '-debug' : '')
+			key + (!isFullScrape ? '-debug' : '')
 		);
+
+		// Make sure the output directory exists
 		fs.mkdirSync(outDir, { recursive: true });
 
 		const result = await driver({
@@ -79,6 +104,7 @@ export const cli = async () => {
 			}
 		});
 
+		// Log results to files
 		p.log.success(`Total subjects: ${result.subjects.length}`);
 		write(`${outDir}/subjects.json`, result.subjects);
 
@@ -88,11 +114,12 @@ export const cli = async () => {
 		p.log.success(`Total professors: ${result.professors.length}`);
 		write(`${outDir}/professors.json`, result.professors);
 
-		p.log.success(`${label} scraped successfully!`);
+		p.note(`Output directory: ${outDir}`, `${label} scraped successfully!`);
 	}
 
 	p.outro('Done!');
 
+	// Leave the browser open if it's a test run
 	if (isFullScrape) {
 		process.exit(0);
 	}

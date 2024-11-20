@@ -85,6 +85,9 @@ export const FileDetailsModal = () => {
 									<SelectItem value={'-'}>-</SelectItem>
 									{Array.from({ length: 20 }, (_, index) => (
 										<SelectItem
+											key={`${new Date().getFullYear() - index}/${
+												new Date().getFullYear() - index + 1
+											}`}
 											value={`${new Date().getFullYear() - index}/${
 												new Date().getFullYear() - index + 1
 											}`}

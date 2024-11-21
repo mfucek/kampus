@@ -1,5 +1,6 @@
 {
-	"name": "scraper",
+	"name": "topic-scraper",
+	"version": "0.1.1",
 	"module": "index.ts",
 	"type": "module",
 	"scripts": {

@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer';
 
+import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
 import type { Driver } from '@/modules/driver/types';
 import type { Professor, Program, Subject, SubjectReference } from '@/types';
 import { shortenList } from '@/utils/shorten-list';
@@ -24,77 +25,71 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 	const programsList: { [externalLink: string]: Program } = {};
 	const subjectsList: { [externalLink: string]: Subject } = {};
 	const professorsList: { [externalLink: string]: Professor } = {};
+
 	let counter = 0;
 
 	// -----------------------------
 	// Scrape programs
 
 	await page.goto(urlPrograms);
+	await hydrateWindowWithUtilFunctions(page);
 
-	// preddiplomski
-	const selectorPreddiplomski = '.row.two-col > .col-md-6 > h4 > a';
-
+	// Undergraduate programs
 	(
-		await page.evaluate(
-			(selector, baseUrl) => {
-				const programs = document.querySelectorAll(selector);
-				const results: Program[] = [];
+		await page.evaluate((baseUrl) => {
+			const programs = document.querySelectorAll(
+				'.row.two-col > .col-md-6 > h4 > a'
+			);
+			const results: Program[] = [];
 
-				programs.forEach((program) => {
-					const name = program.textContent?.trim() || '';
-					const link = baseUrl + program.getAttribute('href') || '';
-					const shortName = link.split('/').pop() || '';
+			programs.forEach((program) => {
+				let name = program.textContent?.trim() || '';
+				name = window.sanitizeTitle(name);
 
+				const link = baseUrl + program.getAttribute('href') || '';
+				const shortName = link.split('/').pop() || '';
+
+				results.push({
+					name,
+					shortName,
+					externalLink: link,
+					departments: [],
+					subjects: [],
+					type: 'Preddiplomski studiji'
+				});
+			});
+
+			return results;
+		}, baseUrl)
+	).map((program) => {
+		programsList[program.externalLink] = program;
+	});
+
+	// Graduate programs
+	(
+		await page.evaluate((baseUrl) => {
+			const programs = document.querySelectorAll('.col-md-4 > ul > li > a');
+			const results: Program[] = [];
+
+			programs.forEach((program) => {
+				const name = program.textContent?.trim() || '';
+				const link = program.getAttribute('href') || '';
+				const shortName = link.split('/').pop() || '';
+
+				if (link && name) {
 					results.push({
 						name,
 						shortName,
 						externalLink: link,
 						departments: [],
 						subjects: [],
-						type: 'preddiplomski'
+						type: 'Diplomski studiji'
 					});
-				});
+				}
+			});
 
-				return results;
-			},
-			selectorPreddiplomski,
-			baseUrl
-		)
-	).map((program) => {
-		programsList[program.externalLink] = program;
-	});
-
-	// diplomski
-	const selectorDiplomski = '.col-md-4 > ul > li > a';
-
-	(
-		await page.evaluate(
-			(selector, baseUrl) => {
-				const programs = document.querySelectorAll(selector);
-				const results: Program[] = [];
-
-				programs.forEach((program) => {
-					const name = program.textContent?.trim() || '';
-					const link = program.getAttribute('href') || '';
-					const shortName = link.split('/').pop() || '';
-
-					if (link && name) {
-						results.push({
-							name,
-							shortName,
-							externalLink: link,
-							departments: [],
-							subjects: [],
-							type: 'diplomski'
-						});
-					}
-				});
-
-				return results;
-			},
-			selectorDiplomski,
-			baseUrl
-		)
+			return results;
+		}, baseUrl)
 	).map((program) => {
 		programsList[program.externalLink] = program;
 	});
@@ -102,9 +97,6 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 	// -----------------------------
 	// Get all subjects for each program
 
-	const selectorSemesterTabContents = '.col-md-12.div-striped';
-
-	// Go through all programs and make references to subject links
 	counter = 0;
 	for await (const program of shortenList(Object.values(programsList), {
 		enabled: debug
@@ -117,48 +109,42 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 		);
 
 		await page.goto(program.externalLink);
+		await hydrateWindowWithUtilFunctions(page);
 
-		let programSemesters = await page.evaluate(
-			(selector, baseUrl) => {
-				const contents = document.querySelectorAll(selector);
+		let programSemesters = await page.evaluate((baseUrl) => {
+			const contents = document.querySelectorAll('.col-md-12.div-striped');
 
-				let outputSemesters: SubjectReference[] = [];
+			let outputSemesters: SubjectReference[] = [];
 
-				// Go through each semester
-				contents.forEach((content, semester) => {
-					const rows = content.querySelectorAll('& > .row');
+			// Go through each semester
+			contents.forEach((content, semester) => {
+				const rows = content.querySelectorAll('& > .row');
 
-					console.log(rows);
+				let sectionTitle = '';
 
-					let sectionTitle = '';
+				Array.from(rows).forEach((row) => {
+					// It is a section title
+					if (row.classList.length === 1) {
+						sectionTitle =
+							row.textContent
+								?.split('\n')[0]
+								.split('(')[0]
+								.split('-')[0]
+								.trim() || '';
+						return;
+					}
+					const link =
+						baseUrl + row.querySelector('& a')?.getAttribute('href') || '';
 
-					Array.from(rows).forEach((row) => {
-						// It is a section title
-						if (row.classList.length === 1) {
-							sectionTitle =
-								row.textContent
-									?.split('\n')[0]
-									.split('(')[0]
-									.split('-')[0]
-									.trim() || '';
-							return;
-						}
-						const link =
-							baseUrl + row.querySelector('& a')?.getAttribute('href') || '';
-						// const shortName = link.split('/').pop() || '';
-
-						outputSemesters.push({
-							externalLink: link,
-							semester: semester + 1,
-							groupName: sectionTitle
-						});
+					outputSemesters.push({
+						externalLink: link,
+						semester: semester + 1,
+						groupName: sectionTitle
 					});
 				});
-				return outputSemesters;
-			},
-			selectorSemesterTabContents,
-			baseUrl
-		);
+			});
+			return outputSemesters;
+		}, baseUrl);
 
 		program.subjects = programSemesters;
 	}
@@ -184,6 +170,7 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 		maxLength: 5
 	})) {
 		await page.goto(subjectLink);
+		await hydrateWindowWithUtilFunctions(page);
 
 		counter += 1;
 		callbacks?.onProgress?.(counter, debug ? 5 : subjectLinks.length, false);
@@ -206,15 +193,14 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 						.querySelector('.bodoviInfoRow > .col-md-12:nth-child(4) > strong')
 						?.textContent?.trim() || '';
 
-				const professorsList: { professor: Professor; groupName: string }[] =
-					[];
+				const professorsList: { professor: Professor; role: string }[] = [];
 
-				let groupName = '';
+				let role = '';
 				document
 					.querySelectorAll('.content, h4')
 					.forEach((professorSectionOrHeading) => {
 						if (professorSectionOrHeading.tagName === 'H4') {
-							groupName = professorSectionOrHeading.textContent?.trim() || '';
+							role = professorSectionOrHeading.textContent?.trim() || '';
 							return;
 						}
 
@@ -226,9 +212,10 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 						}
 
 						professorsInSection.forEach((professor) => {
-							professor
-								.querySelector('.staff-list .staffname')
-								?.textContent?.trim() || '';
+							const name =
+								professor
+									.querySelector('.staff-list .staffname')
+									?.textContent?.trim() || '';
 							const link =
 								baseUrl +
 									professor
@@ -238,11 +225,11 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 								baseUrl +
 									professor
 										.querySelector('.staff-list img')
-										?.getAttribute('src') || '';
+										?.getAttribute('src') || null;
 
 							professorsList.push({
-								professor: { name: subjectName, imageUrl, externalLink: link },
-								groupName: groupName
+								professor: { name, imageUrl, externalLink: link },
+								role
 							});
 						});
 					});
@@ -255,7 +242,7 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 						externalCode: subjectCode,
 						ects: Number(subjectEcts),
 						professorsLinks: professorsList.map((p) => ({
-							groupName: p.groupName,
+							role: p.role,
 							link: p.professor.externalLink
 						}))
 					},

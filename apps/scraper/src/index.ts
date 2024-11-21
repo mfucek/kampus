@@ -1,6 +1,6 @@
 import { cli } from './modules/cli';
 
-// clear terminal
-console.clear();
+// // clear terminal
+// console.clear();
 
 await cli();

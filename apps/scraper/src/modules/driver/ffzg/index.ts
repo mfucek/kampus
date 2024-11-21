@@ -97,15 +97,15 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 		enabled: debug,
 		maxLength: 2
 	})) {
-		await page.goto(programLink);
-		await hydrateWindowWithUtilFunctions(page);
-
 		counter += 1;
 		callbacks?.onProgress?.(
 			counter,
-			debug ? 5 : Object.keys(subjectsList).length,
-			false
+			debug ? 2 : Object.keys(programsList).length,
+			'Getting subjects from programs'
 		);
+
+		await page.goto(programLink);
+		await hydrateWindowWithUtilFunctions(page);
 
 		const result = await page.evaluate((baseUrl) => {
 			const semesterPanels = document.querySelectorAll(
@@ -130,10 +130,10 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 						let groupName = window.sanitizeTitle(
 							semesterGroupTitles[semesterSubjectGroupIndex].textContent
 						);
-						groupName = groupName
-							.split('. ')[1]
-							.split(' - ')[0]
-							.split(' za Akade')[0];
+						groupName = groupName.includes('.')
+							? groupName.split('. ')[1]
+							: groupName;
+						groupName = groupName.split(' - ')[0].split(' za Akade')[0];
 
 						subjects.forEach((subject) => {
 							const subjectCode =
@@ -211,10 +211,20 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 
 	// -----------------------------
 	// Go through subjects from results and link professors
+
+	counter = 0;
+
 	for await (const subjectLink of shortenList(Object.keys(subjectsList), {
 		enabled: debug,
-		maxLength: 5
+		maxLength: 3
 	})) {
+		counter += 1;
+		callbacks?.onProgress?.(
+			counter,
+			debug ? 3 : Object.keys(subjectsList).length,
+			'Linking professors to subjects'
+		);
+
 		await page.goto(subjectLink);
 		await hydrateWindowWithUtilFunctions(page);
 
@@ -238,22 +248,30 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 		}, baseUrl);
 
 		professors.forEach(({ link, title }) => {
-			if (
-				subjectsList[subjectLink].professorsLinks.find((p) => p.link === link)
-			) {
-				subjectsList[subjectLink].professorsLinks.find(
-					(p) => p.link === link
-				)!.role = title;
+			const subject = subjectsList[subjectLink];
+
+			if (subject.professorsLinks.find((p) => p.link === link)) {
+				subject.professorsLinks.find((p) => p.link === link)!.role = title;
 			}
 		});
 	}
 
 	// -----------------------------
 	// Go through professors from results and assign images
+
+	counter = 0;
+
 	for await (const professorLink of shortenList(Object.keys(professorsList), {
 		enabled: debug,
 		maxLength: 5
 	})) {
+		counter += 1;
+		callbacks?.onProgress?.(
+			counter,
+			debug ? 5 : Object.keys(professorsList).length,
+			'Assigning images to professors'
+		);
+
 		await page.goto(professorLink);
 		await hydrateWindowWithUtilFunctions(page);
 
@@ -268,11 +286,6 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 		professorsList[professorLink].imageUrl =
 			imgUrl && (await checkImage(imgUrl)) ? imgUrl : null;
 	}
-
-	// -----------------------------
-	// Finish progress
-
-	callbacks?.onProgress?.(0, 0, true);
 
 	// -----------------------------
 	// Close browser

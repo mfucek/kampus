@@ -34,6 +34,7 @@ export type DriverOptions = {
 		onSubjectsScraped?: (subjects: Subject[]) => void;
 		onProgramsScraped?: (programs: Program[]) => void;
 		onProfessorsScraped?: (professors: Professor[]) => void;
-		onProgress?: (progress: number, total: number, done: boolean) => void;
+		onProgress?: (progress: number, total: number, title?: string) => void;
+		onCompleted?: () => void;
 	};
 };

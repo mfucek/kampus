@@ -4,7 +4,7 @@ export type Subject = {
 	shortName: string;
 	externalCode: string;
 	ects: number;
-	professorsLinks: { groupName: string; link: string }[];
+	professorsLinks: { role: string; link: string }[];
 };
 
 export type SubjectReference = {
@@ -19,13 +19,13 @@ export type Program = {
 	shortName: string;
 	departments: string[];
 	subjects: SubjectReference[];
-	type: 'preddiplomski' | 'diplomski' | 'doktorski' | 'specijalisticki';
+	type: string; //'preddiplomski' | 'diplomski' | 'doktorski' | 'specijalisticki';
 };
 
 export type Professor = {
 	externalLink: string;
 	name: string;
-	imageUrl: string;
+	imageUrl: string | null;
 };
 
 export type DriverOptions = {

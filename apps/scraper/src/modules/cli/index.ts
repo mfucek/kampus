@@ -7,6 +7,8 @@ import { write } from '@/utils/write';
 
 import { ferDriver } from '@/modules/driver/fer';
 import { ffzgDriver } from '@/modules/driver/ffzg';
+import chalk from 'chalk';
+import { formatDistance } from 'date-fns';
 
 const collegeList: Record<string, { label: string; driver: Driver }> = {
 	fer: {
@@ -25,9 +27,6 @@ process.on('SIGINT', () => {
 });
 
 export const cli = async () => {
-	p.intro('Kampus.hr - Topic Scraper');
-
-	// -----------------------------
 	// Check CLI arguments for flags and skip prompts
 	const args = process.argv.slice(2);
 
@@ -52,6 +51,14 @@ export const cli = async () => {
 		);
 		process.exit(0);
 	}
+
+	// -----------------------------
+	// clear terminal
+	if (!argIsDebug) {
+		console.clear();
+	}
+
+	p.intro('Kampus.hr - Topic Scraper');
 
 	// -----------------------------
 
@@ -92,29 +99,58 @@ export const cli = async () => {
 		// Make sure the output directory exists
 		fs.mkdirSync(outDir, { recursive: true });
 
+		let spinnerStartTime = Date.now();
+		const startTime = Date.now();
+
 		const result = await driver({
 			debug: !isFullScrape,
 			callbacks: {
-				onProgress: (progress, total, done) => {
-					spinner.message(`${progress} / ${total} `);
-					if (done) {
-						spinner.stop(`Done scraping ${label}.`);
+				onProgress: (progress, total, title) => {
+					if (progress === 1 || progress === 0) {
+						spinnerStartTime = Date.now();
 					}
+
+					const elapsedTime = Date.now() - spinnerStartTime;
+					const estimatedTime = elapsedTime * (total / progress);
+					const remainingTime = estimatedTime - elapsedTime;
+
+					const remainingText = `${formatDistance(0, remainingTime, {
+						includeSeconds: true
+					})} remaining`;
+
+					spinner.message(
+						`${title && chalk.blue(title + ' ')}${
+							progress + ' / ' + total
+						} ${chalk.gray(remainingText)} `
+					);
 				}
 			}
 		});
 
+		spinner.stop(`Done scraping ${label}.`);
+
 		// Log results to files
-		p.log.success(`Total subjects: ${result.subjects.length}`);
+		p.log.success(`Total subjects: ${chalk.yellow(result.subjects.length)}`);
 		write(`${outDir}/subjects.json`, result.subjects);
 
-		p.log.success(`Total programs: ${result.programs.length}`);
+		p.log.success(`Total programs: ${chalk.yellow(result.programs.length)}`);
 		write(`${outDir}/programs.json`, result.programs);
 
-		p.log.success(`Total professors: ${result.professors.length}`);
+		p.log.success(
+			`Total professors: ${chalk.yellow(result.professors.length)}`
+		);
 		write(`${outDir}/professors.json`, result.professors);
 
-		p.note(`Output directory: ${outDir}`, `${label} scraped successfully!`);
+		p.note(
+			`Output directory: ${outDir}\n\nTook ${formatDistance(
+				0,
+				Date.now() - startTime,
+				{
+					includeSeconds: true
+				}
+			)}`,
+			`${label} scraped successfully!`
+		);
 	}
 
 	p.outro('Done!');

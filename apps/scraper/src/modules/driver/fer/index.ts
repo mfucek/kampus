@@ -35,6 +35,9 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 	await hydrateWindowWithUtilFunctions(page);
 
 	// Undergraduate programs
+	counter += 1;
+	callbacks?.onProgress?.(counter, 2, 'Finding programs');
+
 	(
 		await page.evaluate((baseUrl) => {
 			const programs = document.querySelectorAll(
@@ -66,6 +69,8 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 	});
 
 	// Graduate programs
+	counter += 1;
+	callbacks?.onProgress?.(counter, 2, 'Finding programs');
 	(
 		await page.evaluate((baseUrl) => {
 			const programs = document.querySelectorAll('.col-md-4 > ul > li > a');
@@ -98,6 +103,7 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 	// Get all subjects for each program
 
 	counter = 0;
+
 	for await (const program of shortenList(Object.values(programsList), {
 		enabled: debug
 	})) {
@@ -105,7 +111,7 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 		callbacks?.onProgress?.(
 			counter,
 			debug ? 5 : Object.keys(programsList).length,
-			false
+			'Getting subjects from programs'
 		);
 
 		await page.goto(program.externalLink);
@@ -169,11 +175,15 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 		enabled: debug,
 		maxLength: 5
 	})) {
+		counter += 1;
+		callbacks?.onProgress?.(
+			counter,
+			debug ? 5 : subjectLinks.length,
+			'Getting subject details'
+		);
+
 		await page.goto(subjectLink);
 		await hydrateWindowWithUtilFunctions(page);
-
-		counter += 1;
-		callbacks?.onProgress?.(counter, debug ? 5 : subjectLinks.length, false);
 
 		const result = await page.evaluate(
 			(subjectLink, baseUrl) => {
@@ -259,15 +269,6 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 			professorsList[professor.professor.externalLink] = professor.professor;
 		}
 	}
-
-	// -----------------------------
-	// Finish progress
-
-	callbacks?.onProgress?.(
-		Object.keys(programsList).length,
-		Object.keys(subjectLinks).length,
-		true
-	);
 
 	// -----------------------------
 	// Close browser

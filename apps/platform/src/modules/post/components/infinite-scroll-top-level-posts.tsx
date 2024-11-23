@@ -75,7 +75,7 @@ export const InfiniteScrollTopLevelPosts: FC<{
 	const query = api.post.list.useInfiniteQuery(
 		{
 			scope,
-			limit: 5
+			limit: 10
 		},
 		{
 			getNextPageParam: (lastPage) => lastPage.nextCursor

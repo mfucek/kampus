@@ -45,7 +45,6 @@ export const ThreadContent = () => {
 						<Post key={fullPost.post.id} fullPost={fullPost} depthInfo={[]} />
 						<Composer
 							collegeId={fullPost.post.collegeId}
-							collegeSlug={''} // @TODO fix this
 							topicId={fullPost.post.topicId ?? undefined}
 							replyToId={fullPost.post.id}
 						/>

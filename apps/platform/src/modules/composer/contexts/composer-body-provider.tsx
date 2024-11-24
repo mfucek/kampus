@@ -4,18 +4,19 @@ import { JSONContent } from '@tiptap/react';
 import { createContext, FC, ReactNode, useContext, useState } from 'react';
 
 const defaultData = {
-	body: {
-		type: 'doc',
-		content: [{ type: 'paragraph', content: [] }]
-	}
+	body: null,
+	characterCount: 0
 };
 
 const ComposerBodyContext = createContext<{
-	body: JSONContent;
-	setBody: (body: JSONContent) => void;
+	body: JSONContent | null;
+	setBody: (body: JSONContent | null) => void;
+	characterCount: number;
+	setCharacterCount: (characterCount: number) => void;
 }>({
 	...defaultData,
-	setBody: () => {}
+	setBody: () => {},
+	setCharacterCount: () => {}
 });
 
 export const useComposerBodyContext = () => {
@@ -31,13 +32,18 @@ export const useComposerBodyContext = () => {
 export const ComposerBodyProvider: FC<{
 	children: ReactNode;
 }> = ({ children }) => {
-	const [body, setBody] = useState<JSONContent>(defaultData.body);
+	const [body, setBody] = useState<JSONContent | null>(defaultData.body);
+	const [characterCount, setCharacterCount] = useState(
+		defaultData.characterCount
+	);
 
 	return (
 		<ComposerBodyContext.Provider
 			value={{
 				body,
-				setBody
+				setBody,
+				characterCount,
+				setCharacterCount
 			}}
 		>
 			{children}

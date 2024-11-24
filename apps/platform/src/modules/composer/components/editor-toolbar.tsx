@@ -5,9 +5,11 @@ import { useCallback } from 'react';
 
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
+import { useComposerController } from '../contexts/composer-controller-provider';
 import { useComposerUploadDialog } from '../hooks/use-composer-upload-dialog';
 
 export const EditorToolbar = ({ editor }: { editor: Editor }) => {
+	const { locked } = useComposerController();
 	const { openFileDialog } = useComposerUploadDialog();
 
 	const setLink = useCallback(() => {
@@ -51,6 +53,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 					variant={editor.isActive('bold') ? 'solid' : 'ghost'}
 					iconOnly
 					onClick={() => editor.chain().focus().toggleBold().run()}
+					disabled={locked}
 				>
 					<Icon icon="text-bold" />
 				</Button>
@@ -60,6 +63,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 					variant={editor.isActive('italic') ? 'solid' : 'ghost'}
 					iconOnly
 					onClick={() => editor.chain().focus().toggleItalic().run()}
+					disabled={locked}
 				>
 					<Icon icon="text-italic" />
 				</Button>
@@ -69,6 +73,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 					variant={editor.isActive('strike') ? 'solid' : 'ghost'}
 					iconOnly
 					onClick={() => editor.chain().focus().toggleStrike().run()}
+					disabled={locked}
 				>
 					<Icon icon="text-strikethrough" />
 				</Button>
@@ -83,6 +88,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 					variant={editor.isActive('link') ? 'solid' : 'ghost'}
 					iconOnly
 					onClick={handleLink}
+					disabled={locked}
 				>
 					<Icon icon="link" />
 				</Button>
@@ -92,6 +98,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 					variant={editor.isActive('code') ? 'solid' : 'ghost'}
 					iconOnly
 					onClick={() => editor.chain().focus().toggleCode().run()}
+					disabled={locked}
 				>
 					<Icon icon="code" />
 				</Button>
@@ -106,6 +113,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 					variant={'ghost'}
 					iconOnly
 					onClick={() => openFileDialog()}
+					disabled={locked}
 				>
 					<Icon icon="image" />
 				</Button>
@@ -115,18 +123,19 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 					variant={'ghost'}
 					iconOnly
 					onClick={() => openFileDialog()}
+					disabled={locked}
 				>
 					<Icon icon="file" />
 				</Button>
 			</div>
 
-			<div className="self-stretch w-px bg-neutral-medium my-1" />
+			{/* <div className="self-stretch w-px bg-neutral-medium my-1" />
 
 			<div className="flex flex-row gap-2">
-				<Button size="xs" theme="neutral" variant={'ghost'} iconOnly disabled>
+				<Button size="xs" theme="neutral" variant={'ghost'} iconOnly>
 					<Icon icon="ellipsis" />
 				</Button>
-			</div>
+			</div> */}
 		</div>
 	);
 };

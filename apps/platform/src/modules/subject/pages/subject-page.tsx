@@ -6,7 +6,6 @@ import { Composer } from '@/modules/composer/components';
 import { DocumentsTableAdvanced } from '@/modules/file/components/documents-table-advanced';
 import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
 import { StaffsTableAdvanced } from '@/modules/staff/components/staffs-table-advanced';
-import { SummarySection } from '@/modules/summary/components/summary-section';
 import type { FC } from 'react';
 
 const DiscussionTab: FC<{
@@ -17,11 +16,7 @@ const DiscussionTab: FC<{
 }> = async ({ subjectId, subjectSlug, collegeSlug, collegeId }) => {
 	return (
 		<div className="flex flex-col gap-10">
-			<Composer
-				collegeId={collegeId}
-				collegeSlug={collegeSlug}
-				topicId={subjectId}
-			/>
+			<Composer collegeId={collegeId} topicId={subjectId} />
 			<InfiniteScrollTopLevelPosts scope={{ topic: { id: subjectId } }} />
 		</div>
 	);
@@ -51,7 +46,7 @@ export const SubjectPage: FC<{
 				collegeName={subject.college.name}
 				topicName={subject.name}
 			/>
-			<SummarySection />
+			{/* <SummarySection /> */}
 			<Tabs defaultValue="discussion">
 				<TabsList>
 					<TabsTrigger value="discussion">Rasprava</TabsTrigger>

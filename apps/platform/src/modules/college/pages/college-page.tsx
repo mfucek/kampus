@@ -8,15 +8,12 @@ import { SubjectsTableAdvanced } from '@/modules/subject/components/subjects-tab
 import type { FC } from 'react';
 import { StaffsTableAdvanced } from '../../staff/components/staffs-table-advanced';
 
-const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
-	collegeSlug,
-	collegeId
-}) => {
+const DiscussionTab: FC<{ collegeId: string }> = async ({ collegeId }) => {
 	// const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
 
 	return (
 		<div className="flex flex-col gap-10">
-			<Composer collegeId={collegeId} collegeSlug={collegeSlug} />
+			<Composer collegeId={collegeId} />
 			<InfiniteScrollTopLevelPosts
 				scope={{
 					college: {
@@ -33,10 +30,10 @@ const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
 	);
 };
 
-const SubjectsTab: FC<{ collegeSlug: string }> = async ({ collegeSlug }) => {
+const SubjectsTab: FC<{ collegeId: string }> = async ({ collegeId }) => {
 	return (
 		<div className="flex flex-col gap-2">
-			<SubjectsTableAdvanced scope={{ collegeSlug }} />
+			<SubjectsTableAdvanced scope={{ collegeId }} />
 		</div>
 	);
 };
@@ -65,10 +62,10 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 					<TabsTrigger value="staff">Svi Profesori</TabsTrigger>
 				</TabsList>
 				<TabsContent value="discussion">
-					<DiscussionTab collegeSlug={collegeSlug} collegeId={college.id} />
+					<DiscussionTab collegeId={college.id} />
 				</TabsContent>
 				<TabsContent value="subjects">
-					<SubjectsTab collegeSlug={collegeSlug} />
+					<SubjectsTab collegeId={college.id} />
 				</TabsContent>
 				<TabsContent value="staff">
 					<StaffTab collegeSlug={collegeSlug} />

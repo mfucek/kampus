@@ -27,7 +27,8 @@ export type PostFile = {
 };
 
 const defaultData = {
-	files: []
+	files: [],
+	fileDetailsIndex: null
 };
 
 const ComposerFilesContext = createContext<{
@@ -36,6 +37,7 @@ const ComposerFilesContext = createContext<{
 	addFile: (file: File) => void;
 	addFiles: (files: File[]) => void;
 	removeFile: (index: number) => void;
+	updateFile: (index: number, update: Partial<PostFile>) => void;
 	fileDetailsIndex: number | null;
 	setFileDetailsIndex: (index: number | null) => void;
 	openFileDetailsDialog: (index?: number) => void;
@@ -45,7 +47,7 @@ const ComposerFilesContext = createContext<{
 	addFile: () => {},
 	addFiles: () => {},
 	removeFile: () => {},
-	fileDetailsIndex: null,
+	updateFile: () => {},
 	setFileDetailsIndex: () => {},
 	openFileDetailsDialog: () => {}
 });
@@ -67,7 +69,9 @@ export const ComposerFilesProvider: FC<{
 
 	const [files, setFiles] = useState<PostFile[]>(defaultData.files);
 	const [fileDetailsDialogOpen, setFileDetailsDialogOpen] = useState(false);
-	const [fileDetailsIndex, setFileDetailsIndex] = useState<number | null>(null);
+	const [fileDetailsIndex, setFileDetailsIndex] = useState<number | null>(
+		defaultData.fileDetailsIndex
+	);
 
 	const addFile = (newFile: File) => {
 		try {
@@ -75,35 +79,37 @@ export const ComposerFilesProvider: FC<{
 			setFiles([...files, sanitizedFile]);
 			setFileDetailsIndex(files.length);
 
-			if (sanitizedFile.type === 'IMAGE' || sanitizedFile.type === 'PDF') {
+			if (sanitizedFile.type === 'ARCHIVE' || sanitizedFile.type === 'PDF') {
 				openFileDetailsDialog(files.length);
 			}
 		} catch (error) {
 			console.error('Error adding file:', error);
 			toast({
-				title: 'Greška pri dodavanju datoteke.',
-				description: 'Nepodržani tip datoteke.',
+				title: 'Nedopušteni tip datoteke',
+				description: 'Dopušteni tipovi datoteka su: png, jpeg, pdf, zip',
 				variant: 'danger'
 			});
 		}
 	};
 
 	const addFiles = (newFiles: File[]) => {
-		let firstImageOrPdfIndex: number | null = null;
+		let firstDocumentIndex: number | null = null;
 
-		const sanitizedFiles = newFiles.map((file) => {
+		const sanitizedFiles = newFiles.map((file, i) => {
 			try {
 				const sanitizedFile = fileToPostFile(file);
 
-				if (sanitizedFile.type === 'IMAGE' || sanitizedFile.type === 'PDF') {
-					firstImageOrPdfIndex = files.length;
+				if (sanitizedFile.type === 'ARCHIVE' || sanitizedFile.type === 'PDF') {
+					firstDocumentIndex = firstDocumentIndex
+						? firstDocumentIndex
+						: files.length + i;
 				}
 
 				return sanitizedFile;
 			} catch (error) {
 				toast({
-					title: 'Greška pri dodavanju datoteke.',
-					description: 'Nepodržani tip datoteke.',
+					title: 'Nedopušteni tip datoteke',
+					description: 'Dopušteni tipovi datoteka su: png, jpeg, pdf, zip',
 					variant: 'danger'
 				});
 				return null;
@@ -117,16 +123,22 @@ export const ComposerFilesProvider: FC<{
 		setFiles([...files, ...filteredSanitizedFiles]);
 		setFileDetailsIndex(files.length + sanitizedFiles.length - 1);
 
-		if (firstImageOrPdfIndex) {
-			openFileDetailsDialog(firstImageOrPdfIndex);
+		console.log('firstDocumentIndex', firstDocumentIndex);
+
+		if (firstDocumentIndex !== null) {
+			openFileDetailsDialog(firstDocumentIndex);
 		}
 	};
 
-	const removeFile = (removeIndex: number) => {
-		console.log('removeIndex', removeIndex);
-		console.log('fileDetailsIndex', fileDetailsIndex);
-		console.log('files.length', files.length);
+	const updateFile = (updateIndex: number, update: Partial<PostFile>) => {
+		setFiles(
+			files.map((file, index) =>
+				index === updateIndex ? { ...file, ...update } : file
+			)
+		);
+	};
 
+	const removeFile = (removeIndex: number) => {
 		setFiles(files.filter((_, i) => i !== removeIndex));
 
 		let newIndex = fileDetailsIndex;
@@ -156,6 +168,7 @@ export const ComposerFilesProvider: FC<{
 				addFile,
 				addFiles,
 				removeFile,
+				updateFile,
 				fileDetailsIndex,
 				setFileDetailsIndex,
 				openFileDetailsDialog

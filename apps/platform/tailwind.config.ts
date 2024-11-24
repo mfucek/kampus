@@ -15,53 +15,81 @@ export default {
 				foreground:
 					'rgba(from var(--color-foreground) r g b / var(--tw-bg-opacity))',
 				accent: {
-					DEFAULT: 'var(--color-accent-default)',
-					strong: 'var(--color-accent-strong)',
-					medium: 'var(--color-accent-medium)',
-					weak: 'var(--color-accent-weak)',
-					contrast: 'var(--color-accent-contrast)'
+					DEFAULT:
+						'rgba(from var(--color-accent-default) r g b / var(--tw-bg-opacity))',
+					strong:
+						'rgba(from var(--color-accent-strong) r g b / var(--tw-bg-opacity))',
+					medium:
+						'rgba(from var(--color-accent-medium) r g b / var(--tw-bg-opacity))',
+					weak: 'rgba(from var(--color-accent-weak) r g b / var(--tw-bg-opacity))',
+					contrast:
+						'rgba(from var(--color-accent-contrast) r g b / var(--tw-bg-opacity))'
 				},
 				neutral: {
-					DEFAULT: 'var(--color-neutral-default)',
-					strong: 'var(--color-neutral-strong)',
-					medium: 'var(--color-neutral-medium)',
-					weak: 'var(--color-neutral-weak)',
-					contrast: 'var(--color-neutral-contrast)'
+					DEFAULT:
+						'rgba(from var(--color-neutral-default) r g b / var(--tw-bg-opacity))',
+					strong:
+						'rgba(from var(--color-neutral-strong) r g b / var(--tw-bg-opacity))',
+					medium:
+						'rgba(from var(--color-neutral-medium) r g b / var(--tw-bg-opacity))',
+					weak: 'rgba(from var(--color-neutral-weak) r g b / var(--tw-bg-opacity))',
+					contrast:
+						'rgba(from var(--color-neutral-contrast) r g b / var(--tw-bg-opacity))'
 				},
 				success: {
-					DEFAULT: 'var(--color-success-default)',
-					strong: 'var(--color-success-strong)',
-					medium: 'var(--color-success-medium)',
-					weak: 'var(--color-success-weak)',
-					contrast: 'var(--color-success-contrast)'
+					DEFAULT:
+						'rgba(from var(--color-success-default) r g b / var(--tw-bg-opacity))',
+					strong:
+						'rgba(from var(--color-success-strong) r g b / var(--tw-bg-opacity))',
+					medium:
+						'rgba(from var(--color-success-medium) r g b / var(--tw-bg-opacity))',
+					weak: 'rgba(from var(--color-success-weak) r g b / var(--tw-bg-opacity))',
+					contrast:
+						'rgba(from var(--color-success-contrast) r g b / var(--tw-bg-opacity))'
 				},
 				danger: {
-					DEFAULT: 'var(--color-danger-default)',
-					strong: 'var(--color-danger-strong)',
-					medium: 'var(--color-danger-medium)',
-					weak: 'var(--color-danger-weak)',
-					contrast: 'var(--color-danger-contrast)'
+					DEFAULT:
+						'rgba(from var(--color-danger-default) r g b / var(--tw-bg-opacity))',
+					strong:
+						'rgba(from var(--color-danger-strong) r g b / var(--tw-bg-opacity))',
+					medium:
+						'rgba(from var(--color-danger-medium) r g b / var(--tw-bg-opacity))',
+					weak: 'rgba(from var(--color-danger-weak) r g b / var(--tw-bg-opacity))',
+					contrast:
+						'rgba(from var(--color-danger-contrast) r g b / var(--tw-bg-opacity))'
 				},
 				warning: {
-					DEFAULT: 'var(--color-warning-default)',
-					strong: 'var(--color-warning-strong)',
-					medium: 'var(--color-warning-medium)',
-					weak: 'var(--color-warning-weak)',
-					contrast: 'var(--color-warning-contrast)'
+					DEFAULT:
+						'rgba(from var(--color-warning-default) r g b / var(--tw-bg-opacity))',
+					strong:
+						'rgba(from var(--color-warning-strong) r g b / var(--tw-bg-opacity))',
+					medium:
+						'rgba(from var(--color-warning-medium) r g b / var(--tw-bg-opacity))',
+					weak: 'rgba(from var(--color-warning-weak) r g b / var(--tw-bg-opacity))',
+					contrast:
+						'rgba(from var(--color-warning-contrast) r g b / var(--tw-bg-opacity))'
 				},
 				info: {
-					DEFAULT: 'var(--color-info-default)',
-					strong: 'var(--color-info-strong)',
-					medium: 'var(--color-info-medium)',
-					weak: 'var(--color-info-weak)',
-					contrast: 'var(--color-info-contrast)'
+					DEFAULT:
+						'rgba(from var(--color-info-default) r g b / var(--tw-bg-opacity))',
+					strong:
+						'rgba(from var(--color-info-strong) r g b / var(--tw-bg-opacity))',
+					medium:
+						'rgba(from var(--color-info-medium) r g b / var(--tw-bg-opacity))',
+					weak: 'rgba(from var(--color-info-weak) r g b / var(--tw-bg-opacity))',
+					contrast:
+						'rgba(from var(--color-info-contrast) r g b / var(--tw-bg-opacity))'
 				},
 				theme: {
-					DEFAULT: 'var(--color-theme-default)',
-					strong: 'var(--color-theme-strong)',
-					medium: 'var(--color-theme-medium)',
-					weak: 'var(--color-theme-weak)',
-					contrast: 'var(--color-theme-contrast)'
+					DEFAULT:
+						'rgba(from var(--color-theme-default) r g b / var(--tw-bg-opacity))',
+					strong:
+						'rgba(from var(--color-theme-strong) r g b / var(--tw-bg-opacity))',
+					medium:
+						'rgba(from var(--color-theme-medium) r g b / var(--tw-bg-opacity))',
+					weak: 'rgba(from var(--color-theme-weak) r g b / var(--tw-bg-opacity))',
+					contrast:
+						'rgba(from var(--color-theme-contrast) r g b / var(--tw-bg-opacity))'
 				}
 			},
 			keyframes: {

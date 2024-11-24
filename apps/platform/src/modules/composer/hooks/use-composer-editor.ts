@@ -1,22 +1,18 @@
 'use client';
 
 import { useEditor } from '@tiptap/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
-import { MAX_CHARACTERS } from '@/modules/discussion/constants/composer';
 import { useComposerBodyContext } from '../contexts/composer-body-provider';
-import { useComposerFilesContext } from '../contexts/composer-files-provider';
+import { useComposerController } from '../contexts/composer-controller-provider';
 
 export const useComposerEditor = () => {
-	const { body, setBody } = useComposerBodyContext();
-	const { addFile } = useComposerFilesContext();
+	const { body, setBody, setCharacterCount } = useComposerBodyContext();
+	const { locked } = useComposerController();
 
-	const [textValue, setTextValue] = useState('');
 	const [contentKey, setContentKey] = useState(0);
-	const [isDragging, setIsDragging] = useState(false);
-
-	const remaining = MAX_CHARACTERS - textValue.length;
+	const enabled = !locked;
 
 	const editor = useEditor({
 		immediatelyRender: false,
@@ -27,12 +23,20 @@ export const useComposerEditor = () => {
 				class: 'rounded-md p-3 outline-none flex flex-col gap-1'
 			}
 		},
+		onBlur: () => {},
+		editable: enabled,
 		onUpdate({ editor }) {
 			setBody(editor.getJSON());
-			setTextValue(editor.getText());
+			setCharacterCount(editor.getText().length);
 			setContentKey((prev) => prev + 1); // Increment the key
 		}
 	});
 
-	return { editor };
+	useEffect(() => {
+		if (body === null) {
+			editor?.commands.clearContent();
+		}
+	}, [editor, body]);
+
+	return { editor, enabled };
 };

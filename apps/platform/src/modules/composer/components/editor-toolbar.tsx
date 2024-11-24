@@ -1,11 +1,15 @@
 'use client';
 
-import { Icon } from '@/global/components/icon';
-import { Button } from '@/lib/shadcn/ui/button';
 import { type Editor } from '@tiptap/react';
 import { useCallback } from 'react';
 
+import { Icon } from '@/global/components/icon';
+import { Button } from '@/lib/shadcn/ui/button';
+import { useComposerUploadDialog } from '../hooks/use-composer-upload-dialog';
+
 export const EditorToolbar = ({ editor }: { editor: Editor }) => {
+	const { openFileDialog } = useComposerUploadDialog();
+
 	const setLink = useCallback(() => {
 		const previousUrl = editor.getAttributes('link').href;
 		const url = window.prompt('URL', previousUrl);
@@ -96,10 +100,22 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 			<div className="self-stretch w-px bg-neutral-medium my-1" />
 
 			<div className="flex flex-row gap-2">
-				<Button size="xs" theme="neutral" variant={'ghost'} iconOnly disabled>
+				<Button
+					size="xs"
+					theme="neutral"
+					variant={'ghost'}
+					iconOnly
+					onClick={() => openFileDialog()}
+				>
 					<Icon icon="image" />
 				</Button>
-				<Button size="xs" theme="neutral" variant={'ghost'} iconOnly disabled>
+				<Button
+					size="xs"
+					theme="neutral"
+					variant={'ghost'}
+					iconOnly
+					onClick={() => openFileDialog()}
+				>
 					<Icon icon="file" />
 				</Button>
 			</div>

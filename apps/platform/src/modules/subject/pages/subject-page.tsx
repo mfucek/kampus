@@ -2,7 +2,7 @@ import { Container } from '@/global/components/container';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/lib/shadcn/ui/tabs';
 import { api } from '@/lib/trpc/server';
 import { PageHeader } from '@/modules/college/components/page-header';
-import { Composer } from '@/modules/discussion/components/composer';
+import { Composer } from '@/modules/composer/components';
 import { DocumentsTableAdvanced } from '@/modules/file/components/documents-table-advanced';
 import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
 import { StaffsTableAdvanced } from '@/modules/staff/components/staffs-table-advanced';

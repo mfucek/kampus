@@ -1,5 +1,6 @@
-import { publicProcedure } from '@/server/api/trpc';
 import { z } from 'zod';
+
+import { publicProcedure } from '@/server/api/trpc';
 
 export const listByPostProcedure = publicProcedure
 	.input(z.object({ postId: z.string() }))
@@ -15,10 +16,6 @@ export const listByPostProcedure = publicProcedure
 				imageFile: true
 			}
 		});
-
-		const imageFiles = files
-			.filter((file) => file.imageFile !== null)
-			.map((file) => {});
 
 		return files;
 	});

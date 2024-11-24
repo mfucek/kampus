@@ -9,7 +9,7 @@ import { Container } from '../../../global/components/container';
 import { usePostId } from '../components/post-id-provider';
 
 export const ThreadContent = () => {
-	const { postId, setPostId } = usePostId();
+	const { postId } = usePostId();
 
 	const { data: fullPost } = api.post.getPostById.useQuery(
 		{

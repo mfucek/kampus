@@ -1,4 +1,4 @@
-import { Permissions, RoleType } from '@prisma/client';
+import { type Permissions, RoleType } from '@prisma/client';
 
 export const rolePermissions: Record<
 	RoleType,

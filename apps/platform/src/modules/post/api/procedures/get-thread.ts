@@ -1,10 +1,11 @@
-import { getFileUrl } from '@/lib/s3';
-import { publicProcedure } from '@/server/api/trpc';
 import { VoteType } from '@prisma/client';
-import { JSONContent } from '@tiptap/react';
+import { type JSONContent } from '@tiptap/react';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { RecursivePost } from '../../types/recursive-post';
+
+import { getFileUrl } from '@/lib/s3';
+import { publicProcedure } from '@/server/api/trpc';
+import { type RecursivePost } from '../../types/recursive-post';
 
 export const getThreadProcedure = publicProcedure
 	.input(z.object({ postId: z.string() }))

@@ -51,6 +51,7 @@ export const PublicProfileSection = () => {
 				description: 'An error occurred while updating your display name',
 				variant: 'danger'
 			});
+			console.error(error);
 		}
 	};
 

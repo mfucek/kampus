@@ -52,7 +52,7 @@ export const stripeRouter = createTRPCRouter({
 			return { redirectURL: checkoutSession.url };
 		}),
 
-	getLifetimeCheckoutURL: protectedProcedure.query(async ({ ctx }) => {
+	getLifetimeCheckoutURL: protectedProcedure.query(async () => {
 		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
 			apiVersion: '2024-09-30.acacia'
 		});

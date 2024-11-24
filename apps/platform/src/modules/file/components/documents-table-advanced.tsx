@@ -2,8 +2,10 @@
 
 import { type FC, useEffect, useState } from 'react';
 
-import { TFileFilters } from '../schemas/file-filters';
-import { TFileScope } from '../schemas/file-scope';
+import { type DocumentFileType } from '@prisma/client';
+
+import { type TFileFilters } from '../schemas/file-filters';
+import { type TFileScope } from '../schemas/file-scope';
 
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -18,7 +20,6 @@ import {
 import { cn } from '@/lib/shadcn/utils';
 import { api } from '@/lib/trpc/react';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
-import { DocumentFileType } from '@prisma/client';
 import { DocumentsTable } from './documents-table';
 
 const DocumentsTableWithData: FC<{
@@ -102,6 +103,7 @@ const displayMap: Record<DocumentFileType, string> = {
 	HOMEWORK: 'Zadaca',
 	SEMINAR: 'Seminar',
 	SCRIPT: 'Skripta',
+	NOTES: 'Bilješke',
 	PAPER: 'Rad',
 	OTHER: 'Ostalo',
 	SUMMER_EXAM: 'Ljetni rok',

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/shadcn/utils';
 import { cva } from 'class-variance-authority';
-import { FC } from 'react';
+import { type FC } from 'react';
 
 export type Sentiment = 'positive' | 'negative' | 'neutral' | 'warning';
 

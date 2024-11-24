@@ -1,7 +1,8 @@
-import { cn } from '@/lib/shadcn/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FC } from 'react';
+import { type FC } from 'react';
+
+import { cn } from '@/lib/shadcn/utils';
 
 export const PageHeader: FC<{
 	collegeSlug: string;

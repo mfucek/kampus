@@ -1,7 +1,13 @@
 'use client';
 
-import { JSONContent } from '@tiptap/react';
-import { createContext, FC, ReactNode, useContext, useState } from 'react';
+import { type JSONContent } from '@tiptap/react';
+import {
+	createContext,
+	type FC,
+	type ReactNode,
+	useContext,
+	useState
+} from 'react';
 
 const defaultData = {
 	body: null,

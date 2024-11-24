@@ -11,6 +11,7 @@ export const useComposerEditor = () => {
 	const { body, setBody, setCharacterCount } = useComposerBodyContext();
 	const { locked } = useComposerController();
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [contentKey, setContentKey] = useState(0);
 	const enabled = !locked;
 

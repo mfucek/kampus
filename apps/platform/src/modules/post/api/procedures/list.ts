@@ -1,8 +1,8 @@
+import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
 import { protectedProcedure } from '@/server/api/trpc';
-import { Prisma } from '@prisma/client';
 import { postScopeSchema } from '../../schemas/post-scope';
 
 const paginationSchema = z.object({

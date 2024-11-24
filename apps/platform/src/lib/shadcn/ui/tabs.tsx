@@ -11,7 +11,7 @@ const Tabs = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
 		tabs_id?: string;
 	}
->(({ tabs_id, defaultValue, ...props }, ref) => {
+>(({ defaultValue, ...props }, ref) => {
 	const searchParams = useSearchParams();
 	const currentTab = searchParams.get('activeTab') || defaultValue;
 
@@ -44,7 +44,7 @@ TabsList.displayName = TabsPrimitive.List.displayName;
 const TabsTrigger = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.Trigger>,
 	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, children, value, onClick, ...props }, ref) => {
+>(({ className, children, value, ...props }, ref) => {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 

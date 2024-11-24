@@ -9,8 +9,8 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
-import { DocumentFileType } from '@prisma/client';
-import { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { type DocumentFileType } from '@prisma/client';
+import { type FC, type PropsWithChildren, useEffect, useState } from 'react';
 import { useComposerFilesContext } from '../../contexts/composer-files-provider';
 
 const Section: FC<

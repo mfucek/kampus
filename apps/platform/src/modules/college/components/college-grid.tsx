@@ -1,10 +1,12 @@
 'use client';
 
-import { Container } from '@/global/components/container';
-import { Input } from '@/lib/shadcn/ui/input';
-import { College } from '@prisma/client';
 import Link from 'next/link';
 import { useState } from 'react';
+
+import { Input } from '@/lib/shadcn/ui/input';
+import { type College } from '@prisma/client';
+
+import { Container } from '@/global/components/container';
 import { CollegeCard } from './college-card';
 
 export const CollegeGrid = ({ colleges }: { colleges: College[] }) => {

@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
+import { FileType, type Prisma } from '@prisma/client';
+
 import { getFileUrl } from '@/lib/s3';
 import { publicProcedure } from '@/server/api/trpc';
-import { FileType, Prisma } from '@prisma/client';
 import { fileFiltersSchema } from '../../schemas/file-filters';
 import { fileScopeSchema } from '../../schemas/file-scope';
 

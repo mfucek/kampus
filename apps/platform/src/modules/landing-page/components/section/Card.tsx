@@ -1,6 +1,6 @@
 'use client';
 import { IconSizeContext } from '@/lib/shadcn/ui/button';
-import { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 
 export const Card: FC<PropsWithChildren> = ({ children }) => {
 	return (

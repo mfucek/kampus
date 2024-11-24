@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useComposerBodyContext } from '../contexts/composer-body-provider';
 import { useComposerController } from '../contexts/composer-controller-provider';
 import {
-	PostFile,
+	type PostFile,
 	useComposerFilesContext
 } from '../contexts/composer-files-provider';
 
@@ -19,12 +19,9 @@ export const useSubmitPost = () => {
 	const router = useRouter();
 	const utils = api.useUtils();
 
-	const { mutateAsync: makeUploadUrl, isPending: isMakingUploadUrl } =
-		api.file.makeUploadUrl.useMutation();
-	const { mutateAsync: linkToPost, isPending } =
-		api.file.linkToPost.useMutation();
-	const { mutateAsync: createPost, isPending: isCreatingPost } =
-		api.post.createPost.useMutation();
+	const { mutateAsync: makeUploadUrl } = api.file.makeUploadUrl.useMutation();
+	const { mutateAsync: linkToPost } = api.file.linkToPost.useMutation();
+	const { mutateAsync: createPost } = api.post.createPost.useMutation();
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 

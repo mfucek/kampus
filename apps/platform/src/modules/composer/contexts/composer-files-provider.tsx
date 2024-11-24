@@ -2,7 +2,7 @@
 
 import { Dialog } from '@/lib/shadcn/ui/dialog';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { DocumentFileType, FileType } from '@prisma/client';
+import { type DocumentFileType, type FileType } from '@prisma/client';
 import {
 	type FC,
 	type ReactNode,
@@ -106,6 +106,7 @@ export const ComposerFilesProvider: FC<{
 				}
 
 				return sanitizedFile;
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			} catch (error) {
 				toast({
 					title: 'Nedopušteni tip datoteke',
@@ -122,8 +123,6 @@ export const ComposerFilesProvider: FC<{
 
 		setFiles([...files, ...filteredSanitizedFiles]);
 		setFileDetailsIndex(files.length + sanitizedFiles.length - 1);
-
-		console.log('firstDocumentIndex', firstDocumentIndex);
 
 		if (firstDocumentIndex !== null) {
 			openFileDetailsDialog(firstDocumentIndex);

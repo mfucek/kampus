@@ -40,6 +40,7 @@ export const useComposerEditorOld = ({
 
 	const remaining = MAX_CHARACTERS - textValue.length;
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [contentKey, setContentKey] = useState(0);
 
 	const editor = useEditor({

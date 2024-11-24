@@ -1,6 +1,7 @@
-import { College } from '@prisma/client';
 import Image from 'next/image';
-import { FC } from 'react';
+import { type FC } from 'react';
+
+import { type College } from '@prisma/client';
 
 export const CollegeCard: FC<{ college: College }> = ({ college }) => {
 	return (

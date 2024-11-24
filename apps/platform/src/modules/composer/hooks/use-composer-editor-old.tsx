@@ -1,27 +1,24 @@
 'use client';
 
-import { Button } from '@/lib/shadcn/ui/button';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { cn } from '@/lib/shadcn/utils';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
-import { EditorContent, type JSONContent, useEditor } from '@tiptap/react';
+import { type JSONContent, useEditor } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
-import { type FC, useState } from 'react';
-import { useSelectFiles } from '../hooks/use-select-files';
-import { EditorToolbar } from './editor-toolbar';
+import { useState } from 'react';
+import { useSelectFiles } from './use-select-files';
 
-import { Dialog, DialogTrigger } from '@/lib/shadcn/ui/dialog';
-import { ComposerFile } from './composer-file';
-import { FileDetailsModal } from './file-details-modal';
 const MAX_CHARACTERS = 2000;
 
-export const Composer: FC<{
+export const useComposerEditorOld = ({
+	collegeId,
+	topicId,
+	replyToId
+}: {
 	collegeId: string;
-	collegeSlug: string;
 	topicId?: string;
 	replyToId?: string;
-}> = ({ collegeId, topicId, replyToId }) => {
+}) => {
 	const utils = api.useUtils();
 	const router = useRouter();
 	const { toast } = useToast();
@@ -109,66 +106,15 @@ export const Composer: FC<{
 		}
 	};
 
-	const Footer = () => {
-		return (
-			<div className="flex flex-row gap-2 items-center">
-				<p
-					className={cn('w-full text-neutral-strong body-3', {
-						'text-danger': remaining < 0
-					})}
-				>
-					{remaining} znakova preostalo.
-				</p>
-				<Button
-					theme="accent"
-					variant="solid"
-					size="sm"
-					disabled={remaining < 0 || textValue.length <= 0}
-					onClick={handleSubmit}
-					loading={isCreatingPost}
-				>
-					Objavi
-				</Button>
-			</div>
-		);
+	return {
+		remaining,
+		handleSubmit,
+		isCreatingPost,
+		isDragging,
+		containerProps,
+		editor,
+		files,
+		removeFile,
+		textValue
 	};
-
-	return (
-		<div className="flex flex-col gap-3 w-full">
-			<div
-				className={cn(
-					'flex flex-col gap-3 pt-3 border border-neutral-medium rounded-lg overflow-hidden',
-					isDragging && 'border-accent bg-accent-weak'
-				)}
-				{...containerProps}
-			>
-				<div className="flex flex-col">
-					{editor && (
-						<>
-							<EditorToolbar editor={editor} />
-							<EditorContent editor={editor} />
-						</>
-					)}
-				</div>
-			</div>
-
-			<div className="flex flex-row gap-2">
-				{files.map((file, index) => (
-					<ComposerFile
-						onRemove={() => removeFile(index)}
-						onClick={() => {}}
-						key={file.key || index}
-					/>
-				))}
-			</div>
-			<Dialog>
-				<DialogTrigger asChild>
-					<Button>Open modal</Button>
-				</DialogTrigger>
-				<FileDetailsModal />
-			</Dialog>
-
-			<Footer />
-		</div>
-	);
 };

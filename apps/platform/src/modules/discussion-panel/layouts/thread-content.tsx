@@ -2,7 +2,7 @@
 
 import { Spinner } from '@/global/components/spinner';
 import { api } from '@/lib/trpc/react';
-import { Composer } from '@/modules/discussion/components/composer';
+import { Composer } from '@/modules/composer/components';
 import { Post } from '@/modules/discussion/components/post';
 import { unpackThread } from '@/modules/discussion/utils/unpack-thread';
 import { Container } from '../../../global/components/container';

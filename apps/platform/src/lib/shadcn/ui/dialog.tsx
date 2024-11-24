@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 
-import { cn } from '@/lib/shadcn/utils';
-
 import {
 	Drawer,
 	DrawerClose,
@@ -115,7 +113,7 @@ const DialogTitle = ({ className, children, ...props }: DialogProps) => {
 
 const DialogBody = ({ className, children, ...props }: DialogProps) => {
 	return (
-		<div className={cn('px-4 md:px-0', className)} {...props}>
+		<div className={className} {...props}>
 			{children}
 		</div>
 	);

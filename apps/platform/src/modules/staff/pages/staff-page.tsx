@@ -1,7 +1,7 @@
 import { Container } from '@/global/components/container';
 import { api } from '@/lib/trpc/server';
 import { PageHeader } from '@/modules/college/components/page-header';
-import { Composer } from '@/modules/discussion/components/composer';
+import { Composer } from '@/modules/composer/components';
 import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
 import { SummarySection } from '@/modules/summary/components/summary-section';
 import type { FC } from 'react';

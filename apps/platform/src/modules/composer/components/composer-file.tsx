@@ -1,8 +1,8 @@
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 import { useComposerController } from '../contexts/composer-controller-provider';
-import { PostFile } from '../contexts/composer-files-provider';
+import { type PostFile } from '../contexts/composer-files-provider';
 
 export const ComposerFile: FC<{
 	file: PostFile;

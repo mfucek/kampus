@@ -13,7 +13,7 @@ const DiscussionTab: FC<{
 	subjectSlug: string;
 	collegeSlug: string;
 	collegeId: string;
-}> = async ({ subjectId, subjectSlug, collegeSlug, collegeId }) => {
+}> = async ({ subjectId, collegeId }) => {
 	return (
 		<div className="flex flex-col gap-10">
 			<Composer collegeId={collegeId} topicId={subjectId} />

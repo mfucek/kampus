@@ -30,7 +30,9 @@ const config = {
 					attributes: false
 				}
 			}
-		]
+		],
+		'@next/next/no-img-element': 'off',
+		'react-hooks/exhaustive-deps': 'off'
 	}
 };
 module.exports = config;

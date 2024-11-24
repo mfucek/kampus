@@ -7,7 +7,7 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
-import { VoteType } from '@prisma/client';
+import { type VoteType } from '@prisma/client';
 import { Reactions } from './reactions';
 
 type PostActionsInterface = {

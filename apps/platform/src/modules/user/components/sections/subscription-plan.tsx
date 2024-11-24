@@ -4,13 +4,11 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { useUser } from '@clerk/nextjs';
 import { formatDate } from 'date-fns';
-import { useRouter } from 'next/navigation';
 import { SettingsSubSection } from '../settings-subsection';
 
 export const SubscriptionPlanSection = () => {
 	const { isLoaded } = useUser();
 	const { data: account } = api.account.getAccount.useQuery();
-	const router = useRouter();
 
 	const { data: subscriptionSessionDataCheap } =
 		api.stripe.getSubscriptionCheckoutURL.useQuery(
@@ -28,10 +26,10 @@ export const SubscriptionPlanSection = () => {
 			}
 		);
 
-	const { data: lifetimeSessionData } =
-		api.stripe.getLifetimeCheckoutURL.useQuery(void {}, {
-			enabled: isLoaded
-		});
+	// const { data: lifetimeSessionData } =
+	// 	api.stripe.getLifetimeCheckoutURL.useQuery(void {}, {
+	// 		enabled: isLoaded
+	// 	});
 
 	const { mutateAsync: cancelSubscription } =
 		api.stripe.cancelSubscription.useMutation();

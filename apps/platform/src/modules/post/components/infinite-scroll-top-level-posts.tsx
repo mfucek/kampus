@@ -1,12 +1,12 @@
 'use client';
 
+import { type JSONContent } from '@tiptap/react';
 import { useEffect, type FC } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { Spinner } from '@/global/components/spinner';
 import { api } from '@/lib/trpc/react';
 import { Post } from '@/modules/discussion/components/post';
-import { JSONContent } from '@tiptap/react';
 import { type ListPostsItem } from '../api/procedures/list';
 import { type TPostScope } from '../schemas/post-scope';
 

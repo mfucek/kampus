@@ -1,9 +1,10 @@
 'use client';
 
+import { type FC, useState } from 'react';
+import { PanelResizeHandle } from 'react-resizable-panels';
+
 import { cn } from '@/lib/shadcn/utils';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
-import { FC, useState } from 'react';
-import { PanelResizeHandle } from 'react-resizable-panels';
 
 type ResizeHandleProps = {
 	horizontal?: boolean;

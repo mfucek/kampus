@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 
 import { Icon } from '@/global/components/icon';
-import { DocumentFileType, FileType } from '@prisma/client';
+import { type DocumentFileType, type FileType } from '@prisma/client';
 import Image from 'next/image';
 
 type PostFile = {

@@ -9,7 +9,7 @@ import {
 import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
 import { useEffect, useRef, useState } from 'react';
-import { Sentiment, SummaryCard } from './summary-card';
+import { type Sentiment, SummaryCard } from './summary-card';
 
 const exampleData: {
 	title: string;

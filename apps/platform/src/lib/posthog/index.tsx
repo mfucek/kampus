@@ -1,10 +1,11 @@
 'use client';
 
-import { env } from '@/env';
 import { usePathname, useSearchParams } from 'next/navigation';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
-import { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
+
+import { env } from '@/env';
 
 const posthog_key = 'phc_ja1RmkJI17SjamUr0rDmMmjyw8GlezvHlYm05tGCDFv';
 const posthog_host = 'https://us.i.posthog.com';

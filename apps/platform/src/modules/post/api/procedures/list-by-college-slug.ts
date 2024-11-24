@@ -1,9 +1,10 @@
+import { type JSONContent } from '@tiptap/react';
+import { z } from 'zod';
+
 import { getFileUrl } from '@/lib/s3';
 import { getUserId } from '@/modules/account/api/helpers/get-user-id';
-import { FullPost } from '@/modules/post/types/full-post';
+import { type FullPost } from '@/modules/post/types/full-post';
 import { publicProcedure } from '@/server/api/trpc';
-import { JSONContent } from '@tiptap/react';
-import { z } from 'zod';
 import { getPostVotes } from '../helpers/get-post-votes';
 
 export const listPostsByCollegeSlugProcedure = publicProcedure

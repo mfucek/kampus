@@ -1,9 +1,9 @@
+import { type JSONContent } from '@tiptap/react';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
 import { getUserId } from '@/modules/account/api/helpers/get-user-id';
 import { publicProcedure } from '@/server/api/trpc';
-import { JSONContent } from '@tiptap/react';
 import { getPostVotes } from '../helpers/get-post-votes';
 
 export const getTopicPostsByIdProcedure = publicProcedure

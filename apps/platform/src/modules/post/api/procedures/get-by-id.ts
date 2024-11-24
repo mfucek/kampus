@@ -1,8 +1,8 @@
+import { type JSONContent } from '@tiptap/react';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
 import { publicProcedure } from '@/server/api/trpc';
-import { JSONContent } from '@tiptap/react';
 import { TRPCError } from '@trpc/server';
 import { getPostVotes } from '../helpers/get-post-votes';
 

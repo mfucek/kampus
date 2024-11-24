@@ -1,8 +1,14 @@
 'use client';
 
-import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
+import { EditorContent, type JSONContent, useEditor } from '@tiptap/react';
 import { formatDistance } from 'date-fns';
 import { type FC } from 'react';
+
+import {
+	type DocumentFileType,
+	type FileType,
+	type VoteType
+} from '@prisma/client';
 
 import { Icon } from '@/global/components/icon';
 import {
@@ -12,7 +18,6 @@ import {
 } from '@/lib/shadcn/ui/tooltip';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
-import { DocumentFileType, FileType, VoteType } from '@prisma/client';
 import { PostActions } from './post-actions';
 import { PostFiles } from './post-files';
 import { PostThreading } from './post-threading';

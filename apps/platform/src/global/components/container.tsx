@@ -1,5 +1,6 @@
+import { type FC, type PropsWithChildren } from 'react';
+
 import { cn } from '@/lib/shadcn/utils';
-import { FC, PropsWithChildren } from 'react';
 
 export const Container: FC<
 	PropsWithChildren<{ className?: string; wide?: boolean }>

@@ -1,6 +1,12 @@
 'use client';
 
-import { createContext, FC, ReactNode, useContext, useState } from 'react';
+import {
+	createContext,
+	type FC,
+	type ReactNode,
+	useContext,
+	useState
+} from 'react';
 
 const defaultData = {
 	collegeId: '',

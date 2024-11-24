@@ -12,7 +12,6 @@ export const clearProcedure = protectedProcedure
 			postId: z.string().nullish()
 		})
 	)
-	.mutation(async ({ input, ctx }) => {
-		const { db } = ctx;
+	.mutation(async () => {
 		return;
 	});

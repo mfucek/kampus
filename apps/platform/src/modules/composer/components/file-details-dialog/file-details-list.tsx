@@ -74,7 +74,11 @@ export const FileDetailsList = () => {
 				Materijali
 			</div>
 
-			<div className="flex flex-row md:flex-col gap-2 md:gap-2 flex-1 px-3 md:px-2 py-2 min-w-[200px] overflow-y-auto">
+			<div
+				className={cn(
+					'flex flex-row md:flex-col gap-2 md:gap-2 flex-1 px-3 md:px-2 py-2 min-w-[200px] overflow-y-auto'
+				)}
+			>
 				{files.map((file, index) => (
 					<SidebarFile
 						file={file}

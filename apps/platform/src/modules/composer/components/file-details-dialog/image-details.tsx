@@ -1,7 +1,9 @@
-import { FC } from 'react';
-import { PostFile } from '../../contexts/composer-files-provider';
+import { useComposerFilesContext } from '../../contexts/composer-files-provider';
 
-export const ImageDetails: FC<{ file: PostFile }> = ({ file }) => {
+export const ImageDetails = () => {
+	const { files, fileDetailsIndex } = useComposerFilesContext();
+
+	const file = files[fileDetailsIndex ?? 0];
 	const fileUrl = URL.createObjectURL(file!.file);
 
 	return (

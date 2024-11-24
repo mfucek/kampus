@@ -20,6 +20,33 @@ type PostFile = {
 	url?: string | null;
 };
 
+const OnlyImage: FC<{ file: PostFile }> = ({ file }) => {
+	return (
+		<div>
+			<a
+				href={file.url!}
+				key={file.id}
+				target="_blank"
+				rel="noopener noreferrer"
+				className="inline-block"
+			>
+				<div className="relative w-full sm:w-[320px] max-h-[400px] rounded-xl overflow-hidden bg-neutral-weak">
+					{/* <div className="absolute inset-0 bg-neutral-weak animate-pulse" /> */}
+					<Image
+						src={file.url!}
+						quality={20}
+						alt="file"
+						width={320}
+						height={400}
+						className="w-full h-auto max-h-[400px] object-contain"
+						// unoptimized
+					/>
+				</div>
+			</a>
+		</div>
+	);
+};
+
 const FileCard: FC<{ file: PostFile }> = ({ file }) => {
 	// return <pre>{JSON.stringify(file, null, 2)}</pre>;
 
@@ -59,7 +86,7 @@ const FileCard: FC<{ file: PostFile }> = ({ file }) => {
 			>
 				<div
 					key={file.id}
-					className="w-[120px] h-[80px] bg-neutral-weak rounded-xl flex flex-col items-center justify-center clickable"
+					className="w-[120px] h-[80px] bg-neutral-weak rounded-xl flex flex-col items-center justify-center overflow-hidden clickable"
 				>
 					<Icon icon="file-textual" size={24} />
 					<p className="caption text-neutral-strong">
@@ -80,7 +107,7 @@ const FileCard: FC<{ file: PostFile }> = ({ file }) => {
 			>
 				<div
 					key={file.id}
-					className="w-[120px] h-[80px] bg-neutral-weak rounded-xl flex flex-col items-center justify-center clickable"
+					className="w-[120px] h-[80px] bg-neutral-weak rounded-xl flex flex-col items-center justify-center overflow-hidden clickable"
 				>
 					<Icon icon="file" size={24} />
 				</div>
@@ -92,6 +119,10 @@ const FileCard: FC<{ file: PostFile }> = ({ file }) => {
 };
 
 export const PostFiles: FC<{ files: PostFile[] }> = ({ files }) => {
+	if (files.length === 1 && files[0]!.type === 'IMAGE') {
+		return <OnlyImage file={files[0]!} />;
+	}
+
 	return (
 		<div className="flex flex-row w-full gap-2 overflow-x-auto">
 			{files?.map((file) => <FileCard file={file} key={file.id} />)}

@@ -3,7 +3,6 @@ import { api } from '@/lib/trpc/server';
 import { PageHeader } from '@/modules/college/components/page-header';
 import { Composer } from '@/modules/composer/components';
 import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
-import { SummarySection } from '@/modules/summary/components/summary-section';
 import type { FC } from 'react';
 
 export const StaffPage: FC<{
@@ -19,13 +18,9 @@ export const StaffPage: FC<{
 				collegeName={staff.college.name}
 				topicName={staff.name}
 			/>
-			<SummarySection />
+			{/* <SummarySection /> */}
 			<div className="flex flex-col gap-10">
-				<Composer
-					collegeId={staff.college.id}
-					collegeSlug={collegeSlug}
-					topicId={staff.id}
-				/>
+				<Composer collegeId={staff.college.id} topicId={staff.id} />
 				<InfiniteScrollTopLevelPosts scope={{ topic: { id: staff.id } }} />
 			</div>
 		</Container>

@@ -272,6 +272,7 @@ enum DocumentFileType {
   HOMEWORK
   SEMINAR
   SCRIPT
+  NOTES
   PAPER
   OTHER
   SUMMER_EXAM

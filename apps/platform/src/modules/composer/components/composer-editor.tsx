@@ -7,8 +7,8 @@ import { useComposerDragUpload } from '../hooks/use-composer-drag-upload';
 import { useComposerEditor } from '../hooks/use-composer-editor';
 import { EditorToolbar } from './editor-toolbar';
 
-export const ComposerBody = () => {
-	const { editor } = useComposerEditor();
+export const ComposerEditor = () => {
+	const { editor, enabled } = useComposerEditor();
 	const { uploadAreaProps, isDragging } = useComposerDragUpload();
 
 	return (
@@ -23,7 +23,10 @@ export const ComposerBody = () => {
 				{editor && (
 					<>
 						<EditorToolbar editor={editor} />
-						<EditorContent editor={editor} />
+						<EditorContent
+							editor={editor}
+							className={cn(!enabled && 'opacity-50')}
+						/>
 					</>
 				)}
 			</div>

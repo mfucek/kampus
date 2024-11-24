@@ -2,25 +2,30 @@
 
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
+import { MAX_CHARACTERS } from '@/modules/discussion/constants/composer';
+import { useComposerBodyContext } from '../contexts/composer-body-provider';
 import { useSubmitPost } from '../hooks/use-submit-post';
 
 export const ComposerFooter = () => {
 	const { handleSubmit, isSubmitting } = useSubmitPost();
+	const { characterCount } = useComposerBodyContext();
+
+	const remaining = MAX_CHARACTERS - characterCount;
 
 	return (
 		<div className="flex flex-row gap-2 items-center">
 			<p
 				className={cn('w-full text-neutral-strong body-3', {
-					// 'text-danger': remaining < 0
+					'text-danger': remaining < 0
 				})}
 			>
-				{'remaining'} znakova preostalo.
+				{remaining} znakova preostalo.
 			</p>
 			<Button
 				theme="accent"
 				variant="solid"
 				size="sm"
-				// disabled={remaining < 0 || textValue.length <= 0}
+				disabled={remaining < 0 || characterCount == 0}
 				onClick={handleSubmit}
 				loading={isSubmitting}
 			>

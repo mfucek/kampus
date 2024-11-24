@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { type FC } from 'react';
 
 import { Button } from '@/lib/shadcn/ui/button';
+import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
 import { VoteType } from '@prisma/client';
@@ -30,10 +31,12 @@ export const PostActions: FC<{ fullPost: PostActionsInterface }> = ({
 	fullPost
 }) => {
 	const { post, votes } = fullPost;
-	const { data: user } = api.account.getUser.useQuery();
-	const { setPostId } = usePostId();
+
 	const router = useRouter();
 	const utils = api.useUtils();
+	const { toast } = useToast();
+	const { data: user } = api.account.getUser.useQuery();
+	const { setPostId } = usePostId();
 	const { mutateAsync: deletePost } = api.post.deletePost.useMutation({
 		onSuccess: async () => {
 			// Invalidate and refetch relevant queries
@@ -51,7 +54,22 @@ export const PostActions: FC<{ fullPost: PostActionsInterface }> = ({
 	};
 
 	const handleShare = () => {
-		navigator.clipboard.writeText(window.location.href);
+		const sharedUrl = window.location.origin + '/post/' + post.id;
+
+		// navigator.clipboard.writeText(window.location.href);
+		if (navigator.canShare()) {
+			navigator.share({
+				title: 'Share this post',
+				url: sharedUrl
+			});
+		} else {
+			navigator.clipboard.writeText(sharedUrl);
+			toast({
+				title: 'Copied to clipboard',
+				description: 'You can now paste the link anywhere you want',
+				variant: 'success'
+			});
+		}
 	};
 
 	const handleReply = () => {

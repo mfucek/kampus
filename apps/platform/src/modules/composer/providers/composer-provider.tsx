@@ -2,16 +2,16 @@
 
 import { FC, ReactNode } from 'react';
 import { ComposerBodyProvider } from '../contexts/composer-body-provider';
+import { ComposerControllerProvider } from '../contexts/composer-controller-provider';
 import { ComposerFilesProvider } from '../contexts/composer-files-provider';
-import { ComposerTopicProvider } from '../contexts/composer-topic-provider';
 export const ComposerProvider: FC<{
 	children: ReactNode;
-	collegeId?: string;
+	collegeId: string;
 	topicId?: string;
 	replyToId?: string;
 }> = ({ children, collegeId, topicId, replyToId }) => {
 	return (
-		<ComposerTopicProvider
+		<ComposerControllerProvider
 			collegeId={collegeId}
 			topicId={topicId}
 			replyToId={replyToId}
@@ -19,6 +19,6 @@ export const ComposerProvider: FC<{
 			<ComposerBodyProvider>
 				<ComposerFilesProvider>{children}</ComposerFilesProvider>
 			</ComposerBodyProvider>
-		</ComposerTopicProvider>
+		</ComposerControllerProvider>
 	);
 };

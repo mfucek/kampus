@@ -9,7 +9,9 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
-import { FC, PropsWithChildren } from 'react';
+import { DocumentFileType } from '@prisma/client';
+import { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { useComposerFilesContext } from '../../contexts/composer-files-provider';
 
 const Section: FC<
 	{
@@ -28,24 +30,19 @@ const Section: FC<
 	);
 };
 
-const categories = {
+const categoryLabels: Record<DocumentFileType, string> = {
 	EXAM: 'Ispit',
 	COLOQUIUM: 'Kolokvij',
 	EXERCISE: 'Vjezba',
 	HOMEWORK: 'Zadaca',
 	SEMINAR: 'Seminar',
-	SCRIPT: 'Skripta / Biljeske',
+	SCRIPT: 'Skripta',
+	NOTES: 'Bilješke',
 	PAPER: 'Rad',
-	OTHER: 'Ostalo'
-};
-
-const coloquiumCategories = {
+	OTHER: 'Ostalo',
 	COLOQUIUM_MID: 'Međuispit',
 	COLOQUIUM_FINAL: 'Završni ispit',
-	SOLVED: 'Riješeni zadaci'
-};
-
-const examCategories = {
+	SOLVED: 'Riješeni zadaci',
 	SUMMER_EXAM: 'Ljetni ispit',
 	FALL_EXAM: 'Jesenski ispit',
 	WINTER_EXAM: 'Zimski ispit',
@@ -54,7 +51,93 @@ const examCategories = {
 	ORAL_EXAM: 'Usmeni ispit'
 };
 
+const mainCategories: DocumentFileType[] = [
+	'EXAM',
+	'COLOQUIUM',
+	'EXERCISE',
+	'HOMEWORK',
+	'SEMINAR',
+	'SCRIPT',
+	'NOTES',
+	'PAPER',
+	'OTHER'
+];
+
+const coloquiumCategories: DocumentFileType[] = [
+	'COLOQUIUM_MID',
+	'COLOQUIUM_FINAL'
+];
+
+const examCategories: DocumentFileType[] = [
+	'SUMMER_EXAM',
+	'FALL_EXAM',
+	'WINTER_EXAM',
+	'SPRING_EXAM',
+	'CORRECTION_EXAM',
+	'ORAL_EXAM'
+];
+
 export const DocumentDetails = () => {
+	const { files, fileDetailsIndex, updateFile } = useComposerFilesContext();
+
+	const file = files[fileDetailsIndex!]!;
+
+	const [academicYear, setAcademicYear] = useState<string | null>(
+		file.documentOptions!.academicYear
+	);
+	const [selectedCategories, setSelectedCategories] = useState<
+		DocumentFileType[]
+	>(file.documentOptions!.types);
+	const [name, setName] = useState<string | null>(file.name);
+
+	const handleCategoryClick = (documentType: DocumentFileType) => {
+		const alreadySelected = selectedCategories.includes(documentType);
+
+		if (alreadySelected) {
+			let alsoRemoveCategories: DocumentFileType[] = [];
+			if (documentType === 'EXAM') {
+				alsoRemoveCategories = examCategories;
+			}
+			if (documentType === 'COLOQUIUM') {
+				alsoRemoveCategories = coloquiumCategories;
+			}
+
+			setSelectedCategories((prev) =>
+				prev
+					.filter((category) => category !== documentType)
+					.filter((category) => !alsoRemoveCategories.includes(category))
+			);
+		} else {
+			setSelectedCategories((prev) => [...new Set([...prev, documentType])]);
+		}
+	};
+
+	const handleSelectCategory = (documentType: DocumentFileType) => {
+		setSelectedCategories((prev) => [...new Set([...prev, documentType])]);
+	};
+
+	const handleDeselectCategory = (documentType: DocumentFileType) => {
+		setSelectedCategories((prev) =>
+			prev.filter((category) => category !== documentType)
+		);
+	};
+
+	useEffect(() => {
+		updateFile(fileDetailsIndex!, {
+			name: name ?? '',
+			documentOptions: {
+				academicYear: academicYear ?? null,
+				types: selectedCategories
+			}
+		});
+	}, [name, selectedCategories, academicYear]);
+
+	const showExamCategories = selectedCategories.includes('EXAM');
+	const showColoquiumCategories = selectedCategories.includes('COLOQUIUM');
+	const showSolvedCategory =
+		selectedCategories.includes('EXAM') ||
+		selectedCategories.includes('COLOQUIUM');
+
 	return (
 		<form className="flex flex-col md:gap-0 gap-10 w-full h-full">
 			<div className="px-3 md:p-6 flex flex-col gap-3 md:border-b border-b-neutral-weak">
@@ -62,16 +145,24 @@ export const DocumentDetails = () => {
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full">
 					<div className="flex flex-col gap-2">
 						<p className="caption">Naziv dokumenta</p>
-						<Input placeholder="Naziv dokumenta" />
+						<Input
+							placeholder="Naziv dokumenta"
+							value={name ?? ''}
+							onChange={(e) => setName(e.target.value)}
+						/>
 					</div>
 					<div className="flex flex-col gap-2">
 						<p className="caption">Akademska godina</p>
-						<Select>
+						<Select
+							defaultValue={academicYear ?? undefined}
+							onValueChange={(value) => setAcademicYear(value)}
+						>
 							<SelectTrigger>
 								<SelectValue placeholder="Izaberi akademsku godinu" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value={'-'}>-</SelectItem>
+								{/* @ts-expect-error */}
+								<SelectItem value={null}>-</SelectItem>
 								{Array.from({ length: 20 }, (_, index) => (
 									<SelectItem
 										key={`${new Date().getFullYear() - index}/${
@@ -96,63 +187,146 @@ export const DocumentDetails = () => {
 				<div className="flex flex-col gap-6">
 					<Section title="Kategorija" description="O kakvom dokumentu se radi?">
 						<div className="w-full -mr-2 -mb-2">
-							{Object.entries(categories).map(([key, value]) => (
-								<div className="mr-2 mb-2 inline-block" key={key}>
-									<Button variant="outline" size="sm" type="button" rounded>
-										{value}
+							{mainCategories.map((value, i) => (
+								<div className="mr-2 mb-2 inline-block" key={i}>
+									<Button
+										variant={
+											selectedCategories.includes(value) ? 'solid' : 'outline'
+										}
+										theme={
+											selectedCategories.includes(value) ? 'accent' : 'neutral'
+										}
+										size="sm"
+										type="button"
+										rounded
+										onClick={() => {
+											handleCategoryClick(value);
+										}}
+									>
+										{categoryLabels[value as DocumentFileType]}
 									</Button>
 								</div>
 							))}
 						</div>
 					</Section>
 
-					<Section
-						title="Kategorija ispita"
-						description="O kojem tipu ispita se radi?"
-					>
-						<div className="w-full -mr-2 -mb-2">
-							{Object.entries(examCategories).map(([key, value]) => (
-								<div className="mr-2 mb-2 inline-block" key={key}>
-									<Button variant="outline" size="sm" type="button" rounded>
-										{value}
-									</Button>
-								</div>
-							))}
-						</div>
-					</Section>
-
-					<Section
-						title="Kategorija kolokvija"
-						description="O kakvom tipu kolokvija se radi?"
-					>
-						<div className="w-full -mr-2 -mb-2">
-							{Object.entries(coloquiumCategories).map(([key, value]) => (
-								<div className="mr-2 mb-2 inline-block" key={key}>
-									<Button variant="outline" size="sm" type="button" rounded>
-										{value}
-									</Button>
-								</div>
-							))}
-						</div>
-					</Section>
-
-					<Section
-						title="Rješenost"
-						description="Jesu li priloženi postupci ili rješenja?"
-					>
-						<div className="w-full -mr-2 -mb-2">
-							<div className="mr-2 mb-2 inline-block">
-								<Button variant="outline" size="sm" type="button" rounded>
-									Da
-								</Button>
+					{showExamCategories && (
+						<Section
+							title="Kategorija ispita"
+							description="O kojem tipu ispita se radi?"
+						>
+							<div className="w-full -mr-2 -mb-2">
+								{examCategories.map((value, i) => (
+									<div className="mr-2 mb-2 inline-block" key={i}>
+										<Button
+											variant={
+												selectedCategories.includes(value) ? 'solid' : 'outline'
+											}
+											theme={
+												selectedCategories.includes(value)
+													? 'accent'
+													: 'neutral'
+											}
+											size="sm"
+											type="button"
+											rounded
+											onClick={() => {
+												handleCategoryClick(value);
+											}}
+										>
+											{categoryLabels[value as DocumentFileType]}
+										</Button>
+									</div>
+								))}
 							</div>
-							<div className="mr-2 mb-2 inline-block">
-								<Button variant="outline" size="sm" type="button" rounded>
-									Ne
-								</Button>
+						</Section>
+					)}
+
+					{showColoquiumCategories && (
+						<Section
+							title="Kategorija kolokvija"
+							description="O kakvom tipu kolokvija se radi?"
+						>
+							<div className="w-full -mr-2 -mb-2">
+								{coloquiumCategories.map((value, i) => (
+									<div className="mr-2 mb-2 inline-block" key={i}>
+										<Button
+											variant={
+												selectedCategories.includes(value) ? 'solid' : 'outline'
+											}
+											theme={
+												selectedCategories.includes(value)
+													? 'accent'
+													: 'neutral'
+											}
+											size="sm"
+											type="button"
+											rounded
+											onClick={() => {
+												handleCategoryClick(value);
+											}}
+										>
+											{categoryLabels[value as DocumentFileType]}
+										</Button>
+									</div>
+								))}
 							</div>
-						</div>
-					</Section>
+						</Section>
+					)}
+
+					{showSolvedCategory && (
+						<Section
+							title="Rješenost"
+							description="Jesu li priloženi postupci ili rješenja?"
+						>
+							<div className="w-full -mr-2 -mb-2">
+								<div className="mr-2 mb-2 inline-block">
+									<Button
+										variant={
+											selectedCategories.includes('SOLVED')
+												? 'solid'
+												: 'outline'
+										}
+										theme={
+											selectedCategories.includes('SOLVED')
+												? 'accent'
+												: 'neutral'
+										}
+										size="sm"
+										type="button"
+										rounded
+										onClick={() => {
+											handleSelectCategory('SOLVED');
+										}}
+									>
+										Da
+									</Button>
+								</div>
+								<div className="mr-2 mb-2 inline-block">
+									<Button
+										variant={
+											!selectedCategories.includes('SOLVED')
+												? 'solid'
+												: 'outline'
+										}
+										theme={
+											!selectedCategories.includes('SOLVED')
+												? 'accent'
+												: 'neutral'
+										}
+										size="sm"
+										type="button"
+										rounded
+										onClick={() => {
+											handleDeselectCategory('SOLVED');
+										}}
+									>
+										Ne
+									</Button>
+								</div>
+							</div>
+						</Section>
+					)}
 				</div>
 			</div>
 		</form>

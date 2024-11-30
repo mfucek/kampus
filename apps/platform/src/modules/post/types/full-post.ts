@@ -11,14 +11,15 @@ export type FullPost = {
 		id: string;
 		body: JSONContent | null;
 		createdAt: Date;
+		updatedAt: Date;
 		authorId: string;
+		collegeId: string;
+		topicId: string | null;
+		replyToId: string | null;
 		author: {
 			id: string;
-			createdAt: Date;
-			updatedAt: Date;
 			displayName: string;
 			imageUrl: string | null;
-			accountId: string;
 			badge: string | null;
 		};
 		_count: {

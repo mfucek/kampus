@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
 import { protectedProcedure } from '@/server/api/trpc';
+import { JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
 
 const paginationSchema = z.object({
@@ -97,8 +98,22 @@ export const listProcedure = protectedProcedure
 				return {
 					post: {
 						id: post.id,
-						body: post.body,
-						createdAt: post.createdAt
+						body: post.body as JSONContent,
+						createdAt: post.createdAt,
+						updatedAt: post.updatedAt,
+						collegeId: post.collegeId,
+						topicId: post.topicId,
+						replyToId: post.replyToId,
+						authorId: post.authorId,
+						_count: {
+							replies: post._count.Replies
+						},
+						author: {
+							id: post.Author.id,
+							displayName: post.Author.displayName,
+							imageUrl: post.Author.imageUrl,
+							badge: post.Author.badge
+						}
 					},
 					votes: {
 						likes: votes.likes,
@@ -146,9 +161,3 @@ export type ListPostsItem = ListPostsOutput['posts'][number];
 // number of replies, reply IDs
 // votes
 // author
-
-// in frontend, data fetching layer
-// <DynamicPost />
-// is recursive
-// has a cursor
-// has a limit

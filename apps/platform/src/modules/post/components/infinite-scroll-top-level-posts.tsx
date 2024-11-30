@@ -27,11 +27,14 @@ const DynamicPost: FC<{
 							id: post.author.id,
 							displayName: post.author.displayName,
 							imageUrl: post.author.imageUrl || '',
-							badge: post.author.badge || '',
-							accountId: ''
+							badge: post.author.badge || ''
 						},
 						createdAt: post.post.createdAt,
+						updatedAt: post.post.updatedAt,
 						authorId: post.author.id,
+						collegeId: post.post.collegeId,
+						topicId: post.post.topicId,
+						replyToId: post.post.replyToId,
 						id: post.post.id,
 						body: post.post.body as JSONContent,
 						_count: {

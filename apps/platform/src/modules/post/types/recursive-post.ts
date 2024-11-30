@@ -11,7 +11,11 @@ export type RecursivePost = {
 		id: string;
 		body: JSONContent | null;
 		createdAt: Date;
+		updatedAt: Date;
 		authorId: string;
+		collegeId: string;
+		topicId: string | null;
+		replyToId: string | null;
 		author: {
 			id: string;
 			createdAt: Date;

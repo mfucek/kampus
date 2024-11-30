@@ -62,7 +62,7 @@ const createStaffIfNotExists = async (name: string) => {
 			slug: slugify(name),
 			type: 'STAFF',
 			collegeId: 'cm2l1cy55000475clharn9mma',
-			staff: {
+			Staff: {
 				create: {}
 			}
 		}
@@ -94,7 +94,7 @@ const createSubjectIfNotExists = async (subject: {
 			slug: slugify(subject.ime),
 			type: 'SUBJECT',
 			collegeId: 'cm2l1cy55000475clharn9mma',
-			subject: {
+			Subject: {
 				create: {
 					ects: subject.ects
 				}
@@ -140,8 +140,8 @@ const insertSubjects = async () => {
 				topicId: newTopic.id
 			},
 			data: {
-				staffs: {
-					connect: professorIds.map((id) => ({ topicId: id }))
+				Staffs: {
+					// connect: professorIds.map((id) => ({ topicId: id }))
 				}
 			}
 		});

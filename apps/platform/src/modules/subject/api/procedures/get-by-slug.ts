@@ -21,17 +21,17 @@ export const getBySlugProcedure = publicProcedure
 			}
 		});
 
-		const subject = {
-			...subjectRaw,
-			college: subjectRaw?.College
-		};
-
-		if (!subject) {
+		if (!subjectRaw) {
 			throw new TRPCError({
 				code: 'NOT_FOUND',
 				message: 'Subject not found'
 			});
 		}
+
+		const subject = {
+			...subjectRaw,
+			college: subjectRaw.College
+		};
 
 		return subject;
 	});

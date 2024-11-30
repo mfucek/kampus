@@ -39,12 +39,12 @@ export const listProcedure = protectedProcedure
 		};
 
 		const include: Prisma.PostInclude = {
-			author: true,
-			votes: true,
+			Author: true,
+			Votes: true,
 			_count: {
 				select: {
-					files: true,
-					replies: true
+					Files: true,
+					Replies: true
 				}
 			}
 		};
@@ -63,10 +63,10 @@ export const listProcedure = protectedProcedure
 		const posts = await Promise.all(
 			postsRaw.map(async (post) => {
 				const votes = {
-					likes: post.votes.filter((vote) => vote.type === 'UP').length,
-					dislikes: post.votes.filter((vote) => vote.type === 'DOWN').length,
+					likes: post.Votes.filter((vote) => vote.type === 'UP').length,
+					dislikes: post.Votes.filter((vote) => vote.type === 'DOWN').length,
 					userVote:
-						post.votes.find((vote) => vote.userId === ctx.user.id)?.type ?? null
+						post.Votes.find((vote) => vote.userId === ctx.user.id)?.type ?? null
 				};
 
 				const filesRaw = await db.file.findMany({
@@ -74,8 +74,8 @@ export const listProcedure = protectedProcedure
 						postId: post.id
 					},
 					include: {
-						documentFile: true,
-						imageFile: true
+						DocumentFile: true,
+						ImageFile: true
 					}
 				});
 
@@ -85,11 +85,11 @@ export const listProcedure = protectedProcedure
 						type: file.type,
 						key: file.key,
 						documentFile: {
-							academicYear: file.documentFile?.academicYear ?? undefined,
-							title: file.documentFile?.title ?? undefined,
-							types: file.documentFile?.types || []
+							academicYear: file.DocumentFile?.academicYear ?? undefined,
+							title: file.DocumentFile?.title ?? undefined,
+							types: file.DocumentFile?.types || []
 						},
-						imageFile: file.imageFile,
+						imageFile: file.ImageFile,
 						url: await getFileUrl(file.key)
 					}))
 				);
@@ -106,13 +106,13 @@ export const listProcedure = protectedProcedure
 						userVote: votes.userVote
 					},
 					author: {
-						id: post.author.id,
-						displayName: post.author.displayName,
-						imageUrl: post.author.imageUrl,
-						badge: post.author.badge
+						id: post.Author.id,
+						displayName: post.Author.displayName,
+						imageUrl: post.Author.imageUrl,
+						badge: post.Author.badge
 					},
 					replies: {
-						count: post._count.replies
+						count: post._count.Replies
 					},
 					files: files
 				};

@@ -73,7 +73,7 @@ export const listDocumentsProcedure = publicProcedure
 					}
 				: {}),
 
-			documentFile: {
+			DocumentFile: {
 				// name filter
 				...(filters?.name
 					? {
@@ -96,7 +96,7 @@ export const listDocumentsProcedure = publicProcedure
 		};
 
 		const include: Prisma.FileInclude = {
-			documentFile: true
+			DocumentFile: true
 		};
 
 		const filesRaw = await db.file.findMany({
@@ -115,9 +115,9 @@ export const listDocumentsProcedure = publicProcedure
 				const downloadUrl = await getFileUrl(file.key);
 
 				const documentData = {
-					title: file.documentFile!.title,
-					academicYear: file.documentFile!.academicYear,
-					types: file.documentFile!.types
+					title: file.DocumentFile!.title,
+					academicYear: file.DocumentFile!.academicYear,
+					types: file.DocumentFile!.types
 				};
 
 				const originalPostId = file.postId;

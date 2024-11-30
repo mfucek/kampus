@@ -18,14 +18,14 @@ export const getPostByIdProcedure = publicProcedure
 			include: {
 				_count: {
 					select: {
-						replies: true
+						Replies: true
 					}
 				},
-				author: true,
-				files: {
+				Author: true,
+				Files: {
 					include: {
-						documentFile: true,
-						imageFile: true
+						DocumentFile: true,
+						ImageFile: true
 					}
 				}
 			}
@@ -41,7 +41,7 @@ export const getPostByIdProcedure = publicProcedure
 		};
 
 		const filesWithUrls = await Promise.all(
-			post.files.map(async (file) => ({
+			post.Files.map(async (file) => ({
 				...file,
 				url: await getFileUrl(file.key)
 			}))
@@ -52,16 +52,15 @@ export const getPostByIdProcedure = publicProcedure
 			votes: await getPostVotes(post.id, null, db),
 			files: filesWithUrls.map((file) => ({
 				...file,
-				documentFile: file.documentFile
+				documentFile: file.DocumentFile
 					? {
-							academicYear: file.documentFile.academicYear ?? undefined,
-							types: file.documentFile.types,
-							title: file.documentFile.title ?? undefined
+							academicYear: file.DocumentFile.academicYear ?? undefined,
+							types: file.DocumentFile.types,
+							title: file.DocumentFile.title ?? undefined
 						}
 					: null
 			}))
 		};
 
-		postWithVotes.post.author.imageUrl;
 		return postWithVotes;
 	});

@@ -8,18 +8,23 @@ export const getBySlugProcedure = publicProcedure
 	.query(async ({ input, ctx }) => {
 		const { db } = ctx;
 
-		const subject = await db.topic.findFirst({
+		const subjectRaw = await db.topic.findFirst({
 			where: {
 				slug: input.subjectSlug,
 				type: 'SUBJECT',
-				college: {
+				College: {
 					slug: input.collegeSlug
 				}
 			},
 			include: {
-				college: true
+				College: true
 			}
 		});
+
+		const subject = {
+			...subjectRaw,
+			college: subjectRaw?.College
+		};
 
 		if (!subject) {
 			throw new TRPCError({

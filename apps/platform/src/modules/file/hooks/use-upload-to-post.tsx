@@ -22,8 +22,6 @@ export const useUploadToPost = () => {
 			onSuccess: async () => {
 				// Invalidate and refetch relevant queries
 				await utils.post.invalidate();
-				await utils.post.getTopicPostsById.invalidate();
-				await utils.post.listPostsByCollegeSlug.invalidate();
 
 				// Force a re-render of the page
 				router.refresh();

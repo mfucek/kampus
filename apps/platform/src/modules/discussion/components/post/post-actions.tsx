@@ -41,8 +41,6 @@ export const PostActions: FC<{ fullPost: PostActionsInterface }> = ({
 		onSuccess: async () => {
 			// Invalidate and refetch relevant queries
 			await utils.post.invalidate();
-			await utils.post.getTopicPostsById.invalidate();
-			await utils.post.listPostsByCollegeSlug.invalidate();
 
 			// Force a re-render of the page
 			router.refresh();

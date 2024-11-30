@@ -7,15 +7,23 @@ export const listByPostProcedure = publicProcedure
 	.query(async ({ input, ctx }) => {
 		const { db } = ctx;
 
-		const files = await db.file.findMany({
+		const filesRaw = await db.file.findMany({
 			where: {
 				postId: input.postId
 			},
 			include: {
-				documentFile: true,
-				imageFile: true
+				DocumentFile: true,
+				ImageFile: true
 			}
 		});
+
+		const files = await Promise.all(
+			filesRaw.map(async (file) => ({
+				...file,
+				documentFile: file.DocumentFile,
+				imageFile: file.ImageFile
+			}))
+		);
 
 		return files;
 	});

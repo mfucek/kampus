@@ -9,8 +9,6 @@ import type { FC } from 'react';
 import { StaffsTableAdvanced } from '../../staff/components/staffs-table-advanced';
 
 const DiscussionTab: FC<{ collegeId: string }> = async ({ collegeId }) => {
-	// const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
-
 	return (
 		<div className="flex flex-col gap-10">
 			<Composer collegeId={collegeId} />
@@ -21,11 +19,6 @@ const DiscussionTab: FC<{ collegeId: string }> = async ({ collegeId }) => {
 					}
 				}}
 			/>
-			{/* <div className="flex flex-col">
-				{fullPosts.map((fullPost) => (
-					<Post key={fullPost.post.id} fullPost={fullPost} depthInfo={[]} />
-				))}
-			</div> */}
 		</div>
 	);
 };

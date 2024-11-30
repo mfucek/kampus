@@ -13,13 +13,13 @@ export const getUserProfilePictureUrlProcedure = publicProcedure
 				userId: input.userId
 			},
 			include: {
-				file: true
+				File: true
 			}
 		});
 
 		if (!profilePicture) return null;
 
-		const url = await getFileUrl(profilePicture.file.key);
+		const url = await getFileUrl(profilePicture.File.key);
 
 		return url;
 	});

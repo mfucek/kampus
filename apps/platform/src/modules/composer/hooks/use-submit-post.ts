@@ -85,8 +85,6 @@ export const useSubmitPost = () => {
 		// invalidate queries
 		await utils.post.invalidate();
 		await utils.post.list.invalidate();
-		await utils.post.getTopicPostsById.invalidate();
-		await utils.post.listPostsByCollegeSlug.invalidate();
 
 		setIsSubmitting(false);
 

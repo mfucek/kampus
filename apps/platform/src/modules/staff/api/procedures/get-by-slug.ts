@@ -12,12 +12,12 @@ export const getBySlugProcedure = publicProcedure
 			where: {
 				slug: input.staffSlug,
 				type: 'STAFF',
-				college: {
+				College: {
 					slug: input.collegeSlug
 				}
 			},
 			include: {
-				college: true
+				College: true
 			}
 		});
 

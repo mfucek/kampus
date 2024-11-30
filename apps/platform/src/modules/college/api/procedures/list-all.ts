@@ -5,7 +5,7 @@ export const listAllProcedure = publicProcedure.query(async ({ ctx }) => {
 
 	const colleges = await db.college.findMany({
 		orderBy: {
-			posts: {
+			Posts: {
 				_count: 'desc'
 			}
 		}

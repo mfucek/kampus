@@ -1,11 +1,20 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { cacheResult, checkCache } from '@/lib/cache/cache';
 import { publicProcedure } from '@/server/api/trpc';
 
 export const getSubjectsProcedure = publicProcedure
 	.input(z.object({ programId: z.string() }))
 	.query(async ({ input, ctx }) => {
+		const cache = checkCache<typeof subjects>(
+			`program.getSubjects#${input.programId}`
+		);
+
+		if (cache) {
+			return cache;
+		}
+
 		const { db } = ctx;
 
 		const programRaw = await db.topic.findFirst({
@@ -20,37 +29,6 @@ export const getSubjectsProcedure = publicProcedure
 				message: 'Program not found'
 			});
 		}
-
-		// const subjectsRaw = await db.topic.findMany({
-		// 	where: {
-		// 		type: 'SUBJECT',
-		// 		Subject: {
-		// 			Programs: {
-		// 				some: {
-		// 					Program: {
-		// 						topicId: input.programId
-		// 					}
-		// 				}
-		// 			}
-		// 		}
-		// 	},
-		// 	include: {
-		// 		Subject: {
-		// 			include: {
-		// 				Staffs: {
-		// 					take: 3,
-		// 					include: {
-		// 						Staff: {
-		// 							include: {
-		// 								Topic: true
-		// 							}
-		// 						}
-		// 					}
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// });
 
 		const programSubjectsRaw = await db.programSubject.findMany({
 			where: {
@@ -106,6 +84,12 @@ export const getSubjectsProcedure = publicProcedure
 			semester: programSubject.semester,
 			topLevelPosts: programSubject.Subject.Topic._count.Posts
 		}));
+
+		cacheResult(
+			`program.getSubjects#${input.programId}`,
+			subjects,
+			Date.now() + 1000 * 60 * 60 * 24
+		);
 
 		return subjects;
 	});

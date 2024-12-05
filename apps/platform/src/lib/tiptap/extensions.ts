@@ -7,7 +7,7 @@ import { Paragraph } from '@tiptap/extension-paragraph';
 import { Strike } from '@tiptap/extension-strike';
 import { Text } from '@tiptap/extension-text';
 
-import { Extensions } from '@tiptap/react';
+import { type Extensions } from '@tiptap/react';
 
 export const tiptapExtensions: Extensions = [
 	Document,

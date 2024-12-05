@@ -62,14 +62,14 @@ export const listProcedure = publicProcedure
 			})
 		};
 
-		const subjects = await db.topic.findMany({
+		const subjectsRaw = await db.topic.findMany({
 			where,
 			include: {
-				college: true,
-				subject: true,
+				College: true,
+				Subject: true,
 				_count: {
 					select: {
-						posts: true
+						Posts: true
 					}
 				}
 			},
@@ -84,6 +84,22 @@ export const listProcedure = publicProcedure
 					}
 				: undefined
 		});
+
+		const subjects = await Promise.all(
+			subjectsRaw.map(async (subject) => ({
+				college: subject.College,
+				subject: subject.Subject,
+				_count: {
+					posts: subject._count.Posts
+				},
+				id: subject.id,
+				name: subject.name,
+				shortName: subject.shortName,
+				type: subject.type,
+				slug: subject.slug,
+				collegeId: subject.collegeId
+			}))
+		);
 
 		const totalSubjects = Math.ceil(
 			(await db.topic.count({

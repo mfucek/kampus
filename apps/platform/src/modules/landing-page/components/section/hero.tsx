@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export const HeroSection = () => {
 	const { isSignedIn } = useAuth();
-	const { openSignIn } = useClerk();
+	const { openSignUp } = useClerk();
 
 	const scrollToSection = (id: string) => {
 		const element = document.getElementById(id);
@@ -27,7 +27,7 @@ export const HeroSection = () => {
 		return (
 			<>
 				<Button
-					onClick={() => openSignIn()}
+					onClick={() => openSignUp({ afterSignInUrl: '/home' })}
 					theme="accent"
 					size="md"
 					variant="solid"

@@ -20,7 +20,6 @@ type Subject = {
 	};
 	subject: {
 		topicId: string;
-		semester: number | null;
 		ects: number | null;
 	} | null;
 	_count: {
@@ -32,10 +31,6 @@ export const columns: ColumnDef<Subject>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Predmet'
-	},
-	{
-		accessorKey: 'subject.semester',
-		header: 'Semestar'
 	},
 	{
 		accessorKey: 'subject.ects',

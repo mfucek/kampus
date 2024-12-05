@@ -19,7 +19,13 @@ export const env = createEnv({
 		AWS_REGION: z.string(),
 		AMPLIFY_BUCKET: z.string(),
 		AMPLIFY_ACCESS_KEY_ID: z.string(),
-		AMPLIFY_SECRET_ACCESS_KEY: z.string()
+		AMPLIFY_SECRET_ACCESS_KEY: z.string(),
+		STRIPE_PRODUCT_ID_MONTHLY_CHEAP: z.string(),
+		STRIPE_PRODUCT_ID_MONTHLY_PRO: z.string(),
+		STRIPE_PRODUCT_ID_LIFETIME: z.string(),
+		STRIPE_PRICE_ID_MONTHLY_CHEAP: z.string(),
+		STRIPE_PRICE_ID_MONTHLY_PRO: z.string(),
+		STRIPE_PRICE_ID_LIFETIME: z.string()
 	},
 
 	/**
@@ -29,7 +35,8 @@ export const env = createEnv({
 	 */
 	client: {
 		// NEXT_PUBLIC_CLIENTVAR: z.string(),
-		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string()
+		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
+		NEXT_PUBLIC_DEPLOYMENT: z.enum(['staging', 'production'])
 	},
 
 	/**
@@ -49,7 +56,15 @@ export const env = createEnv({
 		AWS_REGION: process.env.AWS_REGION,
 		AMPLIFY_BUCKET: process.env.AMPLIFY_BUCKET,
 		AMPLIFY_ACCESS_KEY_ID: process.env.AMPLIFY_ACCESS_KEY_ID,
-		AMPLIFY_SECRET_ACCESS_KEY: process.env.AMPLIFY_SECRET_ACCESS_KEY
+		AMPLIFY_SECRET_ACCESS_KEY: process.env.AMPLIFY_SECRET_ACCESS_KEY,
+		STRIPE_PRODUCT_ID_MONTHLY_CHEAP:
+			process.env.STRIPE_PRODUCT_ID_MONTHLY_CHEAP,
+		STRIPE_PRODUCT_ID_MONTHLY_PRO: process.env.STRIPE_PRODUCT_ID_MONTHLY_PRO,
+		STRIPE_PRODUCT_ID_LIFETIME: process.env.STRIPE_PRODUCT_ID_LIFETIME,
+		STRIPE_PRICE_ID_MONTHLY_CHEAP: process.env.STRIPE_PRICE_ID_MONTHLY_CHEAP,
+		STRIPE_PRICE_ID_MONTHLY_PRO: process.env.STRIPE_PRICE_ID_MONTHLY_PRO,
+		STRIPE_PRICE_ID_LIFETIME: process.env.STRIPE_PRICE_ID_LIFETIME,
+		NEXT_PUBLIC_DEPLOYMENT: process.env.NEXT_PUBLIC_DEPLOYMENT
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

@@ -1,5 +1,5 @@
-import { Navbar } from '@/global/components/navbar';
 import { Spinner } from '@/global/components/spinner';
+import { Navbar } from '@/global/molecules/navbar/navbar';
 import { ClientPanels } from '@/modules/discussion-panel/components/client-panels';
 import { PostIdProvider } from '@/modules/discussion-panel/components/post-id-provider';
 import { Suspense, type FC, type PropsWithChildren } from 'react';
@@ -7,7 +7,7 @@ import { Suspense, type FC, type PropsWithChildren } from 'react';
 const Layout: FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<>
-			<div className="flex flex-col w-screen h-screen md:overflow-hidden">
+			<div className="flex flex-col w-screen h-screen md:overflow-x-hidden overscroll-x-none">
 				<Navbar />
 				<Suspense
 					fallback={

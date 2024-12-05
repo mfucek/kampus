@@ -1,6 +1,8 @@
+import { type DocumentFileType, type FileType } from '@prisma/client';
+
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
-import { DocumentFileType, FileType } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
 const fileTypeToFileType = (type: string): FileType => {
@@ -11,11 +13,20 @@ const fileTypeToFileType = (type: string): FileType => {
 };
 
 export const useUploadToPost = () => {
-	const { mutateAsync: makeUploadUrl, isPending: isMakingUploadUrl } =
-		api.file.makeUploadUrl.useMutation();
+	const utils = api.useUtils();
+	const router = useRouter();
+	const { mutateAsync: makeUploadUrl } = api.file.makeUploadUrl.useMutation();
 
 	const { mutateAsync: linkToPost, isPending } =
-		api.file.linkToPost.useMutation();
+		api.file.linkToPost.useMutation({
+			onSuccess: async () => {
+				// Invalidate and refetch relevant queries
+				await utils.post.invalidate();
+
+				// Force a re-render of the page
+				router.refresh();
+			}
+		});
 
 	const { toast } = useToast();
 
@@ -58,6 +69,7 @@ export const useUploadToPost = () => {
 			}
 
 			setFiles((prev) => [...prev, { file, type, documentOptions }]);
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		} catch (error) {
 			toast({
 				title: 'Nedopušteni tip datoteke',
@@ -75,7 +87,7 @@ export const useUploadToPost = () => {
 		try {
 			// get s3 upload url
 			const filesWithKeys = await Promise.all(
-				files.map(async (file, i) => {
+				files.map(async (file) => {
 					const { url, key } = await makeUploadUrl(void {}, {});
 
 					// upload file to s3

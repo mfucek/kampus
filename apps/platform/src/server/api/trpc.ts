@@ -45,7 +45,7 @@ export const createTRPCContext = async (opts: {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
+export const t = initTRPC.context<typeof createTRPCContext>().create({
 	transformer: superjson,
 	errorFormatter({ shape, error }) {
 		return {
@@ -90,14 +90,14 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 
 	if (process.env.NODE_ENV !== 'production') {
 		// artificial delay in dev
-		const waitMs = Math.floor(Math.random() * 400) + 1000;
+		const waitMs = Math.floor(Math.random() * 200) + 500;
 		await new Promise((resolve) => setTimeout(resolve, waitMs));
 	}
 
 	const result = await next();
 
 	const end = Date.now();
-	console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
+	console.log(`\n[TRPC] ${path} took ${end - start}ms to execute`);
 
 	return result;
 });

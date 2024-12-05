@@ -1,39 +1,25 @@
 'use client';
 
+import { type FC, useEffect, useState } from 'react';
+
 import { Icon } from '@/global/components/icon';
-import { Button } from '@/lib/shadcn/ui/button';
-import { useAuth, useClerk } from '@clerk/nextjs';
-import { useEffect, useState } from 'react';
+import { Button, type ButtonProps } from '@/lib/shadcn/ui/button';
 import { useTheme } from '../providers/theme-provider';
 
-export const ThemeToggler = () => {
-	const { theme, toggleTheme, canToggleTheme } = useTheme();
+export const ThemeToggler: FC<ButtonProps> = ({ ...props }) => {
+	const { theme, toggleTheme } = useTheme();
 	const [mounted, setMounted] = useState(false);
-	const { isSignedIn } = useAuth();
-	const { openSignIn } = useClerk();
 
 	useEffect(() => {
 		setMounted(true);
 	}, []);
-
-	const handleToggleTheme = () => {
-		if (!canToggleTheme) {
-			if (isSignedIn) {
-				window.location.href = '/profile#subscription-plan';
-			} else {
-				openSignIn();
-			}
-			return;
-		}
-		toggleTheme();
-	};
 
 	if (!mounted) {
 		return null;
 	}
 
 	return (
-		<Button variant="ghost" iconOnly onClick={handleToggleTheme}>
+		<Button variant="ghost" iconOnly onClick={toggleTheme} {...props}>
 			<Icon icon={theme === 'light' ? 'moon' : 'sun'} />
 		</Button>
 	);

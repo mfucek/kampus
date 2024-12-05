@@ -1,11 +1,12 @@
 'use client';
 
+import { type ColumnDef } from '@tanstack/react-table';
+import Link from 'next/link';
+import { type FC } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
-import { type ColumnDef } from '@tanstack/react-table';
-import Link from 'next/link';
-import { FC } from 'react';
 
 type Staff = {
 	slug: string;

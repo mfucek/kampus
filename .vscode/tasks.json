@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run scraper",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/apps/scraper && bun start",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"options": {
+				"statusbar": {
+					"label": "Kampus Scraper",
+					"icon": {
+						"id": "cloud-download"
+					}
+				}
+			}
+		}
+	]
+}

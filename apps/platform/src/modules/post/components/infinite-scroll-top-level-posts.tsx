@@ -1,0 +1,115 @@
+'use client';
+
+import { type JSONContent } from '@tiptap/react';
+import { useEffect, type FC } from 'react';
+import { useInView } from 'react-intersection-observer';
+
+import { Spinner } from '@/global/components/spinner';
+import { api } from '@/lib/trpc/react';
+import { Post } from '@/modules/discussion/components/post';
+import { type ListPostsItem } from '../api/procedures/list';
+import { type TPostScope } from '../schemas/post-scope';
+
+type DepthInfo = number[];
+
+const DynamicPost: FC<{
+	post: ListPostsItem;
+	depthInfo: DepthInfo;
+}> = ({ post, depthInfo }) => {
+	// const [expanded, setExpanded] = useState(false);
+
+	return (
+		<>
+			<Post
+				fullPost={{
+					post: {
+						author: {
+							id: post.author.id,
+							displayName: post.author.displayName,
+							imageUrl: post.author.imageUrl || '',
+							badge: post.author.badge || ''
+						},
+						createdAt: post.post.createdAt,
+						updatedAt: post.post.updatedAt,
+						authorId: post.author.id,
+						collegeId: post.post.collegeId,
+						topicId: post.post.topicId,
+						replyToId: post.post.replyToId,
+						id: post.post.id,
+						body: post.post.body as JSONContent,
+						_count: {
+							replies: post.replies.count
+						}
+					},
+					files: post.files,
+					votes: {
+						likes: post.votes.likes,
+						dislikes: post.votes.dislikes,
+						userVote: post.votes.userVote
+					}
+				}}
+				depthInfo={depthInfo}
+			/>
+			{/* {post.replies.count > 0 && (
+				<Button onClick={() => setExpanded(true)}>
+					View {post.replies.count} replies
+				</Button>
+			)} */}
+			{/* {expanded && (<InfiniteScrollTopLevelPosts)} */}
+		</>
+	);
+};
+
+export const TopLevelPostsPage: FC<{
+	page: ListPostsItem[];
+}> = ({ page }) => {
+	return (
+		<div className="flex flex-col">
+			{page.map((post) => (
+				<DynamicPost key={post.post.id} post={post} depthInfo={[]} />
+			))}
+		</div>
+	);
+};
+
+export const InfiniteScrollTopLevelPosts: FC<{
+	scope: TPostScope;
+}> = ({ scope }) => {
+	const query = api.post.list.useInfiniteQuery(
+		{
+			scope,
+			limit: 10
+		},
+		{
+			getNextPageParam: (lastPage) => lastPage.nextCursor
+		}
+	);
+
+	const Loader = () => {
+		const { ref, inView } = useInView({});
+
+		useEffect(() => {
+			if (inView) {
+				query.fetchNextPage();
+			}
+		}, [inView]);
+
+		if (!query.hasNextPage)
+			return <div className="flex justify-center items-center pt-10 h-40" />;
+
+		return (
+			<div className="flex justify-center items-center pt-10 h-40" ref={ref}>
+				<Spinner />
+			</div>
+		);
+	};
+
+	return (
+		<div className="flex flex-col">
+			{query.data?.pages.map((page, index) => (
+				<TopLevelPostsPage key={index} page={page.posts} />
+			))}
+			<Loader />
+		</div>
+	);
+};

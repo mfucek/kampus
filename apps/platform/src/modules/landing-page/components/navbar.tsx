@@ -1,17 +1,23 @@
 'use client';
 
-import { Button } from '@/lib/shadcn/ui/button';
-import { useTranslation } from '@/utils/translations/use-translation';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 
+import { env } from '@/env';
+import { Logo } from '@/global/components/logo';
+import { ActionsGroup } from '@/global/molecules/navbar/actions-group';
+import { Divider } from '@/global/molecules/navbar/divider';
+import { Button } from '@/lib/shadcn/ui/button';
+import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+
+const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
+
 export const Navbar = () => {
-	const { t } = useTranslation('hr');
-	const { openSignIn } = useClerk();
+	const { openSignIn, openSignUp } = useClerk();
 
 	const { isSignedIn } = useAuth();
 
-	const Nav = () => {
+	const Links = () => {
 		const scrollToSection = (id: string) => {
 			const element = document.getElementById(id);
 			if (element) {
@@ -52,33 +58,62 @@ export const Navbar = () => {
 	const Actions = () => {
 		if (isSignedIn) {
 			return (
-				<Link href="/home">
-					<Button theme="accent" size="md" variant="solid">
-						{t.goToPlatform}
-					</Button>
-				</Link>
+				<ActionsGroup>
+					<ThemeToggler size="sm" />
+					<Link href="/home">
+						<Button theme="accent" size="sm" variant="solid">
+							idi na platformu
+						</Button>
+					</Link>
+				</ActionsGroup>
 			);
 		}
 
 		return (
-			<Button
-				onClick={() => openSignIn({ afterSignInUrl: '/home' })}
-				theme="accent"
-				size="md"
-				variant="solid"
-			>
-				{t.register}
-			</Button>
+			<ActionsGroup>
+				<ThemeToggler size="sm" />
+				<Button
+					onClick={() => openSignUp({ afterSignInUrl: '/home' })}
+					theme="neutral"
+					size="sm"
+					variant="solid-weak"
+				>
+					Registriraj se
+				</Button>
+				<Button
+					onClick={() => openSignIn({ afterSignInUrl: '/home' })}
+					theme="accent"
+					size="sm"
+					variant="solid"
+				>
+					Ulogiraj se
+				</Button>
+			</ActionsGroup>
 		);
 	};
 
 	return (
 		<div className="bg-foreground backdrop-blur-md border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0 fixed w-full z-50">
 			<Link href="/">
-				<div className="title-3">Kampus.hr</div>
+				{isStaging && (
+					<div className="ml-1 px-2 flex items-center gap-2 bg-danger caption rounded-md">
+						<div className="shrink-0 h-[20px] w-[70px]">
+							<Logo className="bg-danger-contrast" />
+						</div>
+						<span className="caption text-danger-contrast">STG</span>
+					</div>
+				)}
+				{!isStaging && (
+					<div className="ml-1 px-2 flex items-center gap-2 bg-accent caption rounded-md">
+						<div className="shrink-0 h-[20px] w-[70px]">
+							<Logo className="bg-accent-contrast shrink-0" />
+						</div>
+					</div>
+				)}
 			</Link>
 			<div className="flex flex-row gap-4 items-center">
-				<Nav />
+				<Links />
+				<Divider />
 				<Actions />
 			</div>
 		</div>

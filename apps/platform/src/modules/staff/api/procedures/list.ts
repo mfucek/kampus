@@ -1,6 +1,7 @@
-import { publicProcedure } from '@/server/api/trpc';
 import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
+
+import { publicProcedure } from '@/server/api/trpc';
 import { getCollegeBySlug } from '../../../college/api/helpers/get-college-by-slug';
 import { staffFiltersSchema } from '../../schemas/staff-filters';
 import { staffScopeSchema } from '../../schemas/staff-scope';
@@ -61,14 +62,14 @@ export const listProcedure = publicProcedure
 			})
 		};
 
-		const staffs = await db.topic.findMany({
+		const staffRaw = await db.topic.findMany({
 			where,
 			include: {
-				college: true,
-				staff: true,
+				College: true,
+				Staff: true,
 				_count: {
 					select: {
-						posts: true
+						Posts: true
 					}
 				}
 			},
@@ -83,6 +84,22 @@ export const listProcedure = publicProcedure
 					}
 				: undefined
 		});
+
+		const staffs = await Promise.all(
+			staffRaw.map(async (staff) => ({
+				college: staff.College,
+				staff: staff.Staff,
+				_count: {
+					posts: staff._count.Posts
+				},
+				name: staff.name,
+				type: staff.type,
+				collegeId: staff.collegeId,
+				id: staff.id,
+				slug: staff.slug,
+				shortName: staff.shortName
+			}))
+		);
 
 		const totalStaffs = Math.ceil(
 			(await db.topic.count({

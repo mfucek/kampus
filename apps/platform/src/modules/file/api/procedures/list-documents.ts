@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
+import { FileType, type Prisma } from '@prisma/client';
+
 import { getFileUrl } from '@/lib/s3';
 import { publicProcedure } from '@/server/api/trpc';
-import { FileType, Prisma } from '@prisma/client';
 import { fileFiltersSchema } from '../../schemas/file-filters';
 import { fileScopeSchema } from '../../schemas/file-scope';
 
@@ -72,7 +73,7 @@ export const listDocumentsProcedure = publicProcedure
 					}
 				: {}),
 
-			documentFile: {
+			DocumentFile: {
 				// name filter
 				...(filters?.name
 					? {
@@ -86,8 +87,8 @@ export const listDocumentsProcedure = publicProcedure
 				// document type filter
 				...(filters?.documentTypes
 					? {
-							type: {
-								in: filters.documentTypes
+							types: {
+								hasEvery: filters.documentTypes
 							}
 						}
 					: {})
@@ -95,7 +96,7 @@ export const listDocumentsProcedure = publicProcedure
 		};
 
 		const include: Prisma.FileInclude = {
-			documentFile: true
+			DocumentFile: true
 		};
 
 		const filesRaw = await db.file.findMany({
@@ -114,9 +115,9 @@ export const listDocumentsProcedure = publicProcedure
 				const downloadUrl = await getFileUrl(file.key);
 
 				const documentData = {
-					title: file.documentFile!.title,
-					academicYear: file.documentFile!.academicYear,
-					types: file.documentFile!.types
+					title: file.DocumentFile!.title,
+					academicYear: file.DocumentFile!.academicYear,
+					types: file.DocumentFile!.types
 				};
 
 				const originalPostId = file.postId;

@@ -14,7 +14,7 @@ export const IconClassnameContext = React.createContext<string | undefined>(
 );
 
 const buttonVariants = cva(
-	'relative inline-flex items-center justify-center whitespace-nowrap ring-offset-background duration-300 hover:duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:opacity-50 group clickable',
+	'relative inline-flex items-center justify-center whitespace-nowrap ring-offset-background duration-300 hover:md:duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:opacity-50 group clickable',
 	{
 		variants: {
 			theme: {
@@ -26,14 +26,17 @@ const buttonVariants = cva(
 				danger: 'theme-danger'
 			},
 			variant: {
-				solid: 'bg-theme text-theme-contrast hover:bg-theme-strong',
-				'solid-weak': 'bg-theme-weak text-theme hover:bg-theme-medium',
-				outline: 'border border-theme-medium text-theme hover:bg-theme-medium',
+				solid:
+					'border border-transparent bg-theme text-theme-contrast hover:md:bg-theme-strong',
+				'solid-weak':
+					'border border-transparent bg-theme-weak text-theme hover:md:bg-theme-medium',
+				outline:
+					'border border-theme-medium text-theme hover:md:bg-theme-medium',
 				'outline-weak':
-					'border border-theme-weak text-theme-strong hover:bg-theme-medium hover:text-theme',
-				ghost: 'text-theme hover:bg-theme-medium',
+					'border border-theme-weak text-theme-strong hover:md:bg-theme-medium hover:md:text-theme',
+				ghost: 'border border-transparent text-theme hover:md:bg-theme-medium',
 				'ghost-weak':
-					'text-theme-strong hover:text-theme hover:bg-neutral-medium'
+					'border border-transparent text-theme-strong hover:md:text-theme hover:md:bg-neutral-medium'
 			},
 			size: {
 				lg: 'h-[52px] px-[20px] gap-[8px] button-lg',
@@ -122,12 +125,12 @@ const iconClassVariants = cva('shrink-0', {
 			danger: 'theme-danger'
 		},
 		variant: {
-			solid: 'bg-theme-contrast group-hover:bg-theme-contrast',
-			'solid-weak': 'bg-theme group-hover:bg-theme',
-			outline: 'bg-theme group-hover:bg-theme-contrast',
-			'outline-weak': 'bg-theme-strong group-hover:bg-theme',
-			ghost: 'bg-theme group-hover:bg-theme',
-			'ghost-weak': 'bg-theme-strong group-hover:bg-theme'
+			solid: 'bg-theme-contrast group-hover:md:bg-theme-contrast',
+			'solid-weak': 'bg-theme group-hover:md:bg-theme',
+			outline: 'bg-theme group-hover:md:bg-theme-contrast',
+			'outline-weak': 'bg-theme-strong group-hover:md:bg-theme',
+			ghost: 'bg-theme group-hover:md:bg-theme',
+			'ghost-weak': 'bg-theme-strong group-hover:md:bg-theme'
 		}
 	},
 	compoundVariants: [

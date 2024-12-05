@@ -1,12 +1,21 @@
-import { DocumentFileType, FileType, VoteType } from '@prisma/client';
-import { JSONContent } from '@tiptap/core';
+import { type JSONContent } from '@tiptap/react';
+
+import {
+	type DocumentFileType,
+	type FileType,
+	type VoteType
+} from '@prisma/client';
 
 export type RecursivePost = {
 	post: {
 		id: string;
 		body: JSONContent | null;
 		createdAt: Date;
+		updatedAt: Date;
 		authorId: string;
+		collegeId: string;
+		topicId: string | null;
+		replyToId: string | null;
 		author: {
 			id: string;
 			createdAt: Date;

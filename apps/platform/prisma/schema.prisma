@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,7 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ------------------
 // Clerk account
+// ------------------
 
 model Account {
   id String @id @default(cuid())
@@ -42,7 +41,9 @@ enum AccountStatus {
   CANCELLED
 }
 
-// User
+// ------------------
+// Users
+// ------------------
 
 model User {
   id String @id @default(cuid())
@@ -50,21 +51,26 @@ model User {
   displayName String
   imageUrl    String?
 
-  badge String? // Make sure this line is present
+  badge String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   accountId String  @unique
-  account   Account @relation(fields: [accountId], references: [id])
+  Account   Account @relation(fields: [accountId], references: [id])
 
   votes Vote[]
   posts Post[]
 
   image ImageFile?
+
+  notifications Notification[]
+  // subscriptions Subscription[]
 }
 
-// College
+// ------------------
+// Colleges
+// ------------------
 
 model College {
   id String @id @default(cuid())
@@ -74,64 +80,123 @@ model College {
 
   iconSrc String?
 
-  topics Topic[]
-  posts  Post[]
+  Image ImageFile?
 
-  image ImageFile?
+  Topics Topic[]
+  Posts  Post[]
 }
 
-// Subjects & Staff
+// ------------------
+// Topics
+// ------------------
 
 model Topic {
   id String @id @default(cuid())
 
-  slug String
-  name String
+  slug      String
+  name      String
+  shortName String?
 
   collegeId String
-  college   College @relation(fields: [collegeId], references: [id])
+  College   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
 
   type TopicType
 
-  subject Subject?
-  staff   Staff?
-  posts   Post[]
+  Program Program?
+  Subject Subject?
+  Staff   Staff?
 
-  image     ImageFile?
-  summaries Summary[]
+  Posts Post[]
 
-  @@unique([collegeId, slug])
+  Image     ImageFile?
+  Summaries Summary[]
+
+  // @@unique([collegeId, slug])
 }
 
 enum TopicType {
   SUBJECT
   STAFF
+  PROGRAM
 }
 
 model Staff {
   topicId String @id @unique
-  topic   Topic  @relation(fields: [topicId], references: [id])
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   imageUrl String?
 
-  subjects Subject[]
+  staffExternalCode String?
+  staffExternalLink String?
+
+  // Relationships
+  Subjects SubjectStaff[]
 }
 
 model Subject {
   topicId String @id @unique
-  topic   Topic  @relation(fields: [topicId], references: [id])
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
-  semester    Int?
-  ects        Int?
-  subjectCode String?
-  subjectLink String?
+  ects Int?
 
-  tags String[]
+  subjectExternalCode String?
+  subjectExternalLink String?
 
-  staffs Staff[]
+  // Relationships
+  Staffs   SubjectStaff[]
+  Programs ProgramSubject[]
 }
 
+model Program {
+  topicId String @id @unique
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  programExternalCode String?
+  programExternalLink String?
+
+  departments String[] @default([])
+  type        String?
+
+  // Relationships
+  Subjects ProgramSubject[]
+}
+
+// Topic Relationships
+
+model SubjectStaff {
+  id String @id @default(cuid())
+
+  subjectId String
+  Subject   Subject @relation(fields: [subjectId], references: [topicId], onDelete: Cascade)
+
+  staffId String
+  Staff   Staff  @relation(fields: [staffId], references: [topicId], onDelete: Cascade)
+
+  staffRole String?
+
+  // @@unique([subjectId, staffId])
+  // @@id([subjectId, staffId])
+}
+
+model ProgramSubject {
+  id String @id @default(cuid())
+
+  programId String
+  Program   Program @relation(fields: [programId], references: [topicId], onDelete: Cascade)
+
+  subjectId String
+  Subject   Subject @relation(fields: [subjectId], references: [topicId], onDelete: Cascade)
+
+  semester  Int?
+  groupName String?
+
+  // @@unique([programId, subjectId])
+  // @@id([programId, subjectId])
+}
+
+// ------------------
 // Posts
+// ------------------
 
 model Post {
   id String @id @default(cuid())
@@ -139,31 +204,36 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  author   User   @relation(fields: [authorId], references: [id])
   authorId String
+  Author   User   @relation(fields: [authorId], references: [id])
 
   // college this post belongs to
   collegeId String
-  college   College @relation(fields: [collegeId], references: [id])
+  College   College @relation(fields: [collegeId], references: [id])
 
   // subject or staff this post belongs to
   // if empty, this is college-specific post
   topicId String?
-  topic   Topic?  @relation(fields: [topicId], references: [id])
+  Topic   Topic?  @relation(fields: [topicId], references: [id])
 
   // direct replies
   // if empty, this is top level post
   replyToId String?
   replyTo   Post?   @relation(fields: [replyToId], references: [id], name: "PostReplies")
-  replies   Post[]  @relation("PostReplies")
+  Replies   Post[]  @relation("PostReplies")
 
   // content
   body Json?
 
-  votes Vote[]
-
-  files File[]
+  Votes Vote[]
+  Files File[]
+  // notifications Notification[]
+  // subscriptions Subscription[]
 }
+
+// ------------------
+// Votes
+// ------------------
 
 enum VoteType {
   UP
@@ -176,13 +246,15 @@ model Vote {
   type VoteType
 
   postId String
-  post   Post   @relation(fields: [postId], references: [id])
+  Post   Post   @relation(fields: [postId], references: [id])
 
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  User   User   @relation(fields: [userId], references: [id])
 }
 
+// ------------------
 // Files
+// ------------------
 
 model File {
   id String @id @default(cuid())
@@ -195,45 +267,46 @@ model File {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  documentFile DocumentFile?
-  imageFile    ImageFile?
+  DocumentFile DocumentFile?
+  ImageFile    ImageFile?
 
   postId String?
-  post   Post?   @relation(fields: [postId], references: [id])
+  Post   Post?   @relation(fields: [postId], references: [id])
 }
 
 model ImageFile {
   fileId String @id @unique
-  file   File   @relation(fields: [fileId], references: [id])
+  File   File   @relation(fields: [fileId], references: [id])
 
   topicId String? @unique
-  topic   Topic?  @relation(fields: [topicId], references: [id])
+  Topic   Topic?  @relation(fields: [topicId], references: [id])
 
   collegeId String?  @unique
-  college   College? @relation(fields: [collegeId], references: [id])
+  College   College? @relation(fields: [collegeId], references: [id])
 
   userId String? @unique
-  user   User?   @relation(fields: [userId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id])
 }
 
 model DocumentFile {
   fileId String @id @unique
-  file   File   @relation(fields: [fileId], references: [id])
+  File   File   @relation(fields: [fileId], references: [id])
 
-  title String?
-
+  title        String?
   academicYear String?
-
-  types DocumentFileType[]
+  types        DocumentFileType[]
 }
 
 enum DocumentFileType {
   EXAM
   COLOQUIUM
+  COLOQUIUM_MID
+  COLOQUIUM_FINAL
   EXERCISE
   HOMEWORK
   SEMINAR
   SCRIPT
+  NOTES
   PAPER
   OTHER
   SUMMER_EXAM
@@ -251,11 +324,13 @@ enum FileType {
   ARCHIVE
 }
 
-// permissions
+// ------------------
+// Permissions
+// ------------------
 
 model Permissions {
   accountId String  @id
-  account   Account @relation(fields: [accountId], references: [id])
+  Account   Account @relation(fields: [accountId], references: [id])
 
   // base role
   baseRole RoleType @default(BASE)
@@ -291,7 +366,9 @@ enum RoleType {
   ADMIN
 }
 
+// ------------------
 // Summaries
+// ------------------
 
 model Summary {
   id String @id @default(cuid())
@@ -300,7 +377,7 @@ model Summary {
   content   String
   sentiment SummaryType
 
-  topic   Topic  @relation(fields: [topicId], references: [id])
+  Topic   Topic  @relation(fields: [topicId], references: [id])
   topicId String
 }
 
@@ -309,4 +386,50 @@ enum SummaryType {
   NEGATIVE
   NEUTRAL
   WARNING
+}
+
+// ------------------
+// Subscriptions
+// ------------------
+
+// model Subscription {
+//   id String @id @default(cuid())
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id])
+
+//   postId String?
+//   post   Post?  @relation(fields: [postId], references: [id])
+
+//   topicId String?
+//   topic   Topic? @relation(fields: [topicId], references: [id])
+// }
+
+// ------------------
+// Notifications
+// ------------------
+
+model Notification {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+
+  type NotificationType
+  read Boolean          @default(false)
+
+  postId   String?
+  authorId String?
+  // topicId String?
+
+  recepientId String
+  Recepient   User   @relation(fields: [recepientId], references: [id])
+}
+
+enum NotificationType {
+  POST_REPLY
+  POST_VOTE
+  // TOPIC_NEW_POST
+  // NEW_FEATURE
+  PACKAGE_UPGRADE
+  PACKAGE_DOWNGRADE
 }

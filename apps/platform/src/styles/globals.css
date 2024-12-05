@@ -96,3 +96,12 @@
 ::-webkit-scrollbar-thumb:hover {
 	background-color: hsl(var(--color-neutral) / 0.8);
 }
+
+.scrollbar-hidden {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+	display: none;
+}

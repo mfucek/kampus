@@ -1,5 +1,13 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useRef, useState, type PropsWithChildren } from 'react';
+import {
+	Panel,
+	PanelGroup,
+	type ImperativePanelGroupHandle
+} from 'react-resizable-panels';
+
 import { Icon } from '@/global/components/icon';
 import { ResizeHandle } from '@/lib/react-resizable-handles/components/resize-handle';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -12,13 +20,6 @@ import {
 } from '@/lib/shadcn/ui/drawer';
 import { cn } from '@/lib/shadcn/utils';
 import { useIsMobile } from '@/utils/useMediaQuery';
-import { useRouter } from 'next/navigation';
-import { useRef, useState, type PropsWithChildren } from 'react';
-import {
-	ImperativePanelGroupHandle,
-	Panel,
-	PanelGroup
-} from 'react-resizable-panels';
 import { ThreadContent } from '../layouts/thread-content';
 import { usePostId } from './post-id-provider';
 

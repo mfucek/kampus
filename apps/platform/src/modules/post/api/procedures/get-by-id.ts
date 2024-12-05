@@ -1,9 +1,10 @@
+import { type JSONContent } from '@tiptap/react';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
 import { publicProcedure } from '@/server/api/trpc';
-import { JSONContent } from '@tiptap/react';
 import { TRPCError } from '@trpc/server';
+import { FullPost } from '../../types/full-post';
 import { getPostVotes } from '../helpers/get-post-votes';
 
 export const getPostByIdProcedure = publicProcedure
@@ -11,57 +12,74 @@ export const getPostByIdProcedure = publicProcedure
 	.query(async ({ input, ctx }) => {
 		const { db } = ctx;
 
-		const post = await db.post.findUnique({
+		const postRaw = await db.post.findUnique({
 			where: {
 				id: input.postId
 			},
 			include: {
 				_count: {
 					select: {
-						replies: true
+						Replies: true
 					}
 				},
-				author: true,
-				files: {
+				Author: true,
+				Files: {
 					include: {
-						documentFile: true,
-						imageFile: true
+						DocumentFile: true,
+						ImageFile: true
 					}
 				}
 			}
 		});
 
-		if (!post) {
+		if (!postRaw) {
 			throw new TRPCError({ code: 'NOT_FOUND', message: 'Post not found' });
 		}
 
-		const typesafePost = {
-			...post,
-			body: post.body as JSONContent
-		};
+		const post = {
+			author: {
+				id: postRaw.Author.id,
+				displayName: postRaw.Author.displayName,
+				imageUrl: postRaw.Author.imageUrl,
+				badge: postRaw.Author.badge
+			},
+			authorId: postRaw.authorId,
+			id: postRaw.id,
+			body: postRaw.body as JSONContent,
+			createdAt: postRaw.createdAt,
+			updatedAt: postRaw.updatedAt,
+			collegeId: postRaw.collegeId,
+			topicId: postRaw.topicId,
+			replyToId: postRaw.replyToId,
+			_count: {
+				replies: postRaw._count.Replies
+			}
+		} satisfies FullPost['post'];
 
-		const filesWithUrls = await Promise.all(
-			post.files.map(async (file) => ({
-				...file,
-				url: await getFileUrl(file.key)
-			}))
-		);
-
-		const postWithVotes = {
-			post: typesafePost,
-			votes: await getPostVotes(post.id, null, db),
-			files: filesWithUrls.map((file) => ({
-				...file,
-				documentFile: file.documentFile
+		const files = await Promise.all(
+			postRaw.Files.map(async (file) => ({
+				id: file.id,
+				key: file.key,
+				type: file.type,
+				imageFile: file.ImageFile,
+				url: await getFileUrl(file.key),
+				documentFile: file.DocumentFile
 					? {
-							academicYear: file.documentFile.academicYear ?? undefined,
-							types: file.documentFile.types,
-							title: file.documentFile.title ?? undefined
+							academicYear: file.DocumentFile.academicYear ?? undefined,
+							types: file.DocumentFile.types,
+							title: file.DocumentFile.title ?? undefined
 						}
 					: null
 			}))
-		};
+		);
 
-		postWithVotes.post.author.imageUrl;
-		return postWithVotes;
+		const votes = await getPostVotes(postRaw.id, null, db);
+
+		const output = {
+			post: post,
+			votes: votes,
+			files: files
+		} satisfies FullPost;
+
+		return output;
 	});

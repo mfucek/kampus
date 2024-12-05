@@ -1,24 +1,29 @@
-import { publicProcedure } from '@/server/api/trpc';
 import { z } from 'zod';
+
+import { publicProcedure } from '@/server/api/trpc';
 
 export const listByPostProcedure = publicProcedure
 	.input(z.object({ postId: z.string() }))
 	.query(async ({ input, ctx }) => {
 		const { db } = ctx;
 
-		const files = await db.file.findMany({
+		const filesRaw = await db.file.findMany({
 			where: {
 				postId: input.postId
 			},
 			include: {
-				documentFile: true,
-				imageFile: true
+				DocumentFile: true,
+				ImageFile: true
 			}
 		});
 
-		const imageFiles = files
-			.filter((file) => file.imageFile !== null)
-			.map((file) => {});
+		const files = await Promise.all(
+			filesRaw.map(async (file) => ({
+				...file,
+				documentFile: file.DocumentFile,
+				imageFile: file.ImageFile
+			}))
+		);
 
 		return files;
 	});

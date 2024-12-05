@@ -1,7 +1,8 @@
 import '@/styles/colors.css';
 import '@/styles/globals.css';
-import '@/styles/tiptap.css';
 import '@/styles/typography.css';
+
+import '@/styles/tiptap.css';
 
 import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
@@ -12,14 +13,20 @@ import { TRPCReactProvider } from '@/lib/trpc/react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '../modules/theme/providers/theme-provider';
 
+import { env } from '@/env';
 import { Toaster } from '@/lib/shadcn/ui/toaster';
 import NextTopLoader from 'nextjs-toploader';
+
+const isDevOrStg =
+	env.NODE_ENV === 'development' || env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const metadata: Metadata = {
 	title: 'Kampus.hr | Platforma za sve studente',
 	description:
 		'Kampus.hr je mjesto za diskusije, dijeljenje materijala i povezivanje s kolegama.',
-	icons: [{ rel: 'icon', url: '/favicon.png' }]
+	icons: [
+		{ rel: 'icon', url: isDevOrStg ? '/favicon-dev.png' : '/favicon.png' }
+	]
 };
 
 export default function RootLayout({
@@ -27,7 +34,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="en" className={GeistSans.variable}>
-			<body className="bg-background min-h-screen">
+			<body className="bg-background min-h-screen bg-opacity-100">
 				<NextTopLoader color="#3461ff" shadow={false} showSpinner={false} />
 				<ClerkProvider localization={{ locale: 'hr-HR' }}>
 					<TRPCReactProvider>

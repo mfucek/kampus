@@ -1,35 +1,43 @@
-import { Container } from '@/global/components/container';
+import type { FC } from 'react';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/lib/shadcn/ui/tabs';
 import { api } from '@/lib/trpc/server';
+
+import { Container } from '@/global/components/container';
 import { PageHeader } from '@/modules/college/components/page-header';
-import { Composer } from '@/modules/discussion/components/composer';
-import { Post } from '@/modules/discussion/components/post';
+import { Composer } from '@/modules/composer/components';
+import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
+import { CollegePrograms } from '@/modules/program/components/college-programs';
+import { StaffsTableAdvanced } from '@/modules/staff/components/staffs-table-advanced';
 import { SubjectsTableAdvanced } from '@/modules/subject/components/subjects-table-advanced';
-import type { FC } from 'react';
-import { StaffsTableAdvanced } from '../../staff/components/staffs-table-advanced';
 
-const DiscussionTab: FC<{ collegeSlug: string; collegeId: string }> = async ({
-	collegeSlug,
-	collegeId
-}) => {
-	const fullPosts = await api.post.listPostsByCollegeSlug({ collegeSlug });
-
+const DiscussionTab: FC<{ collegeId: string }> = async ({ collegeId }) => {
 	return (
 		<div className="flex flex-col gap-10">
-			<Composer collegeId={collegeId} collegeSlug={collegeSlug} />
-			<div className="flex flex-col">
-				{fullPosts.map((fullPost) => (
-					<Post key={fullPost.post.id} fullPost={fullPost} depthInfo={[]} />
-				))}
-			</div>
+			<Composer collegeId={collegeId} />
+			<InfiniteScrollTopLevelPosts
+				scope={{
+					college: {
+						id: collegeId
+					}
+				}}
+			/>
 		</div>
 	);
 };
 
-const SubjectsTab: FC<{ collegeSlug: string }> = async ({ collegeSlug }) => {
+const ProgramsTab: FC<{ collegeId: string }> = async ({ collegeId }) => {
 	return (
 		<div className="flex flex-col gap-2">
-			<SubjectsTableAdvanced scope={{ collegeSlug }} />
+			<CollegePrograms collegeId={collegeId} />
+		</div>
+	);
+};
+
+const SubjectsTab: FC<{ collegeId: string }> = async ({ collegeId }) => {
+	return (
+		<div className="flex flex-col gap-2">
+			<SubjectsTableAdvanced scope={{ collegeId }} />
 		</div>
 	);
 };
@@ -54,14 +62,18 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 			<Tabs defaultValue="discussion">
 				<TabsList>
 					<TabsTrigger value="discussion">Opca Rasprava</TabsTrigger>
-					<TabsTrigger value="subjects">Popis Predmeta</TabsTrigger>
+					<TabsTrigger value="programs">Smjerovi</TabsTrigger>
+					<TabsTrigger value="subjects">Svi Predmeti</TabsTrigger>
 					<TabsTrigger value="staff">Svi Profesori</TabsTrigger>
 				</TabsList>
 				<TabsContent value="discussion">
-					<DiscussionTab collegeSlug={collegeSlug} collegeId={college.id} />
+					<DiscussionTab collegeId={college.id} />
 				</TabsContent>
 				<TabsContent value="subjects">
-					<SubjectsTab collegeSlug={collegeSlug} />
+					<SubjectsTab collegeId={college.id} />
+				</TabsContent>
+				<TabsContent value="programs">
+					<ProgramsTab collegeId={college.id} />
 				</TabsContent>
 				<TabsContent value="staff">
 					<StaffTab collegeSlug={collegeSlug} />

@@ -4,13 +4,11 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { useUser } from '@clerk/nextjs';
 import { formatDate } from 'date-fns';
-import { useRouter } from 'next/navigation';
 import { SettingsSubSection } from '../settings-subsection';
 
 export const SubscriptionPlanSection = () => {
 	const { isLoaded } = useUser();
 	const { data: account } = api.account.getAccount.useQuery();
-	const router = useRouter();
 
 	const { data: subscriptionSessionDataCheap } =
 		api.stripe.getSubscriptionCheckoutURL.useQuery(
@@ -28,10 +26,10 @@ export const SubscriptionPlanSection = () => {
 			}
 		);
 
-	const { data: lifetimeSessionData } =
-		api.stripe.getLifetimeCheckoutURL.useQuery(void {}, {
-			enabled: isLoaded
-		});
+	// const { data: lifetimeSessionData } =
+	// 	api.stripe.getLifetimeCheckoutURL.useQuery(void {}, {
+	// 		enabled: isLoaded
+	// 	});
 
 	const { mutateAsync: cancelSubscription } =
 		api.stripe.cancelSubscription.useMutation();
@@ -85,9 +83,8 @@ export const SubscriptionPlanSection = () => {
 	const FreePlanDescription = () => {
 		return (
 			<ul>
-				<li>Neograničen pristup svim raspravama</li>
+				<li>Pristup svim raspravama uz reklame</li>
 				<li>2 AI sažetka po temi</li>
-				<li>10 preuzimanja mjesecno</li>
 			</ul>
 		);
 	};
@@ -95,10 +92,9 @@ export const SubscriptionPlanSection = () => {
 	const SponsorPlanDescription = () => {
 		return (
 			<ul>
+				<li>Pristup svom sadržaju bez reklama</li>
 				<li>Pristup svim AI sažetcima</li>
 				<li>Supporter badge</li>
-				<li>30 preuzimanja mjesecno</li>
-				<li>Dark mode</li>
 			</ul>
 		);
 	};
@@ -191,7 +187,7 @@ export const SubscriptionPlanSection = () => {
 				title="Pretplati se!"
 				description="Hvala ti što koristiš stranicu! Ako želiš podržati stranicu, možeš kupiti pretplatu i dobiti pristup novim funkcionalnostima."
 			>
-				<div className="flex flex-col gap-2 p-4 border border-neutral-weak rounded-xl">
+				<div className="flex flex-col gap-2 p-4 bg-neutral-weak rounded-xl">
 					<p className="body-2">Trenutno si na Student planu:</p>
 					<FreePlanDescription />
 				</div>

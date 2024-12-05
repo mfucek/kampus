@@ -2,14 +2,14 @@
 
 import { Spinner } from '@/global/components/spinner';
 import { api } from '@/lib/trpc/react';
-import { Composer } from '@/modules/discussion/components/composer';
+import { Composer } from '@/modules/composer/components';
 import { Post } from '@/modules/discussion/components/post';
 import { unpackThread } from '@/modules/discussion/utils/unpack-thread';
 import { Container } from '../../../global/components/container';
 import { usePostId } from '../components/post-id-provider';
 
 export const ThreadContent = () => {
-	const { postId, setPostId } = usePostId();
+	const { postId } = usePostId();
 
 	const { data: fullPost } = api.post.getPostById.useQuery(
 		{
@@ -45,7 +45,6 @@ export const ThreadContent = () => {
 						<Post key={fullPost.post.id} fullPost={fullPost} depthInfo={[]} />
 						<Composer
 							collegeId={fullPost.post.collegeId}
-							collegeSlug={''} // @TODO fix this
 							topicId={fullPost.post.topicId ?? undefined}
 							replyToId={fullPost.post.id}
 						/>

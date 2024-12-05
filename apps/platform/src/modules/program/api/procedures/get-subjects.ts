@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { cacheResult, checkCache } from '@/lib/cache/cache';
 import { publicProcedure } from '@/server/api/trpc';
 
-export const getSubjectsProcedure = publicProcedure
+export const listSubjectsProcedure = publicProcedure
 	.input(z.object({ programId: z.string() }))
 	.query(async ({ input, ctx }) => {
 		const cache = checkCache<typeof subjects>(
@@ -95,5 +95,5 @@ export const getSubjectsProcedure = publicProcedure
 	});
 
 export type GetSubjectsOutput = Awaited<
-	ReturnType<typeof getSubjectsProcedure>
+	ReturnType<typeof listSubjectsProcedure>
 >[number];

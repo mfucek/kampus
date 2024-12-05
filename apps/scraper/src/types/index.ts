@@ -1,32 +1,50 @@
-export type Subject = {
-	externalLink: string;
-	name: string;
-	shortName: string;
-	externalCode: string;
-	ects: number;
-	professorsLinks: { role: string; link: string }[];
-};
+import { z } from 'zod';
 
-export type SubjectReference = {
-	externalLink: string;
-	semester: number;
-	groupName: string;
-};
+export const subjectSchema = z.object({
+	externalLink: z.string(),
+	name: z.string(),
+	shortName: z.string(),
+	externalCode: z.string(),
+	ects: z.number().nullable(),
+	professorsLinks: z.array(z.object({ role: z.string(), link: z.string() }))
+});
 
-export type Program = {
-	externalLink: string;
-	name: string;
-	shortName: string;
-	departments: string[];
-	subjects: SubjectReference[];
-	type: string; //'preddiplomski' | 'diplomski' | 'doktorski' | 'specijalisticki';
-};
+export type Subject = z.infer<typeof subjectSchema>;
 
-export type Professor = {
-	externalLink: string;
-	name: string;
-	imageUrl: string | null;
-};
+// -----------------------------
+
+export const subjectReferenceSchema = z.object({
+	externalLink: z.string(),
+	semester: z.number(),
+	groupName: z.string()
+});
+
+export type SubjectReference = z.infer<typeof subjectReferenceSchema>;
+
+// -----------------------------
+
+export const programSchema = z.object({
+	externalLink: z.string(),
+	name: z.string(),
+	shortName: z.string(),
+	departments: z.array(z.string()),
+	subjects: z.array(subjectReferenceSchema),
+	type: z.string() // preddiplomski, diplomski, doktorski, specijalisticki, etc.
+});
+
+export type Program = z.infer<typeof programSchema>;
+
+// -----------------------------
+
+export const professorSchema = z.object({
+	externalLink: z.string(),
+	name: z.string(),
+	imageUrl: z.string().nullable()
+});
+
+export type Professor = z.infer<typeof professorSchema>;
+
+// -----------------------------
 
 export type DriverOptions = {
 	debug?: boolean;

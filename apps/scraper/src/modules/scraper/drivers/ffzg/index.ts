@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 
 import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
-import type { Driver } from '@/modules/driver/types';
+import type { Driver } from '@/modules/scraper/drivers/types';
 import type { Professor, Program, Subject, SubjectReference } from '@/types';
 import { checkImage } from '@/utils/check-image';
 import { shortenList } from '@/utils/shorten-list';

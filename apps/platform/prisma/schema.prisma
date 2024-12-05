@@ -98,7 +98,7 @@ model Topic {
   shortName String?
 
   collegeId String
-  College   College @relation(fields: [collegeId], references: [id])
+  College   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
 
   type TopicType
 
@@ -111,7 +111,7 @@ model Topic {
   Image     ImageFile?
   Summaries Summary[]
 
-  @@unique([collegeId, slug])
+  // @@unique([collegeId, slug])
 }
 
 enum TopicType {
@@ -122,9 +122,12 @@ enum TopicType {
 
 model Staff {
   topicId String @id @unique
-  Topic   Topic  @relation(fields: [topicId], references: [id])
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   imageUrl String?
+
+  staffExternalCode String?
+  staffExternalLink String?
 
   // Relationships
   Subjects SubjectStaff[]
@@ -132,12 +135,12 @@ model Staff {
 
 model Subject {
   topicId String @id @unique
-  Topic   Topic  @relation(fields: [topicId], references: [id])
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   ects Int?
 
-  subjectExternalCode String? @unique
-  subjectExternalLink String? @unique
+  subjectExternalCode String?
+  subjectExternalLink String?
 
   // Relationships
   Staffs   SubjectStaff[]
@@ -146,10 +149,10 @@ model Subject {
 
 model Program {
   topicId String @id @unique
-  Topic   Topic  @relation(fields: [topicId], references: [id])
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
-  programExternalCode String? @unique
-  programExternalLink String? @unique
+  programExternalCode String?
+  programExternalLink String?
 
   departments String[] @default([])
 
@@ -160,30 +163,34 @@ model Program {
 // Topic Relationships
 
 model SubjectStaff {
+  id String @id @default(cuid())
+
   subjectId String
-  Subject   Subject @relation(fields: [subjectId], references: [topicId])
+  Subject   Subject @relation(fields: [subjectId], references: [topicId], onDelete: Cascade)
 
   staffId String
-  Staff   Staff  @relation(fields: [staffId], references: [topicId])
+  Staff   Staff  @relation(fields: [staffId], references: [topicId], onDelete: Cascade)
 
   staffRole String?
 
-  @@id([subjectId, staffId])
-  @@unique([subjectId, staffId])
+  // @@unique([subjectId, staffId])
+  // @@id([subjectId, staffId])
 }
 
 model ProgramSubject {
+  id String @id @default(cuid())
+
   programId String
-  Program   Program @relation(fields: [programId], references: [topicId])
+  Program   Program @relation(fields: [programId], references: [topicId], onDelete: Cascade)
 
   subjectId String
-  Subject   Subject @relation(fields: [subjectId], references: [topicId])
+  Subject   Subject @relation(fields: [subjectId], references: [topicId], onDelete: Cascade)
 
   semester  Int?
   groupName String?
 
-  @@id([programId, subjectId])
-  @@unique([programId, subjectId])
+  // @@unique([programId, subjectId])
+  // @@id([programId, subjectId])
 }
 
 // ------------------

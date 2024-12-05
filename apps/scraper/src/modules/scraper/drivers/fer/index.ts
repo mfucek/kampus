@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 
 import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
-import type { Driver } from '@/modules/driver/types';
+import type { Driver } from '@/modules/scraper/drivers/types';
 import type { Professor, Program, Subject, SubjectReference } from '@/types';
 import { shortenList } from '@/utils/shorten-list';
 
@@ -227,18 +227,24 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 									.querySelector('.staff-list .staffname')
 									?.textContent?.trim() || '';
 							const link =
-								baseUrl +
-									professor
-										.querySelector('.staff-list a')
-										?.getAttribute('href') || '';
+								professor
+									.querySelector('.staff-list a')
+									?.getAttribute('href') || '';
 							const imageUrl =
-								baseUrl +
-									professor
-										.querySelector('.staff-list img')
-										?.getAttribute('src') || null;
+								professor
+									.querySelector('.staff-list img')
+									?.getAttribute('src') || null;
+
+							if (!link) {
+								return;
+							}
 
 							professorsList.push({
-								professor: { name, imageUrl, externalLink: link },
+								professor: {
+									name,
+									imageUrl: imageUrl ? baseUrl + imageUrl : null,
+									externalLink: baseUrl + link
+								},
 								role
 							});
 						});

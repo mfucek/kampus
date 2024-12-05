@@ -2,11 +2,10 @@ import * as p from '@clack/prompts';
 import fs from 'fs';
 import path from 'path';
 
-import { write } from '@/utils/write';
-
 import chalk from 'chalk';
 import { formatDistance } from 'date-fns';
 import { drivers, type College } from './drivers/drivers';
+import { output } from './steps/output';
 
 interface ScraperOptions {
 	colleges: College[];
@@ -23,6 +22,7 @@ export const scraper = async (options: ScraperOptions) => {
 	}
 
 	// -----------------------------
+	// Run drivers for each college
 
 	for (const c of colleges) {
 		const key = c;
@@ -79,9 +79,12 @@ export const scraper = async (options: ScraperOptions) => {
 			`Total professors: ${chalk.yellow(result.professors.length)}`
 		);
 
-		write(`${outDir}/subjects.json`, result.subjects);
-		write(`${outDir}/programs.json`, result.programs);
-		write(`${outDir}/professors.json`, result.professors);
+		await output({
+			outDir,
+			subjects: result.subjects,
+			programs: result.programs,
+			professors: result.professors
+		});
 
 		const elapsedTime = formatDistance(0, Date.now() - startTime, {
 			includeSeconds: true
@@ -92,6 +95,8 @@ export const scraper = async (options: ScraperOptions) => {
 			`${label} scraped successfully!`
 		);
 	}
+
+	// -----------------------------
 
 	p.outro('Done!');
 

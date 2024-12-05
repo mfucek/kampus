@@ -90,7 +90,8 @@ export const createPrograms = async ({
 					data: {
 						topicId: topic.id,
 						departments: program.departments,
-						programExternalLink: program.externalLink
+						programExternalLink: program.externalLink,
+						type: program.type
 					}
 				});
 			}

@@ -155,6 +155,7 @@ model Program {
   programExternalLink String?
 
   departments String[] @default([])
+  type        String?
 
   // Relationships
   Subjects ProgramSubject[]

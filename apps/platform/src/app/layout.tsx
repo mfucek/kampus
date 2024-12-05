@@ -13,14 +13,20 @@ import { TRPCReactProvider } from '@/lib/trpc/react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '../modules/theme/providers/theme-provider';
 
+import { env } from '@/env';
 import { Toaster } from '@/lib/shadcn/ui/toaster';
 import NextTopLoader from 'nextjs-toploader';
+
+const isDevOrStg =
+	env.NODE_ENV === 'development' || env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const metadata: Metadata = {
 	title: 'Kampus.hr | Platforma za sve studente',
 	description:
 		'Kampus.hr je mjesto za diskusije, dijeljenje materijala i povezivanje s kolegama.',
-	icons: [{ rel: 'icon', url: '/favicon.png' }]
+	icons: [
+		{ rel: 'icon', url: isDevOrStg ? '/favicon-dev.png' : '/favicon.png' }
+	]
 };
 
 export default function RootLayout({

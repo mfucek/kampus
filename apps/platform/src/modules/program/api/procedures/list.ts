@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { publicProcedure } from '@/server/api/trpc';
 
-export const listByDepartmentProcedure = publicProcedure
+export const listProcedure = publicProcedure
 	.input(
 		z.object({
 			collegeId: z.string().optional()
@@ -44,5 +44,5 @@ export const listByDepartmentProcedure = publicProcedure
 	});
 
 export type ListByDepartmentItem = Awaited<
-	ReturnType<typeof listByDepartmentProcedure>
+	ReturnType<typeof listProcedure>
 >[number];

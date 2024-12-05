@@ -13,7 +13,7 @@ import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Table, TableBody, TableCell, TableRow } from '@/lib/shadcn/ui/table';
 import { api } from '@/lib/trpc/react';
-import { type ListByDepartmentItem } from '../api/procedures/list-by-department';
+import { type ListByDepartmentItem } from '../api/procedures/list';
 
 const ProgramsTable: FC<{
 	programs: ListByDepartmentItem[];
@@ -73,7 +73,7 @@ const groupPrograms = (programs: ListByDepartmentItem[]) => {
 };
 
 export const CollegePrograms: FC<{ collegeId: string }> = ({ collegeId }) => {
-	const { data: departmentPrograms } = api.program.listByDepartment.useQuery({
+	const { data: departmentPrograms } = api.program.list.useQuery({
 		collegeId
 	});
 	const { data: college } = api.college.getById.useQuery({

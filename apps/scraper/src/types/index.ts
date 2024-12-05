@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const subjectSchema = z.object({
 	externalLink: z.string(),
 	name: z.string(),
-	shortName: z.string(),
+	shortName: z.string().nullable(),
 	externalCode: z.string(),
 	ects: z.number().nullable(),
 	professorsLinks: z.array(z.object({ role: z.string(), link: z.string() }))

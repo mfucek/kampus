@@ -8,7 +8,7 @@
 		"db:generate": "prisma generate --no-hints # prisma migrate dev",
 		"db:migrate": "prisma migrate deploy",
 		"db:push": "prisma db push",
-		"db:studio": "prisma studio -b null",
+		"db:studio": "prisma studio --browser none",
 		"stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks/stripe",
 		"dev": "next dev",
 		"postinstall": "prisma generate",

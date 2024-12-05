@@ -62,8 +62,8 @@ export const CollegePage: FC<{ collegeSlug: string }> = async ({
 			<Tabs defaultValue="discussion">
 				<TabsList>
 					<TabsTrigger value="discussion">Opca Rasprava</TabsTrigger>
-					<TabsTrigger value="subjects">Popis Predmeta</TabsTrigger>
 					<TabsTrigger value="programs">Smjerovi</TabsTrigger>
+					<TabsTrigger value="subjects">Svi Predmeti</TabsTrigger>
 					<TabsTrigger value="staff">Svi Profesori</TabsTrigger>
 				</TabsList>
 				<TabsContent value="discussion">

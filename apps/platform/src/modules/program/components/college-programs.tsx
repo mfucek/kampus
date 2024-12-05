@@ -15,9 +15,10 @@ import { Table, TableBody, TableCell, TableRow } from '@/lib/shadcn/ui/table';
 import { api } from '@/lib/trpc/react';
 import { type ListByDepartmentItem } from '../api/procedures/list-by-department';
 
-const ProgramsTable: FC<{ programs: ListByDepartmentItem[] }> = ({
-	programs
-}) => {
+const ProgramsTable: FC<{
+	programs: ListByDepartmentItem[];
+	collegeSlug: string;
+}> = ({ programs, collegeSlug }) => {
 	const router = useRouter();
 
 	return (
@@ -28,7 +29,7 @@ const ProgramsTable: FC<{ programs: ListByDepartmentItem[] }> = ({
 						key={program.id}
 						className="hover:bg-neutral-weak cursor-pointer"
 						onClick={() => {
-							router.push(`/program/${program.id}`);
+							router.push(`/${collegeSlug}/program/${program.slug}`);
 						}}
 					>
 						<TableCell>{program.name}</TableCell>
@@ -75,8 +76,11 @@ export const CollegePrograms: FC<{ collegeId: string }> = ({ collegeId }) => {
 	const { data: departmentPrograms } = api.program.listByDepartment.useQuery({
 		collegeId
 	});
+	const { data: college } = api.college.getById.useQuery({
+		collegeId
+	});
 
-	if (!departmentPrograms) {
+	if (!departmentPrograms || !college) {
 		return null;
 	}
 
@@ -109,6 +113,7 @@ export const CollegePrograms: FC<{ collegeId: string }> = ({ collegeId }) => {
 										</div>
 										<ProgramsTable
 											key={department + type}
+											collegeSlug={college.slug}
 											programs={groupedPrograms[department]![type]!}
 										/>
 									</div>

@@ -14,7 +14,10 @@ const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<TabsPrimitive.List
 		ref={ref}
-		className={cn('flex flex-row md:grid md:grid-cols-4 gap-2', className)}
+		className={cn(
+			'flex flex-row md:grid md:grid-cols-4 gap-2 md:overflow-x-visible overflow-x-auto',
+			className
+		)}
 		{...props}
 	/>
 ));
@@ -30,7 +33,7 @@ const TabsTrigger = React.forwardRef<
 				variant={'solid-weak'}
 				size="sm"
 				className={cn(
-					'md:h-16 md:w-full md:justify-start text-neutral md:px-4',
+					'md:h-16 h-12 md:w-full md:justify-start text-neutral px-4',
 					'data-[state=active]:border data-[state=active]:border-theme data-[state=active]:theme-accent data-[state=inactive]:theme-neutral',
 					className
 				)}

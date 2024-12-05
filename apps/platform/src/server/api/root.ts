@@ -2,6 +2,7 @@ import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
 
 import { fileRouter } from '@/modules/file/api/router';
 import { postRouter } from '@/modules/post/api/router';
+import { programRouter } from '@/modules/program/api/router';
 import { userRouter } from '@/modules/user/api/router';
 import { voteRouter } from '@/modules/vote/api/router';
 import { stripeRouter } from '../../lib/stripe/api/router';
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
 	stripe: stripeRouter,
 	account: accountRouter,
 	subject: subjectRouter,
+	program: programRouter,
 	staff: staffRouter,
 	vote: voteRouter,
 	file: fileRouter,

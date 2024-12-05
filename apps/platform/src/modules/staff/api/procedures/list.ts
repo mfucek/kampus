@@ -1,6 +1,7 @@
-import { publicProcedure } from '@/server/api/trpc';
 import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
+
+import { publicProcedure } from '@/server/api/trpc';
 import { getCollegeBySlug } from '../../../college/api/helpers/get-college-by-slug';
 import { staffFiltersSchema } from '../../schemas/staff-filters';
 import { staffScopeSchema } from '../../schemas/staff-scope';

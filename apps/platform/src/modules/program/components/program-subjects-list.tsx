@@ -36,7 +36,7 @@ const groupSubjectsByGroupFilterBySemester = (
 export const ProgramSubjectsList: FC<{ programId: string }> = async ({
 	programId
 }) => {
-	const subjects = await api.program.getSubjects({
+	const subjects = await api.program.listSubjects({
 		programId
 	});
 

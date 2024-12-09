@@ -19,7 +19,7 @@ export const StaffPage: FC<{
 				topicName={staff.name}
 			/>
 			{/* <SummarySection /> */}
-			<div className="flex flex-col gap-10">
+			<div className="flex flex-col gap-10 px-4 lg:px-0">
 				<Composer collegeId={staff.college.id} topicId={staff.id} />
 				<InfiniteScrollTopLevelPosts scope={{ topic: { id: staff.id } }} />
 			</div>

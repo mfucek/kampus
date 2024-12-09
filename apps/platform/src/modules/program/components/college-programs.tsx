@@ -28,12 +28,12 @@ const ProgramsList: FC<{
 					{programs.map((program) => (
 						<TableRow
 							key={program.id}
-							className="hover:bg-neutral-weak bg-neutral-weak cursor-pointer md:border-section border-background"
+							className="bg-neutral-weak cursor-pointer md:border-section border-background"
 							onClick={() => {
 								router.push(`/${collegeSlug}/program/${program.slug}`);
 							}}
 						>
-							<TableCell>{program.name}</TableCell>
+							<TableCell className="button-md">{program.name}</TableCell>
 							<TableCell className="text-right">
 								<Button iconOnly size="xs" theme="accent" variant="ghost">
 									<Icon icon="arrow-right" />

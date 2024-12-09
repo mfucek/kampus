@@ -53,7 +53,7 @@ export const ProgramSubjectsList: FC<{ programId: string }> = async ({
 	return (
 		<>
 			<Tabs defaultValue={`${uniqueSemesters[0]}`}>
-				<TabsList className="md:grid-cols-6">
+				<TabsList className="md:grid-cols-6 mb-4 px-4 lg:px-0">
 					{uniqueSemesters.map((semester) => (
 						<TabsTrigger key={semester} value={`${semester}`}>
 							{`${semester}. semestar`}
@@ -62,7 +62,7 @@ export const ProgramSubjectsList: FC<{ programId: string }> = async ({
 				</TabsList>
 				{uniqueSemesters.map((semester) => (
 					<TabsContent key={semester} value={`${semester}`}>
-						<div className="flex flex-col gap-4">
+						<div className="flex flex-col gap-4 px-4 lg:px-4">
 							{Object.entries(
 								groupSubjectsByGroupFilterBySemester(subjects, semester)
 							).map(([group, subjects], index) => (

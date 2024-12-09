@@ -27,14 +27,14 @@ export const SubjectGroupTable: FC<{
 					{subjects.length} predmeta
 				</div>
 			</div>
-			<Table className="table-fixed">
+			<Table className="table-fixed border-none">
 				<TableBody>
 					{subjects
 						.slice(0, expanded ? undefined : EXPAND_THRESHOLD)
 						.map((subject) => (
 							<TableRow
 								key={subject.id}
-								className="hover:bg-neutral-weak cursor-pointer group"
+								className="bg-neutral-weak cursor-pointer group"
 								onClick={() => {
 									router.push(`/${collegeSlug}/subject/${subject.slug}`);
 								}}

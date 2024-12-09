@@ -9,7 +9,7 @@ interface LinkProgramSubjectsOptions {
 	programsData: Program[];
 }
 
-const BATCH_SIZE_PROGRAM_SUBJECTS = 75;
+const BATCH_SIZE_PROGRAM_SUBJECTS = 50;
 
 export const linkProgramSubjects = async ({
 	collegeId,
@@ -113,28 +113,33 @@ export const linkProgramSubjects = async ({
 			i + BATCH_SIZE_PROGRAM_SUBJECTS
 		);
 
-		await db.$transaction(async (tx) => {
-			for (const [programLink, subjectLink, semester, groupName] of chunk) {
-				const programId = programCache.get(programLink);
-				const subjectId = subjectCache.get(subjectLink);
+		await db.$transaction(
+			async (tx) => {
+				for (const [programLink, subjectLink, semester, groupName] of chunk) {
+					const programId = programCache.get(programLink);
+					const subjectId = subjectCache.get(subjectLink);
 
-				if (!programId || !subjectId) {
-					console.log(
-						`Program or subject not found: ${programLink} ${subjectLink}`
-					);
-					continue;
-				}
-
-				await tx.programSubject.create({
-					data: {
-						programId: programId,
-						subjectId: subjectId,
-						semester,
-						groupName
+					if (!programId || !subjectId) {
+						console.log(
+							`Program or subject not found: ${programLink} ${subjectLink}`
+						);
+						continue;
 					}
-				});
+
+					await tx.programSubject.create({
+						data: {
+							programId: programId,
+							subjectId: subjectId,
+							semester,
+							groupName
+						}
+					});
+				}
+			},
+			{
+				timeout: 30000
 			}
-		});
+		);
 
 		createdProgramSubjectRelationships += chunk.length;
 		spinnerProgramSubjects.onProgress(

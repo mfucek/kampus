@@ -12,7 +12,7 @@ interface CreateProgramsOptions {
 	programsData: Program[];
 }
 
-const BATCH_SIZE_PROGRAMS = 25;
+const BATCH_SIZE_PROGRAMS = 20;
 
 export const createPrograms = async ({
 	collegeId,
@@ -56,53 +56,60 @@ export const createPrograms = async ({
 	for (let i = 0; i < programsToCreate.length; i += BATCH_SIZE_PROGRAMS) {
 		const chunk = programsToCreate.slice(i, i + BATCH_SIZE_PROGRAMS);
 
-		await db.$transaction(async (tx) => {
-			// First create the topics
-			const topicsToCreate: Prisma.TopicCreateManyInput[] = chunk.map((p) => ({
-				type: 'PROGRAM',
-				slug: slugify(p.name),
-				name: p.name,
-				collegeId: collegeId,
-				shortName: p.shortName
-			}));
-
-			await tx.topic.createMany({
-				data: topicsToCreate,
-				skipDuplicates: true
-			});
-
-			// Connect programs to topics
-			for (const program of chunk) {
-				const topic = await tx.topic.findFirst({
-					where: {
+		await db.$transaction(
+			async (tx) => {
+				// First create the topics
+				const topicsToCreate: Prisma.TopicCreateManyInput[] = chunk.map(
+					(p) => ({
 						type: 'PROGRAM',
+						slug: slugify(p.name),
+						name: p.name,
 						collegeId: collegeId,
-						slug: slugify(program.name)
-					}
+						shortName: p.shortName
+					})
+				);
+
+				await tx.topic.createMany({
+					data: topicsToCreate,
+					skipDuplicates: true
 				});
 
-				if (!topic) {
-					console.log(`Topic not found: ${program.name}`);
-					continue;
+				// Connect programs to topics
+				for (const program of chunk) {
+					const topic = await tx.topic.findFirst({
+						where: {
+							type: 'PROGRAM',
+							collegeId: collegeId,
+							slug: slugify(program.name)
+						}
+					});
+
+					if (!topic) {
+						console.log(`Topic not found: ${program.name}`);
+						continue;
+					}
+
+					await tx.program.create({
+						data: {
+							topicId: topic.id,
+							departments: program.departments,
+							programExternalLink: program.externalLink,
+							type: program.type
+						}
+					});
 				}
 
-				await tx.program.create({
-					data: {
-						topicId: topic.id,
-						departments: program.departments,
-						programExternalLink: program.externalLink,
-						type: program.type
-					}
-				});
+				createdPrograms += chunk.length;
+				spinnerPrograms.onProgress(
+					createdPrograms,
+					programsToCreate.length,
+					'Creating programs'
+				);
+			},
+			{
+				timeout: 30000
 			}
-
-			createdPrograms += chunk.length;
-			spinnerPrograms.onProgress(
-				createdPrograms,
-				programsToCreate.length,
-				'Creating programs'
-			);
-		});
+		);
 	}
 
 	spinnerPrograms.stop(`Created ${createdPrograms} new programs.`);

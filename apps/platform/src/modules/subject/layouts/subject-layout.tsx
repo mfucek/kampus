@@ -6,14 +6,22 @@ import { Spinner } from '@/global/components/spinner';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { api } from '@/lib/trpc/server';
 
-interface CollegeLayoutProps {
+interface SubjectLayoutProps {
 	params: {
+		subjectSlug: string;
 		collegeSlug: string;
 	};
 }
 
-const CollegeHeader = async ({ collegeSlug }: { collegeSlug: string }) => {
-	const college = await api.college.getBySlug({
+const SubjectHeader = async ({
+	subjectSlug,
+	collegeSlug
+}: {
+	subjectSlug: string;
+	collegeSlug: string;
+}) => {
+	const subject = await api.subject.getBySlug({
+		subjectSlug,
 		collegeSlug
 	});
 
@@ -21,15 +29,15 @@ const CollegeHeader = async ({ collegeSlug }: { collegeSlug: string }) => {
 		<div className="flex flex-col gap-2 px-4 lg:px-0">
 			<div className="flex flex-wrap">
 				<Badge variant="tertiary" theme="neutral">
-					Fakultet
+					Predmet
 				</Badge>
 			</div>
-			<div className="display-3">{college.name}</div>
+			<div className="display-3">{subject.name}</div>
 		</div>
 	);
 };
 
-const CollegeHeaderSkeleton = () => {
+const SubjectHeaderSkeleton = () => {
 	return (
 		<div className="flex flex-col gap-2 px-4 lg:px-0">
 			<div className="flex flex-wrap">
@@ -45,22 +53,25 @@ const CollegeHeaderSkeleton = () => {
 	);
 };
 
-export const CollegeLayout = async ({
+export const SubjectLayout = async ({
 	children,
 	params
-}: PropsWithChildren<CollegeLayoutProps>) => {
-	const makeRoute = (page: string) => `/${params.collegeSlug}${page}`;
+}: PropsWithChildren<SubjectLayoutProps>) => {
+	const makeRoute = (page: string) =>
+		`/${params.collegeSlug}/subject/${params.subjectSlug}${page}`;
 
 	return (
 		<Container className="flex flex-col gap-10 py-10 h-full">
-			<Suspense fallback={<CollegeHeaderSkeleton />}>
-				<CollegeHeader collegeSlug={params.collegeSlug} />
+			<Suspense fallback={<SubjectHeaderSkeleton />}>
+				<SubjectHeader
+					subjectSlug={params.subjectSlug}
+					collegeSlug={params.collegeSlug}
+				/>
 			</Suspense>
 			<Tabs className="px-4 lg:px-0">
-				<Tab route={makeRoute('')}>Opca Rasprava</Tab>
-				<Tab route={makeRoute('/programs')}>Smjerovi</Tab>
-				<Tab route={makeRoute('/all-subjects')}>Svi predmeti</Tab>
-				<Tab route={makeRoute('/all-staff')}>Svi nastavnici</Tab>
+				<Tab route={makeRoute('')}>Rasprava</Tab>
+				<Tab route={makeRoute('/materials')}>Materijali</Tab>
+				<Tab route={makeRoute('/staff')}>Nastavnici</Tab>
 			</Tabs>
 			<Suspense fallback={<Spinner />}>{children}</Suspense>
 		</Container>

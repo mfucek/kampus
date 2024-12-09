@@ -48,7 +48,7 @@ export const Tabs = ({
 	return (
 		<div
 			className={cn(
-				'flex flex-row gap-2 overflow-y-visible overflow-x-auto shrink-0 w-full py-2',
+				'flex flex-row gap-2 overflow-y-visible overflow-x-auto shrink-0 w-full py-2 scrollbar-hidden',
 				className
 			)}
 			{...props}

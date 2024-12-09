@@ -44,7 +44,7 @@ export const listDocumentsProcedure = publicProcedure
 			// college scope
 			...(collegeId
 				? {
-						post: {
+						Post: {
 							collegeId
 						}
 					}
@@ -53,7 +53,7 @@ export const listDocumentsProcedure = publicProcedure
 			// topic scope
 			...(topicId
 				? {
-						post: {
+						Post: {
 							topicId: topicId
 						}
 					}

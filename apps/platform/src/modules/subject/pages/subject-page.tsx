@@ -15,7 +15,7 @@ const DiscussionTab: FC<{
 	collegeId: string;
 }> = async ({ subjectId, collegeId }) => {
 	return (
-		<div className="flex flex-col gap-10">
+		<div className="flex flex-col gap-10 px-4 lg:px-0">
 			<Composer collegeId={collegeId} topicId={subjectId} />
 			<InfiniteScrollTopLevelPosts scope={{ topic: { id: subjectId } }} />
 		</div>
@@ -23,11 +23,19 @@ const DiscussionTab: FC<{
 };
 
 const MaterialsTab: FC<{ subjectId: string }> = async ({ subjectId }) => {
-	return <DocumentsTableAdvanced scope={{ topicId: subjectId }} />;
+	return (
+		<div className="flex flex-col gap-10 px-4 lg:px-0">
+			<DocumentsTableAdvanced scope={{ topicId: subjectId }} />
+		</div>
+	);
 };
 
 const StaffTab: FC<{ subjectId: string }> = async ({ subjectId }) => {
-	return <StaffsTableAdvanced scope={{ subjectId }} />;
+	return (
+		<div className="flex flex-col gap-10 px-4 lg:px-0">
+			<StaffsTableAdvanced scope={{ subjectId }} />
+		</div>
+	);
 };
 
 export const SubjectPage: FC<{

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import {
 	createContext,
+	HTMLAttributes,
 	useContext,
 	useEffect,
 	useState,
@@ -11,6 +12,7 @@ import {
 } from 'react';
 
 import { Button } from '@/lib/shadcn/ui/button';
+import { cn } from '@/lib/shadcn/utils';
 import { usePathname } from 'next/navigation';
 
 interface CurrentTabContextType {
@@ -30,7 +32,11 @@ const useCurrentTab = () => {
 	return context;
 };
 
-export const Tabs = ({ children }: PropsWithChildren) => {
+export const Tabs = ({
+	children,
+	className,
+	...props
+}: PropsWithChildren & HTMLAttributes<HTMLDivElement>) => {
 	const [currentTab, setCurrentTab] = useState<string | null>(null);
 
 	const pathname = usePathname();
@@ -40,7 +46,13 @@ export const Tabs = ({ children }: PropsWithChildren) => {
 	}, [pathname]);
 
 	return (
-		<div className="flex flex-row gap-2 overflow-y-visible overflow-x-auto shrink-0 w-full py-2">
+		<div
+			className={cn(
+				'flex flex-row gap-2 overflow-y-visible overflow-x-auto shrink-0 w-full py-2',
+				className
+			)}
+			{...props}
+		>
 			<currentTabContext.Provider value={{ currentTab, setCurrentTab }}>
 				{children}
 			</currentTabContext.Provider>

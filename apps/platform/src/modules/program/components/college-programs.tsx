@@ -15,33 +15,35 @@ import { Table, TableBody, TableCell, TableRow } from '@/lib/shadcn/ui/table';
 import { api } from '@/lib/trpc/react';
 import { type ListByDepartmentItem } from '../api/procedures/list';
 
-const ProgramsTable: FC<{
+const ProgramsList: FC<{
 	programs: ListByDepartmentItem[];
 	collegeSlug: string;
 }> = ({ programs, collegeSlug }) => {
 	const router = useRouter();
 
 	return (
-		<Table>
-			<TableBody>
-				{programs.map((program) => (
-					<TableRow
-						key={program.id}
-						className="hover:bg-neutral-weak cursor-pointer"
-						onClick={() => {
-							router.push(`/${collegeSlug}/program/${program.slug}`);
-						}}
-					>
-						<TableCell>{program.name}</TableCell>
-						<TableCell className="text-right">
-							<Button iconOnly size="xs" theme="accent" variant="ghost">
-								<Icon icon="arrow-right" />
-							</Button>
-						</TableCell>
-					</TableRow>
-				))}
-			</TableBody>
-		</Table>
+		<div>
+			<Table className="border-none">
+				<TableBody>
+					{programs.map((program) => (
+						<TableRow
+							key={program.id}
+							className="hover:bg-neutral-weak bg-neutral-weak cursor-pointer md:border-section border-background"
+							onClick={() => {
+								router.push(`/${collegeSlug}/program/${program.slug}`);
+							}}
+						>
+							<TableCell>{program.name}</TableCell>
+							<TableCell className="text-right">
+								<Button iconOnly size="xs" theme="accent" variant="ghost">
+									<Icon icon="arrow-right" />
+								</Button>
+							</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</div>
 	);
 };
 
@@ -90,12 +92,16 @@ export const CollegePrograms: FC<{ collegeId: string }> = ({ collegeId }) => {
 	const showTabs = departments.length > 1;
 
 	return (
-		<div>
+		<>
 			<Tabs defaultValue={departments[0]}>
 				{showTabs && (
-					<TabsList>
+					<TabsList className="mb-4 px-4 lg:px-0 overflow-x-auto">
 						{departments.map((department) => (
-							<TabsTrigger key={department} value={department}>
+							<TabsTrigger
+								key={department}
+								value={department}
+								className="min-w-[120px]"
+							>
 								{department}
 							</TabsTrigger>
 						))}
@@ -105,13 +111,13 @@ export const CollegePrograms: FC<{ collegeId: string }> = ({ collegeId }) => {
 					const types = Object.keys(groupedPrograms[department]!);
 					return (
 						<TabsContent key={department} value={department}>
-							<div className="flex flex-col gap-4">
+							<div className="flex flex-col gap-4 px-4 lg:px-0">
 								{types.map((type) => (
 									<div key={department + type} className="flex flex-col gap-2">
 										<div className="px-3 caption text-neutral-strong">
 											{type}
 										</div>
-										<ProgramsTable
+										<ProgramsList
 											key={department + type}
 											collegeSlug={college.slug}
 											programs={groupedPrograms[department]![type]!}
@@ -123,6 +129,6 @@ export const CollegePrograms: FC<{ collegeId: string }> = ({ collegeId }) => {
 					);
 				})}
 			</Tabs>
-		</div>
+		</>
 	);
 };

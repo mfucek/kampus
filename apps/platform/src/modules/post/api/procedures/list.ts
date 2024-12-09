@@ -2,7 +2,7 @@ import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
-import { protectedProcedure } from '@/server/api/trpc';
+import { publicProcedure } from '@/server/api/trpc';
 import { JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
 
@@ -11,7 +11,7 @@ const paginationSchema = z.object({
 	cursor: z.string().nullish()
 });
 
-export const listProcedure = protectedProcedure
+export const listProcedure = publicProcedure
 	.input(
 		z
 			.object({
@@ -21,8 +21,22 @@ export const listProcedure = protectedProcedure
 	)
 	.query(async ({ ctx, input }) => {
 		const { db } = ctx;
+		const { clerkUserId } = ctx;
 		const { scope, cursor } = input;
 		const limit = input.limit ?? 5;
+
+		const user = clerkUserId
+			? ((
+					await db.account.findUnique({
+						where: {
+							clerkUserId: clerkUserId
+						},
+						include: {
+							user: true
+						}
+					})
+				)?.user ?? null)
+			: null;
 
 		let collegeId = scope.college?.id;
 		let topicId = scope.topic?.id;
@@ -67,7 +81,7 @@ export const listProcedure = protectedProcedure
 					likes: post.Votes.filter((vote) => vote.type === 'UP').length,
 					dislikes: post.Votes.filter((vote) => vote.type === 'DOWN').length,
 					userVote:
-						post.Votes.find((vote) => vote.userId === ctx.user.id)?.type ?? null
+						post.Votes.find((vote) => vote.userId === user?.id)?.type ?? null
 				};
 
 				const filesRaw = await db.file.findMany({

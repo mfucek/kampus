@@ -50,28 +50,33 @@ export const createSubjects = async ({
 	for (let i = 0; i < subjectsToCreate.length; i += BATCH_SIZE_SUBJECTS) {
 		const chunk = subjectsToCreate.slice(i, i + BATCH_SIZE_SUBJECTS);
 
-		await db.$transaction(async (tx) => {
-			for (const subject of chunk) {
-				const newTopic = await tx.topic.create({
-					data: {
-						type: 'SUBJECT',
-						slug: slugify(subject.name),
-						name: subject.name,
-						collegeId: collegeId,
-						shortName: slugify(subject.name)
-					}
-				});
+		await db.$transaction(
+			async (tx) => {
+				for (const subject of chunk) {
+					const newTopic = await tx.topic.create({
+						data: {
+							type: 'SUBJECT',
+							slug: slugify(subject.name),
+							name: subject.name,
+							collegeId: collegeId,
+							shortName: slugify(subject.name)
+						}
+					});
 
-				await tx.subject.create({
-					data: {
-						Topic: { connect: { id: newTopic.id } },
-						ects: subject.ects,
-						subjectExternalCode: subject.externalCode,
-						subjectExternalLink: subject.externalLink
-					}
-				});
+					await tx.subject.create({
+						data: {
+							Topic: { connect: { id: newTopic.id } },
+							ects: subject.ects,
+							subjectExternalCode: subject.externalCode,
+							subjectExternalLink: subject.externalLink
+						}
+					});
+				}
+			},
+			{
+				timeout: 30000
 			}
-		});
+		);
 
 		createdSubjects += chunk.length;
 		spinnerSubjects.onProgress(

@@ -106,27 +106,32 @@ export const linkSubjectStaff = async ({
 	) {
 		const chunk = subjectStaffToCreate.slice(i, i + BATCH_SIZE_SUBJECT_STAFF);
 
-		await db.$transaction(async (tx) => {
-			for (const [subjectLink, staffLink, role] of chunk) {
-				const subjectId = subjectCache.get(subjectLink);
-				const staffId = staffCache.get(staffLink);
+		await db.$transaction(
+			async (tx) => {
+				for (const [subjectLink, staffLink, role] of chunk) {
+					const subjectId = subjectCache.get(subjectLink);
+					const staffId = staffCache.get(staffLink);
 
-				if (!subjectId || !staffId) {
-					console.log(
-						`Subject or staff not found: ${subjectLink} ${staffLink}`
-					);
-					continue;
-				}
-
-				await tx.subjectStaff.create({
-					data: {
-						subjectId: subjectId,
-						staffId: staffId,
-						staffRole: role
+					if (!subjectId || !staffId) {
+						console.log(
+							`Subject or staff not found: ${subjectLink} ${staffLink}`
+						);
+						continue;
 					}
-				});
+
+					await tx.subjectStaff.create({
+						data: {
+							subjectId: subjectId,
+							staffId: staffId,
+							staffRole: role
+						}
+					});
+				}
+			},
+			{
+				timeout: 30000
 			}
-		});
+		);
 
 		createdSubjectStaffRelationships += chunk.length;
 		spinnerSubjectStaff.onProgress(

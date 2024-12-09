@@ -15,7 +15,7 @@ export const CollegeAllSubjectsPage = async ({ params }: PageProps) => {
 	});
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-2 px-4 lg:px-0">
 			<SubjectsTableAdvanced scope={{ collegeId: college.id }} />
 		</div>
 	);

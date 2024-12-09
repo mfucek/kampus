@@ -19,7 +19,7 @@ const DynamicPost: FC<{
 	// const [expanded, setExpanded] = useState(false);
 
 	return (
-		<>
+		<div className="bg-section p-3 rounded-xl">
 			<Post
 				fullPost={{
 					post: {
@@ -56,7 +56,7 @@ const DynamicPost: FC<{
 				</Button>
 			)} */}
 			{/* {expanded && (<InfiniteScrollTopLevelPosts)} */}
-		</>
+		</div>
 	);
 };
 
@@ -64,7 +64,7 @@ export const TopLevelPostsPage: FC<{
 	page: ListPostsItem[];
 }> = ({ page }) => {
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col gap-2">
 			{page.map((post) => (
 				<DynamicPost key={post.post.id} post={post} depthInfo={[]} />
 			))}
@@ -109,6 +109,14 @@ export const InfiniteScrollTopLevelPosts: FC<{
 			{query.data?.pages.map((page, index) => (
 				<TopLevelPostsPage key={index} page={page.posts} />
 			))}
+			{query.data?.pages?.[0]?.posts.length === 0 && (
+				<div className="p-3 py-10 rounded-xl bg-section flex flex-col gap-2">
+					<p className="title-1 text-center">Malo je prazno</p>
+					<p className="body-2 text-center text-neutral-strong">
+						Budi prvi i objavi nešto što želiš podijeliti ostalim kolegama.
+					</p>
+				</div>
+			)}
 			<Loader />
 		</div>
 	);

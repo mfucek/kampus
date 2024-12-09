@@ -10,7 +10,7 @@ export const CollegeAllStaffPage = async ({ params }: PageProps) => {
 	const { collegeSlug } = params;
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-2 px-4 lg:px-0">
 			<StaffsTableAdvanced scope={{ collegeSlug }} />
 		</div>
 	);

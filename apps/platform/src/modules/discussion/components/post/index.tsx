@@ -44,7 +44,7 @@ export const Post: FC<{
 
 	const PostBody = () => {
 		return (
-			<div className="flex flex-col gap-2 pb-6 w-full">
+			<div className="flex flex-col gap-2 w-full">
 				<div className="flex flex-row gap-2 h-6 items-center">
 					<span className="caption">{post.author.displayName}</span>
 					{post.author.badge && (

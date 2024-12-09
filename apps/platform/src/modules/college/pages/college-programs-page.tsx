@@ -15,7 +15,7 @@ export const CollegeProgramsPage = async ({ params }: PageProps) => {
 	});
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-2 pb-20">
 			<CollegePrograms collegeId={college.id} />
 		</div>
 	);

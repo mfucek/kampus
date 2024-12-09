@@ -126,7 +126,7 @@ export const SubjectsTableAdvanced: FC<{
 		<div className="flex flex-col gap-2">
 			<div className="flex flex-row gap-2 justify-between">
 				<Input
-					className="max-w-[200px]"
+					className="w-full md:max-w-[200px]"
 					placeholder="Search"
 					value={viewOptions.filters.name ?? ''}
 					onChange={(e) =>

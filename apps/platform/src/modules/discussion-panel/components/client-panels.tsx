@@ -36,7 +36,7 @@ export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 	if (isMobile) {
 		return (
 			<div className="bg-background md:p-2 w-full h-full">
-				<div className="rounded-lg bg-section flex flex-col items-center min-h-full">
+				<div className="rounded-lg md:bg-section flex flex-col items-center min-h-full">
 					{children}
 				</div>
 				<Drawer open={!!postId} onClose={() => setPostId(null)}>
@@ -65,7 +65,7 @@ export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 		<div className="bg-background md:p-2 w-full h-full overflow-hidden">
 			<PanelGroup autoSaveId="example" direction="horizontal" ref={ref}>
 				<Panel
-					className="rounded-lg bg-section flex flex-col items-center min-h-full"
+					className="rounded-lg md:bg-section flex flex-col items-center min-h-full"
 					style={{ overflow: 'hidden', overflowY: 'auto' }}
 					order={0}
 					id="main-panel"

@@ -8,7 +8,7 @@ export const Container: FC<
 	return (
 		<div
 			className={cn(
-				'w-full px-4 md:px-10 @container flex flex-col gap-10',
+				'w-full @container flex flex-col gap-10',
 				wide ? 'max-w-[1200px]' : 'max-w-[800px]',
 				className
 			)}

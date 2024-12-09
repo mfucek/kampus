@@ -34,10 +34,17 @@ export const listProcedure = publicProcedure
 			...(collegeId ? { collegeId: collegeId } : {}),
 			...(subjectId
 				? {
-						staff: {
-							subjects: {
+						// staff: {
+						// 	subjects: {
+						// 		some: {
+						// 			topicId: subjectId
+						// 		}
+						// 	}
+						// }
+						Staff: {
+							Subjects: {
 								some: {
-									topicId: subjectId
+									subjectId
 								}
 							}
 						}

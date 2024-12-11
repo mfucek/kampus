@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { createHydrationHelpers } from '@trpc/react-query/rsc';
-import { cookies, headers } from 'next/headers';
+import { cookies, headers, type UnsafeUnwrappedCookies, type UnsafeUnwrappedHeaders } from 'next/headers';
 import { cache } from 'react';
 
 import { createCaller, type AppRouter } from '@/server/api/root';
@@ -17,11 +17,11 @@ import { createQueryClient } from './query-client';
 const createContext = cache(() => {
 	return createTRPCContext({
 		headers: new Headers({
-			cookie: cookies().toString(),
+			cookie: (cookies() as unknown as UnsafeUnwrappedCookies).toString(),
 			'x-trpc-source': 'rsc'
 		}),
 		auth: getAuth(
-			new NextRequest('https://notused.com', { headers: headers() })
+			new NextRequest('https://notused.com', { headers: (headers() as unknown as UnsafeUnwrappedHeaders) })
 		)
 	});
 });

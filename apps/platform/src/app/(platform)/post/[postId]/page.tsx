@@ -8,10 +8,11 @@ interface PageProps {
 	};
 }
 
-const Page: FC<PageProps> = ({ params }) => {
-	const { postId } = params;
+const Page: FC<PageProps> = async props => {
+    const params = await props.params;
+    const { postId } = params;
 
-	return <PostPage postId={postId} />;
+    return <PostPage postId={postId} />;
 };
 
 export default Page;

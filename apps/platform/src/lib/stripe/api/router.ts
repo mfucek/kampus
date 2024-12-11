@@ -82,7 +82,8 @@ export const stripeRouter = createTRPCRouter({
 	}),
 
 	cancelSubscription: protectedProcedure.mutation(async ({ ctx }) => {
-		const { clerkUserId, db } = ctx;
+		const { auth, db } = ctx;
+		const clerkUserId = auth.userId;
 
 		const account = await db.account.findUnique({
 			where: {
@@ -121,7 +122,8 @@ export const stripeRouter = createTRPCRouter({
 	}),
 
 	resumeSubscription: protectedProcedure.mutation(async ({ ctx }) => {
-		const { clerkUserId, db } = ctx;
+		const { auth, db } = ctx;
+		const clerkUserId = auth.userId;
 
 		const account = await db.account.findUnique({
 			where: {

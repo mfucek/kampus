@@ -4,26 +4,18 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
-import { publicProcedure } from '@/server/api/trpc';
+import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type RecursivePost } from '../../types/recursive-post';
 
 export const getThreadProcedure = publicProcedure
+	.use(optionalAuthMiddleware)
 	.input(z.object({ postId: z.string() }))
 	.query(async ({ input, ctx }) => {
 		const { db } = ctx;
 
 		let userId = null;
-		if (ctx.clerkUserId) {
-			const account = await db.account.findUnique({
-				where: {
-					clerkUserId: ctx.clerkUserId
-				},
-				include: {
-					user: true
-				}
-			});
-
-			userId = account?.user?.id;
+		if (ctx.user) {
+			userId = ctx.user.id;
 		}
 
 		const fetchReplies = async (postId: string): Promise<RecursivePost> => {

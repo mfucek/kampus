@@ -11,8 +11,8 @@ import {
 } from '@/global/components/card-tabs';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { Table, TableBody, TableCell, TableRow } from '@/lib/shadcn/ui/table';
 import { api } from '@/lib/trpc/react';
+import Link from 'next/link';
 import { type ListByDepartmentItem } from '../api/procedures/list';
 
 const ProgramsList: FC<{
@@ -22,27 +22,22 @@ const ProgramsList: FC<{
 	const router = useRouter();
 
 	return (
-		<div>
-			<Table className="border-none">
-				<TableBody>
-					{programs.map((program) => (
-						<TableRow
-							key={program.id}
-							className="bg-neutral-weak cursor-pointer md:border-section border-background"
-							onClick={() => {
-								router.push(`/${collegeSlug}/program/${program.slug}`);
-							}}
-						>
-							<TableCell className="button-md">{program.name}</TableCell>
-							<TableCell className="text-right">
-								<Button iconOnly size="xs" theme="accent" variant="ghost">
-									<Icon icon="arrow-right" />
-								</Button>
-							</TableCell>
-						</TableRow>
-					))}
-				</TableBody>
-			</Table>
+		<div className="flex flex-col gap-px rounded-xl overflow-hidden">
+			{programs.map((program) => (
+				<Link key={program.id} href={`/${collegeSlug}/program/${program.slug}`}>
+					<div
+						className="flex flex-row items-center justify-between bg-neutral-weak cursor-pointer md:border-section border-background p-4"
+						onClick={() => {
+							router.push(`/${collegeSlug}/program/${program.slug}`);
+						}}
+					>
+						<div className="button-md">{program.name}</div>
+						<Button iconOnly size="xs" theme="accent" variant="ghost">
+							<Icon icon="arrow-right" />
+						</Button>
+					</div>
+				</Link>
+			))}
 		</div>
 	);
 };

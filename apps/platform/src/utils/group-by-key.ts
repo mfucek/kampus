@@ -17,8 +17,6 @@ export const groupByKey = <T>(
 ) => {
 	const grouped: Record<string, T[]> = {};
 
-	console.log(data);
-
 	for (const item of data) {
 		const isEmpty =
 			item[key] === '' ||
@@ -32,7 +30,7 @@ export const groupByKey = <T>(
 			? sanitizedKey
 			: [sanitizedKey];
 
-		for (const group of groupedKeys) {
+		for (const group of groupedKeys as (string | number)[]) {
 			if (!grouped[group]) {
 				grouped[group] = [];
 			}
@@ -40,8 +38,6 @@ export const groupByKey = <T>(
 			grouped[group].push(item);
 		}
 	}
-
-	console.log(Object.keys(grouped));
 
 	return grouped;
 };

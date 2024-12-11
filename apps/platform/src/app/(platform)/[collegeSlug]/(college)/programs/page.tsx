@@ -1,3 +1,14 @@
+import { db } from '@/lib/prisma/db';
 import { CollegeProgramsPage } from '@/modules/college/pages/college-programs-page';
 
 export default CollegeProgramsPage;
+
+export const dynamic = 'force-static';
+
+export const generateStaticParams = async () => {
+	const collegeSlugs = (await db.college.findMany()).map((college) => ({
+		collegeSlug: college.slug
+	}));
+
+	return collegeSlugs;
+};

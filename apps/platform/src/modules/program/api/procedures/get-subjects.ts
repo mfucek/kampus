@@ -1,20 +1,11 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { cacheResult, checkCache } from '@/lib/cache/cache';
 import { publicProcedure } from '@/server/api/trpc';
 
 export const listSubjectsProcedure = publicProcedure
 	.input(z.object({ programId: z.string() }))
 	.query(async ({ input, ctx }) => {
-		const cache = checkCache<typeof subjects>(
-			`program.getSubjects#${input.programId}`
-		);
-
-		if (cache) {
-			return cache;
-		}
-
 		const { db } = ctx;
 
 		const programRaw = await db.topic.findFirst({
@@ -84,12 +75,6 @@ export const listSubjectsProcedure = publicProcedure
 			semester: programSubject.semester,
 			topLevelPosts: programSubject.Subject.Topic._count.Posts
 		}));
-
-		cacheResult(
-			`program.getSubjects#${input.programId}`,
-			subjects,
-			Date.now() + 1000 * 60 * 60 * 24
-		);
 
 		return subjects;
 	});

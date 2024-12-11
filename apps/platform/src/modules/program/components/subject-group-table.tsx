@@ -6,12 +6,12 @@ import { useState, type FC } from 'react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Table, TableBody, TableCell, TableRow } from '@/lib/shadcn/ui/table';
-import { type GetSubjectsOutput } from '../api/procedures/get-subjects';
+import { type ListSubjectsOutput } from '../api/procedures/list-subjects';
 
 const EXPAND_THRESHOLD = 6;
 
 export const SubjectGroupTable: FC<{
-	subjects: GetSubjectsOutput[];
+	subjects: ListSubjectsOutput[];
 	collegeSlug: string;
 	groupName: string;
 }> = ({ subjects, collegeSlug, groupName }) => {

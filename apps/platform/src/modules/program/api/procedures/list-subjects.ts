@@ -30,6 +30,7 @@ export const listSubjectsProcedure = publicProcedure
 					include: {
 						Topic: {
 							include: {
+								College: true,
 								_count: {
 									select: {
 										Posts: {
@@ -73,12 +74,14 @@ export const listSubjectsProcedure = publicProcedure
 			),
 			groupName: programSubject.groupName,
 			semester: programSubject.semester,
-			topLevelPosts: programSubject.Subject.Topic._count.Posts
+			topLevelPosts: programSubject.Subject.Topic._count.Posts,
+			staffCount: programSubject.Subject.Staffs.length,
+			link: `/${programSubject.Subject.Topic.College.slug}/subject/${programSubject.Subject.Topic.slug}`
 		}));
 
 		return subjects;
 	});
 
-export type GetSubjectsOutput = Awaited<
+export type ListSubjectsOutput = Awaited<
 	ReturnType<typeof listSubjectsProcedure>
 >[number];

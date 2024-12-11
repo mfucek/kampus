@@ -14,7 +14,7 @@ export const IconClassnameContext = React.createContext<string | undefined>(
 );
 
 const buttonVariants = cva(
-	'relative inline-flex items-center justify-center whitespace-nowrap ring-offset-background duration-300 hover:md:duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:opacity-50 group clickable',
+	'relative inline-flex items-center justify-center whitespace-nowrap ring-offset-background duration-300 hover:md:duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:opacity-50 group-[btn] clickable',
 	{
 		variants: {
 			theme: {
@@ -125,12 +125,12 @@ const iconClassVariants = cva('shrink-0', {
 			danger: 'theme-danger'
 		},
 		variant: {
-			solid: 'bg-theme-contrast group-hover:md:bg-theme-contrast',
-			'solid-weak': 'bg-theme group-hover:md:bg-theme',
-			outline: 'bg-theme group-hover:md:bg-theme-contrast',
-			'outline-weak': 'bg-theme-strong group-hover:md:bg-theme',
-			ghost: 'bg-theme group-hover:md:bg-theme',
-			'ghost-weak': 'bg-theme-strong group-hover:md:bg-theme'
+			solid: 'bg-theme-contrast group-[btn]-hover:md:bg-theme-contrast',
+			'solid-weak': 'bg-theme group-[btn]-hover:md:bg-theme',
+			outline: 'bg-theme group-[btn]-hover:md:bg-theme-contrast',
+			'outline-weak': 'bg-theme-strong group-[btn]-hover:md:bg-theme',
+			ghost: 'bg-theme group-[btn]-hover:md:bg-theme',
+			'ghost-weak': 'bg-theme-strong group-[btn]-hover:md:bg-theme'
 		}
 	},
 	compoundVariants: [

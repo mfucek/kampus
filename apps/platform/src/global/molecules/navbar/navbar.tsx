@@ -23,7 +23,9 @@ export const Navbar = () => {
 	const { openSignIn } = useClerk();
 
 	const { data: profilePictureUrl } =
-		api.account.getCurrentUserProfilePictureUrl.useQuery();
+		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
+			enabled: !!isSignedIn
+		});
 
 	const Actions = () => {
 		if (isSignedIn) {

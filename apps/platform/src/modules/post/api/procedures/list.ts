@@ -2,7 +2,7 @@ import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
-import { publicProcedure } from '@/server/api/trpc';
+import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
 
@@ -12,6 +12,7 @@ const paginationSchema = z.object({
 });
 
 export const listProcedure = publicProcedure
+	.use(optionalAuthMiddleware)
 	.input(
 		z
 			.object({
@@ -20,8 +21,9 @@ export const listProcedure = publicProcedure
 			.merge(paginationSchema)
 	)
 	.query(async ({ ctx, input }) => {
-		const { db } = ctx;
-		const { clerkUserId } = ctx;
+		const { auth, db } = ctx;
+		const clerkUserId = auth?.userId;
+
 		const { scope, cursor } = input;
 		const limit = input.limit ?? 5;
 

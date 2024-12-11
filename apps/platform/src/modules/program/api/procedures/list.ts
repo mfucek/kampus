@@ -28,8 +28,6 @@ export const listProcedure = publicProcedure
 		const programsRaw = await db.topic.findMany({ where, include });
 
 		const programs = programsRaw.map((program) => {
-			console.log(program.name, program.Program);
-
 			return {
 				id: program.id,
 				name: program.name,

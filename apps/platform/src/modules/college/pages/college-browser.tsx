@@ -1,3 +1,4 @@
+import { CacheHelper } from '@/global/components/cache-helper';
 import { Container } from '@/global/components/container';
 import { api } from '@/lib/trpc/server';
 import { CollegeGrid } from '../components/college-grid';
@@ -8,6 +9,7 @@ export const CollegeBrowserPage = async () => {
 	return (
 		<Container>
 			<CollegeGrid colleges={colleges} />
+			<CacheHelper />
 		</Container>
 	);
 };

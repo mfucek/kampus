@@ -1,4 +1,4 @@
-import { Suspense, type PropsWithChildren } from 'react';
+import { Suspense, type FC, type PropsWithChildren } from 'react';
 
 import { Container } from '@/global/components/container';
 import { Tab, Tabs } from '@/global/components/route-tabs';
@@ -6,10 +6,10 @@ import { Spinner } from '@/global/components/spinner';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { api } from '@/lib/trpc/server';
 
-interface CollegeLayoutProps {
-	params: {
+interface LayoutProps {
+	params: Promise<{
 		collegeSlug: string;
-	};
+	}>;
 }
 
 const CollegeHeader = async ({ collegeSlug }: { collegeSlug: string }) => {
@@ -45,16 +45,18 @@ const CollegeHeaderSkeleton = () => {
 	);
 };
 
-export const CollegeLayout = async ({
+export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 	children,
 	params
-}: PropsWithChildren<CollegeLayoutProps>) => {
-	const makeRoute = (page: string) => `/${params.collegeSlug}${page}`;
+}) => {
+	const { collegeSlug } = await params;
+
+	const makeRoute = (page: string) => `/${collegeSlug}${page}`;
 
 	return (
 		<Container className="flex flex-col gap-10 py-10 h-full">
 			<Suspense fallback={<CollegeHeaderSkeleton />}>
-				<CollegeHeader collegeSlug={params.collegeSlug} />
+				<CollegeHeader collegeSlug={collegeSlug} />
 			</Suspense>
 			<Tabs className="px-4 lg:px-0">
 				<Tab route={makeRoute('')}>Opca Rasprava</Tab>

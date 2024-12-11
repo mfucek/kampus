@@ -2,13 +2,13 @@ import { api } from '@/lib/trpc/server';
 import { DocumentsTableAdvanced } from '@/modules/file/components/documents-table-advanced';
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		subjectSlug: string;
 		collegeSlug: string;
-	};
+	}>;
 }
 export const SubjectMaterialsPage = async ({ params }: PageProps) => {
-	const { subjectSlug, collegeSlug } = params;
+	const { subjectSlug, collegeSlug } = await params;
 
 	const subject = await api.subject.getBySlug({
 		subjectSlug,

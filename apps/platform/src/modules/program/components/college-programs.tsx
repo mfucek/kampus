@@ -54,7 +54,7 @@ const groupPrograms = (programs: ListByDepartmentItem[]) => {
 	> = {};
 
 	for (const program of programs) {
-		const type = program.type || 'Ostalo';
+		const type = program.type ?? 'Ostalo';
 		const departments =
 			program.department.length === 0 ? ['Ostalo'] : program.department;
 

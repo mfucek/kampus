@@ -3,14 +3,14 @@ import { Composer } from '@/modules/composer/components';
 import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		subjectSlug: string;
 		collegeSlug: string;
-	};
+	}>;
 }
 
 export const SubjectDiscussionPage = async ({ params }: PageProps) => {
-	const { subjectSlug, collegeSlug } = params;
+	const { subjectSlug, collegeSlug } = await params;
 
 	const subject = await api.subject.getBySlug({
 		subjectSlug,

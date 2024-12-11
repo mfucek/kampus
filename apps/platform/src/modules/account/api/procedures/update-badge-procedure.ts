@@ -9,10 +9,10 @@ export const updateBadgeProcedure = protectedProcedure
 
 		await db.user.updateMany({
 			where: {
-				id: user.id!
+				id: user.id
 			},
 			data: {
-				badge: input.badge || null
+				badge: input.badge ?? null
 			}
 		});
 

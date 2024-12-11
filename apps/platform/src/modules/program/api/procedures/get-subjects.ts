@@ -76,8 +76,8 @@ export const listSubjectsProcedure = publicProcedure
 			id: programSubject.Subject.Topic.id,
 			name: programSubject.Subject.Topic.name,
 			slug: programSubject.Subject.Topic.slug,
-			ects: programSubject.Subject!.ects,
-			staffs: programSubject.Subject!.Staffs.map(
+			ects: programSubject.Subject.ects,
+			staffs: programSubject.Subject.Staffs.map(
 				(staff) => staff.Staff.Topic.name
 			),
 			groupName: programSubject.groupName,

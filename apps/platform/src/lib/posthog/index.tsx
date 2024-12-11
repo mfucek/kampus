@@ -34,7 +34,7 @@ export const useCaptureEvent = () => {
 	const capture = (name: string, properties: Record<string, any>) => {
 		if (window && pathname) {
 			let url = window.origin + pathname;
-			if (searchParams && searchParams.toString()) {
+			if (searchParams?.toString()) {
 				url = url + `?${searchParams.toString()}`;
 			}
 			posthog.capture(name, { url, ...properties });

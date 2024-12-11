@@ -6,11 +6,11 @@ import { Spinner } from '@/global/components/spinner';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { api } from '@/lib/trpc/server';
 
-interface SubjectLayoutProps {
-	params: {
+interface LayoutProps {
+	params: Promise<{
 		subjectSlug: string;
 		collegeSlug: string;
-	};
+	}>;
 }
 
 const SubjectHeader = async ({
@@ -56,17 +56,16 @@ const SubjectHeaderSkeleton = () => {
 export const SubjectLayout = async ({
 	children,
 	params
-}: PropsWithChildren<SubjectLayoutProps>) => {
+}: PropsWithChildren<LayoutProps>) => {
+	const { collegeSlug, subjectSlug } = await params;
+
 	const makeRoute = (page: string) =>
-		`/${params.collegeSlug}/subject/${params.subjectSlug}${page}`;
+		`/${collegeSlug}/subject/${subjectSlug}${page}`;
 
 	return (
 		<Container className="flex flex-col gap-10 py-10 h-full">
 			<Suspense fallback={<SubjectHeaderSkeleton />}>
-				<SubjectHeader
-					subjectSlug={params.subjectSlug}
-					collegeSlug={params.collegeSlug}
-				/>
+				<SubjectHeader collegeSlug={collegeSlug} subjectSlug={subjectSlug} />
 			</Suspense>
 			<Tabs className="px-4 lg:px-0">
 				<Tab route={makeRoute('')}>Rasprava</Tab>

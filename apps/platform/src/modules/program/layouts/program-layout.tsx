@@ -6,11 +6,11 @@ import { Spinner } from '@/global/components/spinner';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { api } from '@/lib/trpc/server';
 
-interface ProgramLayoutProps {
-	params: {
+interface LayoutProps {
+	params: Promise<{
 		collegeSlug: string;
 		programSlug: string;
-	};
+	}>;
 }
 
 const ProgramHeader = async ({
@@ -56,17 +56,16 @@ const ProgramHeaderSkeleton = () => {
 export const ProgramLayout = async ({
 	children,
 	params
-}: PropsWithChildren<ProgramLayoutProps>) => {
+}: PropsWithChildren<LayoutProps>) => {
+	const { collegeSlug, programSlug } = await params;
+
 	const makeRoute = (page: string) =>
-		`/${params.collegeSlug}/program/${params.programSlug}${page}`;
+		`/${collegeSlug}/program/${programSlug}${page}`;
 
 	return (
 		<Container className="flex flex-col gap-10 py-10 h-full">
 			<Suspense fallback={<ProgramHeaderSkeleton />}>
-				<ProgramHeader
-					collegeSlug={params.collegeSlug}
-					programSlug={params.programSlug}
-				/>
+				<ProgramHeader collegeSlug={collegeSlug} programSlug={programSlug} />
 			</Suspense>
 			<Tabs className="px-4 lg:px-0">
 				<Tab route={makeRoute('')}>Rasprava</Tab>

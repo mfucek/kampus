@@ -44,7 +44,7 @@ export const Breadcrumbs = () => {
 									'text-neutral-strong hover:text-neutral hover:underline'
 							)}
 						>
-							{collegeName || collegeSlug}
+							{collegeName ?? collegeSlug}
 						</div>
 					</Link>
 				</>
@@ -53,7 +53,7 @@ export const Breadcrumbs = () => {
 				<>
 					<Icon icon="chevron-right" className="bg-neutral-strong" size={20} />
 					<div className={cn('title-3', 'max-w-[96px] truncate')}>
-						{staffName || subjectName || topicSlug}
+						{staffName ?? subjectName ?? topicSlug}
 					</div>
 				</>
 			)}

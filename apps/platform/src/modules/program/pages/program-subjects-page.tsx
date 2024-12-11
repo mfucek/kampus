@@ -2,14 +2,14 @@ import { api } from '@/lib/trpc/server';
 import { ProgramSubjectsList } from '../components/program-subjects-list';
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		programSlug: string;
 		collegeSlug: string;
-	};
+	}>;
 }
 
 export const ProgramSubjectsPage = async ({ params }: PageProps) => {
-	const { programSlug, collegeSlug } = params;
+	const { programSlug, collegeSlug } = await params;
 
 	const program = await api.program.getBySlug({
 		programSlug,

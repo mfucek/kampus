@@ -29,7 +29,7 @@ export const useSubmitPost = () => {
 		const { url, key } = await makeUploadUrl(void {}, {});
 
 		// upload file to s3
-		fetch(url, {
+		await fetch(url, {
 			method: 'PUT',
 			body: file.file,
 			headers: { 'Content-Type': file.file.type }

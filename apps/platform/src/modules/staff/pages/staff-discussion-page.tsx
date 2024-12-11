@@ -2,17 +2,15 @@ import { api } from '@/lib/trpc/server';
 import { Composer } from '@/modules/composer/components';
 import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
 
-interface StaffDiscussionPageProps {
-	params: {
+interface PageProps {
+	params: Promise<{
 		collegeSlug: string;
 		staffSlug: string;
-	};
+	}>;
 }
 
-export const StaffDiscussionPage = async ({
-	params
-}: StaffDiscussionPageProps) => {
-	const { collegeSlug, staffSlug } = params;
+export const StaffDiscussionPage = async ({ params }: PageProps) => {
+	const { collegeSlug, staffSlug } = await params;
 
 	const staff = await api.staff.getBySlug({
 		staffSlug,

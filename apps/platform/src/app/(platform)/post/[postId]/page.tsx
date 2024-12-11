@@ -3,16 +3,15 @@ import type { FC } from 'react';
 import { PostPage } from '@/modules/discussion/pages/post-page';
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		postId: string;
-	};
+	}>;
 }
 
-const Page: FC<PageProps> = async props => {
-    const params = await props.params;
-    const { postId } = params;
+const Page: FC<PageProps> = async ({ params }) => {
+	const { postId } = await params;
 
-    return <PostPage postId={postId} />;
+	return <PostPage postId={postId} />;
 };
 
 export default Page;

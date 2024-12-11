@@ -61,7 +61,8 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 	return result;
 });
 
-export const publicProcedure = t.procedure.use(timingMiddleware);
+export const publicProcedure = t.procedure;
+// .use(timingMiddleware);
 
 export const optionalAuthMiddleware = t.middleware(async ({ ctx, next }) => {
 	let auth: ReturnType<typeof getAuth> | null = null;
@@ -121,11 +122,5 @@ const strictAuthMiddleware = t.middleware(async ({ ctx, next }) => {
 });
 
 export const protectedProcedure = t.procedure
-	.use(timingMiddleware)
+	// .use(timingMiddleware)
 	.use(strictAuthMiddleware);
-
-publicProcedure.use(optionalAuthMiddleware).query(async ({ ctx }) => {
-	const { auth, db, headers, user } = ctx;
-
-	return {};
-});

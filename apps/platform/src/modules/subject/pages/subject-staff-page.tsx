@@ -1,5 +1,5 @@
 import { api } from '@/lib/trpc/server';
-import { StaffsTableAdvanced } from '@/modules/staff/components/staffs-table-advanced';
+import { SubjectStaffList } from '../components/subject-staff-list';
 
 interface PageProps {
 	params: Promise<{
@@ -15,9 +15,13 @@ export const SubjectStaffPage = async ({ params }: PageProps) => {
 		collegeSlug
 	});
 
+	const staffs = await api.subject.listStaff({
+		subjectId: subject.id
+	});
+
 	return (
-		<div className="flex flex-col gap-10 px-4 lg:px-0">
-			<StaffsTableAdvanced scope={{ subjectId: subject.id }} />
+		<div className="flex flex-col gap-10">
+			<SubjectStaffList staffs={staffs} />
 		</div>
 	);
 };

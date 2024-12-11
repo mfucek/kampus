@@ -1,3 +1,4 @@
+import { CacheHelper } from '@/global/components/cache-helper';
 import { api } from '@/lib/trpc/server';
 import { ProgramSubjectsList } from '../components/program-subjects-list';
 
@@ -16,9 +17,14 @@ export const ProgramSubjectsPage = async ({ params }: PageProps) => {
 		collegeSlug
 	});
 
+	const subjects = await api.program.listSubjects({
+		programId: program.id
+	});
+
 	return (
 		<div className="flex flex-col gap-2 pb-20">
-			<ProgramSubjectsList programId={program.id} />
+			<ProgramSubjectsList subjects={subjects} />
+			<CacheHelper />
 		</div>
 	);
 };

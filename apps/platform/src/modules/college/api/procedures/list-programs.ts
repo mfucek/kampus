@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { publicProcedure } from '@/server/api/trpc';
 
-export const listProcedure = publicProcedure
+export const listProgramsProcedure = publicProcedure
 	.input(
 		z.object({
 			collegeId: z.string().optional()
@@ -21,11 +21,26 @@ export const listProcedure = publicProcedure
 			...(input.collegeId ? { collegeId: input.collegeId } : {})
 		};
 
-		const include: Prisma.TopicInclude = {
-			Program: true
-		};
-
-		const programsRaw = await db.topic.findMany({ where, include });
+		const programsRaw = await db.topic.findMany({
+			where,
+			include: {
+				Program: {
+					include: {
+						_count: {
+							select: {
+								Subjects: true
+							}
+						}
+					}
+				},
+				College: true,
+				_count: {
+					select: {
+						Posts: true
+					}
+				}
+			}
+		});
 
 		const programs = programsRaw.map((program) => {
 			return {
@@ -34,13 +49,16 @@ export const listProcedure = publicProcedure
 				slug: program.slug,
 				shortName: program.shortName,
 				department: program.Program!.departments,
-				type: program.Program!.type
+				type: program.Program!.type,
+				link: `/${program.College.slug}/program/${program.slug}`,
+				topLevelPosts: program._count.Posts,
+				subjectsCount: program.Program?._count.Subjects
 			};
 		});
 
 		return programs;
 	});
 
-export type ListByDepartmentItem = Awaited<
-	ReturnType<typeof listProcedure>
+export type ListProgramsItem = Awaited<
+	ReturnType<typeof listProgramsProcedure>
 >[number];

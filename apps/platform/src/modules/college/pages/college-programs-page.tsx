@@ -1,6 +1,6 @@
 import { CacheHelper } from '@/global/components/cache-helper';
 import { api } from '@/lib/trpc/server';
-import { CollegePrograms } from '@/modules/program/components/college-programs';
+import { CollegeProgramsList } from '@/modules/college/components/college-programs-list';
 
 interface PageProps {
 	params: Promise<{
@@ -15,9 +15,13 @@ export const CollegeProgramsPage = async ({ params }: PageProps) => {
 		collegeSlug
 	});
 
+	const programs = await api.college.listPrograms({
+		collegeId: college.id
+	});
+
 	return (
-		<div className="flex flex-col gap-2 pb-20">
-			<CollegePrograms collegeId={college.id} />
+		<div className="flex flex-col gap-10">
+			<CollegeProgramsList programs={programs} />
 			<CacheHelper />
 		</div>
 	);

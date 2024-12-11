@@ -12,7 +12,7 @@ export const updateDisplayNameProcedure = protectedProcedure
 
 		await db.user.update({
 			where: {
-				id: user.id!
+				id: user.id
 			},
 			data: {
 				displayName: input.displayName

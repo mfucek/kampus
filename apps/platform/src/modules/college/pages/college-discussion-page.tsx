@@ -11,13 +11,13 @@ import { Composer } from '@/modules/composer/components';
 import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		collegeSlug: string;
-	};
+	}>;
 }
 
 export const CollegeDiscussionPage = async ({ params }: PageProps) => {
-	const { collegeSlug } = params;
+	const { collegeSlug } = await params;
 	const college = await api.college.getBySlug({
 		collegeSlug
 	});

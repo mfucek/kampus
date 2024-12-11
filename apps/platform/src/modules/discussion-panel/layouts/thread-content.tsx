@@ -22,7 +22,7 @@ export const ThreadContent = () => {
 
 	const { data: thread } = api.post.getThread.useQuery(
 		{
-			postId: postId as string
+			postId: postId!
 		},
 		{ enabled: !!postId }
 	);

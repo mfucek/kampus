@@ -43,7 +43,7 @@ export type FullPost = {
 			  }
 			| undefined
 			| null;
-		imageFile: {} | null;
+		imageFile: object | null;
 		url?: string | null;
 	}[];
 };

@@ -5,11 +5,11 @@ import { Spinner } from '@/global/components/spinner';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { api } from '@/lib/trpc/server';
 
-interface StaffLayoutProps {
-	params: {
+interface LayoutProps {
+	params: Promise<{
 		staffSlug: string;
 		collegeSlug: string;
-	};
+	}>;
 }
 
 const StaffHeader = async ({
@@ -55,14 +55,13 @@ const StaffHeaderSkeleton = () => {
 export const StaffLayout = async ({
 	children,
 	params
-}: PropsWithChildren<StaffLayoutProps>) => {
+}: PropsWithChildren<LayoutProps>) => {
+	const { staffSlug, collegeSlug } = await params;
+
 	return (
 		<Container className="flex flex-col gap-10 py-10 h-full">
 			<Suspense fallback={<StaffHeaderSkeleton />}>
-				<StaffHeader
-					staffSlug={params.staffSlug}
-					collegeSlug={params.collegeSlug}
-				/>
+				<StaffHeader staffSlug={staffSlug} collegeSlug={collegeSlug} />
 			</Suspense>
 			<Suspense fallback={<Spinner />}>{children}</Suspense>
 		</Container>

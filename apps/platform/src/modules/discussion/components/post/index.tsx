@@ -12,7 +12,7 @@ import {
 } from '@/lib/shadcn/ui/tooltip';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
-import { FullPost } from '@/modules/post/types/full-post';
+import { type FullPost } from '@/modules/post/types/full-post';
 import { PostActions } from './post-actions';
 import { PostFiles } from './post-files';
 import { PostThreading } from './post-threading';

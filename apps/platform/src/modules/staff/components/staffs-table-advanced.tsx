@@ -43,15 +43,15 @@ const StaffsTableWithData: FC<{
 		setPage(0);
 	}, [filters, limit]);
 
-	const handleNext = () => {
+	const handleNext = async () => {
 		if (!canGoNext) return;
-		query.fetchNextPage();
+		await query.fetchNextPage();
 		setPage((page) => page + 1);
 	};
 
-	const handlePrevious = () => {
+	const handlePrevious = async () => {
 		if (!canGoPrevious) return;
-		query.fetchPreviousPage();
+		await query.fetchPreviousPage();
 		setPage((page) => page - 1);
 	};
 

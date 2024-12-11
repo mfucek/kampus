@@ -1,6 +1,5 @@
 'use client';
 
-import { type JSONContent } from '@tiptap/react';
 import { useEffect, type FC } from 'react';
 import { useInView } from 'react-intersection-observer';
 
@@ -26,8 +25,8 @@ const DynamicPost: FC<{
 						author: {
 							id: post.author.id,
 							displayName: post.author.displayName,
-							imageUrl: post.author.imageUrl || '',
-							badge: post.author.badge || ''
+							imageUrl: post.author.imageUrl ?? '',
+							badge: post.author.badge ?? ''
 						},
 						createdAt: post.post.createdAt,
 						updatedAt: post.post.updatedAt,
@@ -36,7 +35,7 @@ const DynamicPost: FC<{
 						topicId: post.post.topicId,
 						replyToId: post.post.replyToId,
 						id: post.post.id,
-						body: post.post.body as JSONContent,
+						body: post.post.body,
 						_count: {
 							replies: post.replies.count
 						}
@@ -90,7 +89,7 @@ export const InfiniteScrollTopLevelPosts: FC<{
 
 		useEffect(() => {
 			if (inView) {
-				query.fetchNextPage();
+				query.fetchNextPage().catch(console.error);
 			}
 		}, [inView]);
 

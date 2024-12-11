@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
 import { publicProcedure } from '@/server/api/trpc';
-import { JSONContent } from '@tiptap/react';
+import { type JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
 
 const paginationSchema = z.object({
@@ -38,10 +38,10 @@ export const listProcedure = publicProcedure
 				)?.user ?? null)
 			: null;
 
-		let collegeId = scope.college?.id;
-		let topicId = scope.topic?.id;
-		let replyToPostId = scope.replyToPost?.id;
-		let authorId = scope.author?.id;
+		const collegeId = scope.college?.id;
+		const topicId = scope.topic?.id;
+		const replyToPostId = scope.replyToPost?.id;
+		const authorId = scope.author?.id;
 
 		// @TODO: needs more exclusive work to specify what kind of posts we want to get
 		const where: Prisma.PostWhereInput = {
@@ -102,7 +102,7 @@ export const listProcedure = publicProcedure
 						documentFile: {
 							academicYear: file.DocumentFile?.academicYear ?? undefined,
 							title: file.DocumentFile?.title ?? undefined,
-							types: file.DocumentFile?.types || []
+							types: file.DocumentFile?.types ?? []
 						},
 						imageFile: file.ImageFile,
 						url: await getFileUrl(file.key)

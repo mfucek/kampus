@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import {
 	createContext,
-	HTMLAttributes,
 	useContext,
 	useEffect,
 	useState,
 	type FC,
+	type HTMLAttributes,
 	type PropsWithChildren
 } from 'react';
 

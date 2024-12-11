@@ -21,7 +21,7 @@ const groupSubjectsByGroupFilterBySemester = (
 			continue;
 		}
 
-		const group = subject.groupName || 'Ostalo';
+		const group = subject.groupName ?? 'Ostalo';
 
 		if (!grouped[group]) {
 			grouped[group] = [];

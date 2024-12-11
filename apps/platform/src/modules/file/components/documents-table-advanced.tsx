@@ -48,15 +48,15 @@ const DocumentsTableWithData: FC<{
 		setPage(0);
 	}, [filters, limit]);
 
-	const handleNext = () => {
+	const handleNext = async () => {
 		if (!canGoNext) return;
-		query.fetchNextPage();
+		await query.fetchNextPage();
 		setPage((page) => page + 1);
 	};
 
-	const handlePrevious = () => {
+	const handlePrevious = async () => {
 		if (!canGoPrevious) return;
-		query.fetchPreviousPage();
+		await query.fetchPreviousPage();
 		setPage((page) => page - 1);
 	};
 
@@ -163,10 +163,10 @@ const DocumentTypeSelector: FC<{
 				.map((value) => {
 					if (typeof value === 'string') return [value];
 
-					let children = selectedValues.includes(value.value)
+					const children = selectedValues.includes(value.value)
 						? value.expand
 						: [];
-					let list = [value.value, ...children];
+					const list = [value.value, ...children];
 					return list;
 				})
 				.flat(1);

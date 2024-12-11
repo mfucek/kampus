@@ -47,7 +47,7 @@ export type RecursivePost = {
 			  }
 			| undefined
 			| null;
-		imageFile: {} | null;
+		imageFile: object | null;
 		url?: string | null;
 	}[];
 };

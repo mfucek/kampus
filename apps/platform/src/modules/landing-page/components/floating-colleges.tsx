@@ -1,9 +1,7 @@
 'use client';
 
-import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
 import { Badge } from '@/lib/shadcn/ui/badge';
-import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -16,9 +14,9 @@ type Point = {
 
 const random = (min: number, max: number) => Math.random() * (max - min) + min;
 
-const FloatingIcons = () => {
+export const FloatingColleges = () => {
 	const positions = useMemo(() => {
-		let points: Point[] = [];
+		const points: Point[] = [];
 
 		const rangeY = 400;
 		const numberOfPoints = 4;
@@ -135,33 +133,5 @@ const FloatingIcons = () => {
 				</div>
 			))}
 		</>
-	);
-};
-
-export const Test = () => {
-	return (
-		<section
-			className="flex flex-col items-center py-40 bg-background relative overflow-hidden"
-			id="hero"
-		>
-			<FloatingIcons />
-			<Container>
-				<div className="flex flex-col items-center space-y-4 text-center">
-					<div className="flex flex-col items-center gap-6">
-						<h1 className="display-1">Dobrodošli na Kampus.hr</h1>
-						<p className="max-w-[640px] text-neutral-strong">
-							Tvoj virtualni kampus za razmjenu znanja, iskustava i materijala.
-							Spojimo sve studente u Hrvatskoj!
-						</p>
-					</div>
-					<div className="flex flex-row gap-4">
-						<Button theme="accent" size="md" variant="solid">
-							Pridruži se besplatno
-						</Button>
-						<Button variant="outline">Saznaj više</Button>
-					</div>
-				</div>
-			</Container>
-		</section>
 	);
 };

@@ -2,17 +2,52 @@
 
 import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
-import { Card, CardContent, CardHeader, CardTitle } from './Card';
+
+import { IconSizeContext } from '@/lib/shadcn/ui/button';
+import { type FC, type PropsWithChildren } from 'react';
+
+const Card: FC<PropsWithChildren> = ({ children }) => {
+	return (
+		<div className="p-8 rounded-2xl bg-section border border-neutral-weak flex flex-col gap-4 justify-between">
+			{children}
+		</div>
+	);
+};
+
+const CardHeader: FC<PropsWithChildren> = ({ children }) => {
+	return (
+		<div className="flex flex-col gap-2 mb-2">
+			<IconSizeContext.Provider value={24}>{children}</IconSizeContext.Provider>
+		</div>
+	);
+};
+
+const CardTitle: FC<PropsWithChildren> = ({ children }) => {
+	return <div className="flex flex-row gap-2 title-2">{children}</div>;
+};
+
+const CardContent: FC<PropsWithChildren> = ({ children }) => {
+	return (
+		<div className="flex flex-col gap-4 body-1 text-neutral">{children}</div>
+	);
+};
 
 export const FeaturesSection = () => {
 	return (
 		<section
 			id="features"
-			className="flex flex-col items-center py-20 bg-neutral-weak"
+			className="flex flex-col gap-10 items-center py-20 bg-section rounded-2xl md:rounded-3xl"
 		>
-			<Container wide>
-				<h2 className="display-2 text-center mb-12">Zašto Kampus.hr?</h2>
-				<div className="grid gap-2 md:grid-cols-3">
+			<Container size="sm" className="gap-6 px-3 md:px-6">
+				<h2 className="display-2 text-center">Zašto Kampus.hr?</h2>
+				<p className="body-1 text-center text-neutral-strong">
+					Tvoj virtualni kampus za razmjenu znanja, iskustava i materijala.
+					Spojimo sve studente u Hrvatskoj!
+				</p>
+			</Container>
+
+			<Container size="lg" className="gap-10 px-3 md:px-6 relative">
+				<div className="grid gap-2 md:grid-cols-3 z-10">
 					<Card>
 						<CardContent>
 							<CardHeader>
@@ -50,6 +85,7 @@ export const FeaturesSection = () => {
 						</CardContent>
 					</Card>
 				</div>
+				<div className="w-[400px] h-[160px] bg-accent opacity-50 rounded-[100%] blur-[120px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 			</Container>
 		</section>
 	);

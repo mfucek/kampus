@@ -36,7 +36,7 @@ export const FeaturesSection = () => {
 	return (
 		<section
 			id="features"
-			className="flex flex-col gap-10 items-center py-20 bg-section rounded-2xl md:rounded-3xl"
+			className="flex flex-col gap-10 items-center py-20 bg-section rounded-2xl md:rounded-3xl overflow-hidden"
 		>
 			<Container size="sm" className="gap-6 px-3 md:px-6">
 				<h2 className="display-2 text-center">Zašto Kampus.hr?</h2>

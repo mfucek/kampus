@@ -1,7 +1,9 @@
 import { Container } from '@/global/components/container';
 import { api } from '@/lib/trpc/server';
+import { FloatingColleges } from '../floating-colleges';
 import { HeroLogo } from '../hero-logo';
 import { HeroSearch } from '../hero-search';
+import { RadialGrid } from '../radial-grid';
 import { Scribbles } from '../scribbles';
 
 export const HeroSection = async () => {
@@ -13,13 +15,16 @@ export const HeroSection = async () => {
 			className="flex flex-col gap-10 items-center py-40 bg-gradient-to-b from-section to-background relative"
 			id="hero"
 		>
-			{/* <FloatingColleges /> */}
 			<Container className="z-10">
 				<HeroLogo />
 			</Container>
 			<Container className="z-10">
 				<HeroSearch topColleges={topColleges} allColleges={allColleges} />
 			</Container>
+			<div className="absolute inset-0 pointer-events-none overflow-hidden">
+				<RadialGrid className="relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 theme-neutral" />
+			</div>
+			<FloatingColleges allColleges={allColleges} />
 			<Scribbles />
 		</section>
 	);

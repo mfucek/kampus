@@ -8,7 +8,7 @@ export const Scribbles = () => {
 				className={cn(
 					'absolute transition-all ease-in duration-200 shrink-0 bg-accent-medium',
 					'w-[310px] h-[216px]',
-					'scale-50 md:scale-75 lg:scale-100',
+					'scale-[0.4] md:scale-75 lg:scale-100',
 					'top-[-20px] left-[-80px]'
 				)}
 				style={{
@@ -25,7 +25,7 @@ export const Scribbles = () => {
 				className={cn(
 					'absolute transition-all ease-in duration-200 shrink-0 bg-accent-medium',
 					'w-[549px] h-[512px]',
-					'scale-50 md:scale-75 lg:scale-100',
+					'scale-[0.4] md:scale-75 lg:scale-100',
 					'top-[-160px] right-[-240px]'
 				)}
 				style={{
@@ -42,7 +42,7 @@ export const Scribbles = () => {
 				className={cn(
 					'absolute transition-all ease-in duration-200 shrink-0 bg-accent-medium',
 					'w-[605px] h-[470px]',
-					'scale-50 md:scale-75 lg:scale-100',
+					'scale-[0.4] md:scale-75 lg:scale-100',
 					'bottom-[-160px] left-[-240px]'
 				)}
 				style={{
@@ -59,7 +59,7 @@ export const Scribbles = () => {
 				className={cn(
 					'absolute transition-all ease-in duration-200 shrink-0 bg-accent-medium',
 					'w-[776px] h-[112px]',
-					'scale-50 md:scale-75 lg:scale-100',
+					'scale-[0.4] md:scale-75 lg:scale-100',
 					'bottom-[0px] right-[-450px]'
 				)}
 				style={{

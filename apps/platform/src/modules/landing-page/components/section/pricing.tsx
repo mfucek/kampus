@@ -5,7 +5,8 @@ import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from './Card';
+import { Card, CardContent, CardHeader, CardTitle } from '../card';
+import { Scribbles } from '../scribbles';
 
 export const PricingSection = () => {
 	const router = useRouter();
@@ -37,9 +38,10 @@ export const PricingSection = () => {
 	return (
 		<section
 			id="pricing"
-			className="bg-neutral-weak flex flex-col items-center gap-10 py-20"
+			className="flex flex-col items-center gap-10 py-20 rounded-2xl md:rounded-3xl relative"
 		>
-			<Container>
+			<Scribbles />
+			<Container size="sm" className="z-10">
 				<div className="space-y-2">
 					<h2 className="display-2 text-center mb-4">Podrži Kampus.hr</h2>
 					<p className="body-1 text-neutral-strong text-center">
@@ -48,7 +50,7 @@ export const PricingSection = () => {
 					</p>
 				</div>
 			</Container>
-			<Container wide>
+			<Container size="lg" className="z-10">
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<Card>
 						<CardContent>
@@ -59,22 +61,28 @@ export const PricingSection = () => {
 							<ul className="mt-4 space-y-2">
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
-									Pristup svom sadržaju uz reklame
+									Neograničeno pristupi svom sadržaju
 								</li>
 								<li className="flex items-center gap-2">
-									<Icon icon="checkmark" size={24} />2 AI sažetka po temi
+									<Icon icon="checkmark" size={24} />
+									Preuzimaj materijale uz reklame
+								</li>
+								<li className="flex items-center gap-2">
+									<Icon icon="checkmark" size={24} />
+									Po 2 AI sažetka po temi
 								</li>
 							</ul>
 						</CardContent>
 						<Button
 							variant={'outline'}
 							className="w-full"
+							theme="neutral"
 							onClick={handleCreateAccount}
 						>
-							Kreiraj račun
+							Odaberi
 						</Button>
 					</Card>
-					<Card>
+					<Card className="border border-accent">
 						<CardContent>
 							<CardHeader>
 								<CardTitle>Sponzor</CardTitle>
@@ -86,11 +94,12 @@ export const PricingSection = () => {
 							<ul className="mt-4 space-y-2">
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
-									Pristup svom sadržaju bez reklama
+									Neograničeno pristupaj svom sadržaju i materijalima bez
+									reklama
 								</li>
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
-									Pristup svim AI sažetcima
+									Pristupi svim AI sažetcima
 								</li>
 								<li className="flex items-center gap-2">
 									<Icon icon="checkmark" size={24} />
@@ -100,9 +109,10 @@ export const PricingSection = () => {
 						</CardContent>
 						<Button
 							className="w-full"
+							theme="accent"
 							onClick={handleGoToSubscriptionCheckoutSessionCheap}
 						>
-							Pretplati se
+							Odaberi
 						</Button>
 					</Card>
 					<Card>
@@ -119,14 +129,19 @@ export const PricingSection = () => {
 									<Icon icon="checkmark" size={24} />
 									Napravi svoj badge
 								</li>
+								<li className="flex items-center gap-2">
+									<Icon icon="checkmark" size={24} />
+									Beskrajan respect od Kampus tima!
+								</li>
 							</ul>
 						</CardContent>
 						<Button
 							variant={'outline'}
 							className="w-full"
+							theme="neutral"
 							onClick={handleGoToSubscriptionCheckoutSessionPro}
 						>
-							Pretplati se
+							Odaberi
 						</Button>
 					</Card>
 				</div>

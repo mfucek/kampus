@@ -1,3 +1,3 @@
-import { SubjectMaterialsPage } from '@/modules/subject/pages/subject-materials-page';
+import { SubjectMaterialsPage } from '@/modules/topic/subject/pages/subject-materials-page';
 
 export default SubjectMaterialsPage;

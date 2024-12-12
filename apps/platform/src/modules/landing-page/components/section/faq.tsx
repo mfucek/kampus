@@ -8,7 +8,10 @@ import {
 
 export const FaqSection = () => {
 	return (
-		<section id="faq" className="py-20 flex flex-col items-center">
+		<section
+			id="faq"
+			className="py-20 flex flex-col items-center bg-section rounded-2xl md:rounded-3xl"
+		>
 			<Container>
 				<h2 className="display-2 text-center mb-12">
 					Često postavljena pitanja

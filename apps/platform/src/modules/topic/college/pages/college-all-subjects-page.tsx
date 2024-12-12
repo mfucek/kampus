@@ -1,5 +1,5 @@
 import { api } from '@/lib/trpc/server';
-import { SubjectsTableAdvanced } from '@/modules/subject/components/subjects-table-advanced';
+import { SubjectsTableAdvanced } from '@/modules/topic/subject/components/subjects-table-advanced';
 
 interface PageProps {
 	params: Promise<{

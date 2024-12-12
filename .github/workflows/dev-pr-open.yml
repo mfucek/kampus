@@ -5,6 +5,10 @@ on:
       - develop
     types:
       - opened
+
+permissions:
+  pull-requests: write
+
 jobs:
   add_comment:
     name: 'Add Comment'

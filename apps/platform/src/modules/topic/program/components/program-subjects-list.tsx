@@ -15,29 +15,6 @@ import { groupByKey } from '@/utils/group-by-key';
 import Link from 'next/link';
 import { type ListSubjectsOutput } from '../api/procedures/list-subjects';
 
-const groupSubjectsByGroupFilterBySemester = (
-	subjects: ListSubjectsOutput[],
-	semester: number
-) => {
-	const grouped: Record<string, ListSubjectsOutput[]> = {};
-
-	for (const subject of subjects) {
-		if (subject.semester !== semester) {
-			continue;
-		}
-
-		const group = subject.groupName ?? 'Ostalo';
-
-		if (!grouped[group]) {
-			grouped[group] = [];
-		}
-
-		grouped[group].push(subject);
-	}
-
-	return grouped;
-};
-
 export const ProgramSubjectsList: FC<{
 	subjects: ListSubjectsOutput[];
 }> = ({ subjects }) => {

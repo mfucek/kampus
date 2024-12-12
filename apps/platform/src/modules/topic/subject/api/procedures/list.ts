@@ -1,7 +1,7 @@
 import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
-import { getCollegeBySlug } from '@/modules/college/api/helpers/get-college-by-slug';
+import { getCollegeBySlug } from '@/modules/topic/college/api/helpers/get-college-by-slug';
 import { publicProcedure } from '@/server/api/trpc';
 import { subjectFiltersSchema } from '../../schemas/subject-filters';
 import { subjectScopeSchema } from '../../schemas/subject-scope';

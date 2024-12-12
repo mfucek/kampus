@@ -152,7 +152,7 @@ export const HeroSearch: FC<{
 
 	return (
 		<div className="flex flex-col gap-2 px-2 lg:px-0">
-			<div className="flex flex-row items-center h-12 bg-foreground border border-section rounded-full">
+			<div className="flex flex-row items-center h-12 bg-foreground border border-neutral-weak rounded-full">
 				<input
 					className="input bg-transparent h-full px-4 flex-1 outline-none"
 					type="text"

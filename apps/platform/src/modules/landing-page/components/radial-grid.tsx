@@ -33,7 +33,7 @@ export const RadialGrid: FC<HTMLAttributes<SVGElement>> = ({
 					<stop
 						style={{
 							stopColor: 'var(--color-theme-default)',
-							stopOpacity: '0.15'
+							stopOpacity: '0.10'
 						}}
 					/>
 					<stop

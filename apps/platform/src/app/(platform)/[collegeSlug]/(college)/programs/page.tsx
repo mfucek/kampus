@@ -1,5 +1,5 @@
 import { db } from '@/lib/prisma/db';
-import { CollegeProgramsPage } from '@/modules/college/pages/college-programs-page';
+import { CollegeProgramsPage } from '@/modules/topic/college/pages/college-programs-page';
 
 export default CollegeProgramsPage;
 

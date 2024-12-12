@@ -3,7 +3,7 @@ import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
 import { fileRouter } from '@/modules/file/api/router';
 import { notificationsRouter } from '@/modules/notifications/api/router';
 import { postRouter } from '@/modules/post/api/router';
-import { programRouter } from '@/modules/program/api/router';
+import { programRouter } from '@/modules/topic/program/api/router';
 import { userRouter } from '@/modules/user/api/router';
 import { voteRouter } from '@/modules/vote/api/router';
 import { stripeRouter } from '../../lib/stripe/api/router';

@@ -1,3 +1,3 @@
-import { StaffDiscussionPage } from '@/modules/staff/pages/staff-discussion-page';
+import { StaffDiscussionPage } from '@/modules/topic/staff/pages/staff-discussion-page';
 
 export default StaffDiscussionPage;

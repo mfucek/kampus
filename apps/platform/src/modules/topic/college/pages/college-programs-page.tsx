@@ -1,6 +1,6 @@
 import { CacheHelper } from '@/global/components/cache-helper';
 import { api } from '@/lib/trpc/server';
-import { CollegeProgramsList } from '@/modules/college/components/college-programs-list';
+import { CollegeProgramsList } from '@/modules/topic/college/components/college-programs-list';
 
 interface PageProps {
 	params: Promise<{

@@ -1,9 +1,13 @@
 'use client';
 
+import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { cn } from '@/lib/shadcn/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { ListAllCollegesItem } from '@/modules/topic/college/api/procedures/list-all';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 type Point = {
 	anchor: 'left' | 'right';
@@ -14,19 +18,26 @@ type Point = {
 
 const random = (min: number, max: number) => Math.random() * (max - min) + min;
 
-export const FloatingColleges = () => {
+export const FloatingColleges: FC<{ allColleges: ListAllCollegesItem[] }> = ({
+	allColleges
+}) => {
 	const positions = useMemo(() => {
 		const points: Point[] = [];
 
-		const rangeY = 400;
+		const anchorRangeY = 400;
 		const numberOfPoints = 4;
 
-		for (let i = 0; i < numberOfPoints; i++) {
-			const anchorY = -rangeY / 2 + (rangeY / (numberOfPoints - 1)) * i;
+		const rangeX = 120;
+		const rangeY = 20;
+		const rangeZ = 1;
 
-			const displacementX = random(-80, 80);
-			const displacementY = random(-10, 10);
-			const displacementZ = random(-1.0, 0.0);
+		for (let i = 0; i < numberOfPoints; i++) {
+			const anchorY =
+				-anchorRangeY / 2 + (anchorRangeY / (numberOfPoints - 1)) * i;
+
+			const displacementX = random(-rangeX / 2, rangeX / 2);
+			const displacementY = random(-rangeY / 2, rangeY / 2);
+			const displacementZ = random(-rangeZ, 0.0);
 
 			points.push({
 				anchor: 'left',
@@ -36,11 +47,12 @@ export const FloatingColleges = () => {
 			});
 		}
 		for (let i = 0; i < numberOfPoints; i++) {
-			const anchorY = -rangeY / 2 + (rangeY / (numberOfPoints - 1)) * i;
+			const anchorY =
+				-anchorRangeY / 2 + (anchorRangeY / (numberOfPoints - 1)) * i;
 
-			const displacementX = random(-80, 80);
-			const displacementY = random(-10, 10);
-			const displacementZ = random(-1, 0);
+			const displacementX = random(-rangeX / 2, rangeX / 2);
+			const displacementY = random(-rangeY / 2, rangeY / 2);
+			const displacementZ = random(-rangeZ, 0);
 
 			points.push({
 				anchor: 'right',
@@ -57,8 +69,8 @@ export const FloatingColleges = () => {
 	const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
 
 	const offset = {
-		x: mouseOffset.x,
-		y: mouseOffset.y
+		x: 0, //mouseOffset.x,
+		y: 0 //mouseOffset.y
 	};
 
 	useEffect(() => {
@@ -85,11 +97,16 @@ export const FloatingColleges = () => {
 	}, []);
 
 	return (
-		<>
+		<Container
+			size="xl"
+			className="absolute top-0 h-full overflow-hidden [@media(min-width:1600px)]:overflow-visible hidden xl:block"
+		>
 			{positions.map((position, i) => (
 				<div
 					key={i}
-					className={cn('absolute')}
+					className={cn(
+						'absolute duration-300 hover:duration-100 hover:!scale-100 hover:!opacity-100 scale-100 hover:!filter-none'
+					)}
 					style={{
 						top: `calc(50% - ${position.y}px)`,
 						...(position.anchor === 'left'
@@ -97,41 +114,62 @@ export const FloatingColleges = () => {
 							: { right: `${position.x}px` }),
 						perspective: '1000px',
 						transformStyle: 'preserve-3d',
-						transform: `translateY(calc(-50% + ${offset.y * (1 + position.z)}px)) translateX(${offset.x * (1 + position.z)}px)`,
-						opacity: 1 + position.z * 0.1,
-						scale: 1 + position.z * 0.2,
+						opacity: 1 + position.z * 0.2,
+						// @ts-expect-error setting variable
+						'--tw-scale-x': 1 + position.z * 0.2,
+						'--tw-scale-y': 1 + position.z * 0.2,
+						'--tw-translate-x': `calc(${offset.x * (1 + position.z)}px)`,
+						'--tw-translate-y': `calc(${offset.y * (1 + position.z)}px)`,
+						// scale: 1 + position.z * 0.2,
 						filter: `blur(${-position.z * 2}px)`,
-						zIndex: 2 + position.z
+						zIndex: 10 + Math.floor(position.z * 10)
 					}}
+					suppressHydrationWarning={true}
 				>
-					<div className="w-[200px] p-4 gap-2 bg-section flex flex-col rounded-xl border border-neutral-weak">
-						<div className="flex flex-row gap-2 items-center">
-							<div className="w-6 h-6 rounded-md bg-neutral-weak"></div>
-							<div className="title-3">FER</div>
-						</div>
-						<div className="flex flex-row gap-2">
-							<Badge
-								theme="neutral"
-								variant="secondary"
-								className="rounded-full"
-							>
-								<div className="w-4 h-4 rounded-full bg-accent-medium p-1">
-									<div className="w-2 h-2 rounded-full bg-accent" />
+					<Link href={allColleges[i % allColleges.length]!.link}>
+						<div className="w-[240px] p-4 gap-2 bg-section flex flex-col rounded-xl border border-neutral-weak cursor-pointer">
+							<div className="flex flex-row gap-2 items-center">
+								<div className="w-6 h-6 rounded-md bg-neutral-weak shrink-0">
+									{allColleges[i % allColleges.length]?.iconSrc && (
+										<Image
+											src={allColleges[i % allColleges.length]?.iconSrc ?? ''}
+											alt={allColleges[i % allColleges.length]?.name ?? ''}
+											width={24}
+											height={24}
+											className="w-full h-full object-fill"
+										/>
+									)}
 								</div>
-								<span className="text-accent">132 objava</span>
-							</Badge>
-							<Badge
-								theme="neutral"
-								variant="secondary"
-								className="rounded-full"
-							>
-								<Icon icon="users" className="bg-accent" size={16} />
-								<span className="text-accent">24</span>
-							</Badge>
+								<div className="title-3">
+									{allColleges[i % allColleges.length]?.name}
+								</div>
+							</div>
+							<div className="flex flex-row gap-2">
+								<Badge
+									theme="neutral"
+									variant="secondary"
+									className="rounded-full"
+								>
+									<div className="w-4 h-4 rounded-full bg-accent-medium p-1">
+										<div className="w-2 h-2 rounded-full bg-accent" />
+									</div>
+									<span className="text-accent">
+										{allColleges[i % allColleges.length]?.postCount} objava
+									</span>
+								</Badge>
+								<Badge
+									theme="neutral"
+									variant="secondary"
+									className="rounded-full"
+								>
+									<Icon icon="users" className="bg-accent" size={16} />
+									<span className="text-accent">24</span>
+								</Badge>
+							</div>
 						</div>
-					</div>
+					</Link>
 				</div>
 			))}
-		</>
+		</Container>
 	);
 };

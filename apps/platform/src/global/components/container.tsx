@@ -5,11 +5,12 @@ import { cn } from '@/lib/shadcn/utils';
 const sizes = {
 	sm: 'max-w-[480px]',
 	md: 'max-w-[800px]',
-	lg: 'max-w-[1200px]'
+	lg: 'max-w-[1200px]',
+	xl: 'max-w-[1600px]'
 };
 
 export const Container: FC<
-	PropsWithChildren<{ className?: string; size?: 'sm' | 'md' | 'lg' }>
+	PropsWithChildren<{ className?: string; size?: keyof typeof sizes }>
 > = ({ children, className, size = 'md' }) => {
 	return (
 		<div

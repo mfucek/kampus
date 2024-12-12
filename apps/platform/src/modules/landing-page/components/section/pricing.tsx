@@ -38,7 +38,7 @@ export const PricingSection = () => {
 	return (
 		<section
 			id="pricing"
-			className="flex flex-col items-center gap-10 py-20 rounded-2xl md:rounded-3xl relative"
+			className="flex flex-col items-center gap-10 py-20 rounded-2xl md:rounded-3xl overflow-hidden relative"
 		>
 			<Scribbles />
 			<Container size="sm" className="z-10">

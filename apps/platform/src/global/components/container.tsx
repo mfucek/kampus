@@ -2,14 +2,20 @@ import { type FC, type PropsWithChildren } from 'react';
 
 import { cn } from '@/lib/shadcn/utils';
 
+const sizes = {
+	sm: 'max-w-[480px]',
+	md: 'max-w-[800px]',
+	lg: 'max-w-[1200px]'
+};
+
 export const Container: FC<
-	PropsWithChildren<{ className?: string; wide?: boolean }>
-> = ({ children, className, wide = false }) => {
+	PropsWithChildren<{ className?: string; size?: 'sm' | 'md' | 'lg' }>
+> = ({ children, className, size = 'md' }) => {
 	return (
 		<div
 			className={cn(
 				'w-full @container flex flex-col gap-10',
-				wide ? 'max-w-[1200px]' : 'max-w-[800px]',
+				sizes[size],
 				className
 			)}
 		>

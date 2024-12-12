@@ -7,15 +7,22 @@ on:
       - reopened
       - labeled
       - unlabeled
+
+# Update permissions block to include necessary permissions
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   check_labels:
     name: 'Check PR Labels'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: mheap/github-action-required-labels@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           mode: exactly
           count: 1

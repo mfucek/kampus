@@ -1,8 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { type FC } from 'react';
-
 import {
 	Tabs,
 	TabsContent,
@@ -15,33 +12,6 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { groupByKey } from '@/utils/group-by-key';
 import Link from 'next/link';
 import { type ListProgramsItem } from '../api/procedures/list-programs';
-
-const ProgramsList: FC<{
-	programs: ListProgramsItem[];
-	collegeSlug: string;
-}> = ({ programs, collegeSlug }) => {
-	const router = useRouter();
-
-	return (
-		<div className="flex flex-col gap-px rounded-xl overflow-hidden">
-			{programs.map((program) => (
-				<Link key={program.id} href={`/${collegeSlug}/program/${program.slug}`}>
-					<div
-						className="flex flex-row items-center justify-between bg-neutral-weak cursor-pointer md:border-section border-background p-4"
-						onClick={() => {
-							router.push(`/${collegeSlug}/program/${program.slug}`);
-						}}
-					>
-						<div className="button-md">{program.name}</div>
-						<Button iconOnly size="xs" theme="accent" variant="ghost">
-							<Icon icon="arrow-right" />
-						</Button>
-					</div>
-				</Link>
-			))}
-		</div>
-	);
-};
 
 export const CollegeProgramsList = ({
 	programs
@@ -104,7 +74,7 @@ export const CollegeProgramsList = ({
 												</>
 											)}
 											title={type}
-											info={`${programs.length} programa`}
+											info={`${programs.length} smjerova`}
 										/>
 									)
 								)}

@@ -1,3 +1,3 @@
-import { ProgramLayout } from '@/modules/program/layouts/program-layout';
+import { ProgramLayout } from '@/modules/topic/program/layouts/program-layout';
 
 export default ProgramLayout;

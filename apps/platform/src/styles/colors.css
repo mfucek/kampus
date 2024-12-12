@@ -119,7 +119,7 @@
 .dark {
 	--color-section: #101213;
 	--color-background: #000000;
-	--color-foreground: #101213c0;
+	--color-foreground: #000000c0;
 
 	--color-neutral-default: #ffffff;
 	--color-neutral-strong: color-mix(

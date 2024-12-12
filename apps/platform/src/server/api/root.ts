@@ -1,16 +1,17 @@
 import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
 
+import { stripeRouter } from '@/lib/stripe/api/router';
+
+import { accountRouter } from '@/modules/account/api/router';
 import { fileRouter } from '@/modules/file/api/router';
 import { notificationsRouter } from '@/modules/notifications/api/router';
 import { postRouter } from '@/modules/post/api/router';
-import { programRouter } from '@/modules/program/api/router';
+import { collegeRouter } from '@/modules/topic/college/api/router';
+import { programRouter } from '@/modules/topic/program/api/router';
+import { staffRouter } from '@/modules/topic/staff/api/router';
+import { subjectRouter } from '@/modules/topic/subject/api/router';
 import { userRouter } from '@/modules/user/api/router';
 import { voteRouter } from '@/modules/vote/api/router';
-import { stripeRouter } from '../../lib/stripe/api/router';
-import { accountRouter } from '../../modules/account/api/router';
-import { collegeRouter } from '../../modules/college/api/router';
-import { staffRouter } from '../../modules/staff/api/router';
-import { subjectRouter } from '../../modules/subject/api/router';
 
 export const appRouter = createTRPCRouter({
 	post: postRouter,

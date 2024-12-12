@@ -2,7 +2,7 @@ import { cn } from '@/lib/shadcn/utils';
 
 export const Scribbles = () => {
 	return (
-		<div className="absolute inset-0 overflow-hidden">
+		<div className="absolute inset-0 overflow-hidden pointer-events-none">
 			{/* top left */}
 			<div
 				className={cn(
@@ -43,7 +43,7 @@ export const Scribbles = () => {
 					'absolute transition-all ease-in duration-200 shrink-0 bg-accent-medium',
 					'w-[605px] h-[470px]',
 					'scale-50 md:scale-75 lg:scale-100',
-					'bottom-[-120px] left-[-200px]'
+					'bottom-[-160px] left-[-240px]'
 				)}
 				style={{
 					WebkitMaskImage: `url('/assets/illustrations/scribble-lines-bl.svg')`,
@@ -60,7 +60,7 @@ export const Scribbles = () => {
 					'absolute transition-all ease-in duration-200 shrink-0 bg-accent-medium',
 					'w-[776px] h-[112px]',
 					'scale-50 md:scale-75 lg:scale-100',
-					'bottom-[20px] right-[-350px]'
+					'bottom-[0px] right-[-450px]'
 				)}
 				style={{
 					WebkitMaskImage: `url('/assets/illustrations/scribble-lines-h.svg')`,

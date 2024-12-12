@@ -2,7 +2,8 @@ import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
-import { protectedProcedure } from '@/server/api/trpc';
+import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
+import { type JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
 
 const paginationSchema = z.object({
@@ -10,7 +11,8 @@ const paginationSchema = z.object({
 	cursor: z.string().nullish()
 });
 
-export const listProcedure = protectedProcedure
+export const listProcedure = publicProcedure
+	.use(optionalAuthMiddleware)
 	.input(
 		z
 			.object({
@@ -19,14 +21,29 @@ export const listProcedure = protectedProcedure
 			.merge(paginationSchema)
 	)
 	.query(async ({ ctx, input }) => {
-		const { db } = ctx;
+		const { auth, db } = ctx;
+		const clerkUserId = auth?.userId;
+
 		const { scope, cursor } = input;
 		const limit = input.limit ?? 5;
 
-		let collegeId = scope.college?.id;
-		let topicId = scope.topic?.id;
-		let replyToPostId = scope.replyToPost?.id;
-		let authorId = scope.author?.id;
+		const user = clerkUserId
+			? ((
+					await db.account.findUnique({
+						where: {
+							clerkUserId: clerkUserId
+						},
+						include: {
+							user: true
+						}
+					})
+				)?.user ?? null)
+			: null;
+
+		const collegeId = scope.college?.id;
+		const topicId = scope.topic?.id;
+		const replyToPostId = scope.replyToPost?.id;
+		const authorId = scope.author?.id;
 
 		// @TODO: needs more exclusive work to specify what kind of posts we want to get
 		const where: Prisma.PostWhereInput = {
@@ -39,12 +56,12 @@ export const listProcedure = protectedProcedure
 		};
 
 		const include: Prisma.PostInclude = {
-			author: true,
-			votes: true,
+			Author: true,
+			Votes: true,
 			_count: {
 				select: {
-					files: true,
-					replies: true
+					Files: true,
+					Replies: true
 				}
 			}
 		};
@@ -63,10 +80,10 @@ export const listProcedure = protectedProcedure
 		const posts = await Promise.all(
 			postsRaw.map(async (post) => {
 				const votes = {
-					likes: post.votes.filter((vote) => vote.type === 'UP').length,
-					dislikes: post.votes.filter((vote) => vote.type === 'DOWN').length,
+					likes: post.Votes.filter((vote) => vote.type === 'UP').length,
+					dislikes: post.Votes.filter((vote) => vote.type === 'DOWN').length,
 					userVote:
-						post.votes.find((vote) => vote.userId === ctx.user.id)?.type ?? null
+						post.Votes.find((vote) => vote.userId === user?.id)?.type ?? null
 				};
 
 				const filesRaw = await db.file.findMany({
@@ -74,8 +91,8 @@ export const listProcedure = protectedProcedure
 						postId: post.id
 					},
 					include: {
-						documentFile: true,
-						imageFile: true
+						DocumentFile: true,
+						ImageFile: true
 					}
 				});
 
@@ -85,11 +102,11 @@ export const listProcedure = protectedProcedure
 						type: file.type,
 						key: file.key,
 						documentFile: {
-							academicYear: file.documentFile?.academicYear ?? undefined,
-							title: file.documentFile?.title ?? undefined,
-							types: file.documentFile?.types || []
+							academicYear: file.DocumentFile?.academicYear ?? undefined,
+							title: file.DocumentFile?.title ?? undefined,
+							types: file.DocumentFile?.types ?? []
 						},
-						imageFile: file.imageFile,
+						imageFile: file.ImageFile,
 						url: await getFileUrl(file.key)
 					}))
 				);
@@ -97,8 +114,22 @@ export const listProcedure = protectedProcedure
 				return {
 					post: {
 						id: post.id,
-						body: post.body,
-						createdAt: post.createdAt
+						body: post.body as JSONContent,
+						createdAt: post.createdAt,
+						updatedAt: post.updatedAt,
+						collegeId: post.collegeId,
+						topicId: post.topicId,
+						replyToId: post.replyToId,
+						authorId: post.authorId,
+						_count: {
+							replies: post._count.Replies
+						},
+						author: {
+							id: post.Author.id,
+							displayName: post.Author.displayName,
+							imageUrl: post.Author.imageUrl,
+							badge: post.Author.badge
+						}
 					},
 					votes: {
 						likes: votes.likes,
@@ -106,13 +137,13 @@ export const listProcedure = protectedProcedure
 						userVote: votes.userVote
 					},
 					author: {
-						id: post.author.id,
-						displayName: post.author.displayName,
-						imageUrl: post.author.imageUrl,
-						badge: post.author.badge
+						id: post.Author.id,
+						displayName: post.Author.displayName,
+						imageUrl: post.Author.imageUrl,
+						badge: post.Author.badge
 					},
 					replies: {
-						count: post._count.replies
+						count: post._count.Replies
 					},
 					files: files
 				};
@@ -146,9 +177,3 @@ export type ListPostsItem = ListPostsOutput['posts'][number];
 // number of replies, reply IDs
 // votes
 // author
-
-// in frontend, data fetching layer
-// <DynamicPost />
-// is recursive
-// has a cursor
-// has a limit

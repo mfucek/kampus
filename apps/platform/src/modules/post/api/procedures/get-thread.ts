@@ -4,40 +4,32 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
-import { publicProcedure } from '@/server/api/trpc';
+import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type RecursivePost } from '../../types/recursive-post';
 
 export const getThreadProcedure = publicProcedure
+	.use(optionalAuthMiddleware)
 	.input(z.object({ postId: z.string() }))
 	.query(async ({ input, ctx }) => {
 		const { db } = ctx;
 
 		let userId = null;
-		if (ctx.clerkUserId) {
-			const account = await db.account.findUnique({
-				where: {
-					clerkUserId: ctx.clerkUserId
-				},
-				include: {
-					user: true
-				}
-			});
-
-			userId = account?.user?.id;
+		if (ctx.user) {
+			userId = ctx.user.id;
 		}
 
 		const fetchReplies = async (postId: string): Promise<RecursivePost> => {
 			const post = await db.post.findUnique({
 				where: { id: postId },
 				include: {
-					author: true,
+					Author: true,
 					_count: {
-						select: { replies: true }
+						select: { Replies: true }
 					},
-					files: {
+					Files: {
 						include: {
-							documentFile: true,
-							imageFile: true
+							DocumentFile: true,
+							ImageFile: true
 						}
 					}
 				}
@@ -68,7 +60,7 @@ export const getThreadProcedure = publicProcedure
 			);
 
 			const filesWithUrls = await Promise.all(
-				post.files.map(async (file) => ({
+				post.Files.map(async (file) => ({
 					...file,
 					url: await getFileUrl(file.key)
 				}))
@@ -81,16 +73,16 @@ export const getThreadProcedure = publicProcedure
 					body: post.body as JSONContent,
 					createdAt: post.createdAt,
 					author: {
-						id: post.author.id,
-						createdAt: post.author.createdAt,
-						updatedAt: post.author.updatedAt,
-						displayName: post.author.displayName,
-						imageUrl: post.author.imageUrl,
-						accountId: post.author.accountId,
-						badge: post.author.badge
+						id: post.Author.id,
+						createdAt: post.Author.createdAt,
+						updatedAt: post.Author.updatedAt,
+						displayName: post.Author.displayName,
+						imageUrl: post.Author.imageUrl,
+						accountId: post.Author.accountId,
+						badge: post.Author.badge
 					},
 					_count: {
-						replies: post._count.replies
+						replies: post._count.Replies
 					}
 				},
 				replies: recursiveReplies,
@@ -101,13 +93,14 @@ export const getThreadProcedure = publicProcedure
 				},
 				files: filesWithUrls.map((file) => ({
 					...file,
-					documentFile: file.documentFile
+					documentFile: file.DocumentFile
 						? {
-								academicYear: file.documentFile.academicYear ?? undefined,
-								types: file.documentFile.types,
-								title: file.documentFile.title ?? undefined
+								academicYear: file.DocumentFile.academicYear ?? undefined,
+								types: file.DocumentFile.types,
+								title: file.DocumentFile.title ?? undefined
 							}
-						: null
+						: null,
+					imageFile: file.ImageFile ? file.ImageFile : null
 				}))
 			};
 

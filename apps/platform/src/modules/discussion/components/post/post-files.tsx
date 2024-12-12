@@ -16,7 +16,7 @@ type PostFile = {
 		  }
 		| undefined
 		| null;
-	imageFile: {} | null;
+	imageFile: object | null;
 	url?: string | null;
 };
 

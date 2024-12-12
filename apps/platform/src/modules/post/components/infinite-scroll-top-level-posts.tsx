@@ -1,6 +1,5 @@
 'use client';
 
-import { type JSONContent } from '@tiptap/react';
 import { useEffect, type FC } from 'react';
 import { useInView } from 'react-intersection-observer';
 
@@ -19,21 +18,24 @@ const DynamicPost: FC<{
 	// const [expanded, setExpanded] = useState(false);
 
 	return (
-		<>
+		<div className="bg-section p-3 rounded-xl">
 			<Post
 				fullPost={{
 					post: {
 						author: {
 							id: post.author.id,
 							displayName: post.author.displayName,
-							imageUrl: post.author.imageUrl || '',
-							badge: post.author.badge || '',
-							accountId: ''
+							imageUrl: post.author.imageUrl ?? '',
+							badge: post.author.badge ?? ''
 						},
 						createdAt: post.post.createdAt,
+						updatedAt: post.post.updatedAt,
 						authorId: post.author.id,
+						collegeId: post.post.collegeId,
+						topicId: post.post.topicId,
+						replyToId: post.post.replyToId,
 						id: post.post.id,
-						body: post.post.body as JSONContent,
+						body: post.post.body,
 						_count: {
 							replies: post.replies.count
 						}
@@ -53,7 +55,7 @@ const DynamicPost: FC<{
 				</Button>
 			)} */}
 			{/* {expanded && (<InfiniteScrollTopLevelPosts)} */}
-		</>
+		</div>
 	);
 };
 
@@ -61,7 +63,7 @@ export const TopLevelPostsPage: FC<{
 	page: ListPostsItem[];
 }> = ({ page }) => {
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col gap-2">
 			{page.map((post) => (
 				<DynamicPost key={post.post.id} post={post} depthInfo={[]} />
 			))}
@@ -87,7 +89,7 @@ export const InfiniteScrollTopLevelPosts: FC<{
 
 		useEffect(() => {
 			if (inView) {
-				query.fetchNextPage();
+				query.fetchNextPage().catch(console.error);
 			}
 		}, [inView]);
 
@@ -106,6 +108,14 @@ export const InfiniteScrollTopLevelPosts: FC<{
 			{query.data?.pages.map((page, index) => (
 				<TopLevelPostsPage key={index} page={page.posts} />
 			))}
+			{query.data?.pages?.[0]?.posts.length === 0 && (
+				<div className="p-3 py-10 rounded-xl md:bg-neutral-weak bg-section flex flex-col gap-2">
+					<p className="title-1 text-center">Malo je prazno</p>
+					<p className="body-2 text-center text-neutral-strong">
+						Budi prvi i objavi nešto što želiš podijeliti ostalim kolegama.
+					</p>
+				</div>
+			)}
 			<Loader />
 		</div>
 	);

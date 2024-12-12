@@ -79,23 +79,23 @@ export const Reactions: FC<{
 		count -= 1;
 	}
 
-	const handleUpvote = () => {
+	const handleUpvote = async () => {
 		if (!isSignedIn) {
 			openSignIn();
 			return;
 		}
-		createVote.mutateAsync({
+		await createVote.mutateAsync({
 			postId,
 			type: reaction === VoteType.UP ? null : VoteType.UP
 		});
 	};
 
-	const handleDownvote = () => {
+	const handleDownvote = async () => {
 		if (!isSignedIn) {
 			openSignIn();
 			return;
 		}
-		createVote.mutateAsync({
+		await createVote.mutateAsync({
 			postId,
 			type: reaction === VoteType.DOWN ? null : VoteType.DOWN
 		});

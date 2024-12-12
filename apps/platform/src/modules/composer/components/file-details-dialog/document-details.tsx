@@ -161,7 +161,7 @@ export const DocumentDetails = () => {
 								<SelectValue placeholder="Izaberi akademsku godinu" />
 							</SelectTrigger>
 							<SelectContent>
-								{/* @ts-expect-error */}
+								{/* @ts-expect-error TODO */}
 								<SelectItem value={null}>-</SelectItem>
 								{Array.from({ length: 20 }, (_, index) => (
 									<SelectItem
@@ -203,7 +203,7 @@ export const DocumentDetails = () => {
 											handleCategoryClick(value);
 										}}
 									>
-										{categoryLabels[value as DocumentFileType]}
+										{categoryLabels[value]}
 									</Button>
 								</div>
 							))}
@@ -234,7 +234,7 @@ export const DocumentDetails = () => {
 												handleCategoryClick(value);
 											}}
 										>
-											{categoryLabels[value as DocumentFileType]}
+											{categoryLabels[value]}
 										</Button>
 									</div>
 								))}
@@ -266,7 +266,7 @@ export const DocumentDetails = () => {
 												handleCategoryClick(value);
 											}}
 										>
-											{categoryLabels[value as DocumentFileType]}
+											{categoryLabels[value]}
 										</Button>
 									</div>
 								))}

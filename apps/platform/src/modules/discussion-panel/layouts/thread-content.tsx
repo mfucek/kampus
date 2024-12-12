@@ -22,7 +22,7 @@ export const ThreadContent = () => {
 
 	const { data: thread } = api.post.getThread.useQuery(
 		{
-			postId: postId as string
+			postId: postId!
 		},
 		{ enabled: !!postId }
 	);
@@ -40,7 +40,7 @@ export const ThreadContent = () => {
 	return (
 		<>
 			<Container className="py-10">
-				<div className="w-full h-full flex flex-col">
+				<div className="w-full h-full flex flex-col px-4">
 					<div className="flex flex-col w-full gap-10">
 						<Post key={fullPost.post.id} fullPost={fullPost} depthInfo={[]} />
 						<Composer

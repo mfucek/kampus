@@ -5,10 +5,18 @@ const config = {
 		project: true
 	},
 	plugins: ['@typescript-eslint'],
-	extends: ['next/core-web-vitals'],
+	extends: [
+		'next/core-web-vitals',
+		'plugin:@typescript-eslint/recommended-type-checked',
+		'plugin:@typescript-eslint/stylistic-type-checked'
+	],
 	rules: {
 		'@typescript-eslint/array-type': 'off',
 		'@typescript-eslint/consistent-type-definitions': 'off',
+		'@typescript-eslint/no-unsafe-argument': 'off',
+		'@typescript-eslint/no-explicit-any': 'warn',
+		'@typescript-eslint/no-empty-function': 'off',
+		'@typescript-eslint/no-empty-object-type': 'off',
 		'@typescript-eslint/consistent-type-imports': [
 			'warn',
 			{

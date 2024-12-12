@@ -1,162 +1,179 @@
 import * as p from '@clack/prompts';
-import fs from 'fs';
-import path from 'path';
 
-import type { Driver } from '@/modules/driver/types';
-import { write } from '@/utils/write';
-
-import { ferDriver } from '@/modules/driver/fer';
-import { ffzgDriver } from '@/modules/driver/ffzg';
-import chalk from 'chalk';
-import { formatDistance } from 'date-fns';
-
-const collegeList: Record<string, { label: string; driver: Driver }> = {
-	fer: {
-		label: 'FER',
-		driver: ferDriver
-	},
-	ffzg: {
-		label: 'FFZG',
-		driver: ffzgDriver
-	}
-};
+import { drivers } from '@/modules/scraper/drivers/drivers';
+import { importer } from '../importer';
+import { lister } from '../list';
+import { scraper } from '../scraper';
 
 process.on('SIGINT', () => {
 	console.log('\nReceived SIGINT. Exiting gracefully.');
 	process.exit(0);
 });
 
-export const cli = async () => {
-	// Check CLI arguments for flags and skip prompts
-	const args = process.argv.slice(2);
+// Check CLI arguments for flags and skip prompts
+const args = process.argv.slice(2);
 
-	const argIsDebug = args.includes('--debug');
+const handleList = async () => {
+	await lister();
+	process.exit(0);
+};
+
+const handleImport = async () => {
+	// ------------------
+	// Target environment
+
+	const argProduction = args.includes('--production');
+	const argStaging = args.includes('--staging');
+
+	const targetEnvironment = argProduction
+		? 'production'
+		: argStaging
+		? 'staging'
+		: ((await p.select({
+				message: 'Target environment',
+				options: [
+					{ label: 'Production', value: 'production' },
+					{ label: 'Staging', value: 'staging' }
+				]
+		  })) as 'production' | 'staging');
+
+	// ------------------
+	// College slug
+
+	const argCollegeSlug = args
+		.find((arg) => arg.startsWith('--college='))
+		?.split('=')[1];
+
+	const collegeSlug =
+		argCollegeSlug ??
+		((await p.text({
+			message: 'College slug',
+			initialValue: 'fer'
+		})) as string);
+
+	// ------------------
+	// Input directory
+
+	const argInputDir = args
+		.find((arg) => arg.startsWith('--input='))
+		?.split('=')[1];
+
+	const inputDir =
+		argInputDir ??
+		((await p.text({
+			message: 'Input directory',
+			initialValue: `out/${collegeSlug}`
+		})) as string);
+
+	// ------------------
+	// Skipping
+
+	const argSkipStaff = args.includes('--skip-staff');
+	const argSkipSubjects = args.includes('--skip-subjects');
+	const argSkipPrograms = args.includes('--skip-programs');
+
+	// ------------------
+
+	try {
+		await importer({
+			collegeSlug,
+			inputDir,
+			targetEnvironment,
+			importStaff: !argSkipStaff,
+			importSubjects: !argSkipSubjects,
+			importPrograms: !argSkipPrograms
+		});
+	} catch (error) {
+		p.log.error((error as Error).message);
+		console.log('');
+		process.exit(0);
+	}
+};
+
+const handleScrape = async () => {
+	// ------------------
+	// College
 
 	const argCollege = args
 		.find((arg) => arg.startsWith('--college='))
 		?.split('=')[1];
-
-	if (argCollege) {
-		if (!Object.keys(collegeList).includes(argCollege)) {
-			p.log.error(`Invalid college: ${argCollege}`);
-			process.exit(1);
-		}
+	if (argCollege && !Object.keys(drivers).includes(argCollege)) {
+		p.log.error(`Invalid college: ${argCollege}`);
+		process.exit(1);
 	}
-
-	// List out colleges available for scraping
-	const argList = args.find((arg) => arg.startsWith('--list'));
-	if (argList) {
-		p.log.info(
-			`Colleges available for scraping: ${Object.keys(collegeList).join(', ')}`
-		);
-		process.exit(0);
-	}
-
-	// -----------------------------
-	// clear terminal
-	if (!argIsDebug) {
-		console.clear();
-	}
-
-	p.intro('Kampus.hr - Topic Scraper');
-
-	// -----------------------------
 
 	const colleges = argCollege
 		? [argCollege]
 		: ((await p.multiselect({
 				message: 'Select colleges',
-				options: Object.keys(collegeList).map((key) => ({
-					label: collegeList[key as keyof typeof collegeList].label,
+				options: Object.keys(drivers).map((key) => ({
+					label: drivers[key as keyof typeof drivers].label,
 					value: key
 				}))
 		  })) as string[]);
 
-	const isFullScrape = argIsDebug
+	// ------------------
+	// Full scrape / Limited scrape
+
+	const argIsLimited = args.includes('--limited');
+	const argIsFull = args.includes('--full');
+
+	const fullScrape = argIsLimited
 		? false
+		: argIsFull
+		? true
 		: ((await p.confirm({
 				message: 'Full scrape',
 				initialValue: false
 		  })) as boolean);
 
-	// -----------------------------
+	// ------------------
 
-	for (const college of colleges) {
-		const key = college;
-		const label = collegeList[college].label;
-		const driver = collegeList[college].driver;
-
-		// Initialize spinner
-		const spinner = p.spinner();
-		spinner.start();
-
-		const outDir = path.join(
-			process.cwd(),
-			'out',
-			key + (!isFullScrape ? '-debug' : '')
-		);
-
-		// Make sure the output directory exists
-		fs.mkdirSync(outDir, { recursive: true });
-
-		let spinnerStartTime = Date.now();
-		const startTime = Date.now();
-
-		const result = await driver({
-			debug: !isFullScrape,
-			callbacks: {
-				onProgress: (progress, total, title) => {
-					if (progress === 1 || progress === 0) {
-						spinnerStartTime = Date.now();
-					}
-
-					const elapsedTime = Date.now() - spinnerStartTime;
-					const estimatedTime = elapsedTime * (total / progress);
-					const remainingTime = estimatedTime - elapsedTime;
-
-					const remainingText = `${formatDistance(0, remainingTime, {
-						includeSeconds: true
-					})} remaining`;
-
-					spinner.message(
-						`${title && chalk.blue(title + ' ')}${
-							progress + ' / ' + total
-						} ${chalk.gray(remainingText)} `
-					);
-				}
-			}
+	try {
+		await scraper({
+			colleges,
+			fullScrape
 		});
+	} catch (error) {
+		p.log.error((error as Error).message);
+		console.log('');
+		process.exit(0);
+	}
+};
 
-		spinner.stop(`Done scraping ${label}.`);
+export const cli = async () => {
+	p.intro('Kampus.hr - Topic Scraper');
 
-		// Log results to files
-		p.log.success(`Total subjects: ${chalk.yellow(result.subjects.length)}`);
-		write(`${outDir}/subjects.json`, result.subjects);
+	// -----------------------------
+	// Mode
 
-		p.log.success(`Total programs: ${chalk.yellow(result.programs.length)}`);
-		write(`${outDir}/programs.json`, result.programs);
+	const argMode = ['scrape', 'list', 'import'].includes(args[0])
+		? (args[0] as 'scrape' | 'list' | 'import')
+		: null;
 
-		p.log.success(
-			`Total professors: ${chalk.yellow(result.professors.length)}`
-		);
-		write(`${outDir}/professors.json`, result.professors);
+	const mode =
+		argMode ??
+		(await p.select({
+			message: 'Mode',
+			options: [
+				{ label: 'Scrape', value: 'scrape' },
+				{ label: 'List colleges', value: 'list' },
+				{ label: 'Import', value: 'import' }
+			]
+		}));
 
-		p.note(
-			`Output directory: ${outDir}\n\nTook ${formatDistance(
-				0,
-				Date.now() - startTime,
-				{
-					includeSeconds: true
-				}
-			)}`,
-			`${label} scraped successfully!`
-		);
+	// -----------------------------
+	// Handle mode
+
+	if (mode === 'list') {
+		await handleList();
 	}
 
-	p.outro('Done!');
+	if (mode === 'import') {
+		await handleImport();
+	}
 
-	// Leave the browser open if it's a test run
-	if (isFullScrape) {
-		process.exit(0);
+	if (mode === 'scrape') {
+		await handleScrape();
 	}
 };

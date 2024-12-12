@@ -44,8 +44,8 @@ export const linkToPostProcedure = protectedProcedure
 						postId,
 						authorId: ctx.user.id,
 						type,
-						imageFile: type === 'IMAGE' ? { create: {} } : undefined,
-						documentFile: ['PDF', 'ARCHIVE'].includes(type)
+						ImageFile: type === 'IMAGE' ? { create: {} } : undefined,
+						DocumentFile: ['PDF', 'ARCHIVE'].includes(type)
 							? {
 									create: {
 										academicYear: documentOptions!.academicYear,

@@ -68,7 +68,9 @@ export const PublicProfileSection = () => {
 		}
 	};
 
-	const isLegendPlan = ['MONTHLY_PRO', 'LIFETIME'].includes(account?.package!);
+	const isLegendPlan = ['MONTHLY_PRO', 'LIFETIME'].includes(
+		account?.package ?? ''
+	);
 
 	return (
 		<>

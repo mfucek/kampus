@@ -14,7 +14,8 @@
 		"postinstall": "prisma generate",
 		"lint": "next lint",
 		"start": "next start",
-		"tunnel": "lt --port 3000 --subdomain kampus-clerk"
+		"tunnel": "lt --port 3000 --subdomain kampus-clerk",
+		"knip": "knip"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.677.0",

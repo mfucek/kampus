@@ -1,6 +1,7 @@
 import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
 
 import { fileRouter } from '@/modules/file/api/router';
+import { notificationsRouter } from '@/modules/notifications/api/router';
 import { postRouter } from '@/modules/post/api/router';
 import { programRouter } from '@/modules/program/api/router';
 import { userRouter } from '@/modules/user/api/router';
@@ -21,7 +22,8 @@ export const appRouter = createTRPCRouter({
 	staff: staffRouter,
 	vote: voteRouter,
 	file: fileRouter,
-	user: userRouter
+	user: userRouter,
+	notifications: notificationsRouter
 });
 
 export type AppRouter = typeof appRouter;

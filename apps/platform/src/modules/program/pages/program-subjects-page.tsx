@@ -22,7 +22,7 @@ export const ProgramSubjectsPage = async ({ params }: PageProps) => {
 	});
 
 	return (
-		<div className="flex flex-col gap-2 pb-20">
+		<div className="flex flex-col gap-10">
 			<ProgramSubjectsList subjects={subjects} />
 			<CacheHelper />
 		</div>

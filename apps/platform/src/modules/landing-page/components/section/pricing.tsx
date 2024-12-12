@@ -40,17 +40,19 @@ export const PricingSection = () => {
 			id="pricing"
 			className="flex flex-col items-center gap-10 py-20 rounded-2xl md:rounded-3xl overflow-hidden relative"
 		>
-			<Scribbles />
+			<div className="absolute inset-0 md:inset-[-20px]">
+				<Scribbles />
+			</div>
 			<Container size="sm" className="z-10">
-				<div className="space-y-2">
-					<h2 className="display-2 text-center mb-4">Podrži Kampus.hr</h2>
+				<div className="flex flex-col gap-3">
+					<h2 className="display-3 text-center">Podrži Kampus.hr</h2>
 					<p className="body-1 text-neutral-strong text-center">
 						Buraz, ova pretplata te dođe manje nego potrošiš na kavu. Podrži
 						stranicu i osiguraj si sve pogodnosti!
 					</p>
 				</div>
 			</Container>
-			<Container size="lg" className="z-10">
+			<Container size="lg" className="z-10 md:px-3">
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<Card>
 						<CardContent>

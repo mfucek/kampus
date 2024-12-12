@@ -59,14 +59,14 @@ export const HeroSearch: FC<{
 	};
 
 	if (isSignedIn) {
-		<Link href="/home">
+		<Link href="/colleges">
 			<Button>Idi na platformu</Button>
 		</Link>;
 	}
 
 	<>
 		<Button
-			onClick={() => openSignUp({ afterSignInUrl: '/home' })}
+			onClick={() => openSignUp({ afterSignInUrl: '/colleges' })}
 			theme="accent"
 			size="md"
 			variant="solid"
@@ -106,27 +106,27 @@ export const HeroSearch: FC<{
 
 	const DefaultResults = () => {
 		return (
-			<div className="flex flex-row bg-section rounded-2xl overflow-hidden">
+			<div className="flex flex-col-reverse md:flex-row bg-section rounded-2xl overflow-hidden">
 				<div className="flex flex-col gap-3 flex-1 py-4 overflow-hidden">
 					<div className="flex flex-row justify-between px-4">
 						<p className="title-3">Top fakulteti</p>
 						<Link
 							className="text-accent hover:underline button-md"
-							href="/home"
+							href="/colleges"
 						>
 							Vidi sve
 						</Link>
 					</div>
 
-					<div className="flex flex-col px-1">
+					<div className="flex flex-col px-1 h-full">
 						{topColleges.map((college) => (
 							<CollegeCard key={college.id} college={college} />
 						))}
 					</div>
 				</div>
 
-				<div className="flex py-4">
-					<div className="w-px bg-neutral-weak" />
+				<div className="flex px-4 py-0 md:py-4 md:px-0">
+					<div className="w-full md:w-px h-px md:h-full bg-neutral-weak" />
 				</div>
 
 				<div className="flex flex-col gap-3 flex-1 py-4 overflow-hidden">
@@ -137,10 +137,13 @@ export const HeroSearch: FC<{
 						</a>
 					</div>
 
-					<div className="flex flex-col px-1">
-						{topColleges.map((college) => (
+					<div className="flex flex-col px-1 h-full">
+						<div className="flex-1 flex justify-center items-center body-3 text-neutral-strong">
+							Ova funkcionalnost dolazi uskoro!
+						</div>
+						{/* {topColleges.map((college) => (
 							<CollegeCard key={college.id} college={college} />
-						))}
+						))} */}
 					</div>
 				</div>
 			</div>

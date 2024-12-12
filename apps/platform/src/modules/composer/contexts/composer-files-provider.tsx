@@ -149,7 +149,7 @@ export const ComposerFilesProvider: FC<{
 		// Prevent negative index
 		if (newIndex && newIndex < 0) {
 			newIndex = null;
-		} else console.log('setting newIndex to', newIndex);
+		}
 
 		setFileDetailsIndex(newIndex);
 	};

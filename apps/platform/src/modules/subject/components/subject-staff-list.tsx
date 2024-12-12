@@ -30,6 +30,7 @@ export const SubjectStaffList = ({ staffs }: { staffs: ListStaffItem[] }) => {
 					)}
 					title={role}
 					info={`${staff.length} nastavnika`}
+					showAll={true}
 				/>
 			))}
 		</div>

@@ -89,7 +89,7 @@ export const Navbar = () => {
 	return (
 		<div className="md:bg-section md:border-b md:border-b-neutral-weak h-14 flex flex-row justify-between items-center px-2 shrink-0">
 			<div className="flex flex-row gap-3 items-center">
-				<Link href="/home" className="flex flex-row">
+				<Link href="/" className="flex flex-row">
 					{isStaging && (
 						<div className="ml-1 px-2 flex items-center gap-2 bg-danger caption rounded-md">
 							<div className="shrink-0 h-[20px] w-[70px]">

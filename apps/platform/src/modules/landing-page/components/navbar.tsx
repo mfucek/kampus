@@ -60,7 +60,7 @@ export const Navbar = () => {
 			return (
 				<ActionsGroup>
 					<ThemeToggler size="sm" />
-					<Link href="/home">
+					<Link href="/colleges">
 						<Button theme="accent" size="sm" variant="solid">
 							idi na platformu
 						</Button>
@@ -73,7 +73,7 @@ export const Navbar = () => {
 			<ActionsGroup>
 				<ThemeToggler size="sm" />
 				<Button
-					onClick={() => openSignUp({ afterSignInUrl: '/home' })}
+					onClick={() => openSignUp({ afterSignInUrl: '/colleges' })}
 					theme="neutral"
 					size="sm"
 					variant="solid-weak"
@@ -81,7 +81,7 @@ export const Navbar = () => {
 					Registriraj se
 				</Button>
 				<Button
-					onClick={() => openSignIn({ afterSignInUrl: '/home' })}
+					onClick={() => openSignIn({ afterSignInUrl: '/colleges' })}
 					theme="accent"
 					size="sm"
 					variant="solid"
@@ -93,8 +93,8 @@ export const Navbar = () => {
 	};
 
 	return (
-		<div className="bg-transparent backdrop-blur-md border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0 fixed w-full z-50">
-			<Link href="/">
+		<div className="bg-gradient-to-b from-background to-background/0 backdrop-blur-md border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0 fixed w-full z-50">
+			<Link href="/" className="flex flex-row">
 				{isStaging && (
 					<div className="ml-1 px-2 flex items-center gap-2 bg-danger caption rounded-md">
 						<div className="shrink-0 h-[20px] w-[70px]">
@@ -110,6 +110,9 @@ export const Navbar = () => {
 						</div>
 					</div>
 				)}
+				<div className="ml-1 px-2 flex items-center gap-2 bg-neutral-weak caption rounded-md">
+					<span className="caption text-neutral">BETA</span>
+				</div>
 			</Link>
 			<div className="flex flex-row gap-4 items-center">
 				<Links />

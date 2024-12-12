@@ -8,9 +8,10 @@ on:
       - labeled
       - unlabeled
 
-# Add permissions block to grant necessary access
+# Update permissions block to include necessary permissions
 permissions:
-  pull-requests: read
+  contents: read
+  pull-requests: write
 
 jobs:
   check_labels:
@@ -18,9 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: mheap/github-action-required-labels@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           mode: exactly
           count: 1

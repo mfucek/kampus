@@ -32,11 +32,11 @@ export const CollegeDiscussionPage = async ({ params }: PageProps) => {
 					<div className="title-2">Rasprava</div>
 					<Select value="newest" disabled>
 						<SelectTrigger className="w-fit">
-							<SelectValue placeholder="Sort by" />
+							<SelectValue placeholder="Sortiraj" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="newest">Najnoviji</SelectItem>
-							<SelectItem value="oldest">Najstariji</SelectItem>
+							<SelectItem value="newest">Najnovije</SelectItem>
+							<SelectItem value="oldest">Najstarije</SelectItem>
 							<SelectItem value="relevant">Po relevantnosti</SelectItem>
 							<SelectItem value="votes">Po glasovima</SelectItem>
 						</SelectContent>

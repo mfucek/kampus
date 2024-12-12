@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 		throw new Error('Missing webhook secret');
 	}
 
-	const headerPayload = headers();
+	const headerPayload = await headers();
 	const svix_id = headerPayload.get('svix-id');
 	const svix_timestamp = headerPayload.get('svix-timestamp');
 	const svix_signature = headerPayload.get('svix-signature');
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 		return new Response('Missing svix headers', { status: 400 });
 	}
 
-	const payload = await req.json();
+	const payload = (await req.json()) as unknown;
 	const body = JSON.stringify(payload);
 
 	const wh = new Webhook(WEBHOOK_SECRET);

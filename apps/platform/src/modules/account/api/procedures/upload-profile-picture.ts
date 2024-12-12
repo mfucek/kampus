@@ -13,21 +13,21 @@ export const uploadProfilePictureProcedure = protectedProcedure
 				userId: user.id
 			},
 			include: {
-				file: true
+				File: true
 			}
 		});
 
 		// Delete old profile picture file
 		if (oldProfileIcon) {
-			await deleteFile(oldProfileIcon.file.key);
+			await deleteFile(oldProfileIcon.File.key);
 			await db.imageFile.delete({
 				where: { userId: user.id },
 				include: {
-					file: true
+					File: true
 				}
 			});
 			await db.file.delete({
-				where: { id: oldProfileIcon.file.id }
+				where: { id: oldProfileIcon.File.id }
 			});
 		}
 
@@ -36,7 +36,7 @@ export const uploadProfilePictureProcedure = protectedProcedure
 			data: {
 				key: input.key,
 				type: 'IMAGE',
-				authorId: user.id!
+				authorId: user.id
 			}
 		});
 

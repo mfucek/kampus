@@ -7,7 +7,7 @@ import { Suspense, type FC, type PropsWithChildren } from 'react';
 const Layout: FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<>
-			<div className="flex flex-col w-screen h-screen md:overflow-hidden">
+			<div className="flex flex-col w-screen h-screen md:overflow-x-hidden overscroll-x-none">
 				<Navbar />
 				<Suspense
 					fallback={

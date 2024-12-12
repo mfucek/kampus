@@ -1,0 +1,43 @@
+type StringOrStringArrayKeys<T> = {
+	[K in keyof T]: T[K] extends
+		| string
+		| string[]
+		| number
+		| number[]
+		| undefined
+		| null
+		? K
+		: never;
+}[keyof T];
+
+export const groupByKey = <T>(
+	data: T[],
+	key: StringOrStringArrayKeys<T>,
+	defaultGroup: string
+) => {
+	const grouped: Record<string, T[]> = {};
+
+	for (const item of data) {
+		const isEmpty =
+			item[key] === '' ||
+			item[key] === null ||
+			item[key] === undefined ||
+			(Array.isArray(item[key]) && item[key].length === 0);
+
+		const sanitizedKey = isEmpty ? defaultGroup : item[key];
+
+		const groupedKeys = Array.isArray(sanitizedKey)
+			? sanitizedKey
+			: [sanitizedKey];
+
+		for (const group of groupedKeys as (string | number)[]) {
+			if (!grouped[group]) {
+				grouped[group] = [];
+			}
+
+			grouped[group].push(item);
+		}
+	}
+
+	return grouped;
+};

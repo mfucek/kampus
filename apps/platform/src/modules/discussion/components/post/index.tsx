@@ -1,14 +1,8 @@
 'use client';
 
-import { EditorContent, type JSONContent, useEditor } from '@tiptap/react';
+import { EditorContent, useEditor } from '@tiptap/react';
 import { formatDistance } from 'date-fns';
 import { type FC } from 'react';
-
-import {
-	type DocumentFileType,
-	type FileType,
-	type VoteType
-} from '@prisma/client';
 
 import { Icon } from '@/global/components/icon';
 import {
@@ -18,51 +12,13 @@ import {
 } from '@/lib/shadcn/ui/tooltip';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
+import { type FullPost } from '@/modules/post/types/full-post';
 import { PostActions } from './post-actions';
 import { PostFiles } from './post-files';
 import { PostThreading } from './post-threading';
 
-type PostInterface = {
-	post: {
-		author: {
-			id: string;
-			displayName: string;
-			imageUrl: string | null;
-			badge: string | null;
-			accountId: string;
-		};
-		authorId: string | null;
-		id: string;
-		body: JSONContent | null;
-		createdAt: Date;
-		_count: {
-			replies: number;
-		};
-	};
-	files: {
-		id: string;
-		key: string;
-		type: FileType;
-		documentFile:
-			| {
-					academicYear?: string;
-					title?: string;
-					types: DocumentFileType[];
-			  }
-			| undefined
-			| null;
-		imageFile: {} | null;
-		url?: string | null;
-	}[];
-	votes: {
-		likes: number;
-		dislikes: number;
-		userVote: VoteType | null;
-	};
-};
-
 export const Post: FC<{
-	fullPost: PostInterface;
+	fullPost: FullPost;
 	depthInfo: number[];
 	previousThreadDepth?: number[];
 	nextThreadDepth?: number[];
@@ -88,7 +44,7 @@ export const Post: FC<{
 
 	const PostBody = () => {
 		return (
-			<div className="flex flex-col gap-2 pb-6 w-full">
+			<div className="flex flex-col gap-2 w-full">
 				<div className="flex flex-row gap-2 h-6 items-center">
 					<span className="caption">{post.author.displayName}</span>
 					{post.author.badge && (

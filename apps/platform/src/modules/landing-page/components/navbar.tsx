@@ -4,10 +4,13 @@ import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 
 import { env } from '@/env';
+import { Logo } from '@/global/components/logo';
 import { ActionsGroup } from '@/global/molecules/navbar/actions-group';
 import { Divider } from '@/global/molecules/navbar/divider';
 import { Button } from '@/lib/shadcn/ui/button';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+
+const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
 	const { openSignIn, openSignUp } = useClerk();
@@ -92,14 +95,21 @@ export const Navbar = () => {
 	return (
 		<div className="bg-foreground backdrop-blur-md border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0 fixed w-full z-50">
 			<Link href="/">
-				<div className="title-3">
-					Kampus.hr
-					{env.NEXT_PUBLIC_DEPLOYMENT === 'staging' && (
-						<span className="ml-1 px-2 bg-danger text-danger-contrast caption rounded-xl">
-							STG
-						</span>
-					)}
-				</div>
+				{isStaging && (
+					<div className="ml-1 px-2 flex items-center gap-2 bg-danger caption rounded-md">
+						<div className="shrink-0 h-[20px] w-[70px]">
+							<Logo className="bg-danger-contrast" />
+						</div>
+						<span className="caption text-danger-contrast">STG</span>
+					</div>
+				)}
+				{!isStaging && (
+					<div className="ml-1 px-2 flex items-center gap-2 bg-accent caption rounded-md">
+						<div className="shrink-0 h-[20px] w-[70px]">
+							<Logo className="bg-accent-contrast shrink-0" />
+						</div>
+					</div>
+				)}
 			</Link>
 			<div className="flex flex-row gap-4 items-center">
 				<Links />

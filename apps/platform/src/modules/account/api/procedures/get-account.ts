@@ -5,7 +5,7 @@ export const getAccoutProcedure = protectedProcedure.query(async ({ ctx }) => {
 
 	const account = await db.account.findFirst({
 		where: {
-			clerkUserId: auth.userId!
+			clerkUserId: auth.userId
 		}
 	});
 

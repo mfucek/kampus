@@ -141,6 +141,14 @@ export default {
 			xl: '1280px'
 		}
 	},
+	safelist: [
+		'theme-neutral',
+		'theme-accent',
+		'theme-success',
+		'theme-danger',
+		'theme-warning',
+		'theme-info'
+	],
 	plugins: [
 		require('@tailwindcss/container-queries'),
 		require('tailwindcss-animate')

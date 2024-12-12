@@ -35,7 +35,7 @@ export const deletePostProcedure = protectedProcedure
 
 			await tx.imageFile.deleteMany({
 				where: {
-					file: {
+					File: {
 						postId: input.postId
 					}
 				}
@@ -43,7 +43,7 @@ export const deletePostProcedure = protectedProcedure
 
 			await tx.documentFile.deleteMany({
 				where: {
-					file: {
+					File: {
 						postId: input.postId
 					}
 				}

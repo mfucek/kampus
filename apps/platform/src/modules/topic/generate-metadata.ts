@@ -9,12 +9,15 @@ const titleSuffix = ' | Kampus.hr';
 const defaultCoverImage = 'https://kampus.hr/cover.png';
 
 export const generateSubjectMetadata = async ({
-	subjectSlug,
-	collegeSlug
+	params
 }: {
-	subjectSlug: string;
-	collegeSlug: string;
+	params: {
+		subjectSlug: string;
+		collegeSlug: string;
+	};
 }): Promise<Metadata> => {
+	const { subjectSlug, collegeSlug } = params;
+
 	const subject = await db.topic.findFirst({
 		where: {
 			slug: subjectSlug,
@@ -53,10 +56,14 @@ export const generateSubjectMetadata = async ({
 };
 
 export const generateCollegeMetadata = async ({
-	collegeSlug
+	params
 }: {
-	collegeSlug: string;
+	params: {
+		collegeSlug: string;
+	};
 }): Promise<Metadata> => {
+	const { collegeSlug } = params;
+
 	const college = await db.college.findFirst({
 		where: {
 			slug: collegeSlug
@@ -91,12 +98,15 @@ export const generateCollegeMetadata = async ({
 };
 
 export const generateStaffMetadata = async ({
-	staffSlug,
-	collegeSlug
+	params
 }: {
-	staffSlug: string;
-	collegeSlug: string;
+	params: {
+		staffSlug: string;
+		collegeSlug: string;
+	};
 }): Promise<Metadata> => {
+	const { staffSlug, collegeSlug } = params;
+
 	const staff = await db.topic.findFirst({
 		where: {
 			slug: staffSlug,
@@ -135,12 +145,15 @@ export const generateStaffMetadata = async ({
 };
 
 export const generateProgramMetadata = async ({
-	programSlug,
-	collegeSlug
+	params
 }: {
-	programSlug: string;
-	collegeSlug: string;
+	params: {
+		programSlug: string;
+		collegeSlug: string;
+	};
 }): Promise<Metadata> => {
+	const { programSlug, collegeSlug } = params;
+
 	const program = await db.topic.findFirst({
 		where: {
 			slug: programSlug,

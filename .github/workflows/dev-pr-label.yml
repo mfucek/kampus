@@ -7,6 +7,11 @@ on:
       - reopened
       - labeled
       - unlabeled
+
+# Add permissions block to grant necessary access
+permissions:
+  pull-requests: read
+
 jobs:
   check_labels:
     name: 'Check PR Labels'

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const Footer = () => {
 	return (
-		<footer className="flex flex-col md:flex-row gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-t-neutral-weak md:justify-between bg-section">
+		<footer className="flex flex-col md:flex-row gap-2 sm:flex-row py-10 w-full shrink-0 items-center px-4 md:px-6 md:justify-between">
 			<p className="body-3 text-neutral-strong">
 				© {new Date().getFullYear()} Kampus.hr - Sva prava pridržana.
 			</p>

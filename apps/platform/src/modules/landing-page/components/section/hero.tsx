@@ -1,62 +1,26 @@
-'use client';
-
 import { Container } from '@/global/components/container';
-import { Button } from '@/lib/shadcn/ui/button';
-import { useAuth, useClerk } from '@clerk/nextjs';
-import Link from 'next/link';
+import { api } from '@/lib/trpc/server';
+import { HeroLogo } from '../hero-logo';
+import { HeroSearch } from '../hero-search';
+import { Scribbles } from '../scribbles';
 
-export const HeroSection = () => {
-	const { isSignedIn } = useAuth();
-	const { openSignUp } = useClerk();
-
-	const scrollToSection = (id: string) => {
-		const element = document.getElementById(id);
-		if (element) {
-			element.scrollIntoView({ behavior: 'smooth' });
-		}
-	};
-
-	const Actions = () => {
-		if (isSignedIn) {
-			return (
-				<Link href="/home">
-					<Button>Idi na platformu</Button>
-				</Link>
-			);
-		}
-		return (
-			<>
-				<Button
-					onClick={() => openSignUp({ afterSignInUrl: '/home' })}
-					theme="accent"
-					size="md"
-					variant="solid"
-				>
-					Pridruži se besplatno
-				</Button>
-				<Button onClick={() => scrollToSection('features')} variant="outline">
-					Saznaj više
-				</Button>
-			</>
-		);
-	};
+export const HeroSection = async () => {
+	const topColleges = await api.college.listTopColleges();
+	const allColleges = await api.college.listAll();
 
 	return (
-		<section className="flex flex-col items-center py-40 bg-section" id="hero">
-			<Container>
-				<div className="flex flex-col items-center space-y-4 text-center">
-					<div className="flex flex-col items-center gap-6">
-						<h1 className="display-1">Dobrodošli na Kampus.hr</h1>
-						<p className="max-w-[640px] text-neutral-strong">
-							Tvoj virtualni kampus za razmjenu znanja, iskustava i materijala.
-							Spojimo sve studente u Hrvatskoj!
-						</p>
-					</div>
-					<div className="flex flex-row gap-4">
-						<Actions />
-					</div>
-				</div>
+		<section
+			className="flex flex-col gap-10 items-center py-40 bg-gradient-to-b from-section to-background relative"
+			id="hero"
+		>
+			{/* <FloatingColleges /> */}
+			<Container className="z-10">
+				<HeroLogo />
 			</Container>
+			<Container className="z-10">
+				<HeroSearch topColleges={topColleges} allColleges={allColleges} />
+			</Container>
+			<Scribbles />
 		</section>
 	);
 };

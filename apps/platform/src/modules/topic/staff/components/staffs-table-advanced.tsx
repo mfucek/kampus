@@ -1,7 +1,5 @@
 'use client';
 
-import { type FC, useEffect, useState } from 'react';
-
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Input } from '@/lib/shadcn/ui/input';
@@ -13,19 +11,20 @@ import {
 	SelectValue
 } from '@/lib/shadcn/ui/select';
 import { api } from '@/lib/trpc/react';
-import { type TSubjectFilters } from '@/modules/subject/schemas/subject-filters';
-import { type TSubjectScope } from '@/modules/subject/schemas/subject-scope';
+import { StaffsTable } from '@/modules/topic/staff/components/staffs-table';
+import type { TStaffFilters } from '@/modules/topic/staff/schemas/staff-filters';
+import type { TStaffScope } from '@/modules/topic/staff/schemas/staff-scope';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
-import { SubjectsTable } from './subjects-table';
+import { type FC, useEffect, useState } from 'react';
 
-const SubjectsTableWithData: FC<{
-	filters?: TSubjectFilters;
-	scope?: TSubjectScope;
+const StaffsTableWithData: FC<{
+	filters?: TStaffFilters;
+	scope?: TStaffScope;
 	limit: number;
 }> = ({ filters, scope, limit }) => {
 	const [page, setPage] = useState(0);
 
-	const query = api.subject.list.useInfiniteQuery(
+	const query = api.staff.list.useInfiniteQuery(
 		{
 			scope,
 			limit,
@@ -36,7 +35,7 @@ const SubjectsTableWithData: FC<{
 		}
 	);
 
-	const numOfPages = query.data?.pages[0]?.totalSubjects ?? 0;
+	const numOfPages = query.data?.pages[0]?.totalStaffs ?? 0;
 	const canGoNext = page + 1 < numOfPages;
 	const canGoPrevious = page > 0;
 
@@ -58,8 +57,8 @@ const SubjectsTableWithData: FC<{
 
 	return (
 		<>
-			<SubjectsTable
-				subjects={query.data?.pages[page]?.subjects ?? []}
+			<StaffsTable
+				staffs={query.data?.pages[page]?.staffs ?? []}
 				loading={query.isFetching}
 			/>
 
@@ -90,11 +89,11 @@ const SubjectsTableWithData: FC<{
 	);
 };
 
-export const SubjectsTableAdvanced: FC<{
-	scope?: TSubjectScope;
+export const StaffsTableAdvanced: FC<{
+	scope?: TStaffScope;
 }> = ({ scope }) => {
 	const [tableProps, setTableProps] = useState<{
-		filters: TSubjectFilters;
+		filters: TStaffFilters;
 		limit: number;
 	}>({
 		filters: {},
@@ -102,7 +101,7 @@ export const SubjectsTableAdvanced: FC<{
 	});
 
 	const [viewOptions, setViewOptions] = useState<{
-		filters: TSubjectFilters;
+		filters: TStaffFilters;
 		limit: number;
 	}>({
 		filters: {
@@ -160,15 +159,15 @@ export const SubjectsTableAdvanced: FC<{
 				</Select>
 			</div>
 
-			<SubjectsTableWithData scope={scope} {...tableProps} />
+			<StaffsTableWithData scope={scope} {...tableProps} />
 		</div>
 	);
 };
 
 /*
-<SubjectsTable.Provider scope={scope}>
-	<SubjectsTable.Filters />
-		<SubjectsTable.Table />
-	<SubjectsTable.Pagination />
-</SubjectsTable.Provider>
+<StaffsTable.Provider scope={scope}>
+	<StaffsTable.Filters />
+		<StaffsTable.Table />
+	<StaffsTable.Pagination />
+</StaffsTable.Provider>
 */

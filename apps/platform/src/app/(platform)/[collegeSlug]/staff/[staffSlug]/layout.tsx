@@ -1,3 +1,3 @@
-import { StaffLayout } from '@/modules/staff/layouts/staff-layout';
+import { StaffLayout } from '@/modules/topic/staff/layouts/staff-layout';
 
 export default StaffLayout;

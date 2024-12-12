@@ -1,4 +1,4 @@
-import { CollegeBrowserPage } from '@/modules/college/pages/college-browser';
+import { CollegeBrowserPage } from '@/modules/topic/college/pages/college-browser';
 
 export default CollegeBrowserPage;
 

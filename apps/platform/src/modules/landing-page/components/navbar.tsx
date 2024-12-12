@@ -93,7 +93,7 @@ export const Navbar = () => {
 	};
 
 	return (
-		<div className="bg-foreground backdrop-blur-md border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0 fixed w-full z-50">
+		<div className="bg-transparent backdrop-blur-md border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0 fixed w-full z-50">
 			<Link href="/">
 				{isStaging && (
 					<div className="ml-1 px-2 flex items-center gap-2 bg-danger caption rounded-md">

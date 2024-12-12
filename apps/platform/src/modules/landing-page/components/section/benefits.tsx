@@ -2,7 +2,10 @@ import { Container } from '@/global/components/container';
 
 export const BenefitsSection = () => {
 	return (
-		<section id="how-it-works" className="py-20 flex flex-col items-center">
+		<section
+			id="how-it-works"
+			className="py-20 flex flex-col items-center rounded-2xl md:rounded-3xl"
+		>
 			<Container>
 				<h2 className="display-2 text-center mb-12">Kako radi Kampus.hr?</h2>
 				<div className="grid gap-6 lg:grid-cols-3 lg:gap-12">

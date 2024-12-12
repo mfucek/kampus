@@ -1,4 +1,4 @@
-import { StaffsTableAdvanced } from '@/modules/staff/components/staffs-table-advanced';
+import { StaffsTableAdvanced } from '@/modules/topic/staff/components/staffs-table-advanced';
 
 interface PageProps {
 	params: Promise<{

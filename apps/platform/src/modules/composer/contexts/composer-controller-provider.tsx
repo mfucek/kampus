@@ -41,8 +41,9 @@ export const ComposerControllerProvider: FC<{
 	collegeId: string;
 	topicId?: string;
 	replyToId?: string;
-}> = ({ children, collegeId, topicId, replyToId }) => {
-	const [locked, setLocked] = useState(false);
+	enabled?: boolean;
+}> = ({ children, collegeId, topicId, replyToId, enabled = true }) => {
+	const [locked, setLocked] = useState(!enabled);
 
 	return (
 		<ComposerControllerContext.Provider

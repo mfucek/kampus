@@ -36,7 +36,7 @@ export const uploadProfilePictureProcedure = protectedProcedure
 			data: {
 				key: input.key,
 				type: 'IMAGE',
-				authorId: user.id!
+				authorId: user.id
 			}
 		});
 

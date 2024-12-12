@@ -52,49 +52,56 @@ export const createStaff = async ({
 	for (let i = 0; i < professorsToCreate.length; i += BATCH_SIZE_PROFESSORS) {
 		const chunk = professorsToCreate.slice(i, i + BATCH_SIZE_PROFESSORS);
 
-		await db.$transaction(async (tx) => {
-			// First create the topics
-			const topicsToCreate: Prisma.TopicCreateManyInput[] = chunk.map((p) => ({
-				type: 'STAFF',
-				slug: slugify(p.name),
-				name: p.name,
-				collegeId: collegeId,
-				shortName: slugify(p.name)
-			}));
-
-			await tx.topic.createMany({
-				data: topicsToCreate,
-				skipDuplicates: true
-			});
-
-			// Connect staff to topics
-			for (const professor of chunk) {
-				const topic = await tx.topic.findFirst({
-					where: {
+		await db.$transaction(
+			async (tx) => {
+				// First create the topics
+				const topicsToCreate: Prisma.TopicCreateManyInput[] = chunk.map(
+					(p) => ({
 						type: 'STAFF',
+						slug: slugify(p.name),
+						name: p.name,
 						collegeId: collegeId,
-						slug: slugify(professor.name)
-					}
+						shortName: slugify(p.name)
+					})
+				);
+
+				await tx.topic.createMany({
+					data: topicsToCreate,
+					skipDuplicates: true
 				});
 
-				if (topic) {
-					await tx.staff.create({
-						data: {
-							topicId: topic.id,
-							imageUrl: professor.imageUrl,
-							staffExternalLink: professor.externalLink
+				// Connect staff to topics
+				for (const professor of chunk) {
+					const topic = await tx.topic.findFirst({
+						where: {
+							type: 'STAFF',
+							collegeId: collegeId,
+							slug: slugify(professor.name)
 						}
 					});
-				}
-			}
 
-			createdProfessors += chunk.length;
-			spinnerProfs.onProgress(
-				createdProfessors,
-				professorsToCreate.length,
-				'Creating staff'
-			);
-		});
+					if (topic) {
+						await tx.staff.create({
+							data: {
+								topicId: topic.id,
+								imageUrl: professor.imageUrl,
+								staffExternalLink: professor.externalLink
+							}
+						});
+					}
+				}
+
+				createdProfessors += chunk.length;
+				spinnerProfs.onProgress(
+					createdProfessors,
+					professorsToCreate.length,
+					'Creating staff'
+				);
+			},
+			{
+				timeout: 30000
+			}
+		);
 	}
 
 	spinnerProfs.stop(`Created ${createdProfessors} new staff.`);

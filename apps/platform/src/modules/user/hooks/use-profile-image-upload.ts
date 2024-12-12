@@ -34,7 +34,7 @@ export const useProfileImageUpload = () => {
 
 			setUploading(false);
 
-			onSuccess(key);
+			await onSuccess(key);
 		} catch (error) {
 			console.error('Error uploading profile picture:', error);
 			toast({
@@ -49,12 +49,12 @@ export const useProfileImageUpload = () => {
 		const input = document.createElement('input');
 		input.type = 'file';
 		input.accept = 'image/png, image/jpeg';
-		input.onchange = (e) => {
+		input.onchange = async (e) => {
 			const files = (e.target as HTMLInputElement).files;
 			const file = files?.[0];
 			if (!file) return;
 
-			handleUpload(file);
+			await handleUpload(file);
 		};
 		input.click();
 	};

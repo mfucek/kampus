@@ -12,7 +12,7 @@ import {
 } from '@/lib/shadcn/ui/tooltip';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
-import { FullPost } from '@/modules/post/types/full-post';
+import { type FullPost } from '@/modules/post/types/full-post';
 import { PostActions } from './post-actions';
 import { PostFiles } from './post-files';
 import { PostThreading } from './post-threading';
@@ -44,7 +44,7 @@ export const Post: FC<{
 
 	const PostBody = () => {
 		return (
-			<div className="flex flex-col gap-2 pb-6 w-full">
+			<div className="flex flex-col gap-2 w-full">
 				<div className="flex flex-row gap-2 h-6 items-center">
 					<span className="caption">{post.author.displayName}</span>
 					{post.author.badge && (

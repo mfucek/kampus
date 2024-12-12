@@ -1,50 +1,31 @@
-/**
- * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
- * 1. You want to modify request context (see Part 1).
- * 2. You want to create a new middleware or type of procedure (see Part 3).
- *
- * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
- * need to use are documented accordingly near the end.
- */
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
+import { headers } from 'next/headers';
+
+import { NextRequest } from 'next/server';
+
 import { db } from '@/lib/prisma/db';
-import { type getAuth } from '@clerk/nextjs/server';
+import { getAuth } from '@clerk/nextjs/server';
+import { User } from '@prisma/client';
 
-type AuthObject = ReturnType<typeof getAuth>;
+// type AuthObject = ReturnType<typeof getAuth>;
 
-/**
- * 1. CONTEXT
- *
- * This section defines the "contexts" that are available in the backend API.
- *
- * These allow you to access things when processing a request, like the database, the session, etc.
- *
- * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
- * wrap this and provides the required context.
- *
- * @see https://trpc.io/docs/server/context
- */
+/* CONTEXT */
 export const createTRPCContext = async (opts: {
 	headers: Headers;
-	auth: AuthObject;
+	// auth: AuthObject;
 }) => {
 	return {
 		db,
-		clerkUserId: opts.auth.userId,
+		// clerkUserId: opts.auth.userId
+		auth: null,
 		...opts
 	};
 };
 
-/**
- * 2. INITIALIZATION
- *
- * This is where the tRPC API is initialized, connecting the context and transformer. We also parse
- * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
- * errors on the backend.
- */
+/* INITIALIZATION */
 export const t = initTRPC.context<typeof createTRPCContext>().create({
 	transformer: superjson,
 	errorFormatter({ shape, error }) {
@@ -58,33 +39,11 @@ export const t = initTRPC.context<typeof createTRPCContext>().create({
 	}
 });
 
-/**
- * Create a server-side caller.
- *
- * @see https://trpc.io/docs/server/server-side-calls
- */
+/* Create a server-side caller. */
 export const createCallerFactory = t.createCallerFactory;
 
-/**
- * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
- *
- * These are the pieces you use to build your tRPC API. You should import these a lot in the
- * "/src/server/api/routers" directory.
- */
-
-/**
- * This is how you create new routers and sub-routers in your tRPC API.
- *
- * @see https://trpc.io/docs/router
- */
 export const createTRPCRouter = t.router;
 
-/**
- * Middleware for timing procedure execution and adding an artificial delay in development.
- *
- * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
- * network latency that would occur in production but not in local development.
- */
 const timingMiddleware = t.middleware(async ({ next, path }) => {
 	const start = Date.now();
 
@@ -102,24 +61,47 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 	return result;
 });
 
-/**
- * Public (unauthenticated) procedure
- *
- * This is the base piece you use to build new queries and mutations on your tRPC API. It does not
- * guarantee that a user querying is authorized, but you can still access user session data if they
- * are logged in.
- */
-export const publicProcedure = t.procedure.use(timingMiddleware);
+export const publicProcedure = t.procedure;
+// .use(timingMiddleware);
 
-/** Reusable middleware that enforces users are logged in before running the procedure. */
-const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
-	if (!ctx.clerkUserId) {
+export const optionalAuthMiddleware = t.middleware(async ({ ctx, next }) => {
+	let auth: ReturnType<typeof getAuth> | null = null;
+	let user: User | null = null;
+
+	auth = getAuth(
+		new NextRequest('https://notused.com', {
+			headers: await headers()
+		})
+	);
+
+	user = auth?.userId
+		? await db.user.findFirst({
+				where: {
+					Account: {
+						clerkUserId: auth.userId
+					}
+				}
+			})
+		: null;
+
+	return next({ ctx: { ...ctx, auth, user } });
+});
+
+const strictAuthMiddleware = t.middleware(async ({ ctx, next }) => {
+	const auth = getAuth(
+		new NextRequest('https://notused.com', {
+			headers: await headers()
+		})
+	);
+	const clerkUserId = auth.userId;
+
+	if (!clerkUserId) {
 		throw new TRPCError({ code: 'UNAUTHORIZED' });
 	}
 
 	const account = await db.account.findUnique({
 		where: {
-			clerkUserId: ctx.clerkUserId
+			clerkUserId
 		},
 		include: {
 			user: true
@@ -130,10 +112,15 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
 		throw new TRPCError({ code: 'UNAUTHORIZED' });
 	}
 
-	// Make ctx.userId non-nullable in protected procedures
-	return next({ ctx: { clerkUserId: ctx.clerkUserId, user: account.user! } });
+	const user = account.user;
+
+	if (!user) {
+		throw new TRPCError({ code: 'UNAUTHORIZED' });
+	}
+
+	return next({ ctx: { ...ctx, auth, user } });
 });
 
 export const protectedProcedure = t.procedure
-	.use(timingMiddleware)
-	.use(enforceUserIsAuthed);
+	// .use(timingMiddleware)
+	.use(strictAuthMiddleware);

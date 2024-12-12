@@ -1,5 +1,8 @@
-import { protectedProcedure } from '@/server/api/trpc';
 import { z } from 'zod';
+
+import { validateJSONContent } from '@/lib/tiptap/validate-json-content';
+import { protectedProcedure } from '@/server/api/trpc';
+import { type JSONContent } from '@tiptap/react';
 
 export const createPostProcedure = protectedProcedure
 	.input(
@@ -14,14 +17,14 @@ export const createPostProcedure = protectedProcedure
 		const { db, user } = ctx;
 
 		try {
-			JSON.parse(input.body);
+			validateJSONContent(input.body);
 		} catch (error) {
 			console.error(error);
 		}
 
 		const post = await db.post.create({
 			data: {
-				body: input.body,
+				body: input.body as JSONContent,
 				collegeId: input.collegeId,
 				topicId: input.topicId,
 				replyToId: input.replyToId,

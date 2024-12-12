@@ -2,6 +2,7 @@
 
 import { type FC } from 'react';
 
+import { useAuth } from '@clerk/nextjs';
 import { ComposerProvider } from '../providers/composer-provider';
 import { ComposerEditor } from './composer-editor';
 import { ComposerFiles } from './composer-files';
@@ -12,11 +13,14 @@ export const Composer: FC<{
 	topicId?: string;
 	replyToId?: string;
 }> = ({ collegeId, topicId, replyToId }) => {
+	const { isSignedIn } = useAuth();
+
 	return (
 		<ComposerProvider
 			collegeId={collegeId}
 			topicId={topicId}
 			replyToId={replyToId}
+			enabled={isSignedIn}
 		>
 			<div className="flex flex-col gap-3 w-full">
 				<ComposerEditor />

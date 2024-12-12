@@ -10,12 +10,14 @@ export const ComposerProvider: FC<{
 	collegeId: string;
 	topicId?: string;
 	replyToId?: string;
-}> = ({ children, collegeId, topicId, replyToId }) => {
+	enabled?: boolean;
+}> = ({ children, collegeId, topicId, replyToId, enabled = true }) => {
 	return (
 		<ComposerControllerProvider
 			collegeId={collegeId}
 			topicId={topicId}
 			replyToId={replyToId}
+			enabled={enabled}
 		>
 			<ComposerBodyProvider>
 				<ComposerFilesProvider>{children}</ComposerFilesProvider>

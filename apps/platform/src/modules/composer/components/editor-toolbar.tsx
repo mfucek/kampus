@@ -13,7 +13,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 	const { openFileDialog } = useComposerUploadDialog();
 
 	const setLink = useCallback(() => {
-		const previousUrl = editor.getAttributes('link').href;
+		const previousUrl = editor.getAttributes('link').href as string;
 		const url = window.prompt('URL', previousUrl);
 
 		// cancelled

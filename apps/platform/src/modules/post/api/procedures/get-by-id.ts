@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { getFileUrl } from '@/lib/s3';
 import { publicProcedure } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
-import { FullPost } from '../../types/full-post';
+import { type FullPost } from '../../types/full-post';
 import { getPostVotes } from '../helpers/get-post-votes';
 
 export const getPostByIdProcedure = publicProcedure

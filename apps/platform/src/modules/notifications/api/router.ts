@@ -4,7 +4,7 @@ import { clearProcedure } from './procedures/clear';
 import { clearAllProcedure } from './procedures/clear-all';
 import { listProcedure } from './procedures/list';
 
-export const postRouter = createTRPCRouter({
+export const notificationsRouter = createTRPCRouter({
 	list: listProcedure,
 	clear: clearProcedure,
 	clearAll: clearAllProcedure

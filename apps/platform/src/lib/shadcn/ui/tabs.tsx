@@ -13,7 +13,7 @@ const Tabs = React.forwardRef<
 	}
 >(({ defaultValue, ...props }, ref) => {
 	const searchParams = useSearchParams();
-	const currentTab = searchParams.get('activeTab') || defaultValue;
+	const currentTab = searchParams.get('activeTab') ?? defaultValue;
 
 	return (
 		<TabsPrimitive.Root

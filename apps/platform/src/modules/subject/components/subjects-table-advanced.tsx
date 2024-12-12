@@ -44,15 +44,15 @@ const SubjectsTableWithData: FC<{
 		setPage(0);
 	}, [filters, limit]);
 
-	const handleNext = () => {
+	const handleNext = async () => {
 		if (!canGoNext) return;
-		query.fetchNextPage();
+		await query.fetchNextPage();
 		setPage((page) => page + 1);
 	};
 
-	const handlePrevious = () => {
+	const handlePrevious = async () => {
 		if (!canGoPrevious) return;
-		query.fetchPreviousPage();
+		await query.fetchPreviousPage();
 		setPage((page) => page - 1);
 	};
 
@@ -126,7 +126,7 @@ export const SubjectsTableAdvanced: FC<{
 		<div className="flex flex-col gap-2">
 			<div className="flex flex-row gap-2 justify-between">
 				<Input
-					className="max-w-[200px]"
+					className="w-full md:max-w-[200px]"
 					placeholder="Search"
 					value={viewOptions.filters.name ?? ''}
 					onChange={(e) =>

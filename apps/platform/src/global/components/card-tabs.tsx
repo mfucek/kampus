@@ -15,7 +15,7 @@ const TabsList = React.forwardRef<
 	<TabsPrimitive.List
 		ref={ref}
 		className={cn(
-			'flex flex-row md:grid md:grid-cols-4 gap-2 md:overflow-x-visible overflow-x-auto',
+			'flex flex-row md:grid md:grid-cols-4 gap-2 md:overflow-x-visible px-4 lg:px-0 overflow-x-auto scrollbar-hidden',
 			className
 		)}
 		{...props}
@@ -33,8 +33,8 @@ const TabsTrigger = React.forwardRef<
 				variant={'solid-weak'}
 				size="sm"
 				className={cn(
-					'md:h-16 h-12 md:w-full md:justify-start text-neutral px-4',
-					'data-[state=active]:border data-[state=active]:border-theme data-[state=active]:theme-accent data-[state=inactive]:theme-neutral',
+					'md:h-16 h-14 md:w-full md:justify-start text-neutral px-4',
+					'data-[state=active]:border data-[state=active]:border-theme data-[state=active]:theme-accent data-[state=inactive]:theme-neutral min-w-[120px] md:min-w-none justify-center md:justify-start',
 					className
 				)}
 				{...props}
@@ -53,7 +53,7 @@ const TabsContent = React.forwardRef<
 	<TabsPrimitive.Content
 		ref={ref}
 		className={cn(
-			'mt-10 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+			'ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
 			className
 		)}
 		{...props}

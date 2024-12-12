@@ -2,8 +2,8 @@ import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
-import { protectedProcedure } from '@/server/api/trpc';
-import { JSONContent } from '@tiptap/react';
+import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
+import { type JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
 
 const paginationSchema = z.object({
@@ -11,7 +11,8 @@ const paginationSchema = z.object({
 	cursor: z.string().nullish()
 });
 
-export const listProcedure = protectedProcedure
+export const listProcedure = publicProcedure
+	.use(optionalAuthMiddleware)
 	.input(
 		z
 			.object({
@@ -20,14 +21,29 @@ export const listProcedure = protectedProcedure
 			.merge(paginationSchema)
 	)
 	.query(async ({ ctx, input }) => {
-		const { db } = ctx;
+		const { auth, db } = ctx;
+		const clerkUserId = auth?.userId;
+
 		const { scope, cursor } = input;
 		const limit = input.limit ?? 5;
 
-		let collegeId = scope.college?.id;
-		let topicId = scope.topic?.id;
-		let replyToPostId = scope.replyToPost?.id;
-		let authorId = scope.author?.id;
+		const user = clerkUserId
+			? ((
+					await db.account.findUnique({
+						where: {
+							clerkUserId: clerkUserId
+						},
+						include: {
+							user: true
+						}
+					})
+				)?.user ?? null)
+			: null;
+
+		const collegeId = scope.college?.id;
+		const topicId = scope.topic?.id;
+		const replyToPostId = scope.replyToPost?.id;
+		const authorId = scope.author?.id;
 
 		// @TODO: needs more exclusive work to specify what kind of posts we want to get
 		const where: Prisma.PostWhereInput = {
@@ -67,7 +83,7 @@ export const listProcedure = protectedProcedure
 					likes: post.Votes.filter((vote) => vote.type === 'UP').length,
 					dislikes: post.Votes.filter((vote) => vote.type === 'DOWN').length,
 					userVote:
-						post.Votes.find((vote) => vote.userId === ctx.user.id)?.type ?? null
+						post.Votes.find((vote) => vote.userId === user?.id)?.type ?? null
 				};
 
 				const filesRaw = await db.file.findMany({
@@ -88,7 +104,7 @@ export const listProcedure = protectedProcedure
 						documentFile: {
 							academicYear: file.DocumentFile?.academicYear ?? undefined,
 							title: file.DocumentFile?.title ?? undefined,
-							types: file.DocumentFile?.types || []
+							types: file.DocumentFile?.types ?? []
 						},
 						imageFile: file.ImageFile,
 						url: await getFileUrl(file.key)

@@ -1,9 +1,10 @@
 export const slugify = (str: string) => {
 	// B. Milašinović Jurkin -> b-milasinovic-jurkin
 	const lowerCase = str.toLowerCase();
-	const noDots = lowerCase.replace(/\./g, '');
-	const noSpaces = noDots.replace(/\s+/g, '-');
-	const replacedAccentsWithChars = noSpaces.replace(/[čćšđž]/g, (char) => {
+	const noHash = lowerCase.replace(/#/g, '-sharp');
+	const noBrackets = noHash.replace(/\(/g, '').replace(/\)/g, '');
+
+	const replacedAccentsWithChars = noBrackets.replace(/[čćšđž]/g, (char) => {
 		switch (char) {
 			case 'č':
 				return 'c';
@@ -19,5 +20,12 @@ export const slugify = (str: string) => {
 				return '';
 		}
 	});
-	return replacedAccentsWithChars;
+
+	// replace all non-alphanumeric characters with a dash
+	const noNonAlphanumeric = replacedAccentsWithChars.replace(
+		/[^a-zA-Z0-9]/g,
+		'-'
+	);
+
+	return noNonAlphanumeric;
 };

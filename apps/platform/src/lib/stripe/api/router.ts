@@ -10,7 +10,7 @@ export const stripeRouter = createTRPCRouter({
 		.input(z.object({ package: z.nativeEnum(PackageType) }))
 		.query(async ({ ctx, input }) => {
 			const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-				apiVersion: '2024-09-30.acacia'
+				apiVersion: '2024-11-20.acacia'
 			});
 
 			const url = env.URL;
@@ -54,7 +54,7 @@ export const stripeRouter = createTRPCRouter({
 
 	getLifetimeCheckoutURL: protectedProcedure.query(async () => {
 		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-			apiVersion: '2024-09-30.acacia'
+			apiVersion: '2024-11-20.acacia'
 		});
 
 		const url = env.URL;
@@ -82,7 +82,8 @@ export const stripeRouter = createTRPCRouter({
 	}),
 
 	cancelSubscription: protectedProcedure.mutation(async ({ ctx }) => {
-		const { clerkUserId, db } = ctx;
+		const { auth, db } = ctx;
+		const clerkUserId = auth.userId;
 
 		const account = await db.account.findUnique({
 			where: {
@@ -95,7 +96,7 @@ export const stripeRouter = createTRPCRouter({
 		const stripeCustomerId = account.stripeCustomerId;
 
 		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-			apiVersion: '2024-09-30.acacia'
+			apiVersion: '2024-11-20.acacia'
 		});
 
 		const subscription = await stripe.subscriptions.list({
@@ -121,7 +122,8 @@ export const stripeRouter = createTRPCRouter({
 	}),
 
 	resumeSubscription: protectedProcedure.mutation(async ({ ctx }) => {
-		const { clerkUserId, db } = ctx;
+		const { auth, db } = ctx;
+		const clerkUserId = auth.userId;
 
 		const account = await db.account.findUnique({
 			where: {
@@ -134,7 +136,7 @@ export const stripeRouter = createTRPCRouter({
 		const stripeCustomerId = account.stripeCustomerId;
 
 		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-			apiVersion: '2024-09-30.acacia'
+			apiVersion: '2024-11-20.acacia'
 		});
 
 		const subscription = await stripe.subscriptions.list({

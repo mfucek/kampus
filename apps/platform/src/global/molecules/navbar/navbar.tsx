@@ -23,7 +23,9 @@ export const Navbar = () => {
 	const { openSignIn } = useClerk();
 
 	const { data: profilePictureUrl } =
-		api.account.getCurrentUserProfilePictureUrl.useQuery();
+		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
+			enabled: !!isSignedIn
+		});
 
 	const Actions = () => {
 		if (isSignedIn) {
@@ -85,9 +87,9 @@ export const Navbar = () => {
 	};
 
 	return (
-		<div className="bg-section border-b-neutral-weak h-14 border-b flex flex-row justify-between items-center px-2 shrink-0">
+		<div className="md:bg-section md:border-b md:border-b-neutral-weak h-14 flex flex-row justify-between items-center px-2 shrink-0">
 			<div className="flex flex-row gap-3 items-center">
-				<Link href="/home">
+				<Link href="/home" className="flex flex-row">
 					{isStaging && (
 						<div className="ml-1 px-2 flex items-center gap-2 bg-danger caption rounded-md">
 							<div className="shrink-0 h-[20px] w-[70px]">
@@ -103,6 +105,9 @@ export const Navbar = () => {
 							</div>
 						</div>
 					)}
+					<div className="ml-1 px-2 flex items-center gap-2 bg-neutral-weak caption rounded-md">
+						<span className="caption text-neutral">BETA</span>
+					</div>
 				</Link>
 				<div className="hidden md:block">
 					<Breadcrumbs />

@@ -30,8 +30,8 @@ export const PricingSection = () => {
 		router.push('/profile#subscription-plan');
 	};
 
-	const handleCreateAccount = async () => {
-		await openSignIn();
+	const handleCreateAccount = () => {
+		openSignIn();
 	};
 
 	return (

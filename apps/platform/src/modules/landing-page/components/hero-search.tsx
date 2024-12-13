@@ -118,7 +118,7 @@ export const HeroSearch: FC<{
 						</Link>
 					</div>
 
-					<div className="flex flex-col px-1 h-full">
+					<div className="flex flex-col px-1 h-full lg:min-h-[156px]">
 						{topColleges.map((college) => (
 							<CollegeCard key={college.id} college={college} />
 						))}

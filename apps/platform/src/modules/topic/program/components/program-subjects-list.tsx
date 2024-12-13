@@ -60,22 +60,18 @@ export const ProgramSubjectsList: FC<{
 										<>
 											<div className="flex flex-col gap-1">
 												<div>{subject.name}</div>
-												<div className="flex flex-row gap-2">
-													<span className="text-neutral-strong caption">
-														{subject.staffs
-															.map((s) => {
-																const words = s.split(' ');
-																return `${words[0]![0]}. ${words.slice(1).join(' ')}`;
-															})
-															.join(', ')}
-													</span>
-													<span className="text-neutral-medium caption">
+												<p className="text-neutral-strong caption">
+													{subject.ects} ECTS
+													<span className="text-neutral-medium caption px-2">
 														{'·'}
 													</span>
-													<span className="text-neutral-strong caption">
-														{subject.ects} ECTS
-													</span>
-												</div>
+													{subject.staffs
+														.map((s) => {
+															const words = s.split(' ');
+															return `${words[0]![0]}. ${words.slice(1).join(' ')}`;
+														})
+														.join(', ')}
+												</p>
 											</div>
 										</>
 									)}

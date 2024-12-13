@@ -1,3 +1,4 @@
+import { CacheHelper } from '@/global/components/cache-helper';
 import { api } from '@/lib/trpc/server';
 import { SubjectStaffList } from '../components/subject-staff-list';
 
@@ -22,6 +23,7 @@ export const SubjectStaffPage = async ({ params }: PageProps) => {
 	return (
 		<div className="flex flex-col gap-10">
 			<SubjectStaffList staffs={staffs} />
+			<CacheHelper />
 		</div>
 	);
 };

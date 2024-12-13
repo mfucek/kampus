@@ -65,7 +65,7 @@ export const CollegeProgramsList = ({
 															<Icon icon="book-open" />
 														</Button>
 													</Link>
-													<Link href={`${program.link}/staff`}>
+													<Link href={`${program.link}`}>
 														<Button variant="outline" size="sm">
 															{program.topLevelPosts}
 															<Icon icon="chat-single" />
@@ -75,6 +75,7 @@ export const CollegeProgramsList = ({
 											)}
 											title={type}
 											info={`${programs.length} smjerova`}
+											showAll={true}
 										/>
 									)
 								)}

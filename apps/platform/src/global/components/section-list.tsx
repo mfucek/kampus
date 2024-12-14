@@ -1,8 +1,10 @@
 'use client';
 
 import { Button } from '@/lib/shadcn/ui/button';
+import { cn } from '@/lib/shadcn/utils';
 import Link from 'next/link';
 import {
+	HTMLAttributes,
 	useState,
 	type FC,
 	type PropsWithChildren,
@@ -20,11 +22,15 @@ interface SectionListProps<T> {
 	actions?: (item: T) => ReactNode;
 }
 
-const Item: FC<PropsWithChildren> = ({ children }) => {
+const Item: FC<HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
 	return (
-		<div className="flex flex-row gap-2 items-center justify-between bg-section md:bg-neutral-weak cursor-pointer button-md group">
-			{children}
-		</div>
+		<div
+			className={cn(
+				'flex flex-row gap-2 items-center justify-between bg-section md:bg-neutral-weak button-md group',
+				className
+			)}
+			{...props}
+		/>
 	);
 };
 const ItemActions: FC<PropsWithChildren> = ({ children }) => {
@@ -43,7 +49,7 @@ const ItemContent: FC<PropsWithChildren> = ({ children }) => {
 	);
 };
 
-export const SectionList = <T extends { link?: string }>({
+export const SectionList = <T extends Record<string, any>>({
 	title,
 	info,
 	data,
@@ -65,7 +71,7 @@ export const SectionList = <T extends { link?: string }>({
 			.slice(0, showAll || expanded ? undefined : EXPAND_THRESHOLD)
 			.map((item, key) =>
 				item.link ? (
-					<Item key={key}>
+					<Item key={key} className="cursor-pointer">
 						<Link href={item.link} className="flex-1">
 							<ItemContent>{rows(item)}</ItemContent>
 						</Link>

@@ -1,6 +1,5 @@
 import { Container } from '@/global/components/container';
 import { api } from '@/lib/trpc/server';
-import { FloatingColleges } from '../floating-colleges';
 import { HeroLogo } from '../hero-logo';
 import { HeroSearch } from '../hero-search';
 import { RadialGrid } from '../radial-grid';
@@ -24,7 +23,7 @@ export const HeroSection = async () => {
 			<div className="absolute inset-0 pointer-events-none overflow-hidden">
 				<RadialGrid className="relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 theme-neutral" />
 			</div>
-			<FloatingColleges allColleges={allColleges} />
+			{/* <FloatingColleges allColleges={allColleges} /> */}
 			<Scribbles />
 		</section>
 	);

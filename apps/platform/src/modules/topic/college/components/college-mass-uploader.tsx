@@ -95,6 +95,7 @@ export const CollegeMassUploader = ({ collegeId }: { collegeId: string }) => {
 				rows={(item) => <div className="body-2">{item.name}</div>}
 				title="Dokumenti"
 				info={`${subjectsSorted.length} dokumenata`}
+				showAll
 			/>
 		</div>
 	);

@@ -7,7 +7,7 @@ import { PublicProfileSection } from '../components/sections/public-profile';
 import { SubscriptionPlanSection } from '../components/sections/subscription-plan';
 import { SettingsSection } from '../components/settings-section';
 
-export const ProfilePage: FC = async () => {
+export const ProfileSettingsPage: FC = async () => {
 	return (
 		<Container className="py-10 gap-20">
 			<h1 className="display-3"> Your Profile </h1>

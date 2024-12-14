@@ -10,7 +10,6 @@ import { collegeRouter } from '@/modules/topic/college/api/router';
 import { programRouter } from '@/modules/topic/program/api/router';
 import { staffRouter } from '@/modules/topic/staff/api/router';
 import { subjectRouter } from '@/modules/topic/subject/api/router';
-import { userRouter } from '@/modules/user/api/router';
 import { voteRouter } from '@/modules/vote/api/router';
 
 export const appRouter = createTRPCRouter({
@@ -23,7 +22,6 @@ export const appRouter = createTRPCRouter({
 	staff: staffRouter,
 	vote: voteRouter,
 	file: fileRouter,
-	user: userRouter,
 	notifications: notificationsRouter
 });
 

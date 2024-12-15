@@ -1,9 +1,11 @@
 'use client';
 
+import { useAuth } from '@clerk/nextjs';
 import { type FC } from 'react';
 
-import { useAuth } from '@clerk/nextjs';
-import { ComposerProvider } from '../providers/composer-provider';
+import { FileStagingProvider } from '@/modules/file/contexts/file-staging-provider';
+import { ComposerBodyProvider } from '../contexts/composer-body-provider';
+import { ComposerControllerProvider } from '../contexts/composer-controller-provider';
 import { ComposerEditor } from './composer-editor';
 import { ComposerFiles } from './composer-files';
 import { ComposerFooter } from './composer-footer';
@@ -16,17 +18,21 @@ export const Composer: FC<{
 	const { isSignedIn } = useAuth();
 
 	return (
-		<ComposerProvider
+		<ComposerControllerProvider
 			collegeId={collegeId}
 			topicId={topicId}
 			replyToId={replyToId}
 			enabled={isSignedIn}
 		>
-			<div className="flex flex-col gap-3 w-full">
-				<ComposerEditor />
-				<ComposerFiles />
-				<ComposerFooter />
-			</div>
-		</ComposerProvider>
+			<FileStagingProvider>
+				<ComposerBodyProvider>
+					<div className="flex flex-col gap-3 w-full">
+						<ComposerEditor />
+						<ComposerFiles />
+						<ComposerFooter />
+					</div>
+				</ComposerBodyProvider>
+			</FileStagingProvider>
+		</ComposerControllerProvider>
 	);
 };

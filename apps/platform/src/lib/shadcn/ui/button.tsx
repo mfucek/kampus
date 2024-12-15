@@ -114,7 +114,7 @@ const buttonVariants = cva(
 	}
 );
 
-const iconClassVariants = cva('shrink-0', {
+export const iconClassVariants = cva('shrink-0', {
 	variants: {
 		theme: {
 			accent: 'theme-accent',
@@ -152,7 +152,7 @@ const iconClassVariants = cva('shrink-0', {
 	}
 });
 
-const iconSizeVariants = cva('', {
+export const iconSizeVariants = cva('', {
 	variants: {
 		size: {
 			lg: '',

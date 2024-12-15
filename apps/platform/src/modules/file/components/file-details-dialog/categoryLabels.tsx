@@ -1,0 +1,27 @@
+'use client';
+import type { DocumentFileType } from '@prisma/client';
+
+export const categoryLabels: Record<DocumentFileType, string> = {
+	EXAM: 'Ispit',
+	COLOQUIUM: 'Kolokvij',
+	LAB_EXERCISE: 'Laboratorijska vježba',
+	EXERCISES: 'Zadatci',
+	HOMEWORK: 'Zadaća',
+	SEMINAR: 'Seminar',
+	SCRIPT: 'Skripta',
+	NOTES: 'Bilješke',
+	PAPER: 'Rad',
+	OTHER: 'Ostalo',
+	COLOQUIUM_MID: 'Međuispit',
+	COLOQUIUM_FINAL: 'Završni ispit',
+	SOLVED: 'Riješeno / Postupak',
+	SUMMER_EXAM: 'Ljetni ispit',
+	FALL_EXAM: 'Jesenski ispit',
+	WINTER_EXAM: 'Zimski ispit',
+	SPRING_EXAM: 'Proljetni ispit',
+	DEAN_EXAM: 'Dekanski ispit',
+	CORRECTION_EXAM: 'Popravni ispit',
+	ORAL_EXAM: 'Usmeni ispit',
+	ENTRANCE_EXAM: 'Ulazni ispit',
+	EXIT_EXAM: 'Izlazni ispit'
+};

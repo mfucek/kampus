@@ -6,6 +6,11 @@ import { Icon } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
 import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger
+} from '@/lib/shadcn/ui/popover';
+import {
 	Select,
 	SelectContent,
 	SelectItem,
@@ -19,6 +24,9 @@ import {
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { api } from '@/lib/trpc/react';
+import { categoryLabels } from '@/modules/file/components/file-details-dialog/categoryLabels';
+import { removeCategoryFromSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/removeCategoryFromSelectedCategories';
+import { shownCategoriesBasedOnSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/shownCategoriesBasedOnSelectedCategories';
 import {
 	FileStagingProvider,
 	useFileStagingContext
@@ -58,7 +66,7 @@ export const CollegeMassUploader = ({ collegeId }: { collegeId: string }) => {
 export const MassUploader = ({ collegeId }: { collegeId: string }) => {
 	const { files, addFiles, removeFile, openFileDetailsDialog, updateFile } =
 		useFileStagingContext();
-	const { openFileDialog } = useUploadDialog(addFiles);
+	const { openUploadDialog: openFileDialog } = useUploadDialog(addFiles);
 
 	const { data: subjects } = api.subject.list.useQuery({
 		scope: {
@@ -90,7 +98,10 @@ export const MassUploader = ({ collegeId }: { collegeId: string }) => {
 						<SelectContent>
 							{subjectsSorted.sort().map((s) => (
 								<SelectItem key={s.id} value={s.id}>
-									{s.name}
+									{s.name}{' '}
+									<span className="text-neutral-strong">
+										({s.externalCode})
+									</span>
 								</SelectItem>
 							))}
 						</SelectContent>
@@ -138,7 +149,7 @@ export const MassUploader = ({ collegeId }: { collegeId: string }) => {
 								})
 							}
 						>
-							<SelectTrigger className="w-auto">
+							<SelectTrigger className="w-auto" size="xs">
 								<SelectValue placeholder="Godina" />
 							</SelectTrigger>
 							<SelectContent>
@@ -149,14 +160,67 @@ export const MassUploader = ({ collegeId }: { collegeId: string }) => {
 						</Select>
 
 						<div className="flex flex-row gap-1">
-							{file.documentOptions?.types.map((type) => (
-								<Button size="xs" variant="outline" rounded key={type}>
-									{type}
-								</Button>
-							))}
-							<Button size="xs" variant="outline" iconOnly rounded>
-								<Icon icon="add" />
-							</Button>
+							<Popover>
+								{file.documentOptions?.types.map((type) => (
+									<PopoverTrigger asChild key={type}>
+										<Button size="xs" variant="outline" rounded>
+											{categoryLabels[type]}
+										</Button>
+									</PopoverTrigger>
+								))}
+								<PopoverTrigger asChild>
+									<Button size="xs" variant="outline" iconOnly rounded>
+										<Icon icon="add" />
+									</Button>
+								</PopoverTrigger>
+								<PopoverContent>
+									<div className="flex flex-row flex-wrap gap-2">
+										{shownCategoriesBasedOnSelectedCategories(
+											file.documentOptions?.types ?? []
+										).map((type) => {
+											const isSelected =
+												file.documentOptions?.types.includes(type);
+											return (
+												<Button
+													size="xs"
+													variant={isSelected ? 'solid' : 'outline'}
+													theme={isSelected ? 'accent' : 'neutral'}
+													rounded
+													key={type}
+													onClick={() => {
+														if (!file.documentOptions) {
+															return;
+														}
+														if (isSelected) {
+															updateFile(index, {
+																documentOptions: {
+																	...file.documentOptions,
+																	types: removeCategoryFromSelectedCategories(
+																		file.documentOptions?.types ?? [],
+																		type
+																	)
+																}
+															});
+														} else {
+															updateFile(index, {
+																documentOptions: {
+																	...file.documentOptions,
+																	types: [
+																		...(file.documentOptions?.types ?? []),
+																		type
+																	]
+																}
+															});
+														}
+													}}
+												>
+													{categoryLabels[type]}
+												</Button>
+											);
+										})}
+									</div>
+								</PopoverContent>
+							</Popover>
 						</div>
 					</>
 				)}

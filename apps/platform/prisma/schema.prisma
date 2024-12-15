@@ -28,7 +28,7 @@ model Account {
 
   user User?
 
-  role RoleType @default(BASE)
+  role        RoleType     @default(BASE)
   Permissions Permission[]
 }
 
@@ -305,8 +305,9 @@ enum DocumentFileType {
   COLOQUIUM
   COLOQUIUM_MID
   COLOQUIUM_FINAL
-  EXERCISE
+  LAB_EXERCISE
   HOMEWORK
+  EXERCISES
   SEMINAR
   SCRIPT
   NOTES
@@ -316,7 +317,10 @@ enum DocumentFileType {
   FALL_EXAM
   WINTER_EXAM
   SPRING_EXAM
+  DEAN_EXAM
   CORRECTION_EXAM
+  ENTRANCE_EXAM
+  EXIT_EXAM
   ORAL_EXAM
   SOLVED
 }
@@ -344,7 +348,7 @@ model Permission {
   updatedAt DateTime  @updatedAt
   expiresAt DateTime?
 
-  rule RuleType
+  rule  RuleType
   value Boolean
 
   scopeType ScopeType

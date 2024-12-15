@@ -12,7 +12,7 @@ import { useComposerController } from '../contexts/composer-controller-provider'
 export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 	const { locked } = useComposerController();
 	const { addFiles } = useFileStagingContext();
-	const { openFileDialog } = useUploadDialog(addFiles);
+	const { openUploadDialog: openFileDialog } = useUploadDialog(addFiles);
 
 	const setLink = useCallback(() => {
 		const previousUrl = editor.getAttributes('link').href as string;

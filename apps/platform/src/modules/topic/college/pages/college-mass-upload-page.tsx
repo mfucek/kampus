@@ -1,5 +1,5 @@
 import { api } from '@/lib/trpc/server';
-import { CollegeMassUploader } from '../components/college-mass-uploader';
+import { CollegeMassUploader } from '../../../mass-uploader/components/college-mass-uploader';
 
 interface PageProps {
 	params: Promise<{

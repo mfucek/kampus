@@ -18,8 +18,8 @@ interface SectionListProps<T> {
 	info?: string;
 	showAll?: boolean;
 	data: T[];
-	rows: (item: T) => ReactNode;
-	actions?: (item: T) => ReactNode;
+	rows: (item: T, index: number) => ReactNode;
+	actions?: (item: T, index: number) => ReactNode;
 }
 
 const Item: FC<HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
@@ -69,18 +69,18 @@ export const SectionList = <T extends Record<string, any>>({
 	const ItemList = ({ items }: { items: T[] }) =>
 		items
 			.slice(0, showAll || expanded ? undefined : EXPAND_THRESHOLD)
-			.map((item, key) =>
+			.map((item, index) =>
 				item.link ? (
-					<Item key={key} className="cursor-pointer">
+					<Item key={index} className="cursor-pointer">
 						<Link href={item.link} className="flex-1">
-							<ItemContent>{rows(item)}</ItemContent>
+							<ItemContent>{rows(item, index)}</ItemContent>
 						</Link>
-						{actions && <ItemActions>{actions(item)}</ItemActions>}
+						{actions && <ItemActions>{actions(item, index)}</ItemActions>}
 					</Item>
 				) : (
-					<Item key={key}>
-						<ItemContent>{rows(item)}</ItemContent>
-						{actions && <ItemActions>{actions(item)}</ItemActions>}
+					<Item key={index}>
+						<ItemContent>{rows(item, index)}</ItemContent>
+						{actions && <ItemActions>{actions(item, index)}</ItemActions>}
 					</Item>
 				)
 			);

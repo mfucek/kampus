@@ -2,6 +2,7 @@
 
 import { Dialog } from '@/lib/shadcn/ui/dialog';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
+import { FileDetailsDialog } from '@/modules/file/components/file-details-dialog';
 import { type DocumentFileType, type FileType } from '@prisma/client';
 import {
 	type FC,
@@ -10,15 +11,14 @@ import {
 	useContext,
 	useState
 } from 'react';
-import { FileDetailsDialog } from '../components/file-details-dialog';
-import { fileToPostFile } from '../utils/file-to-postfile';
+import { fileToPostFile } from '../../composer/utils/file-to-postfile';
 
 export type DocumentOptions = {
 	academicYear: string | null;
 	types: DocumentFileType[];
 };
 
-export type PostFile = {
+export type StagedFile = {
 	name: string;
 	file: File;
 	type: FileType;
@@ -31,13 +31,13 @@ const defaultData = {
 	fileDetailsIndex: null
 };
 
-const ComposerFilesContext = createContext<{
-	files: PostFile[];
-	setFiles: (files: PostFile[]) => void;
+const FileStagingContext = createContext<{
+	files: StagedFile[];
+	setFiles: (files: StagedFile[]) => void;
 	addFile: (file: File) => void;
 	addFiles: (files: File[]) => void;
 	removeFile: (index: number) => void;
-	updateFile: (index: number, update: Partial<PostFile>) => void;
+	updateFile: (index: number, update: Partial<StagedFile>) => void;
 	fileDetailsIndex: number | null;
 	setFileDetailsIndex: (index: number | null) => void;
 	openFileDetailsDialog: (index?: number) => void;
@@ -52,22 +52,22 @@ const ComposerFilesContext = createContext<{
 	openFileDetailsDialog: () => {}
 });
 
-export const useComposerFilesContext = () => {
-	const context = useContext(ComposerFilesContext);
+export const useFileStagingContext = () => {
+	const context = useContext(FileStagingContext);
 
 	if (!context) {
-		throw new Error('useComposer must be used within a ComposerFilesProvider');
+		throw new Error('useComposer must be used within a FileStagingProvider');
 	}
 
 	return context;
 };
 
-export const ComposerFilesProvider: FC<{
+export const FileStagingProvider: FC<{
 	children: ReactNode;
 }> = ({ children }) => {
 	const { toast } = useToast();
 
-	const [files, setFiles] = useState<PostFile[]>(defaultData.files);
+	const [files, setFiles] = useState<StagedFile[]>(defaultData.files);
 	const [fileDetailsDialogOpen, setFileDetailsDialogOpen] = useState(false);
 	const [fileDetailsIndex, setFileDetailsIndex] = useState<number | null>(
 		defaultData.fileDetailsIndex
@@ -118,7 +118,7 @@ export const ComposerFilesProvider: FC<{
 		});
 
 		const filteredSanitizedFiles = sanitizedFiles.filter(
-			(file): file is PostFile => file !== null
+			(file): file is StagedFile => file !== null
 		);
 
 		setFiles([...files, ...filteredSanitizedFiles]);
@@ -129,7 +129,7 @@ export const ComposerFilesProvider: FC<{
 		}
 	};
 
-	const updateFile = (updateIndex: number, update: Partial<PostFile>) => {
+	const updateFile = (updateIndex: number, update: Partial<StagedFile>) => {
 		setFiles(
 			files.map((file, index) =>
 				index === updateIndex ? { ...file, ...update } : file
@@ -160,7 +160,7 @@ export const ComposerFilesProvider: FC<{
 	};
 
 	return (
-		<ComposerFilesContext.Provider
+		<FileStagingContext.Provider
 			value={{
 				files,
 				setFiles,
@@ -180,6 +180,6 @@ export const ComposerFilesProvider: FC<{
 				{children}
 				<FileDetailsDialog />
 			</Dialog>
-		</ComposerFilesContext.Provider>
+		</FileStagingContext.Provider>
 	);
 };

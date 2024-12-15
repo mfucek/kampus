@@ -11,7 +11,7 @@ import {
 } from '@/lib/shadcn/ui/select';
 import { type DocumentFileType } from '@prisma/client';
 import { type FC, type PropsWithChildren, useEffect, useState } from 'react';
-import { useComposerFilesContext } from '../../contexts/composer-files-provider';
+import { useFileStagingContext } from '../../../file/contexts/file-staging-provider';
 
 const Section: FC<
 	{
@@ -78,7 +78,7 @@ const examCategories: DocumentFileType[] = [
 ];
 
 export const DocumentDetails = () => {
-	const { files, fileDetailsIndex, updateFile } = useComposerFilesContext();
+	const { files, fileDetailsIndex, updateFile } = useFileStagingContext();
 
 	const file = files[fileDetailsIndex!]!;
 

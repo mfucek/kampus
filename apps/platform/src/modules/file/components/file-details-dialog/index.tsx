@@ -8,8 +8,8 @@ import {
 	DialogTitle
 } from '@/lib/shadcn/ui/dialog';
 import { cn } from '@/lib/shadcn/utils';
-import { useComposerFilesContext } from '../../contexts/composer-files-provider';
-import { useComposerDragUpload } from '../../hooks/use-composer-drag-upload';
+import { useFileStagingContext } from '../../../file/contexts/file-staging-provider';
+import { useUploadArea } from '../../../file/hooks/use-upload-area';
 import { DocumentDetails } from './document-details';
 import { FileDetailsDialogActions } from './file-details-dialog-actions';
 import { FileDetailsList } from './file-details-list';
@@ -17,8 +17,8 @@ import { ImageDetails } from './image-details';
 import { NoFilesMessage } from './no-files-message';
 
 export const FileDetailsDialog = () => {
-	const { files, fileDetailsIndex } = useComposerFilesContext();
-	const { uploadAreaProps, isDragging } = useComposerDragUpload();
+	const { files, fileDetailsIndex, addFiles } = useFileStagingContext();
+	const { uploadAreaProps, isDragging } = useUploadArea(addFiles);
 
 	const filesExist = files.length > 0;
 

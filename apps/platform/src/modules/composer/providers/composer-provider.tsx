@@ -2,9 +2,9 @@
 
 import { type FC, type ReactNode } from 'react';
 
+import { FileStagingProvider } from '../../file/contexts/file-staging-provider';
 import { ComposerBodyProvider } from '../contexts/composer-body-provider';
 import { ComposerControllerProvider } from '../contexts/composer-controller-provider';
-import { ComposerFilesProvider } from '../contexts/composer-files-provider';
 export const ComposerProvider: FC<{
 	children: ReactNode;
 	collegeId: string;
@@ -19,9 +19,9 @@ export const ComposerProvider: FC<{
 			replyToId={replyToId}
 			enabled={enabled}
 		>
-			<ComposerBodyProvider>
-				<ComposerFilesProvider>{children}</ComposerFilesProvider>
-			</ComposerBodyProvider>
+			<FileStagingProvider>
+				<ComposerBodyProvider>{children}</ComposerBodyProvider>
+			</FileStagingProvider>
 		</ComposerControllerProvider>
 	);
 };

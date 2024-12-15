@@ -7,12 +7,12 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
 import { formatFileSize } from '@/utils/format-file-size';
 import {
-	type PostFile,
-	useComposerFilesContext
-} from '../../contexts/composer-files-provider';
+	type StagedFile,
+	useFileStagingContext
+} from '../../../file/contexts/file-staging-provider';
 
 const SidebarFile: FC<{
-	file: PostFile;
+	file: StagedFile;
 	selected?: boolean;
 	onClick: () => void;
 	onRemove: () => void;
@@ -66,7 +66,7 @@ const SidebarFile: FC<{
 };
 export const FileDetailsList = () => {
 	const { files, removeFile, fileDetailsIndex, setFileDetailsIndex } =
-		useComposerFilesContext();
+		useFileStagingContext();
 
 	return (
 		<div className="flex flex-col flex-1 md:border-r border-r-neutral-weak md:max-w-[240px]">

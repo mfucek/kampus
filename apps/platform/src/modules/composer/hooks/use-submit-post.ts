@@ -4,16 +4,16 @@ import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import {
+	type StagedFile,
+	useFileStagingContext
+} from '../../file/contexts/file-staging-provider';
 import { useComposerBodyContext } from '../contexts/composer-body-provider';
 import { useComposerController } from '../contexts/composer-controller-provider';
-import {
-	type PostFile,
-	useComposerFilesContext
-} from '../contexts/composer-files-provider';
 
 export const useSubmitPost = () => {
 	const { body, setBody } = useComposerBodyContext();
-	const { files, setFiles } = useComposerFilesContext();
+	const { files, setFiles } = useFileStagingContext();
 	const { collegeId, topicId, replyToId, setLocked } = useComposerController();
 	const { toast } = useToast();
 	const router = useRouter();
@@ -25,7 +25,7 @@ export const useSubmitPost = () => {
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const uploadFileToS3 = async (file: PostFile) => {
+	const uploadFileToS3 = async (file: StagedFile) => {
 		const { url, key } = await makeUploadUrl(void {}, {});
 
 		// upload file to s3

@@ -1,8 +1,4 @@
-import { useComposerFilesContext } from '../contexts/composer-files-provider';
-
-export const useComposerUploadDialog = () => {
-	const { addFiles } = useComposerFilesContext();
-
+export const useUploadDialog = (addFiles: (files: File[]) => void) => {
 	const openFileDialog = async () => {
 		const input = document.createElement('input');
 		input.type = 'file';

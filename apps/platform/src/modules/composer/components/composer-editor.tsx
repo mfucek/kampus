@@ -3,13 +3,15 @@
 import { EditorContent } from '@tiptap/react';
 
 import { cn } from '@/lib/shadcn/utils';
-import { useComposerDragUpload } from '../hooks/use-composer-drag-upload';
+import { useFileStagingContext } from '../../file/contexts/file-staging-provider';
+import { useUploadArea } from '../../file/hooks/use-upload-area';
 import { useComposerEditor } from '../hooks/use-composer-editor';
 import { EditorToolbar } from './editor-toolbar';
 
 export const ComposerEditor = () => {
 	const { editor, enabled } = useComposerEditor();
-	const { uploadAreaProps, isDragging } = useComposerDragUpload();
+	const { addFiles } = useFileStagingContext();
+	const { uploadAreaProps, isDragging } = useUploadArea(addFiles);
 
 	return (
 		<div

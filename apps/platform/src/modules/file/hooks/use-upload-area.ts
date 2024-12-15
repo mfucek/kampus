@@ -2,10 +2,7 @@
 
 import { type DragEvent, useState } from 'react';
 
-import { useComposerFilesContext } from '../contexts/composer-files-provider';
-
-export const useComposerDragUpload = () => {
-	const { addFiles } = useComposerFilesContext();
+export const useUploadArea = (addFiles: (files: File[]) => void) => {
 	const [isDragging, setIsDragging] = useState(false);
 
 	const handleDrop = async (e: DragEvent<HTMLDivElement>) => {

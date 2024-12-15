@@ -1,5 +1,5 @@
 export const useUploadDialog = (addFiles: (files: File[]) => void) => {
-	const openFileDialog = async () => {
+	const openUploadDialog = async () => {
 		const input = document.createElement('input');
 		input.type = 'file';
 		input.multiple = true;
@@ -13,5 +13,5 @@ export const useUploadDialog = (addFiles: (files: File[]) => void) => {
 		input.click();
 	};
 
-	return { openFileDialog };
+	return { openUploadDialog };
 };

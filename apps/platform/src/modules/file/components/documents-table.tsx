@@ -6,11 +6,16 @@ import { type FC } from 'react';
 import { type ListDocumentsItem } from '../api/procedures/list-documents';
 
 import { Icon } from '@/global/components/icon';
+import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
+import { categoryLabels } from '@/modules/file/components/file-details-dialog/categoryLabels';
+import { type DocumentFileType } from '@prisma/client';
 
-export const columns: ColumnDef<ListDocumentsItem>[] = [
+export const columns: ColumnDef<
+	ListDocumentsItem & { highlightedCategories: DocumentFileType[] }
+>[] = [
 	{
 		accessorKey: 'document.title',
 		header: 'Ime'
@@ -22,9 +27,22 @@ export const columns: ColumnDef<ListDocumentsItem>[] = [
 	{
 		accessorKey: 'document.types',
 		header: 'Tipovi',
-		cell: ({ row }) => {
-			return row.original.document.types.join(', ');
-		}
+		cell: ({ row }) => (
+			<div className="flex flex-row flex-wrap gap-2">
+				{row.original.document.types.map((type) => {
+					const isInSearch = row.original.highlightedCategories.includes(type);
+					return (
+						<Badge
+							key={type}
+							variant={isInSearch ? 'secondary' : 'tertiary'}
+							theme="neutral"
+						>
+							{categoryLabels[type]}
+						</Badge>
+					);
+				})}
+			</div>
+		)
 	},
 	{
 		id: 'actions-open',
@@ -62,6 +80,13 @@ export const columns: ColumnDef<ListDocumentsItem>[] = [
 export const DocumentsTable: FC<{
 	documents: ListDocumentsItem[];
 	loading?: boolean;
-}> = ({ documents, loading = false }) => {
-	return <DataTable columns={columns} data={documents} loading={loading} />;
+	highlightedCategories?: DocumentFileType[];
+}> = ({ documents, loading = false, highlightedCategories = [] }) => {
+	return (
+		<DataTable
+			columns={columns}
+			data={documents.map((c) => ({ ...c, highlightedCategories }))}
+			loading={loading}
+		/>
+	);
 };

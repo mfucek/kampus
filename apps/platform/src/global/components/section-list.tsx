@@ -3,10 +3,10 @@
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
 import Link from 'next/link';
-import {
-	HTMLAttributes,
+import React, {
 	useState,
 	type FC,
+	type HTMLAttributes,
 	type PropsWithChildren,
 	type ReactNode
 } from 'react';
@@ -18,6 +18,7 @@ interface SectionListProps<T> {
 	info?: string;
 	showAll?: boolean;
 	data: T[];
+	keyKey?: keyof T;
 	rows: (item: T, index: number) => ReactNode;
 	actions?: (item: T, index: number) => ReactNode;
 }
@@ -49,12 +50,13 @@ const ItemContent: FC<PropsWithChildren> = ({ children }) => {
 	);
 };
 
-export const SectionList = <T extends Record<string, any>>({
+export const SectionList = <T extends Record<string, unknown>>({
 	title,
 	info,
 	data,
 	rows,
 	actions,
+	keyKey,
 	showAll = false
 }: SectionListProps<T>) => {
 	const [expanded, setExpanded] = useState(false);
@@ -69,21 +71,27 @@ export const SectionList = <T extends Record<string, any>>({
 	const ItemList = ({ items }: { items: T[] }) =>
 		items
 			.slice(0, showAll || expanded ? undefined : EXPAND_THRESHOLD)
-			.map((item, index) =>
-				item.link ? (
-					<Item key={index} className="cursor-pointer">
-						<Link href={item.link} className="flex-1">
-							<ItemContent>{rows(item, index)}</ItemContent>
-						</Link>
-						{actions && <ItemActions>{actions(item, index)}</ItemActions>}
-					</Item>
-				) : (
-					<Item key={index}>
-						<ItemContent>{rows(item, index)}</ItemContent>
-						{actions && <ItemActions>{actions(item, index)}</ItemActions>}
-					</Item>
-				)
-			);
+			.map((item, index) => {
+				const key = index; //keyKey ? (item[keyKey] as string) : index;
+
+				return (
+					<React.Fragment key={key}>
+						{item.link ? (
+							<Item className="cursor-pointer">
+								<Link href={item.link} className="flex-1">
+									<ItemContent>{rows(item, index)}</ItemContent>
+								</Link>
+								{actions && <ItemActions>{actions(item, index)}</ItemActions>}
+							</Item>
+						) : (
+							<Item>
+								<ItemContent>{rows(item, index)}</ItemContent>
+								{actions && <ItemActions>{actions(item, index)}</ItemActions>}
+							</Item>
+						)}
+					</React.Fragment>
+				);
+			});
 
 	return (
 		<div className="flex flex-col gap-2">

@@ -7,7 +7,7 @@ import { useUploadDialog } from '../../../file/hooks/use-upload-dialog';
 
 export const FileDetailsDialogActions = () => {
 	const { addFiles } = useFileStagingContext();
-	const { openFileDialog } = useUploadDialog(addFiles);
+	const { openUploadDialog: openFileDialog } = useUploadDialog(addFiles);
 
 	return (
 		<div className="border-t border-neutral-weak px-3 gap-2 py-10 md:py-3 grow-0 shrink-0 flex flex-col md:flex-row">

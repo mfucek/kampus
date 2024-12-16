@@ -148,14 +148,15 @@ const FileActions = (file: StagedFile, index: number) => {
 
 	const { data: duplicatesData } = api.subject.hasFileOfKind.useQuery(
 		{
-			types: file.documentOptions?.types ?? [],
-			year: file.documentOptions?.academicYear!,
+			types: file.documentOptions!.types,
+			year: file.documentOptions!.academicYear!,
 			subjectId: topicId!
 		},
 		{
 			enabled:
 				!!topicId &&
-				!!file.documentOptions?.academicYear &&
+				!!file.documentOptions &&
+				!!file.documentOptions.academicYear &&
 				noOverlap<DocumentFileType>(file.documentOptions.types, ignoredTypes)
 		}
 	);

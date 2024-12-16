@@ -43,13 +43,12 @@ export const useSubmitPost = () => {
 		};
 	};
 
-	const handleSubmit = async ({
-		bodyOverride,
-		filesOverride
-	}: {
+	const handleSubmit = async (overrides?: {
 		bodyOverride?: JSONContent;
 		filesOverride?: StagedFile[];
 	}) => {
+		const { bodyOverride, filesOverride } = overrides ?? {};
+
 		setIsSubmitting(true);
 		setLocked(true);
 		const post = await createPost({

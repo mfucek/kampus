@@ -1,7 +1,7 @@
 'use client';
 
 import { Divider } from '@/global/components/divider';
-import { ListLayout } from '@/global/layouts/list';
+import { ListLayout } from '@/global/layouts/list-layout';
 import { FileStagingProvider } from '@/modules/file/contexts/file-staging-provider';
 import { useMassUploader } from '../hooks';
 

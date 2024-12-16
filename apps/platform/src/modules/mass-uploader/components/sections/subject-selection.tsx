@@ -11,7 +11,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
-import { SubjectListItem } from '@/modules/topic/subject/api/procedures/list';
+import { type SubjectListItem } from '@/modules/topic/subject/api/procedures/list';
 
 export const SubjectSelectionSection = ({
 	subjects,

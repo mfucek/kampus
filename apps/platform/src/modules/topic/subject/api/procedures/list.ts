@@ -116,3 +116,7 @@ export const listProcedure = publicProcedure
 
 		return { subjects, nextCursor, totalSubjects };
 	});
+
+export type SubjectListItem = Awaited<
+	ReturnType<typeof listProcedure>
+>['subjects'][number];

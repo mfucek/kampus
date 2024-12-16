@@ -5,8 +5,10 @@ import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { FileDetailsDialog } from '@/modules/file/components/file-details-dialog';
 import { type DocumentFileType, type FileType } from '@prisma/client';
 import {
+	type Dispatch,
 	type FC,
 	type ReactNode,
+	type SetStateAction,
 	createContext,
 	useContext,
 	useState
@@ -33,9 +35,9 @@ const defaultData = {
 
 const FileStagingContext = createContext<{
 	files: StagedFile[];
-	setFiles: (files: StagedFile[]) => void;
-	addFile: (file: File) => void;
-	addFiles: (files: File[]) => void;
+	setFiles: Dispatch<SetStateAction<StagedFile[]>>;
+	addFile: (file: File, opts?: { openFileDetailsDialog?: boolean }) => void;
+	addFiles: (files: File[], opts?: { openFileDetailsDialog?: boolean }) => void;
 	removeFile: (index: number) => void;
 	updateFile: (index: number, update: Partial<StagedFile>) => void;
 	fileDetailsIndex: number | null;
@@ -43,7 +45,7 @@ const FileStagingContext = createContext<{
 	openFileDetailsDialog: (index?: number) => void;
 }>({
 	...defaultData,
-	setFiles: () => {},
+	setFiles: () => [],
 	addFile: () => {},
 	addFiles: () => {},
 	removeFile: () => {},
@@ -73,14 +75,19 @@ export const FileStagingProvider: FC<{
 		defaultData.fileDetailsIndex
 	);
 
-	const addFile = (newFile: File) => {
+	const addFile = (
+		newFile: File,
+		opts?: { openFileDetailsDialog?: boolean }
+	) => {
 		try {
 			const sanitizedFile = fileToPostFile(newFile);
 			setFiles([...files, sanitizedFile]);
 			setFileDetailsIndex(files.length);
 
-			if (sanitizedFile.type === 'ARCHIVE' || sanitizedFile.type === 'PDF') {
-				openFileDetailsDialog(files.length);
+			if (opts?.openFileDetailsDialog) {
+				if (sanitizedFile.type === 'ARCHIVE' || sanitizedFile.type === 'PDF') {
+					openFileDetailsDialog(files.length);
+				}
 			}
 		} catch (error) {
 			console.error('Error adding file:', error);
@@ -92,7 +99,10 @@ export const FileStagingProvider: FC<{
 		}
 	};
 
-	const addFiles = (newFiles: File[]) => {
+	const addFiles = (
+		newFiles: File[],
+		opts?: { openFileDetailsDialog?: boolean }
+	) => {
 		let firstDocumentIndex: number | null = null;
 
 		const sanitizedFiles = newFiles.map((file, i) => {
@@ -124,8 +134,10 @@ export const FileStagingProvider: FC<{
 		setFiles([...files, ...filteredSanitizedFiles]);
 		setFileDetailsIndex(files.length + sanitizedFiles.length - 1);
 
-		if (firstDocumentIndex !== null) {
-			openFileDetailsDialog(firstDocumentIndex);
+		if (opts?.openFileDetailsDialog) {
+			if (firstDocumentIndex !== null) {
+				openFileDetailsDialog(firstDocumentIndex);
+			}
 		}
 	};
 

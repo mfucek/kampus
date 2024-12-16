@@ -7,9 +7,11 @@ import {
 	DialogHeader,
 	DialogTitle
 } from '@/lib/shadcn/ui/dialog';
-import { cn } from '@/lib/shadcn/utils';
 import { useFileStagingContext } from '../../../file/contexts/file-staging-provider';
-import { useUploadArea } from '../../../file/hooks/use-upload-area';
+import {
+	UploadAreaOverlay,
+	useUploadArea
+} from '../../../file/hooks/use-upload-area';
 import { DocumentDetails } from './document-details';
 import { FileDetailsDialogActions } from './file-details-dialog-actions';
 import { FileDetailsList } from './file-details-list';
@@ -65,12 +67,7 @@ export const FileDetailsDialog = () => {
 					<FileDetailsDialogActions />
 				</div>
 
-				<div
-					className={cn(
-						'absolute duration-300 inset-2 bg-accent-medium backdrop-blur-sm rounded-xl pointer-events-none bg-opacity-20',
-						isDragging ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
-					)}
-				/>
+				<UploadAreaOverlay isDragging={isDragging} />
 			</DialogBody>
 		</DialogContent>
 	);

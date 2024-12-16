@@ -2,8 +2,10 @@
 
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
+import { type JSONContent } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
 import {
 	type StagedFile,
 	useFileStagingContext
@@ -41,20 +43,30 @@ export const useSubmitPost = () => {
 		};
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = async ({
+		bodyOverride,
+		filesOverride
+	}: {
+		bodyOverride?: JSONContent;
+		filesOverride?: StagedFile[];
+	}) => {
 		setIsSubmitting(true);
 		setLocked(true);
 		const post = await createPost({
-			body: body,
+			body: bodyOverride ?? body,
 			collegeId: collegeId,
 			topicId: topicId,
 			replyToId: replyToId
 		});
 
-		if (files.length > 0) {
+		const filesToUpload = filesOverride ?? files;
+
+		if (filesToUpload.length > 0) {
 			try {
 				// upload files to s3
-				const uploadedFiles = await Promise.all(files.map(uploadFileToS3));
+				const uploadedFiles = await Promise.all(
+					filesToUpload.map(uploadFileToS3)
+				);
 
 				// link files to post
 				await linkToPost({
@@ -89,8 +101,8 @@ export const useSubmitPost = () => {
 		setIsSubmitting(false);
 
 		// clear body and files
-		setBody(null);
-		setFiles([]);
+		if (!bodyOverride) setBody(null);
+		if (!filesOverride) setFiles([]);
 
 		setLocked(false);
 

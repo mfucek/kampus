@@ -1,4 +1,4 @@
-export const useUploadDialog = (addFiles: (files: File[]) => void) => {
+export const useUploadDialog = (addFilesCallback: (files: File[]) => void) => {
 	const openUploadDialog = async () => {
 		const input = document.createElement('input');
 		input.type = 'file';
@@ -7,7 +7,7 @@ export const useUploadDialog = (addFiles: (files: File[]) => void) => {
 			const files = (e.target as HTMLInputElement).files;
 			if (!files) return;
 
-			addFiles(Array.from(files));
+			addFilesCallback(Array.from(files));
 		};
 
 		input.click();

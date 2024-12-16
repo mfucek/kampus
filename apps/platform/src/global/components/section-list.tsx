@@ -10,6 +10,7 @@ import React, {
 	type PropsWithChildren,
 	type ReactNode
 } from 'react';
+import { ContentPadding } from '../layouts/content-padding';
 
 const EXPAND_THRESHOLD = 5;
 
@@ -21,6 +22,8 @@ interface SectionListProps<T> {
 	keyKey?: keyof T;
 	rows: (item: T, index: number) => ReactNode;
 	actions?: (item: T, index: number) => ReactNode;
+	emptyRow?: ReactNode;
+	wrapper?: (props: { children: ReactNode }) => ReactNode;
 }
 
 const Item: FC<HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
@@ -50,6 +53,21 @@ const ItemContent: FC<PropsWithChildren> = ({ children }) => {
 	);
 };
 
+const ItemEmptyContent: FC<HTMLAttributes<HTMLDivElement>> = ({
+	className,
+	...props
+}) => {
+	return (
+		<div
+			className={cn(
+				'flex flex-row w-full items-center gap-2 px-3 md:px-4 py-4',
+				className
+			)}
+			{...props}
+		/>
+	);
+};
+
 export const SectionList = <T extends Record<string, unknown>>({
 	title,
 	info,
@@ -57,7 +75,9 @@ export const SectionList = <T extends Record<string, unknown>>({
 	rows,
 	actions,
 	keyKey,
-	showAll = false
+	emptyRow,
+	showAll = false,
+	wrapper
 }: SectionListProps<T>) => {
 	const [expanded, setExpanded] = useState(false);
 
@@ -68,11 +88,13 @@ export const SectionList = <T extends Record<string, unknown>>({
 		setExpanded((expanded) => !expanded);
 	};
 
+	const Wrapper = wrapper ?? React.Fragment;
+
 	const ItemList = ({ items }: { items: T[] }) =>
 		items
 			.slice(0, showAll || expanded ? undefined : EXPAND_THRESHOLD)
 			.map((item, index) => {
-				const key = index; //keyKey ? (item[keyKey] as string) : index;
+				const key = index; // keyKey ? (item[keyKey] as string) : index;
 
 				return (
 					<React.Fragment key={key}>
@@ -99,23 +121,30 @@ export const SectionList = <T extends Record<string, unknown>>({
 				<p className="caption text-neutral-strong">{title}</p>
 				<p className="caption text-neutral-strong">{info}</p>
 			</div>
-			<div className="px-2 lg:px-0">
-				<div className="rounded-xl overflow-x-auto overflow-y-hidden scrollbar-hidden">
-					<div className="flex flex-col gap-px">
+			<Wrapper>
+				<ContentPadding size="sm">
+					<div className="rounded-xl overflow-x-auto overflow-y-hidden scrollbar-hidden">
 						<div className="flex flex-col gap-px">
-							<ItemList items={firstHalf} />
-						</div>
-						<div
-							className="flex flex-col gap-px"
-							style={{
-								display: showAll || expanded ? 'flex' : 'none'
-							}}
-						>
-							<ItemList items={secondHalf} />
+							{data.length === 0 && (
+								<Item>
+									<ItemEmptyContent>{emptyRow}</ItemEmptyContent>
+								</Item>
+							)}
+							<div className="flex flex-col gap-px">
+								<ItemList items={firstHalf} />
+							</div>
+							<div
+								className="flex flex-col gap-px"
+								style={{
+									display: showAll || expanded ? 'flex' : 'none'
+								}}
+							>
+								<ItemList items={secondHalf} />
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
+				</ContentPadding>
+			</Wrapper>
 			{!showAll && data.length > EXPAND_THRESHOLD && (
 				<div className="flex w-full justify-center">
 					<Button onClick={handleClick} variant="outline" size="sm">

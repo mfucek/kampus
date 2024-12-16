@@ -3,7 +3,7 @@ import { type FC, type HTMLAttributes } from 'react';
 
 import { cn } from '@/lib/shadcn/utils';
 
-const listLayoutVariants = cva(['flex flex-col gap-10'], {
+const listLayoutVariants = cva(['flex flex-col w-full'], {
 	variants: {
 		size: {
 			sm: 'gap-4',

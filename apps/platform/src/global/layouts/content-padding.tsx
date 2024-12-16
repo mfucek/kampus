@@ -6,9 +6,9 @@ import { cn } from '@/lib/shadcn/utils';
 const contentPaddingVariants = cva('', {
 	variants: {
 		size: {
-			sm: 'px-2 md:px-0',
-			md: 'px-3 md:px-0',
-			lg: 'px-4 md:px-0'
+			sm: 'px-2 @md:px-0',
+			md: 'px-3 @md:px-0',
+			lg: 'px-4 @md:px-0'
 		}
 	},
 	defaultVariants: {

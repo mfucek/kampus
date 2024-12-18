@@ -124,11 +124,11 @@ export const ferDriver: Driver = async ({ debug = false, callbacks }) => {
 
 			// Go through each semester
 			contents.forEach((content, semester) => {
-				const rows = content.querySelectorAll('& > .row');
+				const rows = Array.from(content.querySelectorAll('& > .row'));
 
 				let sectionTitle = '';
 
-				Array.from(rows).forEach((row) => {
+				rows.forEach((row) => {
 					// It is a section title
 					if (row.classList.length === 1) {
 						sectionTitle =

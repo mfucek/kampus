@@ -1,5 +1,6 @@
 import { ferDriver } from './fer';
 import { ffzgDriver } from './ffzg';
+import { pmfDriver } from './pmf';
 import type { Driver } from './types';
 
 export const drivers: Record<
@@ -15,6 +16,11 @@ export const drivers: Record<
 		label: 'FFZG',
 		slug: 'ffzg',
 		driver: ffzgDriver
+	},
+	pmf: {
+		label: 'PMF',
+		slug: 'pmf',
+		driver: pmfDriver
 	}
 };
 

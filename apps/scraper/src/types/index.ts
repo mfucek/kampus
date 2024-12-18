@@ -1,12 +1,21 @@
 import { z } from 'zod';
 
+export const professorReferenceSchema = z.object({
+	role: z.string(),
+	link: z.string()
+});
+
+export type ProfessorReference = z.infer<typeof professorReferenceSchema>;
+
+// -----------------------------
+
 export const subjectSchema = z.object({
 	externalLink: z.string(),
 	name: z.string(),
 	shortName: z.string().nullable(),
 	externalCode: z.string(),
 	ects: z.number().nullable(),
-	professorsLinks: z.array(z.object({ role: z.string(), link: z.string() }))
+	professorsLinks: z.array(professorReferenceSchema)
 });
 
 export type Subject = z.infer<typeof subjectSchema>;

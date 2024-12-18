@@ -1,13 +1,16 @@
+import { Page } from 'puppeteer';
+
 import { checkImage } from '@/utils/check-image';
 import { sanitizeTitle } from '@/utils/sanitize-title';
-import { Page } from 'puppeteer';
-import { slugify } from '../../../utils/slugify';
+import type { shortenList } from '@/utils/shorten-list';
+import { slugify } from '@/utils/slugify';
 
 declare global {
 	interface Window {
-		slugify: (str: string) => string;
-		sanitizeTitle: (str: string | undefined | null) => string;
-		checkImage: (url: string) => Promise<boolean>;
+		slugify: typeof slugify;
+		sanitizeTitle: typeof sanitizeTitle;
+		checkImage: typeof checkImage;
+		shortenList: typeof shortenList;
 	}
 }
 

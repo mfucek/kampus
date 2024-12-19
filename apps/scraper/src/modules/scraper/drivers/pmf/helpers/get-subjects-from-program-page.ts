@@ -1,25 +1,29 @@
-import type { ProfessorReference, Subject } from '@/types';
+import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
+import type { DriverCallbacks, ProfessorReference, Subject } from '@/types';
+import type { Logger } from '@/utils/logger';
 import { sanitizeTitle } from '@/utils/sanitize-title';
 import { shortenList } from '@/utils/shorten-list';
-import type { ElementHandle, Page } from 'puppeteer';
+import type { Browser, ElementHandle, Page } from 'puppeteer';
 
-const processRow = async (
-	page: Page,
-	row: ElementHandle,
-	baseUrl: string
-): Promise<Subject> => {
-	const subjectEcts = await (await row.$(
-		'& > td:nth-child(1) > span'
-	))!.evaluate((el) => el.textContent?.split('(')[0].trim() || '0');
-
+const processSubjectRow = async ({
+	page,
+	row,
+	baseUrl,
+	logger,
+	browser
+}: {
+	page: Page;
+	row: ElementHandle;
+	baseUrl: string;
+	logger?: Logger;
+	browser: Browser;
+}): Promise<Subject> => {
+	// Subject name
 	const subjectName = await (
 		await row.$('& > td:nth-child(2) > a')
 	)?.evaluate((el) => el?.textContent?.split('(')[0].trim() || '')!;
 
-	const subjectCode = await (
-		await row.$('& > td:nth-child(2) > a')
-	)?.evaluate((el) => el?.textContent?.split('(')[0].trim() || '')!;
-
+	// Subject link
 	const subjectLink =
 		baseUrl +
 		(await (
@@ -28,26 +32,64 @@ const processRow = async (
 
 	const subjectShortName = subjectLink.split('/').pop()?.split('_')[0] || '';
 
-	// Open info modal
-	const buttonEl = (await row.$('td:last-child > a'))!;
-	await buttonEl.click();
-	await page.waitForSelector('#lightbox_iframe');
-	await new Promise((resolve) => setTimeout(resolve, 1000));
+	// Find modal button
+	const anchorTagEls = await row.$$('a');
+	let modalContentHref: string | null = null;
 
-	const iFrame = await (await page.$('iframe#lightbox_iframe'))!.contentFrame();
+	// find js code in href attribute
+	for await (const anchorTagEl of anchorTagEls) {
+		const href = await anchorTagEl.evaluate((el) => el.getAttribute('href'));
+		if (href?.includes('show_window')) {
+			try {
+				modalContentHref = href.split("'")[1];
+				modalContentHref = baseUrl + modalContentHref;
+			} catch (error) {
+				logger?.log('error', 'Error parsing modal content href');
+			}
+			break;
+		}
+	}
 
-	// Get professors
+	if (!modalContentHref) {
+		logger?.log(
+			'error',
+			'No button found on ' + page.url() + ' ' + subjectName
+		);
+		throw new Error('No button found on ' + page.url() + ' ' + subjectName);
+	}
+
+	logger?.log('info', 'Modal content href: ' + modalContentHref);
+
+	const modalPage = await browser.newPage();
+
+	// Open info modal content
+	await modalPage.goto(modalContentHref);
+	await hydrateWindowWithUtilFunctions(modalPage);
+
+	// Subject code
+	const subjectCode =
+		(await (
+			await modalPage.$('table > tbody > tr:first-child > td:last-child')
+		)?.evaluate((el) => el?.textContent?.trim() || '')) || '';
+
+	// Subject ECTS
+	const subjectEcts =
+		(await (
+			await modalPage.$('table > tbody > tr:nth-child(2) > td:last-child')
+		)?.evaluate((el) => el?.textContent?.trim() || '')) || '';
+
+	// Professors
 	const professorReferences: ProfessorReference[] = [];
 
-	const linchargeProfessors = await iFrame.$$(
+	const linchargeProfessors = await modalPage.$$(
 		'table > tbody > tr.lincharge > td:nth-child(2) > a'
 	);
 
-	const lecturersProfessors = await iFrame.$$(
+	const lecturersProfessors = await modalPage.$$(
 		'table > tbody > tr.lecturers > td:nth-child(2) > a'
 	);
 
-	const lecturersRolesTr = await iFrame.$(
+	const lecturersRolesTr = await modalPage.$(
 		'table > tbody > tr.lecturers > td:last-child'
 	);
 	const lecturersRolesRaw = await lecturersRolesTr?.evaluate(
@@ -59,6 +101,10 @@ const processRow = async (
 	for await (const professor of linchargeProfessors) {
 		const link = await professor.evaluate((el) => el.getAttribute('href'));
 		const role = 'Nositelji';
+
+		if (!link || link.endsWith('/.')) {
+			continue;
+		}
 
 		professorReferences.push({
 			role: role,
@@ -72,16 +118,18 @@ const processRow = async (
 		const link = await professor.evaluate((el) => el.getAttribute('href'));
 		const role = lecturersRoles[professorIndex];
 
+		if (!link || link.endsWith('/.')) {
+			continue;
+		}
+
 		professorReferences.push({
 			role: sanitizeTitle(role),
 			link: baseUrl + link
 		});
 	}
 
-	// Close info modal
-	// @ts-ignore
-	await page.evaluate(() => hide_window());
-	await new Promise((resolve) => setTimeout(resolve, 200));
+	// Close info modal page
+	await modalPage.close();
 
 	return {
 		externalLink: subjectLink,
@@ -93,24 +141,66 @@ const processRow = async (
 	};
 };
 
-export const getSubjectsFromProgramPage = async (
-	page: Page,
-	baseUrl: string,
-	debug?: boolean
-): Promise<Subject[]> => {
-	// limit to 5 rows
-	const rows = (await page.$$('.cms_table_row_0, .cms_table_row_1')).slice(
-		0,
-		5
+export const getSubjectsFromProgramPage = async ({
+	page,
+	baseUrl,
+	selector,
+	logger,
+	callbacks,
+	debug,
+	browser
+}: {
+	page: Page;
+	baseUrl: string;
+	selector: string;
+	logger?: Logger;
+	callbacks?: DriverCallbacks;
+	debug?: boolean;
+	browser: Browser;
+}): Promise<Subject[]> => {
+	const subjects: Subject[] = [];
+
+	logger?.log('info', 'Finding rows with selector ' + selector);
+
+	const rows = await page.$$(
+		selector + ' *:is(.cms_table_row_0, .cms_table_row_1)'
 	);
 
-	const subjects: Subject[] = [];
+	if (rows.length === 0) {
+		logger?.log('warn', 'No rows found on ' + page.url());
+		return [];
+	}
+
+	logger?.log('info', 'Found ' + rows.length + ' rows');
+
+	let counter = 0;
+	const totalRows = rows.length;
 
 	for await (const row of shortenList(rows, {
 		enabled: debug,
 		maxLength: 5
 	})) {
-		const subject = await processRow(page, row, baseUrl);
+		counter += 1;
+
+		logger?.log('info', 'Processing row no ' + counter + ' of ' + totalRows);
+
+		// confirm row is subject by checking if it contains an anchor tag that's href starts with javascript
+		const anchorTags = await row.$$('a');
+		const isSubject = anchorTags.some((anchor) =>
+			anchor.evaluate((el) => el.getAttribute('href')?.startsWith('javascript'))
+		);
+
+		if (!isSubject) {
+			continue;
+		}
+
+		const subject = await processSubjectRow({
+			page,
+			row,
+			baseUrl,
+			logger,
+			browser
+		});
 		subjects.push(subject);
 	}
 

@@ -119,10 +119,13 @@ export const linkProgramSubjects = async ({
 					const programId = programCache.get(programLink);
 					const subjectId = subjectCache.get(subjectLink);
 
-					if (!programId || !subjectId) {
-						console.log(
-							`Program or subject not found: ${programLink} ${subjectLink}`
-						);
+					if (!programId) {
+						console.log(`Program not found: ${programLink}`);
+						continue;
+					}
+
+					if (!subjectId) {
+						console.log(`Subject not found: ${subjectLink}`);
 						continue;
 					}
 
@@ -134,6 +137,8 @@ export const linkProgramSubjects = async ({
 							groupName
 						}
 					});
+
+					createdProgramSubjectRelationships += 1;
 				}
 			},
 			{
@@ -141,7 +146,6 @@ export const linkProgramSubjects = async ({
 			}
 		);
 
-		createdProgramSubjectRelationships += chunk.length;
 		spinnerProgramSubjects.onProgress(
 			createdProgramSubjectRelationships,
 			programSubjectToCreate.length,

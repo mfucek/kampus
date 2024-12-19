@@ -1,64 +1,137 @@
 import type { Page } from 'puppeteer';
 
 import type { SubjectReference } from '@/types';
+import type { Logger } from '@/utils/logger';
 import { sanitizeTitle } from '@/utils/sanitize-title';
 
-export const getSubjectReferencesFromProgramPage = async (
-	page: Page,
-	baseUrl: string,
-	debug?: boolean
-) => {
-	const result = await page.evaluate((baseUrl) => {
-		const contents = Array.from(
-			document.querySelectorAll('.ui-tabs-panel:nth-child(n+3) > table > tbody')
-		);
+export const getSubjectReferencesFromProgramPage = async ({
+	page,
+	baseUrl,
+	logger,
+	tablesSelector,
+	debug
+}: {
+	page: Page;
+	baseUrl: string;
+	logger?: Logger;
+	tablesSelector: {
+		tables: string;
+		tableGroups: string;
+	};
+	debug?: boolean;
+}) => {
+	logger?.log('info', 'Getting subject references from program page');
+	const semesterTableGroups = await page.$$(tablesSelector.tableGroups);
 
-		let subjectReferences: SubjectReference[] = [];
-		// let outputSubjects: Record<string, Subject> = {};
+	logger?.log(
+		'info',
+		'Found ' +
+			semesterTableGroups.length +
+			' semester table groups with selector ' +
+			tablesSelector.tableGroups
+	);
 
-		// Go through each semester
-		for (
-			let semesterIndex = 0;
-			semesterIndex < contents.length;
-			semesterIndex++
-		) {
-			const content = contents[semesterIndex];
-			const rows = Array.from(content.querySelectorAll('& > tr'));
+	const result = await page.evaluate(
+		(baseUrl, tablesSelector) => {
+			let subjectReferences: SubjectReference[] = [];
 
-			let sectionTitle = '';
+			const semesterTableGroups = Array.from(
+				document.querySelectorAll(tablesSelector.tableGroups)
+			);
 
-			for (const row of rows) {
-				// It is a section title
-				if (row.classList.contains('predmet')) {
-					sectionTitle =
-						row
-							.querySelector('& > td:nth-child(2)')
-							?.textContent?.trim()
-							.split('\n')[0] || '';
-					continue;
-				}
+			for (const semesterTableGroup of semesterTableGroups) {
+				const semesterTables = Array.from(
+					semesterTableGroup.querySelectorAll(tablesSelector.tables)
+				);
 
-				// It is a subject
-				if (
-					row.classList.contains('cms_table_row_0') ||
-					row.classList.contains('cms_table_row_1')
+				// Go through each semester
+				for (
+					let semesterIndex = 0;
+					semesterIndex < semesterTables.length;
+					semesterIndex++
 				) {
-					const subjectLink =
-						row
-							.querySelector('& > td:nth-child(2) > a')
-							?.getAttribute('href') || '';
+					const semesterTable = semesterTables[semesterIndex];
+					const rows = Array.from(semesterTable.querySelectorAll('tr'));
 
-					subjectReferences.push({
-						externalLink: baseUrl + subjectLink,
-						semester: semesterIndex + 1,
-						groupName: sanitizeTitle(sectionTitle)
-					});
+					let sectionTitle = '';
+
+					for (const row of rows) {
+						const hasPredmetClass = row.classList.contains('predmet');
+						const hasThChild = row.querySelector('th');
+						const hasStripeClass =
+							row.classList.contains('cms_table_row_0') ||
+							row.classList.contains('cms_table_row_1');
+						const hasAnchorChild = row.querySelector('td:nth-child(2) > a');
+
+						// It is a section title
+						if (hasPredmetClass || (hasStripeClass && hasThChild)) {
+							const rawText = row.querySelector('td:nth-child(2)')?.textContent;
+
+							if (
+								rawText?.toLowerCase().includes('obvez') &&
+								rawText?.toLowerCase().includes('izbo')
+							) {
+								sectionTitle = 'Obvezni Izborni Predmeti';
+								continue;
+							}
+
+							if (
+								rawText?.toLowerCase().includes('izvan') &&
+								rawText?.toLowerCase().includes('izbo')
+							) {
+								sectionTitle = 'Izborni Predmeti izvan Odabranih Grana';
+								continue;
+							}
+
+							if (rawText?.toLowerCase().includes('izbo')) {
+								sectionTitle = 'Izborni Predmeti';
+								continue;
+							}
+
+							if (rawText?.toLowerCase().includes('fakultativni')) {
+								sectionTitle = 'Fakultativni Predmeti';
+								continue;
+							}
+
+							if (rawText?.toLowerCase().includes('redovni')) {
+								sectionTitle = 'Redovni Predmeti';
+								continue;
+							}
+
+							if (rawText?.toLowerCase().includes('obvez')) {
+								sectionTitle = 'Obvezni Predmeti';
+								continue;
+							}
+
+							sectionTitle =
+								rawText?.trim().split('\n')[0].split('=>')[0].split(' ,')[0] ||
+								'';
+							sectionTitle = sanitizeTitle(sectionTitle);
+							continue;
+						}
+
+						// It is a subject
+						if (hasStripeClass && hasAnchorChild) {
+							const subjectLink =
+								row
+									.querySelector('td:nth-child(2) > a')
+									?.getAttribute('href') || '';
+
+							subjectReferences.push({
+								externalLink: baseUrl + subjectLink,
+								semester: semesterIndex + 1,
+								groupName: sectionTitle
+							});
+						}
+					}
 				}
 			}
-		}
 
-		return { subjectReferences };
-	}, baseUrl);
+			return { subjectReferences };
+		},
+		baseUrl,
+		tablesSelector
+	);
 
 	return result.subjectReferences;
 };

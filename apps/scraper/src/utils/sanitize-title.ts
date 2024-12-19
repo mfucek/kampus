@@ -3,7 +3,7 @@ export const sanitizeTitle = (title: string | undefined | null) => {
 		return '';
 	}
 
-	let sanitized = title.trim();
+	let sanitized = title.trim().toLowerCase();
 
 	// remove all double spaces
 	// e.g. "Povijest  i geografija" -> "Povijest i geografija"

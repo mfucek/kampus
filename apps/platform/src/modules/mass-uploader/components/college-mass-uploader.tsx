@@ -5,7 +5,6 @@ import { ListLayout } from '@/global/layouts/list-layout';
 import { FileStagingProvider } from '@/modules/file/contexts/file-staging-provider';
 import { useMassUploader } from '../hooks';
 
-import { api } from '@/lib/trpc/react';
 import { ComposerBodyProvider } from '@/modules/composer/contexts/composer-body-provider';
 import { ComposerControllerProvider } from '@/modules/composer/contexts/composer-controller-provider';
 import { type SubjectListItem } from '@/modules/topic/subject/api/procedures/list';
@@ -15,18 +14,18 @@ import { FileUploadSection } from './sections/file-upload';
 import { IntroSection } from './sections/intro';
 import { SubjectSelectionSection } from './sections/subject-selection';
 
-export const CollegeMassUploader = ({ collegeId }: { collegeId: string }) => {
+export const CollegeMassUploader = ({
+	collegeId,
+	subjects
+}: {
+	collegeId: string;
+	subjects: SubjectListItem[];
+}) => {
 	const [targetSubject, setTargetSubject] = useState<SubjectListItem | null>(
 		null
 	);
 
-	const { data: subjects } = api.subject.list.useQuery({
-		scope: {
-			collegeId: collegeId
-		}
-	});
-
-	const subjectsSorted = (subjects?.subjects ?? []).sort((a, b) =>
+	const subjectsSorted = (subjects ?? []).sort((a, b) =>
 		a.name.localeCompare(b.name)
 	);
 

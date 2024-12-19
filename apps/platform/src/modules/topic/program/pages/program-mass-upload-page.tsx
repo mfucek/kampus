@@ -4,27 +4,29 @@ import { CollegeMassUploader } from '../../../mass-uploader/components/college-m
 interface PageProps {
 	params: Promise<{
 		collegeSlug: string;
+		programSlug: string;
 	}>;
 }
 
-export const CollegeMassUploadPage = async ({ params }: PageProps) => {
-	const { collegeSlug } = await params;
+export const ProgramMassUploadPage = async ({ params }: PageProps) => {
+	const { collegeSlug, programSlug } = await params;
 
-	const college = await api.college.getBySlug({
-		collegeSlug
+	const program = await api.program.getBySlug({
+		collegeSlug,
+		programSlug
 	});
 
-	if (!college) return null;
+	if (!program) return null;
 
 	const allSubjects = await api.subject.list({
 		scope: {
-			collegeId: college.id
+			programId: program.id
 		}
 	});
 
 	return (
 		<CollegeMassUploader
-			collegeId={college.id}
+			collegeId={program.collegeId}
 			subjects={allSubjects.subjects}
 		/>
 	);

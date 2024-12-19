@@ -26,12 +26,17 @@ export const listProcedure = publicProcedure
 				? (await getCollegeBySlug(db, input.scope?.collegeSlug)).id
 				: undefined);
 
+		const programId = input.scope?.programId;
+
 		const staffId = input.scope?.staffId;
 
 		const where: Prisma.TopicWhereInput = {
 			type: 'SUBJECT',
 			// scope
 			...(collegeId ? { collegeId: collegeId } : {}),
+			...(programId
+				? { Subject: { Programs: { some: { programId: programId } } } }
+				: {}),
 			...(staffId
 				? {
 						subject: {

@@ -6,11 +6,19 @@ import type { Professor, Program, Subject } from '@/types';
 import { sanitizeTitle } from '@/utils/sanitize-title';
 import { shortenList } from '@/utils/shorten-list';
 import { slugify } from '@/utils/slugify';
+import { getStaffDetails } from './helpers/get-staff-details';
 import { getSubjectReferencesFromProgramPage } from './helpers/get-subject-references-from-program-page';
 import { getSubjectsFromProgramPage } from './helpers/get-subjects-from-program-page';
 
-export const pmfDriver: Driver = async ({ debug = false, callbacks }) => {
+export const pmfDriver: Driver = async ({
+	debug = false,
+	logger,
+	callbacks
+}) => {
+	logger?.log('info', 'Starting PMF driver');
+
 	// Initialize browser
+	logger?.log('info', 'Initializing browser');
 	const browser = await puppeteer.launch({
 		headless: !debug,
 		devtools: debug
@@ -25,6 +33,7 @@ export const pmfDriver: Driver = async ({ debug = false, callbacks }) => {
 	// -----------------------------
 	// Initialize lists
 
+	logger?.log('info', 'Initializing lists');
 	const programsList: { [externalLink: string]: Program } = {};
 	const subjectsList: { [externalLink: string]: Subject } = {};
 	const professorsList: { [externalLink: string]: Professor } = {};
@@ -32,6 +41,7 @@ export const pmfDriver: Driver = async ({ debug = false, callbacks }) => {
 	// -----------------------------
 	// Scrape programs
 
+	logger?.log('info', 'Scraping programs');
 	const departmentsUrl: Record<
 		string,
 		Record<string, { url: string; selector: string }>
@@ -53,7 +63,7 @@ export const pmfDriver: Driver = async ({ debug = false, callbacks }) => {
 		Fizika: {
 			'Integrirani Studiji': {
 				url: 'https://www.pmf.unizg.hr/phy/nastava/predmeti',
-				selector: 'ul#nav_95985_27 > li:first-child > a.nav_link'
+				selector: 'ul#nav_124789_8 > li > a.nav_link'
 			}
 		},
 		Kemija: {
@@ -120,9 +130,50 @@ export const pmfDriver: Driver = async ({ debug = false, callbacks }) => {
 		}
 	};
 
+	const tablesSelectors: Record<
+		string,
+		{
+			tables: string;
+			tableGroups: string;
+		}
+	> = {
+		Biologija: {
+			tableGroups: '.ui-tabs',
+			tables: '.ui-tabs-panel:nth-of-type(n+2) > table > tbody'
+		},
+		Fizika: {
+			tableGroups: '.ui-tabs',
+			tables: '.ui-tabs-panel:nth-child(n+3) > table > tbody'
+		},
+		Kemija: {
+			tableGroups: '.ui-tabs',
+			tables: '.ui-tabs-panel:nth-child(n+3) > table > tbody'
+		},
+		Matematika: {
+			tableGroups: '.ui-tabs',
+			tables: '.ui-tabs-panel:nth-child(n+3) > table > tbody'
+		},
+		Geofizika: {
+			tableGroups: '.ui-tabs',
+			tables: '.ui-tabs-panel:nth-child(n+3) > table > tbody'
+		},
+		Geografija: {
+			tableGroups: '.ui-tabs',
+			tables: '.ui-tabs-panel'
+		},
+		Geologija: {
+			tableGroups: '.ui-tabs',
+			tables: '.ui-tabs-panel:nth-child(n+3)'
+		}
+	};
+
 	const numOfPagesToScrape = 16;
 	let counter = 0;
 
+	logger?.log(
+		'info',
+		'Scraping ' + Object.entries(departmentsUrl).length + ' departments'
+	);
 	for await (const [department, programUrlsSelector] of shortenList(
 		Object.entries(departmentsUrl),
 		{ enabled: debug }
@@ -134,33 +185,36 @@ export const pmfDriver: Driver = async ({ debug = false, callbacks }) => {
 			callbacks?.onProgress?.(
 				counter,
 				numOfPagesToScrape,
-				`Gathering links for ${department} ${programType}`
+				`Gathering links for ${department}`
 			);
 
+			logger?.log('info', 'Navigating to ' + url);
 			if (page.url() !== url) {
 				await page.goto(url);
 				await hydrateWindowWithUtilFunctions(page);
 			}
 
-			(
-				await page.evaluate(
-					(selector, baseUrl) => {
-						const anchors = Array.from(document.querySelectorAll(selector));
-						return anchors.map((anchor) => {
-							const name = anchor.textContent?.trim() || '';
-							const link = anchor.getAttribute('href') || '';
-							return { name: name, link: baseUrl + link };
-						});
-					},
-					selector,
-					baseUrl
-				)
-			).forEach(({ link, name }) => {
+			logger?.log('info', 'Scraping ' + selector);
+			const result = await page.evaluate(
+				(selector, baseUrl) => {
+					const anchors = Array.from(document.querySelectorAll(selector));
+					return anchors.map((anchor) => {
+						const name = anchor.textContent?.trim() || '';
+						const link = anchor.getAttribute('href') || '';
+						return { name: name, link: baseUrl + link };
+					});
+				},
+				selector,
+				baseUrl
+			);
+
+			result.forEach(({ link, name }) => {
+				logger?.log('info', 'Found program ' + name);
 				programsList[link] = {
 					name: sanitizeTitle(name),
 					shortName: slugify(name),
 					externalLink: link,
-					departments: [],
+					departments: [department],
 					subjects: [],
 					type: programType
 				};
@@ -174,17 +228,15 @@ export const pmfDriver: Driver = async ({ debug = false, callbacks }) => {
 	const numOfPrograms = Object.keys(programsList).length;
 	counter = 0;
 
+	logger?.log('info', 'Scraping ' + numOfPrograms + ' programs');
 	for await (const program of shortenList(Object.values(programsList), {
 		enabled: debug,
 		maxLength: 5
 	})) {
 		counter += 1;
-		callbacks?.onProgress?.(
-			counter,
-			numOfPrograms,
-			`Getting subjects from ${program.name}`
-		);
+		callbacks?.onProgress?.(counter, numOfPrograms, `Getting subjects`);
 
+		logger?.log('info', 'Navigating to ' + program.externalLink);
 		await page.goto(program.externalLink);
 		await hydrateWindowWithUtilFunctions(page);
 
@@ -196,147 +248,64 @@ export const pmfDriver: Driver = async ({ debug = false, callbacks }) => {
 		});
 
 		if (!tableExists) {
+			logger?.log('warn', 'No table element found');
 			continue;
 		}
 
-		const subjectReferences = await getSubjectReferencesFromProgramPage(
+		logger?.log('info', 'Scraping subject references from table');
+		const subjectReferences = await getSubjectReferencesFromProgramPage({
 			page,
 			baseUrl,
+			tablesSelector: tablesSelectors[program.departments[0]!],
+			logger,
 			debug
-		);
+		});
 
 		program.subjects = subjectReferences;
 
-		const subjects = await getSubjectsFromProgramPage(page, baseUrl, debug);
+		logger?.log('info', 'Scraping individual subject info from modals');
+		const subjects = await getSubjectsFromProgramPage({
+			page: page,
+			baseUrl: baseUrl,
+			selector:
+				tablesSelectors[program.departments[0]!].tableGroups +
+				' ' +
+				tablesSelectors[program.departments[0]!].tables,
+			logger: logger,
+			callbacks: callbacks,
+			debug: debug,
+			browser: browser
+		});
 
+		logger?.log('info', 'Added ' + Object.keys(subjects).length + ' subjects');
 		Object.values(subjects).forEach((subject) => {
 			subjectsList[subject.externalLink] = subject;
 		});
 	}
 
 	// -----------------------------
-	// Get all unique subject links
+	// Scrape each professor link
 
-	// const subjectLinks = [
-	// 	...new Set(
-	// 		Object.values(programsList).flatMap((program) =>
-	// 			program.subjects.map((subject) => subject.externalLink)
-	// 		)
-	// 	)
-	// ];
+	const professorLinks = [
+		...new Set(
+			Object.values(subjectsList).flatMap((subject) =>
+				subject.professorsLinks.map((p) => p.link)
+			)
+		)
+	];
 
-	// -----------------------------
-	// Scrape each subject link
+	const professors = await getStaffDetails({
+		links: professorLinks,
+		page,
+		logger,
+		baseUrl,
+		debug,
+		callbacks
+	});
 
-	// counter = 0;
-
-	// for await (const subjectLink of shortenList(subjectLinks, {
-	// 	enabled: debug,
-	// 	maxLength: 5
-	// })) {
-	// 	counter += 1;
-	// 	callbacks?.onProgress?.(
-	// 		counter,
-	// 		debug ? 5 : subjectLinks.length,
-	// 		'Getting subject details'
-	// 	);
-
-	// 	await page.goto(subjectLink);
-	// 	await hydrateWindowWithUtilFunctions(page);
-
-	// 	const result = await page.evaluate(
-	// 		(subjectLink, baseUrl) => {
-	// 			const subjectName =
-	// 				document
-	// 					.querySelector('.portlet_news > h3.cms_module_title')
-	// 					?.textContent?.trim() || '';
-
-	// 			const subjectCode =
-	// 				document
-	// 					.querySelector('table > tbody > tr:nth-child(1) > td:nth-child(2)')
-	// 					?.textContent?.split('\n')[1]
-	// 					.trim() || '';
-
-	// 			const subjectEcts = Number(
-	// 				document
-	// 					.querySelector('table > tbody > tr:nth-child(2) > td:nth-child(2)')
-	// 					?.textContent?.trim() || '0'
-	// 			);
-
-	// 			const subjectShortName =
-	// 				subjectLink.split('/').pop()?.split('_')[0] || '';
-
-	// 			const professorRoleList: { professor: Professor; role: string }[] = [];
-
-	// 			document
-	// 				.querySelectorAll(
-	// 					'table > tbody > tr.lincharge > td:nth-child(2) > a'
-	// 				)
-	// 				.forEach((anchor) => {
-	// 					const name = anchor.textContent?.trim() || '';
-	// 					const link = anchor.getAttribute('href') || '';
-	// 					professorRoleList.push({
-	// 						professor: {
-	// 							name: name,
-	// 							externalLink: baseUrl + link,
-	// 							imageUrl: null
-	// 						},
-	// 						role: 'Nositelji'
-	// 					});
-	// 				});
-	// 			document
-	// 				.querySelectorAll(
-	// 					'table > tbody > tr.lincharge > td:nth-child(2) > a'
-	// 				)
-	// 				.forEach((anchor, anchorIndex) => {
-	// 					const name = anchor.textContent?.trim() || '';
-	// 					const link = anchor.getAttribute('href') || '';
-	// 					const role = document
-	// 						.evaluate(
-	// 							`//tr[@class="lecturers"]/td/a[${
-	// 								anchorIndex + 1
-	// 							}]/following-sibling::text()`,
-	// 							document,
-	// 							null,
-	// 							XPathResult.STRING_TYPE
-	// 						)
-	// 						.stringValue.split('- ')[1];
-
-	// 					professorRoleList.push({
-	// 						professor: {
-	// 							name: name,
-	// 							externalLink: baseUrl + link,
-	// 							imageUrl: null
-	// 						},
-	// 						role: sanitizeTitle(role)
-	// 					});
-	// 				});
-
-	// 			return {
-	// 				subject: {
-	// 					externalLink: subjectLink,
-	// 					name: subjectName,
-	// 					shortName: subjectShortName,
-	// 					externalCode: subjectCode,
-	// 					ects: Number(subjectEcts),
-	// 					professorsLinks: professorRoleList.map((p) => ({
-	// 						role: p.role,
-	// 						link: p.professor.externalLink
-	// 					}))
-	// 				},
-	// 				professors: professorRoleList
-	// 			};
-	// 		},
-	// 		subjectLink,
-	// 		baseUrl
-	// 	);
-
-	// 	subjectsList[subjectLink] = result.subject;
-
-	// 	for (const professor of result.professors) {
-	// 		professorsList[professor.professor.externalLink] = professor.professor;
-	// 	}
-	// }
+	Object.entries(professors).forEach(([link, professor]) => {
+		professorsList[link] = professor;
+	});
 
 	// -----------------------------
 

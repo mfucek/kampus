@@ -81,13 +81,18 @@ export const createStaff = async ({
 					});
 
 					if (topic) {
-						await tx.staff.create({
-							data: {
-								topicId: topic.id,
-								imageUrl: professor.imageUrl,
-								staffExternalLink: professor.externalLink
-							}
-						});
+						try {
+							await tx.staff.create({
+								data: {
+									topicId: topic.id,
+									imageUrl: professor.imageUrl,
+									staffExternalLink: professor.externalLink
+								}
+							});
+						} catch (error) {
+							console.log(topic.id, professor.externalLink);
+							throw error;
+						}
 					}
 				}
 

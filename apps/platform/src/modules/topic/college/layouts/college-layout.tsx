@@ -5,6 +5,8 @@ import { PageHeader } from '@/global/components/page-header';
 import { Tab, Tabs } from '@/global/components/route-tabs';
 import { Spinner } from '@/global/components/spinner';
 import { api } from '@/lib/trpc/server';
+import { RuleProtected } from '@/modules/permissions/components/protected';
+import { RuleType } from '@prisma/client';
 
 interface LayoutProps {
 	params: Promise<{
@@ -32,9 +34,11 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 				<Tab route={makeRoute('/programs')}>Smjerovi</Tab>
 				<Tab route={makeRoute('/all-subjects')}>Svi predmeti</Tab>
 				<Tab route={makeRoute('/all-staff')}>Svi nastavnici</Tab>
-				{/* <RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={college.id}>
-					<Tab route={makeRoute('/mass-upload')}>Mass Upload</Tab>
-				</RuleProtected> */}
+				<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={college.id}>
+					<Tab route={makeRoute('/mass-upload')}>
+						Mass Upload (svi smjerovi)
+					</Tab>
+				</RuleProtected>
 			</Tabs>
 			<Suspense fallback={<Spinner />}>{children}</Suspense>
 		</Container>

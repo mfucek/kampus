@@ -5,6 +5,8 @@ import { PageHeader } from '@/global/components/page-header';
 import { Tab, Tabs } from '@/global/components/route-tabs';
 import { Spinner } from '@/global/components/spinner';
 import { api } from '@/lib/trpc/server';
+import { RuleProtected } from '@/modules/permissions/components/protected';
+import { RuleType } from '@prisma/client';
 
 interface LayoutProps {
 	params: Promise<{
@@ -33,6 +35,9 @@ export const ProgramLayout = async ({
 			<Tabs className="px-4 lg:px-0">
 				<Tab route={makeRoute('')}>Rasprava</Tab>
 				<Tab route={makeRoute('/subjects')}>Predmeti</Tab>
+				<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={program.id}>
+					<Tab route={makeRoute('/mass-upload')}>Mass Upload</Tab>
+				</RuleProtected>
 			</Tabs>
 			<Suspense fallback={<Spinner />}>{children}</Suspense>
 		</Container>

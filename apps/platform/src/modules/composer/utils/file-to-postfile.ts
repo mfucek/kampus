@@ -1,8 +1,8 @@
 import type { FileType } from '@prisma/client';
 import type {
 	DocumentOptions,
-	PostFile
-} from '../contexts/composer-files-provider';
+	StagedFile
+} from '../../file/contexts/file-staging-provider';
 
 const fileTypeToFileType = (type: string): FileType => {
 	if (['image/png', 'image/jpeg'].includes(type)) return 'IMAGE';
@@ -12,7 +12,7 @@ const fileTypeToFileType = (type: string): FileType => {
 	throw new Error('Invalid file type');
 };
 
-export const fileToPostFile = (file: File): PostFile => {
+export const fileToPostFile = (file: File): StagedFile => {
 	const type = fileTypeToFileType(file.type);
 
 	let documentOptions: DocumentOptions | null = null;

@@ -26,8 +26,10 @@ model Account {
   status      AccountStatus @default(INACTIVE)
   activeUntil DateTime?
 
-  user                User?
-  permissionOverrides Permissions?
+  user User?
+
+  role        RoleType     @default(BASE)
+  Permissions Permission[]
 }
 
 enum PackageType {
@@ -303,8 +305,9 @@ enum DocumentFileType {
   COLOQUIUM
   COLOQUIUM_MID
   COLOQUIUM_FINAL
-  EXERCISE
+  LAB_EXERCISE
   HOMEWORK
+  EXERCISES
   SEMINAR
   SCRIPT
   NOTES
@@ -314,7 +317,10 @@ enum DocumentFileType {
   FALL_EXAM
   WINTER_EXAM
   SPRING_EXAM
+  DEAN_EXAM
   CORRECTION_EXAM
+  ENTRANCE_EXAM
+  EXIT_EXAM
   ORAL_EXAM
   SOLVED
 }
@@ -326,45 +332,40 @@ enum FileType {
 }
 
 // ------------------
-// Permissions
+// Role Based Access Control
 // ------------------
-
-model Permissions {
-  accountId String  @id
-  Account   Account @relation(fields: [accountId], references: [id])
-
-  // base role
-  baseRole RoleType @default(BASE)
-
-  // overrides
-  canEnterPlatform Boolean?
-
-  canPost  Boolean?
-  canReply Boolean?
-  canVote  Boolean?
-
-  canUploadFiles  Boolean?
-  canUploadImages Boolean?
-
-  canChangeTheme      Boolean?
-  canViewAllSummaries Boolean?
-
-  canSuggestTopics  Boolean?
-  canApproveTopics  Boolean?
-  canManageTopics   Boolean?
-  canManageColleges Boolean?
-
-  canDeleteOthersPosts Boolean?
-
-  canDeleteUsers       Boolean?
-  canManageUserRoles   Boolean?
-  canManagePermissions Boolean?
-}
 
 enum RoleType {
   BASE
-  MODERATOR
-  ADMIN
+  ADMINISTRATOR
+}
+
+model Permission {
+  accountId String  @id
+  Account   Account @relation(fields: [accountId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
+
+  rule  RuleType
+  value Boolean
+
+  scopeType ScopeType
+  scopeId   String?
+}
+
+enum RuleType {
+  CAN_POST
+
+  CAN_CHANGE_PROFILE_BADGE
+
+  CAN_MASS_UPLOAD
+}
+
+enum ScopeType {
+  GLOBAL
+  COLLEGE
 }
 
 // ------------------

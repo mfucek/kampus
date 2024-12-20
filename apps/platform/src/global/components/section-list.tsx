@@ -1,13 +1,16 @@
 'use client';
 
 import { Button } from '@/lib/shadcn/ui/button';
+import { cn } from '@/lib/shadcn/utils';
 import Link from 'next/link';
-import {
+import React, {
 	useState,
 	type FC,
+	type HTMLAttributes,
 	type PropsWithChildren,
 	type ReactNode
 } from 'react';
+import { ContentPadding } from '../layouts/content-padding';
 
 const EXPAND_THRESHOLD = 5;
 
@@ -16,15 +19,22 @@ interface SectionListProps<T> {
 	info?: string;
 	showAll?: boolean;
 	data: T[];
-	rows: (item: T) => ReactNode;
-	actions?: (item: T) => ReactNode;
+	keyKey?: keyof T;
+	rows: (item: T, index: number) => ReactNode;
+	actions?: (item: T, index: number) => ReactNode;
+	emptyRow?: ReactNode;
+	wrapper?: (props: { children: ReactNode }) => ReactNode;
 }
 
-const Item: FC<PropsWithChildren> = ({ children }) => {
+const Item: FC<HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
 	return (
-		<div className="flex flex-row gap-2 items-center justify-between bg-section md:bg-neutral-weak cursor-pointer button-md group">
-			{children}
-		</div>
+		<div
+			className={cn(
+				'flex flex-row gap-2 items-center justify-between bg-section md:bg-neutral-weak button-md group',
+				className
+			)}
+			{...props}
+		/>
 	);
 };
 const ItemActions: FC<PropsWithChildren> = ({ children }) => {
@@ -43,13 +53,31 @@ const ItemContent: FC<PropsWithChildren> = ({ children }) => {
 	);
 };
 
-export const SectionList = <T extends { link?: string }>({
+const ItemEmptyContent: FC<HTMLAttributes<HTMLDivElement>> = ({
+	className,
+	...props
+}) => {
+	return (
+		<div
+			className={cn(
+				'flex flex-row w-full items-center gap-2 px-3 md:px-4 py-4',
+				className
+			)}
+			{...props}
+		/>
+	);
+};
+
+export const SectionList = <T extends Record<string, unknown>>({
 	title,
 	info,
 	data,
 	rows,
 	actions,
-	showAll = false
+	keyKey,
+	emptyRow,
+	showAll = false,
+	wrapper
 }: SectionListProps<T>) => {
 	const [expanded, setExpanded] = useState(false);
 
@@ -60,24 +88,32 @@ export const SectionList = <T extends { link?: string }>({
 		setExpanded((expanded) => !expanded);
 	};
 
+	const Wrapper = wrapper ?? React.Fragment;
+
 	const ItemList = ({ items }: { items: T[] }) =>
 		items
 			.slice(0, showAll || expanded ? undefined : EXPAND_THRESHOLD)
-			.map((item, key) =>
-				item.link ? (
-					<Item key={key}>
-						<Link href={item.link} className="flex-1">
-							<ItemContent>{rows(item)}</ItemContent>
-						</Link>
-						{actions && <ItemActions>{actions(item)}</ItemActions>}
-					</Item>
-				) : (
-					<Item key={key}>
-						<ItemContent>{rows(item)}</ItemContent>
-						{actions && <ItemActions>{actions(item)}</ItemActions>}
-					</Item>
-				)
-			);
+			.map((item, index) => {
+				const key = index; // keyKey ? (item[keyKey] as string) : index;
+
+				return (
+					<React.Fragment key={key}>
+						{item.link ? (
+							<Item className="cursor-pointer">
+								<Link href={item.link} className="flex-1">
+									<ItemContent>{rows(item, index)}</ItemContent>
+								</Link>
+								{actions && <ItemActions>{actions(item, index)}</ItemActions>}
+							</Item>
+						) : (
+							<Item>
+								<ItemContent>{rows(item, index)}</ItemContent>
+								{actions && <ItemActions>{actions(item, index)}</ItemActions>}
+							</Item>
+						)}
+					</React.Fragment>
+				);
+			});
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -85,23 +121,30 @@ export const SectionList = <T extends { link?: string }>({
 				<p className="caption text-neutral-strong">{title}</p>
 				<p className="caption text-neutral-strong">{info}</p>
 			</div>
-			<div className="px-2 lg:px-0">
-				<div className="rounded-xl overflow-x-auto overflow-y-hidden scrollbar-hidden">
-					<div className="flex flex-col gap-px">
+			<Wrapper>
+				<ContentPadding size="sm">
+					<div className="rounded-xl overflow-x-auto overflow-y-hidden scrollbar-hidden">
 						<div className="flex flex-col gap-px">
-							<ItemList items={firstHalf} />
-						</div>
-						<div
-							className="flex flex-col gap-px"
-							style={{
-								display: showAll || expanded ? 'flex' : 'none'
-							}}
-						>
-							<ItemList items={secondHalf} />
+							{data.length === 0 && (
+								<Item>
+									<ItemEmptyContent>{emptyRow}</ItemEmptyContent>
+								</Item>
+							)}
+							<div className="flex flex-col gap-px">
+								<ItemList items={firstHalf} />
+							</div>
+							<div
+								className="flex flex-col gap-px"
+								style={{
+									display: showAll || expanded ? 'flex' : 'none'
+								}}
+							>
+								<ItemList items={secondHalf} />
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
+				</ContentPadding>
+			</Wrapper>
 			{!showAll && data.length > EXPAND_THRESHOLD && (
 				<div className="flex w-full justify-center">
 					<Button onClick={handleClick} variant="outline" size="sm">

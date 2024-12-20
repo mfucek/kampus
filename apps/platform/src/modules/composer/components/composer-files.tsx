@@ -1,11 +1,11 @@
 'use client';
 
-import { useComposerFilesContext } from '../contexts/composer-files-provider';
+import { useFileStagingContext } from '../../file/contexts/file-staging-provider';
 import { ComposerFile } from './composer-file';
 
 export const ComposerFiles = () => {
-	const { files, removeFile } = useComposerFilesContext();
-	const { openFileDetailsDialog } = useComposerFilesContext();
+	const { files, removeFile } = useFileStagingContext();
+	const { openFileDetailsDialog } = useFileStagingContext();
 
 	return (
 		<div>

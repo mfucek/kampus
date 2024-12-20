@@ -11,7 +11,10 @@ import {
 } from '@/lib/shadcn/ui/select';
 import { type DocumentFileType } from '@prisma/client';
 import { type FC, type PropsWithChildren, useEffect, useState } from 'react';
-import { useComposerFilesContext } from '../../contexts/composer-files-provider';
+import { useFileStagingContext } from '../../../file/contexts/file-staging-provider';
+import { categoryLabels } from './categoryLabels';
+import { mainCategories, subCategories } from './constants/document-categories';
+import { removeCategoryFromSelectedCategories } from './constants/removeCategoryFromSelectedCategories';
 
 const Section: FC<
 	{
@@ -30,55 +33,8 @@ const Section: FC<
 	);
 };
 
-const categoryLabels: Record<DocumentFileType, string> = {
-	EXAM: 'Ispit',
-	COLOQUIUM: 'Kolokvij',
-	EXERCISE: 'Vjezba',
-	HOMEWORK: 'Zadaca',
-	SEMINAR: 'Seminar',
-	SCRIPT: 'Skripta',
-	NOTES: 'Bilješke',
-	PAPER: 'Rad',
-	OTHER: 'Ostalo',
-	COLOQUIUM_MID: 'Međuispit',
-	COLOQUIUM_FINAL: 'Završni ispit',
-	SOLVED: 'Riješeni zadaci',
-	SUMMER_EXAM: 'Ljetni ispit',
-	FALL_EXAM: 'Jesenski ispit',
-	WINTER_EXAM: 'Zimski ispit',
-	SPRING_EXAM: 'Proljetni ispit',
-	CORRECTION_EXAM: 'Popravni ispit',
-	ORAL_EXAM: 'Usmeni ispit'
-};
-
-const mainCategories: DocumentFileType[] = [
-	'EXAM',
-	'COLOQUIUM',
-	'EXERCISE',
-	'HOMEWORK',
-	'SEMINAR',
-	'SCRIPT',
-	'NOTES',
-	'PAPER',
-	'OTHER'
-];
-
-const coloquiumCategories: DocumentFileType[] = [
-	'COLOQUIUM_MID',
-	'COLOQUIUM_FINAL'
-];
-
-const examCategories: DocumentFileType[] = [
-	'SUMMER_EXAM',
-	'FALL_EXAM',
-	'WINTER_EXAM',
-	'SPRING_EXAM',
-	'CORRECTION_EXAM',
-	'ORAL_EXAM'
-];
-
 export const DocumentDetails = () => {
-	const { files, fileDetailsIndex, updateFile } = useComposerFilesContext();
+	const { files, fileDetailsIndex, updateFile } = useFileStagingContext();
 
 	const file = files[fileDetailsIndex!]!;
 
@@ -94,18 +50,21 @@ export const DocumentDetails = () => {
 		const alreadySelected = selectedCategories.includes(documentType);
 
 		if (alreadySelected) {
-			let alsoRemoveCategories: DocumentFileType[] = [];
-			if (documentType === 'EXAM') {
-				alsoRemoveCategories = examCategories;
-			}
-			if (documentType === 'COLOQUIUM') {
-				alsoRemoveCategories = coloquiumCategories;
-			}
+			// let alsoRemoveCategories: DocumentFileType[] = [];
+			// if (documentType === 'EXAM') {
+			// 	alsoRemoveCategories = examCategories;
+			// }
+			// if (documentType === 'COLOQUIUM') {
+			// 	alsoRemoveCategories = coloquiumCategories;
+			// }
 
+			// setSelectedCategories((prev) =>
+			// 	prev
+			// 		.filter((category) => category !== documentType)
+			// 		.filter((category) => !alsoRemoveCategories.includes(category))
+			// );
 			setSelectedCategories((prev) =>
-				prev
-					.filter((category) => category !== documentType)
-					.filter((category) => !alsoRemoveCategories.includes(category))
+				removeCategoryFromSelectedCategories(prev, documentType)
 			);
 		} else {
 			setSelectedCategories((prev) => [...new Set([...prev, documentType])]);
@@ -216,7 +175,7 @@ export const DocumentDetails = () => {
 							description="O kojem tipu ispita se radi?"
 						>
 							<div className="w-full -mr-2 -mb-2">
-								{examCategories.map((value, i) => (
+								{subCategories.EXAM.map((value, i) => (
 									<div className="mr-2 mb-2 inline-block" key={i}>
 										<Button
 											variant={
@@ -248,7 +207,7 @@ export const DocumentDetails = () => {
 							description="O kakvom tipu kolokvija se radi?"
 						>
 							<div className="w-full -mr-2 -mb-2">
-								{coloquiumCategories.map((value, i) => (
+								{subCategories.COLOQUIUM.map((value, i) => (
 									<div className="mr-2 mb-2 inline-block" key={i}>
 										<Button
 											variant={

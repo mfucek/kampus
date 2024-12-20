@@ -2,18 +2,20 @@
 
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
+import { type JSONContent } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+import {
+	type StagedFile,
+	useFileStagingContext
+} from '../../file/contexts/file-staging-provider';
 import { useComposerBodyContext } from '../contexts/composer-body-provider';
 import { useComposerController } from '../contexts/composer-controller-provider';
-import {
-	type PostFile,
-	useComposerFilesContext
-} from '../contexts/composer-files-provider';
 
 export const useSubmitPost = () => {
 	const { body, setBody } = useComposerBodyContext();
-	const { files, setFiles } = useComposerFilesContext();
+	const { files, setFiles } = useFileStagingContext();
 	const { collegeId, topicId, replyToId, setLocked } = useComposerController();
 	const { toast } = useToast();
 	const router = useRouter();
@@ -25,7 +27,7 @@ export const useSubmitPost = () => {
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const uploadFileToS3 = async (file: PostFile) => {
+	const uploadFileToS3 = async (file: StagedFile) => {
 		const { url, key } = await makeUploadUrl(void {}, {});
 
 		// upload file to s3
@@ -41,20 +43,29 @@ export const useSubmitPost = () => {
 		};
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (overrides?: {
+		bodyOverride?: JSONContent;
+		filesOverride?: StagedFile[];
+	}) => {
+		const { bodyOverride, filesOverride } = overrides ?? {};
+
 		setIsSubmitting(true);
 		setLocked(true);
 		const post = await createPost({
-			body: body,
+			body: bodyOverride ?? body,
 			collegeId: collegeId,
 			topicId: topicId,
 			replyToId: replyToId
 		});
 
-		if (files.length > 0) {
+		const filesToUpload = filesOverride ?? files;
+
+		if (filesToUpload.length > 0) {
 			try {
 				// upload files to s3
-				const uploadedFiles = await Promise.all(files.map(uploadFileToS3));
+				const uploadedFiles = await Promise.all(
+					filesToUpload.map(uploadFileToS3)
+				);
 
 				// link files to post
 				await linkToPost({
@@ -89,8 +100,8 @@ export const useSubmitPost = () => {
 		setIsSubmitting(false);
 
 		// clear body and files
-		setBody(null);
-		setFiles([]);
+		if (!bodyOverride) setBody(null);
+		if (!filesOverride) setFiles([]);
 
 		setLocked(false);
 

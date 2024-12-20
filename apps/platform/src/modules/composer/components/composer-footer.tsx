@@ -31,7 +31,7 @@ export const ComposerFooter = () => {
 					variant="solid"
 					size="sm"
 					disabled={remaining < 0 || characterCount == 0}
-					onClick={handleSubmit}
+					onClick={() => handleSubmit()}
 					loading={isSubmitting}
 				>
 					Objavi

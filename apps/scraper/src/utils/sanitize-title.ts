@@ -3,7 +3,7 @@ export const sanitizeTitle = (title: string | undefined | null) => {
 		return '';
 	}
 
-	let sanitized = title.trim();
+	let sanitized = title.trim().toLowerCase();
 
 	// remove all double spaces
 	// e.g. "Povijest  i geografija" -> "Povijest i geografija"
@@ -178,9 +178,21 @@ export const sanitizeTitle = (title: string | undefined | null) => {
 	sanitized = sanitized
 		.split(' ')
 		.map((word) => {
-			return exceptions.includes(word)
-				? word
-				: word.charAt(0).toUpperCase() + word.slice(1);
+			// split word into chunks of alphanumerics and non-alphanumerics
+			// asd123 => "asd123"
+			// asd(123) => "asd", "(", "123", ")"
+			// (asd) => "(", "asd", ")"
+			// čćšđž => "čćšđž"
+			const wordChunks = word.match(
+				/[a-zA-Z0-9čćšđžČĆŠĐŽ]+|[^a-zA-Z0-9čćšđžČĆŠĐŽ]+/g
+			) || [word];
+
+			const assembledWord = wordChunks.map((chunk) => {
+				return exceptions.includes(chunk)
+					? chunk
+					: chunk.charAt(0).toUpperCase() + chunk.slice(1);
+			});
+			return assembledWord.join('');
 		})
 		.join(' ');
 

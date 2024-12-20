@@ -1,7 +1,7 @@
-import { useComposerFilesContext } from '../../contexts/composer-files-provider';
+import { useFileStagingContext } from '../../../file/contexts/file-staging-provider';
 
 export const ImageDetails = () => {
-	const { files, fileDetailsIndex } = useComposerFilesContext();
+	const { files, fileDetailsIndex } = useFileStagingContext();
 
 	const file = files[fileDetailsIndex ?? 0];
 	const fileUrl = URL.createObjectURL(file!.file);

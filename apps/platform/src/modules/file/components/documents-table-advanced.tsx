@@ -21,6 +21,10 @@ import { cn } from '@/lib/shadcn/utils';
 import { api } from '@/lib/trpc/react';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
 import { DocumentsTable } from './documents-table';
+import { categoryLabels } from './file-details-dialog/categoryLabels';
+import { mainCategories } from './file-details-dialog/constants/document-categories';
+import { removeCategoryFromSelectedCategories } from './file-details-dialog/constants/removeCategoryFromSelectedCategories';
+import { shownCategoriesBasedOnSelectedCategories } from './file-details-dialog/constants/shownCategoriesBasedOnSelectedCategories';
 
 const DocumentsTableWithData: FC<{
 	filters?: TFileFilters;
@@ -65,6 +69,7 @@ const DocumentsTableWithData: FC<{
 			<DocumentsTable
 				documents={query.data?.pages[page]?.files ?? []}
 				loading={query.isFetching}
+				highlightedCategories={filters?.documentTypes ?? []}
 			/>
 
 			<div className="flex flex-row gap-2 w-full justify-center items-center">
@@ -94,90 +99,10 @@ const DocumentsTableWithData: FC<{
 	);
 };
 
-const displayMap: Record<DocumentFileType, string> = {
-	EXAM: 'Ispit',
-	COLOQUIUM: 'Kolokvij',
-	COLOQUIUM_MID: 'Meduispit',
-	COLOQUIUM_FINAL: 'Zavrsni ispit',
-	EXERCISE: 'Vjezba',
-	HOMEWORK: 'Zadaca',
-	SEMINAR: 'Seminar',
-	SCRIPT: 'Skripta',
-	NOTES: 'Bilješke',
-	PAPER: 'Rad',
-	OTHER: 'Ostalo',
-	SUMMER_EXAM: 'Ljetni rok',
-	FALL_EXAM: 'Jesenski rok',
-	WINTER_EXAM: 'Zimski rok',
-	SPRING_EXAM: 'Proljetni rok',
-	CORRECTION_EXAM: 'Ispravni ispit',
-	ORAL_EXAM: 'Usmeni ispit',
-	SOLVED: 'Rijesen'
-};
-type ExpandableDocumentFileType = (
-	| DocumentFileType
-	| {
-			value: DocumentFileType;
-			expand: DocumentFileType[];
-	  }
-)[];
-
-const expandValues: ExpandableDocumentFileType = [
-	{
-		value: 'EXAM',
-		expand: [
-			'SUMMER_EXAM',
-			'FALL_EXAM',
-			'WINTER_EXAM',
-			'SPRING_EXAM',
-			'CORRECTION_EXAM',
-			'ORAL_EXAM',
-			'SOLVED'
-		]
-	},
-	{
-		value: 'COLOQUIUM',
-		expand: ['COLOQUIUM_MID', 'COLOQUIUM_FINAL', 'SOLVED']
-	},
-	'EXERCISE',
-	'HOMEWORK',
-	'SEMINAR',
-	'SCRIPT',
-	'PAPER',
-	'OTHER'
-];
-
-const baselineValues = expandValues.map((value) =>
-	typeof value === 'string' ? value : value.value
-);
-
 const DocumentTypeSelector: FC<{
 	onChange: (values: DocumentFileType[]) => void;
 }> = ({ onChange }) => {
 	const [selectedValues, setSelectedValues] = useState<DocumentFileType[]>([]);
-	const [shownOptions, setShownOptions] = useState<DocumentFileType[]>([]);
-
-	useEffect(() => {
-		setShownOptions(() => {
-			const values = expandValues
-				.map((value) => {
-					if (typeof value === 'string') return [value];
-
-					const children = selectedValues.includes(value.value)
-						? value.expand
-						: [];
-					const list = [value.value, ...children];
-					return list;
-				})
-				.flat(1);
-
-			const filteredUniqueValues = values.filter(
-				(value, index, self) => self.indexOf(value) === index
-			);
-
-			return filteredUniqueValues;
-		});
-	}, [selectedValues]);
 
 	useEffect(() => {
 		onChange?.(selectedValues);
@@ -185,7 +110,9 @@ const DocumentTypeSelector: FC<{
 
 	const handleToggle = (value: DocumentFileType) => {
 		if (selectedValues.includes(value)) {
-			setSelectedValues((prev) => prev.filter((v) => v !== value));
+			setSelectedValues((prev) =>
+				removeCategoryFromSelectedCategories(prev, value)
+			);
 		} else {
 			setSelectedValues((prev) => [...prev, value]);
 		}
@@ -193,9 +120,9 @@ const DocumentTypeSelector: FC<{
 
 	return (
 		<div>
-			{shownOptions.map((option) => {
-				const isBaseline = baselineValues.includes(option);
-				const isSelected = selectedValues.includes(option);
+			{shownCategoriesBasedOnSelectedCategories(selectedValues).map((type) => {
+				const isBaseline = mainCategories.includes(type);
+				const isSelected = selectedValues.includes(type);
 				return (
 					<Button
 						variant={isSelected ? 'solid' : 'outline'}
@@ -206,13 +133,13 @@ const DocumentTypeSelector: FC<{
 							!isBaseline && 'animate-push-fade-right'
 						)}
 						rounded
-						key={option}
+						key={type}
 						onClick={() => {
-							handleToggle(option);
+							handleToggle(type);
 						}}
 					>
-						{displayMap[option]}
-						{selectedValues.includes(option) && <Icon icon="close" />}
+						{categoryLabels[type]}
+						{selectedValues.includes(type) && <Icon icon="close" />}
 					</Button>
 				);
 			})}

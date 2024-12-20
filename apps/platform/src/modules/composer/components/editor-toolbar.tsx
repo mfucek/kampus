@@ -5,12 +5,14 @@ import { useCallback } from 'react';
 
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
+import { useFileStagingContext } from '@/modules/file/contexts/file-staging-provider';
+import { useUploadDialog } from '../../file/hooks/use-upload-dialog';
 import { useComposerController } from '../contexts/composer-controller-provider';
-import { useComposerUploadDialog } from '../hooks/use-composer-upload-dialog';
 
 export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 	const { locked } = useComposerController();
-	const { openFileDialog } = useComposerUploadDialog();
+	const { addFiles } = useFileStagingContext();
+	const { openUploadDialog: openFileDialog } = useUploadDialog(addFiles);
 
 	const setLink = useCallback(() => {
 		const previousUrl = editor.getAttributes('link').href as string;

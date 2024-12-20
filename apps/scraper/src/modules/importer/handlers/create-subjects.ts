@@ -71,19 +71,16 @@ export const createSubjects = async ({
 							subjectExternalLink: subject.externalLink
 						}
 					});
+
+					createdSubjects += 1;
 				}
 			},
 			{
-				timeout: 30000
+				timeout: 20000
 			}
 		);
 
-		createdSubjects += chunk.length;
-		spinnerSubjects.onProgress(
-			createdSubjects,
-			subjectsToCreate.length,
-			'Creating subjects'
-		);
+		spinnerSubjects.onProgress(i, subjectsToCreate.length, 'Creating subjects');
 	}
 
 	spinnerSubjects.stop(`Created ${createdSubjects} new subjects.`);

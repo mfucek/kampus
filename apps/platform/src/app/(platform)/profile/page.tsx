@@ -1,8 +1,3 @@
-import { ProfilePage } from '@/modules/user/pages/profile-page';
-import type { FC } from 'react';
+import { ProfileSettingsPage } from '@/modules/user/pages/profile-settings-page';
 
-const Page: FC = async () => {
-	return <ProfilePage />;
-};
-
-export default Page;
+export default ProfileSettingsPage;

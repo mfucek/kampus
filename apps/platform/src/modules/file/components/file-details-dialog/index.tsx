@@ -7,9 +7,11 @@ import {
 	DialogHeader,
 	DialogTitle
 } from '@/lib/shadcn/ui/dialog';
-import { cn } from '@/lib/shadcn/utils';
-import { useComposerFilesContext } from '../../contexts/composer-files-provider';
-import { useComposerDragUpload } from '../../hooks/use-composer-drag-upload';
+import { useFileStagingContext } from '../../../file/contexts/file-staging-provider';
+import {
+	UploadAreaOverlay,
+	useUploadArea
+} from '../../../file/hooks/use-upload-area';
 import { DocumentDetails } from './document-details';
 import { FileDetailsDialogActions } from './file-details-dialog-actions';
 import { FileDetailsList } from './file-details-list';
@@ -17,8 +19,8 @@ import { ImageDetails } from './image-details';
 import { NoFilesMessage } from './no-files-message';
 
 export const FileDetailsDialog = () => {
-	const { files, fileDetailsIndex } = useComposerFilesContext();
-	const { uploadAreaProps, isDragging } = useComposerDragUpload();
+	const { files, fileDetailsIndex, addFiles } = useFileStagingContext();
+	const { uploadAreaProps, isDragging } = useUploadArea(addFiles);
 
 	const filesExist = files.length > 0;
 
@@ -65,12 +67,7 @@ export const FileDetailsDialog = () => {
 					<FileDetailsDialogActions />
 				</div>
 
-				<div
-					className={cn(
-						'absolute duration-300 inset-2 bg-accent-medium backdrop-blur-sm rounded-xl pointer-events-none bg-opacity-20',
-						isDragging ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
-					)}
-				/>
+				<UploadAreaOverlay isDragging={isDragging} />
 			</DialogBody>
 		</DialogContent>
 	);

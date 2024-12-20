@@ -18,7 +18,7 @@ export const listProcedure = publicProcedure
 	.query(async ({ input, ctx }) => {
 		const { db } = ctx;
 		const { cursor } = input;
-		const limit = input.limit ?? 10;
+		const limit = input.limit;
 
 		const collegeId =
 			input.scope?.collegeId ??
@@ -26,12 +26,17 @@ export const listProcedure = publicProcedure
 				? (await getCollegeBySlug(db, input.scope?.collegeSlug)).id
 				: undefined);
 
+		const programId = input.scope?.programId;
+
 		const staffId = input.scope?.staffId;
 
 		const where: Prisma.TopicWhereInput = {
 			type: 'SUBJECT',
 			// scope
 			...(collegeId ? { collegeId: collegeId } : {}),
+			...(programId
+				? { Subject: { Programs: { some: { programId: programId } } } }
+				: {}),
 			...(staffId
 				? {
 						subject: {
@@ -76,13 +81,17 @@ export const listProcedure = publicProcedure
 			orderBy: {
 				id: 'desc'
 			},
-			take: limit,
-			skip: cursor ? 1 : 0,
-			cursor: cursor
+			...(limit
 				? {
-						id: cursor
+						take: limit,
+						skip: cursor ? 1 : 0,
+						cursor: cursor
+							? {
+									id: cursor
+								}
+							: undefined
 					}
-				: undefined
+				: {})
 		});
 
 		const subjects = await Promise.all(
@@ -95,6 +104,7 @@ export const listProcedure = publicProcedure
 				id: subject.id,
 				name: subject.name,
 				shortName: subject.shortName,
+				externalCode: subject.Subject?.subjectExternalCode,
 				type: subject.type,
 				slug: subject.slug,
 				collegeId: subject.collegeId
@@ -104,10 +114,14 @@ export const listProcedure = publicProcedure
 		const totalSubjects = Math.ceil(
 			(await db.topic.count({
 				where
-			})) / limit
+			})) / (limit ?? 1)
 		);
 
 		const nextCursor = subjects[subjects.length - 1]?.id;
 
 		return { subjects, nextCursor, totalSubjects };
 	});
+
+export type SubjectListItem = Awaited<
+	ReturnType<typeof listProcedure>
+>['subjects'][number];

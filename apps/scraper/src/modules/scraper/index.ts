@@ -2,6 +2,7 @@ import * as p from '@clack/prompts';
 import fs from 'fs';
 import path from 'path';
 
+import { Logger } from '@/utils/logger';
 import chalk from 'chalk';
 import { formatDistance } from 'date-fns';
 import { drivers, type College } from './drivers/drivers';
@@ -42,11 +43,18 @@ export const scraper = async (options: ScraperOptions) => {
 		// Make sure the output directory exists
 		fs.mkdirSync(outDir, { recursive: true });
 
+		const logger = new Logger(
+			path.join(process.cwd(), 'out', 'logs'),
+			key + (!fullScrape ? '-debug' : '')
+		);
+		logger.log('info', 'Starting driver');
+
 		let spinnerStartTime = Date.now();
 		const startTime = Date.now();
 
 		const result = await driver({
 			debug: !fullScrape,
+			logger,
 			callbacks: {
 				onProgress: (progress, total, title) => {
 					if (progress === 1 || progress === 0) {
@@ -70,6 +78,7 @@ export const scraper = async (options: ScraperOptions) => {
 			}
 		});
 
+		logger.log('info', `Done scraping ${label}.`);
 		spinner.stop(`Done scraping ${label}.`);
 
 		// Log results to files
@@ -79,6 +88,7 @@ export const scraper = async (options: ScraperOptions) => {
 			`Total professors: ${chalk.yellow(result.professors.length)}`
 		);
 
+		logger.log('info', `Outputting results to ${outDir}`);
 		await output({
 			outDir,
 			subjects: result.subjects,
@@ -90,6 +100,7 @@ export const scraper = async (options: ScraperOptions) => {
 			includeSeconds: true
 		});
 
+		logger.log('info', `Took ${elapsedTime}`);
 		p.note(
 			`Output directory: ${outDir}\n\nTook ${elapsedTime}`,
 			`${label} scraped successfully!`

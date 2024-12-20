@@ -17,6 +17,8 @@ const config = {
 		'@typescript-eslint/no-explicit-any': 'warn',
 		'@typescript-eslint/no-empty-function': 'off',
 		'@typescript-eslint/no-empty-object-type': 'off',
+		'@typescript-eslint/no-unsafe-assignment': 'off',
+		'@typescript-eslint/consistent-indexed-object-style': 'off',
 		'@typescript-eslint/consistent-type-imports': [
 			'warn',
 			{

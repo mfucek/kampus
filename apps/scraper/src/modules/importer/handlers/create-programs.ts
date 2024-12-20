@@ -1,6 +1,6 @@
 import * as p from '@clack/prompts';
 
-import { Prisma } from '@prisma/client';
+import { type Topic } from '@prisma/client';
 
 import { Spinner } from '@/lib/clack/spinner';
 import { db } from '@/lib/prisma/db';
@@ -12,7 +12,7 @@ interface CreateProgramsOptions {
 	programsData: Program[];
 }
 
-const BATCH_SIZE_PROGRAMS = 20;
+const BATCH_SIZE_PROGRAMS = 10;
 
 export const createPrograms = async ({
 	collegeId,
@@ -58,50 +58,54 @@ export const createPrograms = async ({
 
 		await db.$transaction(
 			async (tx) => {
-				// First create the topics
-				const topicsToCreate: Prisma.TopicCreateManyInput[] = chunk.map(
-					(p) => ({
-						type: 'PROGRAM',
-						slug: slugify(p.name),
-						name: p.name,
-						collegeId: collegeId,
-						shortName: p.shortName
-					})
-				);
-
-				await tx.topic.createMany({
-					data: topicsToCreate,
-					skipDuplicates: true
-				});
-
-				// Connect programs to topics
 				for (const program of chunk) {
-					const topic = await tx.topic.findFirst({
-						where: {
-							type: 'PROGRAM',
-							collegeId: collegeId,
-							slug: slugify(program.name)
-						}
-					});
+					let topic: Topic | null = null;
+					const wantedSlug = slugify(program.name);
+					let suffix = 0;
 
-					if (!topic) {
-						console.log(`Topic not found: ${program.name}`);
-						continue;
+					while (topic) {
+						topic = await tx.topic.findFirst({
+							where: {
+								type: 'PROGRAM',
+								collegeId: collegeId,
+								slug: wantedSlug + (suffix ? `-${suffix}` : '')
+							}
+						});
+
+						if (topic) {
+							suffix = suffix + 1;
+						}
 					}
 
-					await tx.program.create({
+					const newTopic = await tx.topic.create({
 						data: {
-							topicId: topic.id,
-							departments: program.departments,
-							programExternalLink: program.externalLink,
-							type: program.type
+							type: 'PROGRAM',
+							slug: wantedSlug + (suffix ? `-${suffix}` : ''),
+							name: program.name,
+							collegeId: collegeId,
+							shortName: program.shortName
 						}
 					});
+
+					try {
+						await tx.program.create({
+							data: {
+								topicId: newTopic.id,
+								departments: program.departments,
+								programExternalLink: program.externalLink,
+								type: program.type
+							}
+						});
+					} catch (error) {
+						console.log('ERRORR!!!!', newTopic.id, program.externalLink);
+						throw error;
+					}
+
+					createdPrograms += 1;
 				}
 
-				createdPrograms += chunk.length;
 				spinnerPrograms.onProgress(
-					createdPrograms,
+					i,
 					programsToCreate.length,
 					'Creating programs'
 				);

@@ -2,10 +2,12 @@ import { DialogClose } from '@/lib/shadcn/ui/dialog';
 
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { useComposerUploadDialog } from '../../hooks/use-composer-upload-dialog';
+import { useFileStagingContext } from '@/modules/file/contexts/file-staging-provider';
+import { useUploadDialog } from '../../../file/hooks/use-upload-dialog';
 
 export const FileDetailsDialogActions = () => {
-	const { openFileDialog } = useComposerUploadDialog();
+	const { addFiles } = useFileStagingContext();
+	const { openUploadDialog: openFileDialog } = useUploadDialog(addFiles);
 
 	return (
 		<div className="border-t border-neutral-weak px-3 gap-2 py-10 md:py-3 grow-0 shrink-0 flex flex-col md:flex-row">

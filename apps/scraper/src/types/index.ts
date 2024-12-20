@@ -1,4 +1,14 @@
+import type { Logger } from '@/utils/logger';
 import { z } from 'zod';
+
+export const professorReferenceSchema = z.object({
+	role: z.string(),
+	link: z.string()
+});
+
+export type ProfessorReference = z.infer<typeof professorReferenceSchema>;
+
+// -----------------------------
 
 export const subjectSchema = z.object({
 	externalLink: z.string(),
@@ -6,7 +16,7 @@ export const subjectSchema = z.object({
 	shortName: z.string().nullable(),
 	externalCode: z.string(),
 	ects: z.number().nullable(),
-	professorsLinks: z.array(z.object({ role: z.string(), link: z.string() }))
+	professorsLinks: z.array(professorReferenceSchema)
 });
 
 export type Subject = z.infer<typeof subjectSchema>;
@@ -46,13 +56,16 @@ export type Professor = z.infer<typeof professorSchema>;
 
 // -----------------------------
 
+export type DriverCallbacks = {
+	onSubjectsScraped?: (subjects: Subject[]) => void;
+	onProgramsScraped?: (programs: Program[]) => void;
+	onProfessorsScraped?: (professors: Professor[]) => void;
+	onProgress?: (progress: number, total: number, title?: string) => void;
+	onCompleted?: () => void;
+};
+
 export type DriverOptions = {
 	debug?: boolean;
-	callbacks?: {
-		onSubjectsScraped?: (subjects: Subject[]) => void;
-		onProgramsScraped?: (programs: Program[]) => void;
-		onProfessorsScraped?: (professors: Professor[]) => void;
-		onProgress?: (progress: number, total: number, title?: string) => void;
-		onCompleted?: () => void;
-	};
+	logger?: Logger;
+	callbacks?: DriverCallbacks;
 };

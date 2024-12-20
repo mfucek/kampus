@@ -94,14 +94,11 @@ export const createStaff = async ({
 							throw error;
 						}
 					}
+
+					createdProfessors += 1;
 				}
 
-				createdProfessors += chunk.length;
-				spinnerProfs.onProgress(
-					createdProfessors,
-					professorsToCreate.length,
-					'Creating staff'
-				);
+				spinnerProfs.onProgress(i, professorsToCreate.length, 'Creating staff');
 			},
 			{
 				timeout: 30000

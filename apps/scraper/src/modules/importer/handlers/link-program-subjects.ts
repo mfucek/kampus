@@ -147,7 +147,7 @@ export const linkProgramSubjects = async ({
 		);
 
 		spinnerProgramSubjects.onProgress(
-			createdProgramSubjectRelationships,
+			i,
 			programSubjectToCreate.length,
 			'program-subjects'
 		);

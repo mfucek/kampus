@@ -100,11 +100,12 @@ export const createPrograms = async ({
 						console.log('ERRORR!!!!', newTopic.id, program.externalLink);
 						throw error;
 					}
+
+					createdPrograms += 1;
 				}
 
-				createdPrograms += chunk.length;
 				spinnerPrograms.onProgress(
-					createdPrograms,
+					i,
 					programsToCreate.length,
 					'Creating programs'
 				);

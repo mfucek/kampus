@@ -18,7 +18,8 @@ export class Spinner {
 		}
 
 		const elapsedTime = Date.now() - this.spinnerStartTime;
-		const estimatedTime = elapsedTime * (total / progress);
+		const percentage = progress === 0 ? 0 : progress / total;
+		const estimatedTime = elapsedTime * percentage;
 		const remainingTime = estimatedTime - elapsedTime;
 
 		const remainingText = `${formatDistance(0, remainingTime, {

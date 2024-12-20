@@ -126,6 +126,8 @@ export const linkSubjectStaff = async ({
 							staffRole: role
 						}
 					});
+
+					createdSubjectStaffRelationships += 1;
 				}
 			},
 			{
@@ -133,12 +135,7 @@ export const linkSubjectStaff = async ({
 			}
 		);
 
-		createdSubjectStaffRelationships += chunk.length;
-		spinnerSubjectStaff.onProgress(
-			createdSubjectStaffRelationships,
-			subjectProfessorsCount,
-			'subject-staff'
-		);
+		spinnerSubjectStaff.onProgress(i, subjectProfessorsCount, 'subject-staff');
 	}
 
 	spinnerSubjectStaff.stop(

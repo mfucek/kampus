@@ -2,7 +2,7 @@
 
 import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
-import { type DragEvent, FC, HTMLAttributes, useState } from 'react';
+import { type DragEvent, type FC, type HTMLAttributes, useState } from 'react';
 
 export const useUploadArea = (addFiles: (files: File[]) => void) => {
 	const [isDragging, setIsDragging] = useState(false);

@@ -3,6 +3,7 @@ import { db } from '@/lib/prisma/db';
 import { headers } from 'next/headers';
 import { Webhook } from 'svix';
 
+import { generateRandomName } from '@/utils/generate-random-name';
 import type { WebhookEvent } from '@clerk/nextjs/server';
 
 export async function POST(req: Request) {
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
 						clerkUserId: id!,
 						user: {
 							create: {
-								displayName: 'John Doe'
+								displayName: generateRandomName()
 							}
 						}
 					}

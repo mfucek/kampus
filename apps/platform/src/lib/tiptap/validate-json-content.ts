@@ -9,6 +9,6 @@ export const validateJSONContent = (doc: unknown) => {
 		contentNode.check();
 		return doc as JSONContent;
 	} catch (e) {
-		throw new Error('Invalid JSON content');
+		throw new Error('Invalid JSON content', { cause: e });
 	}
 };

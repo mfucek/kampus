@@ -2,7 +2,7 @@ import { Suspense, type PropsWithChildren } from 'react';
 
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
-import { Tab } from '@/global/components/route-tabs';
+import { Tab, Tabs } from '@/global/components/route-tabs';
 import { Spinner } from '@/global/components/spinner';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { api } from '@/lib/trpc/server';
@@ -33,12 +33,17 @@ export const ProgramLayout = async ({
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
 			<PageHeader title={program.name} tags={['Smjer']} />
+
 			<ContentPadding size="lg">
-				<Tab route={makeRoute('')}>Rasprava</Tab>
-				<Tab route={makeRoute('/subjects')}>Predmeti</Tab>
-				<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={program.id}>
-					<Tab route={makeRoute('/mass-upload')}>Mass Upload</Tab>
-				</RuleProtected>
+				<Suspense fallback={<Spinner />}>
+					<Tabs>
+						<Tab route={makeRoute('')}>Rasprava</Tab>
+						<Tab route={makeRoute('/subjects')}>Predmeti</Tab>
+						<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={program.id}>
+							<Tab route={makeRoute('/mass-upload')}>Mass Upload</Tab>
+						</RuleProtected>
+					</Tabs>
+				</Suspense>
 			</ContentPadding>
 			<Suspense fallback={<Spinner />}>{children}</Suspense>
 		</Container>

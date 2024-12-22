@@ -1,4 +1,4 @@
-import { Notification, PackageType } from '@prisma/client';
+import { type Notification, type PackageType } from '@prisma/client';
 
 import { getUserWithAvatarUrl } from '@/modules/user/helpers/get-user-with-avatar-url';
 import { protectedProcedure } from '@/server/api/trpc';

@@ -4,10 +4,10 @@ import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { cn } from '@/lib/shadcn/utils';
-import { ListAllCollegesItem } from '@/modules/topic/college/api/procedures/list-all';
+import { type ListAllCollegesItem } from '@/modules/topic/college/api/procedures/list-all';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 
 type Point = {
 	anchor: 'left' | 'right';

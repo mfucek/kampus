@@ -13,7 +13,7 @@ import {
 
 export const useMassUploader = () => {
 	const { files, setFiles } = useFileStagingContext();
-	const { collegeId, topicId } = useComposerController();
+	const { topicId } = useComposerController();
 	const { handleSubmit } = useSubmitPost();
 
 	const { toast } = useToast();

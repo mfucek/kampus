@@ -1,6 +1,7 @@
 'use client';
 
-import { DocumentFileType } from '@prisma/client';
+import { type DocumentFileType } from '@prisma/client';
+
 import { mainCategories, subCategories } from './document-categories';
 
 export const shownCategoriesBasedOnSelectedCategories = (

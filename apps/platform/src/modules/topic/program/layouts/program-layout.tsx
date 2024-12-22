@@ -2,8 +2,9 @@ import { Suspense, type PropsWithChildren } from 'react';
 
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
-import { Tab, Tabs } from '@/global/components/route-tabs';
+import { Tab } from '@/global/components/route-tabs';
 import { Spinner } from '@/global/components/spinner';
+import { ContentPadding } from '@/global/layouts/content-padding';
 import { api } from '@/lib/trpc/server';
 import { RuleProtected } from '@/modules/permissions/components/protected';
 import { RuleType } from '@prisma/client';
@@ -32,13 +33,13 @@ export const ProgramLayout = async ({
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
 			<PageHeader title={program.name} tags={['Smjer']} />
-			<Tabs className="px-4 lg:px-0">
+			<ContentPadding size="lg">
 				<Tab route={makeRoute('')}>Rasprava</Tab>
 				<Tab route={makeRoute('/subjects')}>Predmeti</Tab>
 				<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={program.id}>
 					<Tab route={makeRoute('/mass-upload')}>Mass Upload</Tab>
 				</RuleProtected>
-			</Tabs>
+			</ContentPadding>
 			<Suspense fallback={<Spinner />}>{children}</Suspense>
 		</Container>
 	);

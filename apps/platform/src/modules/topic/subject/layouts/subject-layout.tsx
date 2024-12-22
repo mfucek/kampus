@@ -30,7 +30,7 @@ export const SubjectLayout = async ({
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
 			<PageHeader title={subject.name} tags={['Predmet']} />
-			<Tabs className="px-4 lg:px-0">
+			<Tabs>
 				<Tab route={makeRoute('')}>Rasprava</Tab>
 				<Tab route={makeRoute('/materials')}>Materijali</Tab>
 				<Tab route={makeRoute('/staff')}>Nastavnici</Tab>

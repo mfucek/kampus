@@ -26,8 +26,8 @@ export const ComposerFooter = () => {
 					<Icon icon="arrow-linked" />
 				</Button> */}
 				<Badge
-					variant="secondary"
 					size="lg"
+					variant={remaining < 0 ? 'secondary' : 'tertiary'}
 					theme={remaining < 0 ? 'danger' : 'neutral'}
 				>
 					{remaining} znakova preostalo.

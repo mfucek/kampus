@@ -15,7 +15,9 @@ export const Section: FC<
 				<p className="title-3 text-neutral">{title}</p>
 				<p className="body-2 text-neutral-strong">{description}</p>
 			</div>
-			<div className="flex flex-col gap-10 flex-1">{children}</div>
+			{children && (
+				<div className="flex flex-col gap-10 flex-1">{children}</div>
+			)}
 		</div>
 	);
 };

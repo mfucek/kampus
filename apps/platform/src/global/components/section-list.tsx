@@ -16,7 +16,7 @@ const EXPAND_THRESHOLD = 5;
 
 interface SectionListProps<T> {
 	title?: string;
-	info?: string;
+	info?: ReactNode;
 	showAll?: boolean;
 	data: T[];
 	keyKey?: keyof T;

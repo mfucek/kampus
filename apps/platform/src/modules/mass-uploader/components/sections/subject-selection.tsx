@@ -35,7 +35,7 @@ export const SubjectSelectionSection = ({
 							setSubject(subjects.find((s) => s.id === value) ?? null)
 						}
 					>
-						<SelectTrigger>
+						<SelectTrigger className="w-full md:w-fit">
 							<SelectValue placeholder="Select a subject" />
 						</SelectTrigger>
 						<SelectContent>

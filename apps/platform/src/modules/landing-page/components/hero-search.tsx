@@ -200,6 +200,11 @@ export const HeroSearch: FC<{
 					)}
 					emptyRow={<>Nema fakulteta</>}
 					title={search ? 'Rezultati za: ' + search : 'Top fakulteti'}
+					info={
+						<Link href="/colleges" className="text-accent">
+							Vidi sve
+						</Link>
+					}
 				/>
 			</div>
 		</>

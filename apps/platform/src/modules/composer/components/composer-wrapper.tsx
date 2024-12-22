@@ -9,7 +9,8 @@ import {
 
 export const ComposerWrapper: FC<{
 	children: ReactNode;
-}> = ({ children }) => {
+	className?: string;
+}> = ({ children, className }) => {
 	const { addFiles } = useFileStagingContext();
 	const { uploadAreaProps, isDragging } = useUploadArea(addFiles);
 	return (
@@ -18,12 +19,13 @@ export const ComposerWrapper: FC<{
 				'flex flex-col gap-3 w-full relative',
 				'rounded-xl overflow-hidden p-3',
 				'md:border md:border-neutral-medium',
-				'bg-section'
+				'bg-section',
+				className
 			)}
 			{...uploadAreaProps}
 		>
 			{children}
-			<UploadAreaOverlay isDragging={isDragging} />
+			<UploadAreaOverlay isDragging={isDragging ?? false} />
 		</div>
 	);
 };

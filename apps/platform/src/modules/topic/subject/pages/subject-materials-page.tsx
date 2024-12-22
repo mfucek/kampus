@@ -1,3 +1,4 @@
+import { ContentPadding } from '@/global/layouts/content-padding';
 import { api } from '@/lib/trpc/server';
 import { DocumentsTableAdvanced } from '@/modules/file/components/documents-table-advanced';
 
@@ -16,8 +17,8 @@ export const SubjectMaterialsPage = async ({ params }: PageProps) => {
 	});
 
 	return (
-		<div className="flex flex-col gap-10 px-4 lg:px-0">
+		<ContentPadding size="sm">
 			<DocumentsTableAdvanced scope={{ topicId: subject.id }} />
-		</div>
+		</ContentPadding>
 	);
 };

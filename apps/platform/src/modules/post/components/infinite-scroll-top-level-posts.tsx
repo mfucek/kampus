@@ -6,6 +6,8 @@ import { useInView } from 'react-intersection-observer';
 import { Spinner } from '@/global/components/spinner';
 import { api } from '@/lib/trpc/react';
 import { Post } from '@/modules/discussion/components/post';
+import { NoPostsCard } from '@/modules/discussion/components/post/no-posts-card';
+import { PostSkeleton } from '@/modules/discussion/components/post/skeleton';
 import { type ListPostsItem } from '../api/procedures/list';
 import { type TPostScope } from '../schemas/post-scope';
 
@@ -63,11 +65,11 @@ export const TopLevelPostsPage: FC<{
 	page: ListPostsItem[];
 }> = ({ page }) => {
 	return (
-		<div className="flex flex-col gap-2">
+		<>
 			{page.map((post) => (
 				<DynamicPost key={post.post.id} post={post} depthInfo={[]} />
 			))}
-		</div>
+		</>
 	);
 };
 
@@ -104,18 +106,18 @@ export const InfiniteScrollTopLevelPosts: FC<{
 	};
 
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col gap-2">
+			{!query.data && (
+				<>
+					<PostSkeleton />
+					<PostSkeleton />
+					<PostSkeleton />
+				</>
+			)}
 			{query.data?.pages.map((page, index) => (
 				<TopLevelPostsPage key={index} page={page.posts} />
 			))}
-			{query.data?.pages?.[0]?.posts.length === 0 && (
-				<div className="p-3 py-10 rounded-xl md:bg-neutral-weak bg-section flex flex-col gap-2">
-					<p className="title-1 text-center">Malo je prazno</p>
-					<p className="body-2 text-center text-neutral-strong">
-						Budi prvi i objavi nešto što želiš podijeliti ostalim kolegama.
-					</p>
-				</div>
-			)}
+			{query.data?.pages?.[0]?.posts.length === 0 && <NoPostsCard />}
 			<Loader />
 		</div>
 	);

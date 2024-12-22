@@ -15,7 +15,8 @@ export const Composer: FC<{
 	collegeId: string;
 	topicId?: string;
 	replyToId?: string;
-}> = ({ collegeId, topicId, replyToId }) => {
+	className?: string;
+}> = ({ collegeId, topicId, replyToId, className }) => {
 	const { isSignedIn } = useAuth();
 
 	return (
@@ -27,7 +28,7 @@ export const Composer: FC<{
 		>
 			<FileStagingProvider>
 				<ComposerBodyProvider>
-					<ComposerWrapper>
+					<ComposerWrapper className={className}>
 						<ComposerEditor />
 						<ComposerFiles />
 						<ComposerFooter />

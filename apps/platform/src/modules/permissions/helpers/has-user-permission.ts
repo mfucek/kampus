@@ -1,5 +1,5 @@
 import { db } from '@/lib/prisma/db';
-import { RuleType, ScopeType } from '@prisma/client';
+import { type RuleType, ScopeType } from '@prisma/client';
 import { rolePermissions } from '../constants/roles';
 
 export const hasUserPermission = async (

@@ -1,3 +1,4 @@
+import { ContentPadding } from '@/global/layouts/content-padding';
 import { StaffsTableAdvanced } from '@/modules/topic/staff/components/staffs-table-advanced';
 
 interface PageProps {
@@ -10,8 +11,10 @@ export const CollegeAllStaffPage = async ({ params }: PageProps) => {
 	const { collegeSlug } = await params;
 
 	return (
-		<div className="flex flex-col gap-2 px-4 lg:px-0">
-			<StaffsTableAdvanced scope={{ collegeSlug }} />
-		</div>
+		<ContentPadding size="sm">
+			<div className="flex flex-col gap-2">
+				<StaffsTableAdvanced scope={{ collegeSlug }} />
+			</div>
+		</ContentPadding>
 	);
 };

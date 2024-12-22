@@ -361,6 +361,8 @@ enum RuleType {
   CAN_CHANGE_PROFILE_BADGE
 
   CAN_MASS_UPLOAD
+
+  CAN_MANAGE_USERS
 }
 
 enum ScopeType {

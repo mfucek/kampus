@@ -1,3 +1,4 @@
+import { ContentPadding } from '@/global/layouts/content-padding';
 import { api } from '@/lib/trpc/server';
 import { SubjectsTableAdvanced } from '@/modules/topic/subject/components/subjects-table-advanced';
 
@@ -15,8 +16,8 @@ export const CollegeAllSubjectsPage = async ({ params }: PageProps) => {
 	});
 
 	return (
-		<div className="flex flex-col gap-2 px-4 lg:px-0">
+		<ContentPadding size="sm">
 			<SubjectsTableAdvanced scope={{ collegeId: college.id }} />
-		</div>
+		</ContentPadding>
 	);
 };

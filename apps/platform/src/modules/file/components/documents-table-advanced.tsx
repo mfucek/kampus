@@ -157,7 +157,7 @@ export const DocumentsTableAdvanced: FC<{
 		filters: {
 			documentTypes: []
 		},
-		limit: 5
+		limit: 10
 	});
 
 	const [viewOptions, setViewOptions] = useState<{
@@ -168,7 +168,7 @@ export const DocumentsTableAdvanced: FC<{
 			name: '',
 			documentTypes: []
 		},
-		limit: 5
+		limit: 10
 	});
 
 	useDebouncedEffect(

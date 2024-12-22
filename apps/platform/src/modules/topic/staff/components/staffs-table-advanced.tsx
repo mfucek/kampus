@@ -97,7 +97,7 @@ export const StaffsTableAdvanced: FC<{
 		limit: number;
 	}>({
 		filters: {},
-		limit: 5
+		limit: 10
 	});
 
 	const [viewOptions, setViewOptions] = useState<{
@@ -107,7 +107,7 @@ export const StaffsTableAdvanced: FC<{
 		filters: {
 			name: ''
 		},
-		limit: 5
+		limit: 10
 	});
 
 	useDebouncedEffect(

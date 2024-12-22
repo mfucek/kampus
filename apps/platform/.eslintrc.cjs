@@ -19,6 +19,7 @@ const config = {
 		'@typescript-eslint/no-empty-object-type': 'off',
 		'@typescript-eslint/no-unsafe-assignment': 'off',
 		'@typescript-eslint/consistent-indexed-object-style': 'off',
+		'@typescript-eslint/no-require-imports': 'off',
 		'@typescript-eslint/consistent-type-imports': [
 			'warn',
 			{
@@ -29,7 +30,8 @@ const config = {
 		'@typescript-eslint/no-unused-vars': [
 			'warn',
 			{
-				argsIgnorePattern: '^_'
+				argsIgnorePattern: '^_',
+				destructuredArrayIgnorePattern: '^_'
 			}
 		],
 		'@typescript-eslint/require-await': 'off',

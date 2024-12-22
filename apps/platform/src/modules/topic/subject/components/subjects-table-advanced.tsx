@@ -98,7 +98,7 @@ export const SubjectsTableAdvanced: FC<{
 		limit: number;
 	}>({
 		filters: {},
-		limit: 5
+		limit: 10
 	});
 
 	const [viewOptions, setViewOptions] = useState<{
@@ -108,7 +108,7 @@ export const SubjectsTableAdvanced: FC<{
 		filters: {
 			name: ''
 		},
-		limit: 5
+		limit: 10
 	});
 
 	useDebouncedEffect(

@@ -11,8 +11,8 @@ export const useComposerEditor = () => {
 	const { body, setBody, setCharacterCount } = useComposerBodyContext();
 	const { locked } = useComposerController();
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [contentKey, setContentKey] = useState(0);
+	// re-rendering fix
+	const [_contentKey, setContentKey] = useState(0);
 	const enabled = !locked;
 
 	const editor = useEditor({
@@ -21,7 +21,7 @@ export const useComposerEditor = () => {
 		content: body,
 		editorProps: {
 			attributes: {
-				class: 'rounded-md p-3 outline-none flex flex-col gap-1'
+				class: 'rounded-md outline-none flex flex-col gap-1'
 			}
 		},
 		onBlur: () => {},
@@ -29,7 +29,7 @@ export const useComposerEditor = () => {
 		onUpdate({ editor }) {
 			setBody(editor.getJSON());
 			setCharacterCount(editor.getText().length);
-			setContentKey((prev) => prev + 1); // Increment the key
+			setContentKey((prev) => prev + 1);
 		}
 	});
 

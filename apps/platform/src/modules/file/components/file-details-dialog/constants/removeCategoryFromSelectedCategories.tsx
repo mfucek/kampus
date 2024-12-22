@@ -1,6 +1,7 @@
 'use client';
 
-import { DocumentFileType } from '@prisma/client';
+import { type DocumentFileType } from '@prisma/client';
+
 import { categoryParents } from './document-categories';
 
 export const removeCategoryFromSelectedCategories = (

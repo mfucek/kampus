@@ -1,4 +1,5 @@
 import { Badge } from '@/lib/shadcn/ui/badge';
+import { ContentPadding } from '../layouts/content-padding';
 
 export const PageHeader = async ({
 	title,
@@ -8,16 +9,18 @@ export const PageHeader = async ({
 	tags?: string[];
 }) => {
 	return (
-		<div className="flex flex-col gap-2 px-4 lg:px-0">
-			<div className="flex flex-wrap">
-				{tags.map((tag) => (
-					<Badge key={tag} variant="tertiary" theme="neutral">
-						{tag}
-					</Badge>
-				))}
+		<ContentPadding size="lg">
+			<div className="flex flex-col gap-2">
+				<div className="flex flex-wrap">
+					{tags.map((tag) => (
+						<Badge key={tag} variant="tertiary" theme="neutral">
+							{tag}
+						</Badge>
+					))}
+				</div>
+				<div className="display-3">{title}</div>
 			</div>
-			<div className="display-3">{title}</div>
-		</div>
+		</ContentPadding>
 	);
 };
 

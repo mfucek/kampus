@@ -47,7 +47,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 	}
 
 	return (
-		<div className="flex flex-row gap-3 px-3">
+		<div className="flex flex-row gap-3">
 			<div className="flex flex-row gap-2">
 				<Button
 					size="xs"

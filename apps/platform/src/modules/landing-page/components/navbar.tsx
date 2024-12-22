@@ -4,6 +4,7 @@ import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 
 import { env } from '@/env';
+
 import { Logo } from '@/global/components/logo';
 import { ActionsGroup } from '@/global/molecules/navbar/actions-group';
 import { Divider } from '@/global/molecules/navbar/divider';
@@ -26,32 +27,37 @@ export const Navbar = () => {
 		};
 
 		return (
-			<nav className="hidden md:flex gap-4 sm:gap-6">
-				<a
-					className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
-					onClick={() => scrollToSection('features')}
-				>
-					Značajke
-				</a>
-				<a
-					className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
-					onClick={() => scrollToSection('how-it-works')}
-				>
-					Kako radi
-				</a>
-				<a
-					className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
-					onClick={() => scrollToSection('pricing')}
-				>
-					Članstvo
-				</a>
-				<a
-					className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
-					onClick={() => scrollToSection('faq')}
-				>
-					FAQ
-				</a>
-			</nav>
+			<>
+				<div className="hidden md:flex flex-row gap-4 sm:gap-6">
+					<nav className="flex flex-row gap-4 sm:gap-6">
+						<a
+							className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
+							onClick={() => scrollToSection('features')}
+						>
+							Značajke
+						</a>
+						<a
+							className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
+							onClick={() => scrollToSection('how-it-works')}
+						>
+							Kako radi
+						</a>
+						<a
+							className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
+							onClick={() => scrollToSection('pricing')}
+						>
+							Članstvo
+						</a>
+						<a
+							className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
+							onClick={() => scrollToSection('faq')}
+						>
+							FAQ
+						</a>
+					</nav>
+					<Divider />
+				</div>
+			</>
 		);
 	};
 
@@ -72,14 +78,16 @@ export const Navbar = () => {
 		return (
 			<ActionsGroup>
 				<ThemeToggler size="sm" />
-				<Button
-					onClick={() => openSignUp({ afterSignInUrl: '/colleges' })}
-					theme="neutral"
-					size="sm"
-					variant="solid-weak"
-				>
-					Registriraj se
-				</Button>
+				<div className="hidden md:block">
+					<Button
+						onClick={() => openSignUp({ afterSignInUrl: '/colleges' })}
+						theme="neutral"
+						size="sm"
+						variant="solid-weak"
+					>
+						Registriraj se
+					</Button>
+				</div>
 				<Button
 					onClick={() => openSignIn({ afterSignInUrl: '/colleges' })}
 					theme="accent"
@@ -116,7 +124,6 @@ export const Navbar = () => {
 			</Link>
 			<div className="flex flex-row gap-4 items-center">
 				<Links />
-				<Divider />
 				<Actions />
 			</div>
 		</div>

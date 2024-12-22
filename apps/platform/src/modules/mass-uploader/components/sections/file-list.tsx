@@ -1,5 +1,9 @@
 'use client';
 
+import { type DocumentFileType } from '@prisma/client';
+import { formatDistance } from 'date-fns';
+import { useState } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -26,9 +30,6 @@ import {
 	useFileStagingContext
 } from '@/modules/file/contexts/file-staging-provider';
 import { UploadArea } from '@/modules/file/hooks/use-upload-area';
-import { DocumentFileType } from '@prisma/client';
-import { formatDistance } from 'date-fns';
-import { useState } from 'react';
 
 const FileRow = (file: StagedFile, index: number) => {
 	const { updateFile } = useFileStagingContext();

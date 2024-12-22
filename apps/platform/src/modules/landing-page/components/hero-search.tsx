@@ -4,9 +4,11 @@ import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useState, type FC } from 'react';
 
-import { Icon, IconName } from '@/global/components/icon';
+import { Icon, type IconName } from '@/global/components/icon';
+import { SectionList } from '@/global/components/section-list';
+import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
-import { ListAllCollegesItem } from '@/modules/topic/college/api/procedures/list-all';
+import { type ListAllCollegesItem } from '@/modules/topic/college/api/procedures/list-all';
 import { type ListTopCollegesItem } from '@/modules/topic/college/api/procedures/list-top-colleges';
 import Image from 'next/image';
 
@@ -22,7 +24,7 @@ const CollegeCard: FC<{
 				size="lg"
 				className="justify-start px-4 hover:md:bg-theme-weak w-full"
 			>
-				<div className="w-6 h-6 flex items-center justify-center bg-neutral-weak rounded-md shrink-0 relative">
+				<div className="w-6 h-6 flex flex-col items-center justify-center bg-neutral-weak rounded-md shrink-0 relative">
 					<Icon icon={fallbackIcon} className="!bg-neutral-strong" size={16} />
 					{college.iconSrc && (
 						<Image
@@ -58,6 +60,12 @@ export const HeroSearch: FC<{
 		}
 	};
 
+	const searchFilteredColleges = allColleges.filter(
+		(college) =>
+			college.name.toLowerCase().includes(search.toLowerCase()) ||
+			college.slug.toLowerCase().includes(search.toLowerCase())
+	);
+
 	if (isSignedIn) {
 		<Link href="/colleges">
 			<Button>Idi na platformu</Button>
@@ -89,15 +97,9 @@ export const HeroSearch: FC<{
 					</div>
 
 					<div className="flex flex-col px-1 lg:min-h-[156px]">
-						{allColleges
-							.filter(
-								(college) =>
-									college.name.toLowerCase().includes(search.toLowerCase()) ||
-									college.slug.toLowerCase().includes(search.toLowerCase())
-							)
-							.map((college) => (
-								<CollegeCard key={college.id} college={college} />
-							))}
+						{searchFilteredColleges.map((college) => (
+							<CollegeCard key={college.id} college={college} />
+						))}
 					</div>
 				</div>
 			</div>
@@ -141,9 +143,6 @@ export const HeroSearch: FC<{
 						<div className="flex-1 flex justify-center items-center body-3 text-neutral-strong">
 							Ova funkcionalnost dolazi uskoro!
 						</div>
-						{/* {topColleges.map((college) => (
-							<CollegeCard key={college.id} college={college} />
-						))} */}
 					</div>
 				</div>
 			</div>
@@ -151,21 +150,58 @@ export const HeroSearch: FC<{
 	};
 
 	return (
-		<div className="flex flex-col gap-2 px-2 lg:px-0">
-			<div className="flex flex-row items-center h-12 bg-foreground border border-neutral-weak rounded-full">
-				<input
-					className="input bg-transparent h-full px-4 flex-1 outline-none"
-					type="text"
-					placeholder="Traži fakultete... (uskoro profesore, predmete)"
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-				/>
-				<div className="px-4">
-					<Icon icon="search" className="bg-neutral-strong" />
+		<>
+			<ContentPadding size="sm">
+				<div className="flex flex-row items-center h-12 bg-section border border-neutral-weak rounded-full">
+					<input
+						className="input bg-transparent h-full px-4 flex-1 outline-none"
+						type="text"
+						placeholder="Traži fakultete..."
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+					/>
+					<div className="px-4">
+						<Icon icon="search" className="bg-neutral-strong" />
+					</div>
 				</div>
+			</ContentPadding>
+
+			<div className="hidden md:block">
+				<ContentPadding size="sm">
+					{search ? <SearchResults /> : <DefaultResults />}
+				</ContentPadding>
 			</div>
 
-			{search ? <SearchResults /> : <DefaultResults />}
-		</div>
+			<div className="block md:hidden">
+				<SectionList
+					data={search ? searchFilteredColleges : topColleges}
+					rows={(college) => (
+						<>
+							<div className="w-6 h-6 flex flex-col items-center justify-center bg-neutral-weak rounded-md shrink-0 relative">
+								<Icon
+									icon="book-open"
+									className="!bg-neutral-strong"
+									size={16}
+								/>
+								{college.iconSrc && (
+									<Image
+										src={college.iconSrc}
+										alt={college.name}
+										fill
+										className="object-cover"
+									/>
+								)}
+							</div>
+							<div className="flex flex-col text-left w-full overflow-hidden">
+								<p className="button-md w-full truncate">{college.name}</p>
+								<p className="text-neutral-strong caption">{college.slug}</p>
+							</div>
+						</>
+					)}
+					emptyRow={<>Nema fakulteta</>}
+					title={search ? 'Rezultati za: ' + search : 'Top fakulteti'}
+				/>
+			</div>
+		</>
 	);
 };

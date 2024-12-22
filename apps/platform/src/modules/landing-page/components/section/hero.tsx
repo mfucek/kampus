@@ -11,7 +11,7 @@ export const HeroSection = async () => {
 
 	return (
 		<section
-			className="flex flex-col gap-10 items-center py-40 bg-gradient-to-b from-section to-background relative"
+			className="flex flex-col gap-10 items-center py-40 bg-gradient-to-b from-section to-background relative min-h-[90vh]"
 			id="hero"
 		>
 			<Container className="z-10">

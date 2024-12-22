@@ -1,7 +1,7 @@
 'use client';
 
+import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
-import { cn } from '@/lib/shadcn/utils';
 import { MAX_CHARACTERS } from '@/modules/discussion/constants/composer';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import { useComposerBodyContext } from '../contexts/composer-body-provider';
@@ -16,15 +16,23 @@ export const ComposerFooter = () => {
 
 	const remaining = MAX_CHARACTERS - characterCount;
 
+	// const { isMobile } = useIsMobile();
+
 	return (
 		<div className="flex flex-row gap-2 items-center">
-			<p
-				className={cn('w-full text-neutral-strong body-3', {
-					'text-danger': remaining < 0
-				})}
-			>
-				{remaining} znakova preostalo.
-			</p>
+			<div className="flex-1 flex flex-row gap-2 items-center">
+				{/* <Button variant="solid-weak" theme="accent" size="xs">
+					{isMobile ? 'Smjernice' : 'Smjernice za objave'}
+					<Icon icon="arrow-linked" />
+				</Button> */}
+				<Badge
+					variant="secondary"
+					size="lg"
+					theme={remaining < 0 ? 'danger' : 'neutral'}
+				>
+					{remaining} znakova preostalo.
+				</Badge>
+			</div>
 			{isSignedIn && (
 				<Button
 					theme="accent"

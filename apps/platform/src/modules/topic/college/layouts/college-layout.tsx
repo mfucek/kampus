@@ -29,7 +29,7 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
 			<PageHeader title={college.name} tags={['Fakultet']} />
-			<Tabs className="px-4 lg:px-0">
+			<Tabs>
 				<Tab route={makeRoute('')}>Opca Rasprava</Tab>
 				<Tab route={makeRoute('/programs')}>Smjerovi</Tab>
 				<Tab route={makeRoute('/all-subjects')}>Svi predmeti</Tab>

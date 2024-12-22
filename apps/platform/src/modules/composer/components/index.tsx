@@ -9,6 +9,7 @@ import { ComposerControllerProvider } from '../contexts/composer-controller-prov
 import { ComposerEditor } from './composer-editor';
 import { ComposerFiles } from './composer-files';
 import { ComposerFooter } from './composer-footer';
+import { ComposerWrapper } from './composer-wrapper';
 
 export const Composer: FC<{
 	collegeId: string;
@@ -26,11 +27,11 @@ export const Composer: FC<{
 		>
 			<FileStagingProvider>
 				<ComposerBodyProvider>
-					<div className="flex flex-col gap-3 w-full">
+					<ComposerWrapper>
 						<ComposerEditor />
 						<ComposerFiles />
 						<ComposerFooter />
-					</div>
+					</ComposerWrapper>
 				</ComposerBodyProvider>
 			</FileStagingProvider>
 		</ComposerControllerProvider>

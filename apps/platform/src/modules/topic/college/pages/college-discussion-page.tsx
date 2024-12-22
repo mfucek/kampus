@@ -1,5 +1,6 @@
 import { api } from '@/lib/trpc/server';
 
+import { ContentPadding } from '@/global/layouts/content-padding';
 import {
 	Select,
 	SelectContent,
@@ -23,33 +24,34 @@ export const CollegeDiscussionPage = async ({ params }: PageProps) => {
 	});
 
 	return (
-		<div className="flex flex-col gap-10 px-2 md:px-0">
-			<div className="p-3 rounded-xl bg-section">
+		<ContentPadding size="sm">
+			<div className="flex flex-col gap-10">
 				<Composer collegeId={college.id} />
-			</div>
-			<div className="flex flex-col gap-2">
-				<div className="flex flex-row justify-between items-center px-4 lg:px-0">
-					<div className="title-2">Rasprava</div>
-					<Select value="newest" disabled>
-						<SelectTrigger className="w-fit">
-							<SelectValue placeholder="Sortiraj" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="newest">Najnovije</SelectItem>
-							<SelectItem value="oldest">Najstarije</SelectItem>
-							<SelectItem value="relevant">Po relevantnosti</SelectItem>
-							<SelectItem value="votes">Po glasovima</SelectItem>
-						</SelectContent>
-					</Select>
+
+				<div className="flex flex-col gap-2">
+					<div className="flex flex-row justify-between items-center">
+						<div className="title-2">Rasprava</div>
+						<Select value="newest" disabled>
+							<SelectTrigger className="w-fit">
+								<SelectValue placeholder="Sortiraj" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="newest">Najnovije</SelectItem>
+								<SelectItem value="oldest">Najstarije</SelectItem>
+								<SelectItem value="relevant">Po relevantnosti</SelectItem>
+								<SelectItem value="votes">Po glasovima</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
+					<InfiniteScrollTopLevelPosts
+						scope={{
+							college: {
+								id: college.id
+							}
+						}}
+					/>
 				</div>
-				<InfiniteScrollTopLevelPosts
-					scope={{
-						college: {
-							id: college.id
-						}
-					}}
-				/>
 			</div>
-		</div>
+		</ContentPadding>
 	);
 };

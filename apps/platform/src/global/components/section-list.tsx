@@ -74,7 +74,6 @@ export const SectionList = <T extends Record<string, unknown>>({
 	data,
 	rows,
 	actions,
-	keyKey,
 	emptyRow,
 	showAll = false,
 	wrapper

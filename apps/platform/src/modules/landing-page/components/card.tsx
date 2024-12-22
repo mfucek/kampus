@@ -1,7 +1,9 @@
 'use client';
+
+import { type FC, type HTMLAttributes } from 'react';
+
 import { IconSizeContext } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
-import { HTMLAttributes, type FC } from 'react';
 
 export const Card: FC<HTMLAttributes<HTMLDivElement>> = ({
 	children,

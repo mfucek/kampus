@@ -1,14 +1,15 @@
+import { Spinner } from '@/global/components/spinner';
 import { Navbar } from '@/global/molecules/navbar/navbar';
 import { ClientPanels } from '@/modules/discussion-panel/components/client-panels';
 import { PostIdProvider } from '@/modules/discussion-panel/components/post-id-provider';
-import { type FC, type PropsWithChildren } from 'react';
+import { Suspense, type FC, type PropsWithChildren } from 'react';
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<>
 			<div className="flex flex-col w-screen h-screen md:overflow-x-hidden overscroll-x-none">
 				<Navbar />
-				{/* <Suspense
+				<Suspense
 					fallback={
 						<>
 							<div className="bg-background md:p-2 w-full h-full animate-pulse">
@@ -18,11 +19,11 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 							</div>
 						</>
 					}
-				> */}
-				<PostIdProvider>
-					<ClientPanels>{children}</ClientPanels>
-				</PostIdProvider>
-				{/* </Suspense> */}
+				>
+					<PostIdProvider>
+						<ClientPanels>{children}</ClientPanels>
+					</PostIdProvider>
+				</Suspense>
 			</div>
 		</>
 	);

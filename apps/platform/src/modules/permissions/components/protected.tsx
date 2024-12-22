@@ -1,8 +1,8 @@
 'use client';
 
 import { api } from '@/lib/trpc/react';
-import { RuleType } from '@prisma/client';
-import { FC, PropsWithChildren, ReactNode } from 'react';
+import { type RuleType } from '@prisma/client';
+import { type FC, type PropsWithChildren, type ReactNode } from 'react';
 
 export const RuleProtected: FC<
 	{

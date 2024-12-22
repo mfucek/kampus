@@ -18,7 +18,7 @@ const DynamicPost: FC<{
 	// const [expanded, setExpanded] = useState(false);
 
 	return (
-		<div className="bg-section p-3 rounded-xl">
+		<div className="bg-section p-3 rounded-xl overflow-hidden">
 			<Post
 				fullPost={{
 					post: {

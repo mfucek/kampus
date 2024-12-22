@@ -7,7 +7,10 @@ export const Divider: FC<HTMLAttributes<HTMLDivElement>> = ({
 }) => {
 	return (
 		<div
-			className={cn('w-full h-[1px] bg-neutral-weak', className)}
+			className={cn(
+				'w-full h-[1px] bg-neutral-medium @md:bg-neutral-weak',
+				className
+			)}
 			{...props}
 		/>
 	);
@@ -19,7 +22,10 @@ export const VerticalDivider: FC<HTMLAttributes<HTMLDivElement>> = ({
 }) => {
 	return (
 		<div
-			className={cn('h-full w-[1px] bg-neutral-weak', className)}
+			className={cn(
+				'h-full w-[1px] bg-neutral-medium @md:bg-neutral-weak',
+				className
+			)}
 			{...props}
 		/>
 	);

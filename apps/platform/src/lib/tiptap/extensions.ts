@@ -4,6 +4,7 @@ import { Document } from '@tiptap/extension-document';
 import { Italic } from '@tiptap/extension-italic';
 import { Link } from '@tiptap/extension-link';
 import { Paragraph } from '@tiptap/extension-paragraph';
+import { Placeholder } from '@tiptap/extension-placeholder';
 import { Strike } from '@tiptap/extension-strike';
 import { Text } from '@tiptap/extension-text';
 
@@ -11,6 +12,9 @@ import { type Extensions } from '@tiptap/react';
 
 export const tiptapExtensions: Extensions = [
 	Document,
+	Placeholder.configure({
+		placeholder: 'Napiši nešto...'
+	}),
 	Paragraph.configure({
 		HTMLAttributes: {
 			class: 'element-paragraph'

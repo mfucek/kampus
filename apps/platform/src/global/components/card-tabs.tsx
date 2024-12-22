@@ -35,6 +35,7 @@ const TabsTrigger = React.forwardRef<
 				className={cn(
 					'md:h-16 h-14 md:w-full md:justify-start text-neutral px-4',
 					'data-[state=active]:border data-[state=active]:border-theme data-[state=active]:theme-accent data-[state=inactive]:theme-neutral min-w-[120px] md:min-w-none justify-center md:justify-start',
+					'data-[state=inactive]:bg-section md:data-[state=inactive]:bg-neutral-weak',
 					className
 				)}
 				{...props}

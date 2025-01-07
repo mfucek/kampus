@@ -6,12 +6,14 @@ import { RadialGrid } from '../radial-grid';
 import { Scribbles } from '../scribbles';
 
 export const HeroSection = async () => {
-	const topColleges = await api.college.listTopColleges();
-	const allColleges = await api.college.listAll();
+	const [topColleges, allColleges] = await Promise.all([
+		api.college.listTopColleges(),
+		api.college.listAll()
+	]);
 
 	return (
 		<section
-			className="flex flex-col gap-10 items-center py-40 bg-gradient-to-b from-section to-background relative min-h-[90vh]"
+			className="flex flex-col gap-10 items-center py-40 bg-gradient-to-b from-section to-background relative min-h-none md:min-h-[90vh]"
 			id="hero"
 		>
 			<Container className="z-10">

@@ -1,5 +1,6 @@
 import { ferDriver } from './fer';
 import { ffzgDriver } from './ffzg';
+import { fkitDriver } from './fkit';
 import { pmfDriver } from './pmf';
 import type { Driver } from './types';
 
@@ -21,6 +22,11 @@ export const drivers: Record<
 		label: 'PMF',
 		slug: 'pmf',
 		driver: pmfDriver
+	},
+	fkit: {
+		label: 'FKIT',
+		slug: 'fkit',
+		driver: fkitDriver
 	}
 };
 

@@ -107,6 +107,8 @@ export const InfiniteScrollTopLevelPosts: FC<{
 
 	return (
 		<div className="flex flex-col gap-2">
+			<button onClick={() => query.refetch()}>Refetch</button>
+
 			{!query.data && (
 				<>
 					<PostSkeleton />

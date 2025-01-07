@@ -1,3 +1,4 @@
+import { ContentPadding } from '@/global/layouts/content-padding';
 import { api } from '@/lib/trpc/server';
 import { Composer } from '@/modules/composer/components';
 import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
@@ -18,9 +19,11 @@ export const StaffDiscussionPage = async ({ params }: PageProps) => {
 	});
 
 	return (
-		<div className="flex flex-col gap-10 px-4 lg:px-0">
-			<Composer collegeId={staff.collegeId} topicId={staff.id} />
-			<InfiniteScrollTopLevelPosts scope={{ topic: { id: staff.id } }} />
-		</div>
+		<ContentPadding size="lg">
+			<div className="flex flex-col gap-10">
+				<Composer collegeId={staff.collegeId} topicId={staff.id} />
+				<InfiniteScrollTopLevelPosts scope={{ topic: { id: staff.id } }} />
+			</div>
+		</ContentPadding>
 	);
 };

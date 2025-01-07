@@ -57,15 +57,16 @@ export const scraper = async (options: ScraperOptions) => {
 			logger,
 			callbacks: {
 				onProgress: (progress, total, title) => {
-					if (progress === 1 || progress === 0) {
+					if (progress === 0) {
 						spinnerStartTime = Date.now();
 					}
 
 					const elapsedTime = Date.now() - spinnerStartTime;
-					const estimatedTime = elapsedTime * (total / progress);
+					const estimatedTime =
+						(elapsedTime / (progress === 0 ? 1 : progress)) * total;
 					const remainingTime = estimatedTime - elapsedTime;
 
-					const remainingText = `${formatDistance(0, remainingTime, {
+					const remainingText = `${formatDistance(0, remainingTime ?? 1000, {
 						includeSeconds: true
 					})} remaining`;
 
@@ -113,6 +114,6 @@ export const scraper = async (options: ScraperOptions) => {
 
 	// Leave the browser open if it's a test run
 	if (fullScrape) {
-		process.exit(0);
 	}
+	process.exit(0);
 };

@@ -1,7 +1,6 @@
 import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
-import { getFileUrl } from '@/lib/s3';
 import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
@@ -55,7 +54,7 @@ export const listProcedure = publicProcedure
 			...(authorId ? { authorId: authorId } : {})
 		};
 
-		const include: Prisma.PostInclude = {
+		const include = {
 			Author: true,
 			Votes: true,
 			_count: {
@@ -64,8 +63,9 @@ export const listProcedure = publicProcedure
 					Replies: true
 				}
 			}
-		};
+		} satisfies Prisma.PostInclude;
 
+		console.time('listProcedure');
 		const postsRaw = await db.post.findMany({
 			where,
 			include,
@@ -74,9 +74,27 @@ export const listProcedure = publicProcedure
 			},
 			take: limit,
 			skip: cursor ? 1 : 0,
-			cursor: cursor ? { id: cursor } : undefined
+			cursor: cursor ? { id: cursor } : undefined,
+			relationLoadStrategy: 'join'
 		});
+		console.timeEnd('listProcedure');
 
+		console.time('filesRaw');
+		const filesRaw = await db.file.findMany({
+			where: {
+				postId: {
+					in: postsRaw.map((post) => post.id)
+				}
+			},
+			include: {
+				DocumentFile: true,
+				ImageFile: true
+			},
+			relationLoadStrategy: 'join'
+		});
+		console.timeEnd('filesRaw');
+
+		console.time('random-bullshit-mapping');
 		const posts = await Promise.all(
 			postsRaw.map(async (post) => {
 				const votes = {
@@ -86,29 +104,31 @@ export const listProcedure = publicProcedure
 						post.Votes.find((vote) => vote.userId === user?.id)?.type ?? null
 				};
 
-				const filesRaw = await db.file.findMany({
-					where: {
-						postId: post.id
-					},
-					include: {
-						DocumentFile: true,
-						ImageFile: true
-					}
-				});
+				// const filesRaw = await db.file.findMany({
+				// 	where: {
+				// 		postId: post.id
+				// 	},
+				// 	include: {
+				// 		DocumentFile: true,
+				// 		ImageFile: true
+				// 	}
+				// });
 
 				const files = await Promise.all(
-					filesRaw.map(async (file) => ({
-						id: file.id,
-						type: file.type,
-						key: file.key,
-						documentFile: {
-							academicYear: file.DocumentFile?.academicYear ?? undefined,
-							title: file.DocumentFile?.title ?? undefined,
-							types: file.DocumentFile?.types ?? []
-						},
-						imageFile: file.ImageFile,
-						url: await getFileUrl(file.key)
-					}))
+					filesRaw
+						.filter((fr) => fr.postId === post.id)
+						.map(async (file) => ({
+							id: file.id,
+							type: file.type,
+							key: file.key,
+							documentFile: {
+								academicYear: file.DocumentFile?.academicYear ?? undefined,
+								title: file.DocumentFile?.title ?? undefined,
+								types: file.DocumentFile?.types ?? []
+							},
+							imageFile: file.ImageFile,
+							url: 'https://upload.wikimedia.org/wikipedia/en/7/73/Trollface.png' //await getFileUrl(file.key)
+						}))
 				);
 
 				return {
@@ -149,6 +169,8 @@ export const listProcedure = publicProcedure
 				};
 			})
 		);
+
+		console.timeEnd('random-bullshit-mapping');
 
 		const totalPages = Math.ceil(
 			(await db.post.count({

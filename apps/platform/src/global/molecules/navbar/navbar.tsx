@@ -9,7 +9,6 @@ import { Logo } from '@/global/components/logo';
 import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { feedbackFormURL } from '@/modules/feedback/constants';
-import { NotificationsButton } from '@/modules/notifications/components/notifications-button';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
 import { Icon } from '../../components/icon';
 import { ActionsGroup } from './actions-group';
@@ -50,7 +49,7 @@ export const Navbar = () => {
 					<Divider className="hidden md:block" />
 					<ActionsGroup>
 						<ThemeToggler size="sm" />
-						<NotificationsButton />
+						{/* <NotificationsButton /> */}
 					</ActionsGroup>
 					<Divider />
 					<Link href="/profile">

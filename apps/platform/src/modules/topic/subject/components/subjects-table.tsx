@@ -49,8 +49,8 @@ export const columns: ColumnDef<Subject>[] = [
 				<div className="flex flex-row gap-1 justify-end">
 					<Link href={`/${collegeSlug}/subject/${topicSlug}`}>
 						<Button theme="neutral" variant="solid-weak" size="sm">
+							{postCount}
 							<Icon icon="chat-single" />
-							{postCount} topics
 						</Button>
 					</Link>
 				</div>

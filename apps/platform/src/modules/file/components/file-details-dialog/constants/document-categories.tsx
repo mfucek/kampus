@@ -10,6 +10,8 @@ export const mainCategories: DocumentFileType[] = [
 	'SCRIPT',
 	'NOTES',
 	'PAPER',
+	'LECTURE',
+	'PRESENTATION',
 	'OTHER'
 ];
 
@@ -52,7 +54,9 @@ export const subCategories: Record<DocumentFileType, DocumentFileType[]> = {
 	ENTRANCE_EXAM: [],
 	EXIT_EXAM: [],
 	ORAL_EXAM: [],
-	SOLVED: []
+	SOLVED: [],
+	LECTURE: [],
+	PRESENTATION: []
 };
 
 export const categoryParents: Record<DocumentFileType, DocumentFileType[]> =

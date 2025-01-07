@@ -36,7 +36,7 @@ export const ComposerFile: FC<{
 				)}
 			</div>
 
-			<div className="flex flex-row p-2 bg-foreground">
+			<div className="flex flex-row w-full p-2 bg-foreground">
 				<p className="caption text-neutral">{file.name}</p>
 			</div>
 

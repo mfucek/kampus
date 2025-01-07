@@ -13,7 +13,7 @@ export const HeroSection = async () => {
 
 	return (
 		<section
-			className="flex flex-col gap-10 items-center py-40 bg-gradient-to-b from-section to-background relative min-h-none md:min-h-[90vh]"
+			className="flex flex-col gap-10 items-center justify-center py-20 bg-gradient-to-b from-section to-background relative min-h-none min-h-[calc(100vh-52px-16px)]"
 			id="hero"
 		>
 			<Container className="z-10">

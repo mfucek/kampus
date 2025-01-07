@@ -23,5 +23,7 @@ export const categoryLabels: Record<DocumentFileType, string> = {
 	CORRECTION_EXAM: 'Popravni ispit',
 	ORAL_EXAM: 'Usmeni ispit',
 	ENTRANCE_EXAM: 'Ulazni ispit',
-	EXIT_EXAM: 'Izlazni ispit'
+	EXIT_EXAM: 'Izlazni ispit',
+	LECTURE: 'Predavanje',
+	PRESENTATION: 'Prezentacija'
 };

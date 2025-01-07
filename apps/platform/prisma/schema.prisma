@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -306,6 +307,8 @@ enum DocumentFileType {
   COLOQUIUM_MID
   COLOQUIUM_FINAL
   LAB_EXERCISE
+  LECTURE
+  PRESENTATION
   HOMEWORK
   EXERCISES
   SEMINAR

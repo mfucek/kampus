@@ -1,4 +1,4 @@
-import { Spinner } from '@/global/components/spinner';
+import { SpinnerReloadErrorMessage } from '@/global/components/reload-error-message';
 import { Navbar } from '@/global/molecules/navbar/navbar';
 import { ClientPanels } from '@/modules/discussion-panel/components/client-panels';
 import { PostIdProvider } from '@/modules/discussion-panel/components/post-id-provider';
@@ -12,9 +12,9 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 				<Suspense
 					fallback={
 						<>
-							<div className="bg-background md:p-2 w-full h-full animate-pulse">
+							<div className="bg-background md:p-2 w-full h-full">
 								<div className="rounded-lg bg-section flex flex-col items-center justify-center min-h-full">
-									<Spinner className="w-10 h-10" />
+									<SpinnerReloadErrorMessage />
 								</div>
 							</div>
 						</>

@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
+import { ContentPadding } from '../layouts/content-padding';
 
 const Tabs = TabsPrimitive.Root;
 
@@ -12,14 +13,16 @@ const TabsList = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.List>,
 	React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 >(({ className, ...props }, ref) => (
-	<TabsPrimitive.List
-		ref={ref}
-		className={cn(
-			'flex flex-row md:grid md:grid-cols-4 gap-2 md:overflow-x-visible px-2 @lg:px-0 overflow-x-auto scrollbar-hidden',
-			className
-		)}
-		{...props}
-	/>
+	<ContentPadding size="sm">
+		<TabsPrimitive.List
+			ref={ref}
+			className={cn(
+				'flex flex-row md:grid md:grid-cols-4 gap-2 md:overflow-x-visiblepx-0 overflow-x-auto scrollbar-hidden',
+				className
+			)}
+			{...props}
+		/>
+	</ContentPadding>
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
@@ -33,7 +36,9 @@ const TabsTrigger = React.forwardRef<
 				variant={'solid-weak'}
 				size="sm"
 				className={cn(
-					'md:h-16 h-14 md:w-full md:justify-start text-neutral px-4',
+					'md:h-16 h-14 sm:flex-1 lg:shrink-0 md:justify-start px-4',
+					'whitespace-normal text-neutral',
+					'text-center lg:text-left',
 					'data-[state=active]:border data-[state=active]:border-theme data-[state=active]:theme-accent data-[state=inactive]:theme-neutral min-w-[120px] md:min-w-none justify-center md:justify-start',
 					'data-[state=inactive]:bg-section md:data-[state=inactive]:bg-neutral-weak',
 					className

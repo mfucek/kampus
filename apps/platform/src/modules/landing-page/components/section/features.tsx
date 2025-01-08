@@ -85,7 +85,7 @@ export const FeaturesSection = () => {
 						</CardContent>
 					</Card>
 				</div>
-				<div className="w-[400px] h-[160px] bg-accent opacity-50 rounded-[100%] blur-[120px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+				<div className="w-[400px] h-[160px] bg-accent opacity-25 rounded-[100%] blur-[120px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 			</Container>
 		</section>
 	);

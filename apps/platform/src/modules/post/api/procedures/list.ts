@@ -1,6 +1,7 @@
 import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
+import { getFileUrl } from '@/lib/s3';
 import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
@@ -127,7 +128,7 @@ export const listProcedure = publicProcedure
 								types: file.DocumentFile?.types ?? []
 							},
 							imageFile: file.ImageFile,
-							url: 'https://upload.wikimedia.org/wikipedia/en/7/73/Trollface.png' //await getFileUrl(file.key)
+							url: await getFileUrl(file.key)
 						}))
 				);
 

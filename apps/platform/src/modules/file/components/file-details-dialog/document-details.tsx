@@ -12,7 +12,7 @@ import {
 import { type DocumentFileType } from '@prisma/client';
 import { type FC, type PropsWithChildren, useEffect, useState } from 'react';
 import { useFileStagingContext } from '../../../file/contexts/file-staging-provider';
-import { categoryLabels } from './categoryLabels';
+import { categoryLabels } from './constants/category-labels';
 import { mainCategories, subCategories } from './constants/document-categories';
 import { removeCategoryFromSelectedCategories } from './constants/removeCategoryFromSelectedCategories';
 
@@ -39,30 +39,17 @@ export const DocumentDetails = () => {
 	const file = files[fileDetailsIndex!]!;
 
 	const [academicYear, setAcademicYear] = useState<string | null>(
-		file.documentOptions!.academicYear
+		file.documentOptions.academicYear
 	);
 	const [selectedCategories, setSelectedCategories] = useState<
 		DocumentFileType[]
-	>(file.documentOptions!.types);
+	>(file.documentOptions.types);
 	const [name, setName] = useState<string | null>(file.name);
 
 	const handleCategoryClick = (documentType: DocumentFileType) => {
 		const alreadySelected = selectedCategories.includes(documentType);
 
 		if (alreadySelected) {
-			// let alsoRemoveCategories: DocumentFileType[] = [];
-			// if (documentType === 'EXAM') {
-			// 	alsoRemoveCategories = examCategories;
-			// }
-			// if (documentType === 'COLOQUIUM') {
-			// 	alsoRemoveCategories = coloquiumCategories;
-			// }
-
-			// setSelectedCategories((prev) =>
-			// 	prev
-			// 		.filter((category) => category !== documentType)
-			// 		.filter((category) => !alsoRemoveCategories.includes(category))
-			// );
 			setSelectedCategories((prev) =>
 				removeCategoryFromSelectedCategories(prev, documentType)
 			);

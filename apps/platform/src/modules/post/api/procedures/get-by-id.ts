@@ -60,7 +60,6 @@ export const getPostByIdProcedure = publicProcedure
 			postRaw.Files.map(async (file) => ({
 				id: file.id,
 				key: file.key,
-				type: file.type,
 				imageFile: file.ImageFile,
 				url: await getFileUrl(file.key),
 				documentFile: file.DocumentFile

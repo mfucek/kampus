@@ -15,7 +15,6 @@ import {
 import { DocumentDetails } from './document-details';
 import { FileDetailsDialogActions } from './file-details-dialog-actions';
 import { FileDetailsList } from './file-details-list';
-import { ImageDetails } from './image-details';
 import { NoFilesMessage } from './no-files-message';
 
 export const FileDetailsDialog = () => {
@@ -27,16 +26,7 @@ export const FileDetailsDialog = () => {
 	const fileIsSelected = fileDetailsIndex !== null;
 
 	const showDocumentDetails =
-		filesExist &&
-		fileIsSelected &&
-		files[fileDetailsIndex] &&
-		['PDF', 'ARCHIVE'].includes(files[fileDetailsIndex].type);
-
-	const showImageDetails =
-		filesExist &&
-		fileIsSelected &&
-		files[fileDetailsIndex] &&
-		files[fileDetailsIndex].type === 'IMAGE';
+		filesExist && fileIsSelected && files[fileDetailsIndex];
 
 	return (
 		<DialogContent
@@ -59,7 +49,6 @@ export const FileDetailsDialog = () => {
 							{showDocumentDetails && (
 								<DocumentDetails key={fileDetailsIndex} />
 							)}
-							{showImageDetails && <ImageDetails key={fileDetailsIndex} />}
 							{!filesExist && <NoFilesMessage />}
 						</div>
 					</div>

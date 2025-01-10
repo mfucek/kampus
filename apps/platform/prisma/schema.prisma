@@ -263,8 +263,8 @@ model Vote {
 model File {
   id String @id @default(cuid())
 
-  key  String   @unique
-  type FileType
+  key       String  @unique
+  extension String?
 
   authorId String?
 
@@ -278,6 +278,7 @@ model File {
   Post   Post?   @relation(fields: [postId], references: [id])
 }
 
+// -> PostFile
 model ImageFile {
   fileId String @id @unique
   File   File   @relation(fields: [fileId], references: [id])
@@ -326,12 +327,6 @@ enum DocumentFileType {
   EXIT_EXAM
   ORAL_EXAM
   SOLVED
-}
-
-enum FileType {
-  IMAGE
-  PDF
-  ARCHIVE
 }
 
 // ------------------

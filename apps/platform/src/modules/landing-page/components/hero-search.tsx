@@ -24,7 +24,7 @@ const CollegeCard: FC<{
 				size="lg"
 				className="justify-start px-4 hover:md:bg-theme-weak w-full"
 			>
-				<div className="w-6 h-6 flex flex-col items-center justify-center bg-neutral-weak rounded-md shrink-0 relative">
+				<div className="w-6 h-6 flex flex-col items-center justify-center bg-neutral-weak rounded-md overflow-hidden border border-neutral-weak shrink-0 relative">
 					<Icon icon={fallbackIcon} className="!bg-neutral-strong" size={16} />
 					{college.iconSrc && (
 						<Image
@@ -60,11 +60,13 @@ export const HeroSearch: FC<{
 		}
 	};
 
-	const searchFilteredColleges = allColleges.filter(
-		(college) =>
-			college.name.toLowerCase().includes(search.toLowerCase()) ||
-			college.slug.toLowerCase().includes(search.toLowerCase())
-	);
+	const searchFilteredColleges = allColleges
+		.filter(
+			(college) =>
+				college.name.toLowerCase().includes(search.toLowerCase()) ||
+				college.slug.toLowerCase().includes(search.toLowerCase())
+		)
+		.filter((_, index) => index < 3);
 
 	if (isSignedIn) {
 		<Link href="/colleges">
@@ -177,7 +179,7 @@ export const HeroSearch: FC<{
 					data={search ? searchFilteredColleges : topColleges}
 					rows={(college) => (
 						<>
-							<div className="w-6 h-6 flex flex-col items-center justify-center bg-neutral-weak rounded-md shrink-0 relative">
+							<div className="w-6 h-6 flex flex-col items-center justify-center bg-neutral-weak border border-neutral-weak rounded-md overflow-hidden shrink-0 relative">
 								<Icon
 									icon="book-open"
 									className="!bg-neutral-strong"

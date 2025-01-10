@@ -32,19 +32,15 @@ export const uploadProfilePictureProcedure = protectedProcedure
 		}
 
 		// Create new profile picture file
-		const file = await db.file.create({
+		await db.file.create({
 			data: {
 				key: input.key,
-				type: 'IMAGE',
-				authorId: user.id
-			}
-		});
-
-		// Create new profile picture file
-		await db.imageFile.create({
-			data: {
-				userId: user.id,
-				fileId: file.id
+				authorId: user.id,
+				ImageFile: {
+					create: {
+						userId: user.id
+					}
+				}
 			}
 		});
 

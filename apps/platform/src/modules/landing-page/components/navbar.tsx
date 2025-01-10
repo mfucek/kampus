@@ -9,14 +9,20 @@ import { Logo } from '@/global/components/logo';
 import { ActionsGroup } from '@/global/molecules/navbar/actions-group';
 import { Divider } from '@/global/molecules/navbar/divider';
 import { Button } from '@/lib/shadcn/ui/button';
+import { api } from '@/lib/trpc/react';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+import Image from 'next/image';
 
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
+	const { isSignedIn } = useAuth();
 	const { openSignIn, openSignUp } = useClerk();
 
-	const { isSignedIn } = useAuth();
+	const { data: profilePictureUrl } =
+		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
+			enabled: !!isSignedIn
+		});
 
 	const Links = () => {
 		const scrollToSection = (id: string) => {
@@ -64,14 +70,26 @@ export const Navbar = () => {
 	const Actions = () => {
 		if (isSignedIn) {
 			return (
-				<ActionsGroup>
-					<ThemeToggler size="sm" />
-					<Link href="/colleges">
-						<Button theme="accent" size="sm" variant="solid">
-							idi na platformu
-						</Button>
+				<>
+					<ActionsGroup>
+						<ThemeToggler size="sm" />
+					</ActionsGroup>
+					<Divider />
+					<Link href="/profile">
+						<div className="w-8 h-8 rounded-full border border-neutral-weak bg-neutral-weak relative overflow-hidden clickable">
+							{profilePictureUrl && (
+								<Image
+									src={profilePictureUrl}
+									alt="User"
+									className="object-cover"
+									fill
+									sizes="80px"
+									quality={80}
+								/>
+							)}
+						</div>
 					</Link>
-				</ActionsGroup>
+				</>
 			);
 		}
 
@@ -80,7 +98,7 @@ export const Navbar = () => {
 				<ThemeToggler size="sm" />
 				<div className="hidden md:block">
 					<Button
-						onClick={() => openSignUp({ afterSignInUrl: '/colleges' })}
+						onClick={() => openSignUp({ forceRedirectUrl: '/colleges' })}
 						theme="neutral"
 						size="sm"
 						variant="solid-weak"
@@ -89,7 +107,7 @@ export const Navbar = () => {
 					</Button>
 				</div>
 				<Button
-					onClick={() => openSignIn({ afterSignInUrl: '/colleges' })}
+					onClick={() => openSignIn({ forceRedirectUrl: '/colleges' })}
 					theme="accent"
 					size="sm"
 					variant="solid"

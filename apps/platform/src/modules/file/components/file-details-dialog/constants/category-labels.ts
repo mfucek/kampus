@@ -25,5 +25,11 @@ export const categoryLabels: Record<DocumentFileType, string> = {
 	ENTRANCE_EXAM: 'Ulazni ispit',
 	EXIT_EXAM: 'Izlazni ispit',
 	LECTURE: 'Predavanje',
-	PRESENTATION: 'Prezentacija'
+	PRESENTATION: 'Prezentacija',
+	COLOQUIUM_FIRST: 'Prvi kolokvij',
+	COLOQUIUM_SECOND: 'Drugi kolokvij',
+	COLOQUIUM_THIRD: 'Treći kolokvij',
+	COLOQUIUM_FOURTH: 'Četvrti kolokvij',
+	EXAM_THEORY: 'Teorija',
+	EXAM_PROBLEMS: 'Zadatci'
 };

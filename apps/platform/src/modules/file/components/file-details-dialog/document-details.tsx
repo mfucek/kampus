@@ -161,28 +161,32 @@ export const DocumentDetails = () => {
 							description="O kojem tipu ispita se radi?"
 						>
 							<div className="w-full -mr-2 -mb-2">
-								{subCategories.EXAM.map((value, i) => (
-									<div className="mr-2 mb-2 inline-block" key={i}>
-										<Button
-											variant={
-												selectedCategories.includes(value) ? 'solid' : 'outline'
-											}
-											theme={
-												selectedCategories.includes(value)
-													? 'accent'
-													: 'neutral'
-											}
-											size="sm"
-											type="button"
-											rounded
-											onClick={() => {
-												handleCategoryClick(value);
-											}}
-										>
-											{categoryLabels[value]}
-										</Button>
-									</div>
-								))}
+								{subCategories.EXAM.filter((value) => value !== 'SOLVED').map(
+									(value, i) => (
+										<div className="mr-2 mb-2 inline-block" key={i}>
+											<Button
+												variant={
+													selectedCategories.includes(value)
+														? 'solid'
+														: 'outline'
+												}
+												theme={
+													selectedCategories.includes(value)
+														? 'accent'
+														: 'neutral'
+												}
+												size="sm"
+												type="button"
+												rounded
+												onClick={() => {
+													handleCategoryClick(value);
+												}}
+											>
+												{categoryLabels[value]}
+											</Button>
+										</div>
+									)
+								)}
 							</div>
 						</Section>
 					)}
@@ -193,7 +197,9 @@ export const DocumentDetails = () => {
 							description="O kakvom tipu kolokvija se radi?"
 						>
 							<div className="w-full -mr-2 -mb-2">
-								{subCategories.COLOQUIUM.map((value, i) => (
+								{subCategories.COLOQUIUM.filter(
+									(value) => value !== 'SOLVED'
+								).map((value, i) => (
 									<div className="mr-2 mb-2 inline-block" key={i}>
 										<Button
 											variant={

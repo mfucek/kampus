@@ -2,7 +2,6 @@
 
 import { type DocumentFileType } from '@prisma/client';
 import { formatDistance } from 'date-fns';
-import { useState } from 'react';
 
 import { Icon } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
@@ -22,7 +21,7 @@ import {
 import { api } from '@/lib/trpc/react';
 import { useComposerController } from '@/modules/composer/contexts/composer-controller-provider';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
-import { categoryLabels } from '@/modules/file/components/file-details-dialog/categoryLabels';
+import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';
 import { removeCategoryFromSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/removeCategoryFromSelectedCategories';
 import { shownCategoriesBasedOnSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/shownCategoriesBasedOnSelectedCategories';
 import {
@@ -40,7 +39,7 @@ const FileRow = (file: StagedFile, index: number) => {
 
 			<Select
 				// size="xs" variant="outline" rounded
-				value={file.documentOptions?.academicYear ?? undefined}
+				value={file.documentOptions.academicYear ?? undefined}
 				onValueChange={(value) =>
 					file.documentOptions &&
 					updateFile(index, {
@@ -63,7 +62,7 @@ const FileRow = (file: StagedFile, index: number) => {
 
 			<div className="flex flex-row gap-1">
 				<Popover>
-					{file.documentOptions?.types.map((type) => (
+					{file.documentOptions.types.map((type) => (
 						<PopoverTrigger asChild key={type}>
 							<Button size="xs" variant="outline" rounded>
 								{categoryLabels[type]}
@@ -78,9 +77,9 @@ const FileRow = (file: StagedFile, index: number) => {
 					<PopoverContent>
 						<div className="flex flex-row flex-wrap gap-2">
 							{shownCategoriesBasedOnSelectedCategories(
-								file.documentOptions?.types ?? []
+								file.documentOptions.types ?? []
 							).map((type) => {
-								const isSelected = file.documentOptions?.types.includes(type);
+								const isSelected = file.documentOptions.types.includes(type);
 								return (
 									<Button
 										size="xs"
@@ -97,7 +96,7 @@ const FileRow = (file: StagedFile, index: number) => {
 													documentOptions: {
 														...file.documentOptions,
 														types: removeCategoryFromSelectedCategories(
-															file.documentOptions?.types ?? [],
+															file.documentOptions.types ?? [],
 															type
 														)
 													}
@@ -106,10 +105,7 @@ const FileRow = (file: StagedFile, index: number) => {
 												updateFile(index, {
 													documentOptions: {
 														...file.documentOptions,
-														types: [
-															...(file.documentOptions?.types ?? []),
-															type
-														]
+														types: [...(file.documentOptions.types ?? []), type]
 													}
 												});
 											}
@@ -145,18 +141,15 @@ const FileActions = (file: StagedFile, index: number) => {
 
 	const { setPostId } = usePostId();
 
-	const [duplicates, setDuplicates] = useState<string[] | null>(null);
-
 	const { data: duplicatesData } = api.subject.hasFileOfKind.useQuery(
 		{
-			types: file.documentOptions!.types,
-			year: file.documentOptions!.academicYear!,
+			types: file.documentOptions.types,
+			year: file.documentOptions.academicYear!,
 			subjectId: topicId!
 		},
 		{
 			enabled:
 				!!topicId &&
-				!!file.documentOptions &&
 				!!file.documentOptions.academicYear &&
 				noOverlap<DocumentFileType>(file.documentOptions.types, ignoredTypes)
 		}

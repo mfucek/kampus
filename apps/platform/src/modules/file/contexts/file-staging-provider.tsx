@@ -3,7 +3,7 @@
 import { Dialog } from '@/lib/shadcn/ui/dialog';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { FileDetailsDialog } from '@/modules/file/components/file-details-dialog';
-import { type DocumentFileType, type FileType } from '@prisma/client';
+import { type DocumentFileType } from '@prisma/client';
 import {
 	type Dispatch,
 	type FC,
@@ -23,9 +23,8 @@ export type DocumentOptions = {
 export type StagedFile = {
 	name: string;
 	file: File;
-	type: FileType;
 	key: string | null;
-	documentOptions: DocumentOptions | null;
+	documentOptions: DocumentOptions;
 };
 
 const defaultData = {
@@ -85,9 +84,7 @@ export const FileStagingProvider: FC<{
 			setFileDetailsIndex(files.length);
 
 			if (opts?.openFileDetailsDialog) {
-				if (sanitizedFile.type === 'ARCHIVE' || sanitizedFile.type === 'PDF') {
-					openFileDetailsDialog(files.length);
-				}
+				openFileDetailsDialog(files.length);
 			}
 		} catch (error) {
 			console.error('Error adding file:', error);
@@ -109,11 +106,9 @@ export const FileStagingProvider: FC<{
 			try {
 				const sanitizedFile = fileToPostFile(file);
 
-				if (sanitizedFile.type === 'ARCHIVE' || sanitizedFile.type === 'PDF') {
-					firstDocumentIndex = firstDocumentIndex
-						? firstDocumentIndex
-						: files.length + i;
-				}
+				firstDocumentIndex = firstDocumentIndex
+					? firstDocumentIndex
+					: files.length + i;
 
 				return sanitizedFile;
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars

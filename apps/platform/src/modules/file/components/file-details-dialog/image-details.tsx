@@ -9,7 +9,7 @@ export const ImageDetails = () => {
 	return (
 		<div className="flex flex-col flex-1 items-center justify-center min-h-[320px]">
 			<div className="p-3">
-				{file && file.type === 'IMAGE' && (
+				{file && (
 					<img
 						src={fileUrl}
 						alt={file.file.name}

@@ -21,7 +21,7 @@ import { cn } from '@/lib/shadcn/utils';
 import { api } from '@/lib/trpc/react';
 import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
 import { DocumentsTable } from './documents-table';
-import { categoryLabels } from './file-details-dialog/categoryLabels';
+import { categoryLabels } from './file-details-dialog/constants/category-labels';
 import { mainCategories } from './file-details-dialog/constants/document-categories';
 import { removeCategoryFromSelectedCategories } from './file-details-dialog/constants/removeCategoryFromSelectedCategories';
 import { shownCategoriesBasedOnSelectedCategories } from './file-details-dialog/constants/shownCategoriesBasedOnSelectedCategories';

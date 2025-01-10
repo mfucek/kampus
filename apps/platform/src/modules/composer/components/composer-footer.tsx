@@ -25,13 +25,15 @@ export const ComposerFooter = () => {
 					{isMobile ? 'Smjernice' : 'Smjernice za objave'}
 					<Icon icon="arrow-linked" />
 				</Button> */}
-				<Badge
-					size="lg"
-					variant={remaining < 0 ? 'secondary' : 'tertiary'}
-					theme={remaining < 0 ? 'danger' : 'neutral'}
-				>
-					{remaining} znakova preostalo.
-				</Badge>
+				{isSignedIn && (
+					<Badge
+						size="lg"
+						variant={remaining < 0 ? 'secondary' : 'tertiary'}
+						theme={remaining < 0 ? 'danger' : 'neutral'}
+					>
+						{remaining} znakova preostalo.
+					</Badge>
+				)}
 			</div>
 			{isSignedIn && (
 				<Button

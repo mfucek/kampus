@@ -1,10 +1,6 @@
 import { type JSONContent } from '@tiptap/react';
 
-import {
-	type DocumentFileType,
-	type FileType,
-	type VoteType
-} from '@prisma/client';
+import { type DocumentFileType, type VoteType } from '@prisma/client';
 
 export type RecursivePost = {
 	post: {
@@ -38,7 +34,6 @@ export type RecursivePost = {
 	files: {
 		id: string;
 		key: string;
-		type: FileType;
 		documentFile:
 			| {
 					academicYear?: string;

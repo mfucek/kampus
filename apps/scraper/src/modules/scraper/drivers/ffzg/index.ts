@@ -2,11 +2,19 @@ import puppeteer from 'puppeteer';
 
 import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
 import type { Driver } from '@/modules/scraper/drivers/types';
-import type { Professor, Program, Subject, SubjectReference } from '@/types';
+import type { Professor, Subject, SubjectReference } from '@/types';
 import { checkImage } from '@/utils/check-image';
 import { shortenList } from '@/utils/shorten-list';
+import { ScraperResult } from '../../result';
+import { scrapeCurrentPageForPrograms } from './helpers/scrape-current-page-for-programs';
 
-export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
+export const ffzgDriver: Driver = async ({
+	debug = false,
+	callbacks,
+	logger
+}) => {
+	logger?.log('info', 'Starting FFZG driver');
+
 	// Initialize browser
 	const browser = await puppeteer.launch({
 		headless: !debug,
@@ -27,87 +35,82 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 	// -----------------------------
 	// Initialize lists
 
-	const programsList: { [externalLink: string]: Program } = {};
-	const subjectsList: { [externalLink: string]: Subject } = {};
-	const professorsList: { [externalLink: string]: Professor } = {};
+	const result = new ScraperResult(logger, callbacks);
 
 	let counter = 0;
 
 	// -----------------------------
 
-	const scrapeCurrentPageForPrograms = async () => {
-		(
-			await page.evaluate((baseUrl) => {
-				const programGroupHeadings = document.querySelectorAll(
-					'.table .col-xs-6 h4'
-				);
-				const programGroups = document.querySelectorAll('.table .col-xs-6 ol');
+	logger?.log('info', 'Scraping programs - start');
 
-				const results: Program[] = [];
-
-				programGroups.forEach((programGroup, index) => {
-					const heading = window.sanitizeTitle(
-						programGroupHeadings[index].textContent
-					);
-
-					programGroup.querySelectorAll('a').forEach((program) => {
-						const name = window.sanitizeTitle(program.textContent);
-
-						const link = baseUrl + program.getAttribute('href') || '';
-
-						results.push({
-							name,
-							externalLink: link,
-							shortName: window.slugify(name),
-							departments: [],
-							subjects: [],
-							type: heading
-						});
-					});
-				});
-
-				return results;
-			}, baseUrl)
-		).map((program) => {
-			programsList[program.externalLink] = program;
-		});
-	};
+	callbacks?.onProgress?.(1, 3, 'Scraping programs');
+	logger?.log('info', 'Scraping programs - undergraduate');
 
 	// Undergraduate programs
 	await page.goto(urlProgramsUndergraduate);
 	await hydrateWindowWithUtilFunctions(page);
-	await scrapeCurrentPageForPrograms();
+	const undergradPrograms = await scrapeCurrentPageForPrograms({
+		page,
+		baseUrl
+	});
+
+	callbacks?.onProgress?.(1, 3, 'Scraping programs');
+	logger?.log('info', 'Scraping programs - integrated');
 
 	// Integrated programs
 	await page.goto(urlProgramsIntegrated);
 	await hydrateWindowWithUtilFunctions(page);
-	await scrapeCurrentPageForPrograms();
+	const integratedPrograms = await scrapeCurrentPageForPrograms({
+		page,
+		baseUrl
+	});
+
+	callbacks?.onProgress?.(2, 3, 'Scraping programs');
+	logger?.log('info', 'Scraping programs - graduate');
 
 	// Graduate programs
 	await page.goto(urlProgramsGraduate);
 	await hydrateWindowWithUtilFunctions(page);
-	await scrapeCurrentPageForPrograms();
+	const graduatePrograms = await scrapeCurrentPageForPrograms({
+		page,
+		baseUrl
+	});
+
+	result.programsList = {
+		...result.programsList,
+		...undergradPrograms,
+		...integratedPrograms,
+		...graduatePrograms
+	};
+
+	callbacks?.onProgress?.(3, 3, 'Scraping programs');
+	logger?.log('info', 'Scraping programs - done');
 
 	// -----------------------------
 	// Visit each program link for subjects and professors
-
 	counter = 0;
 
-	for await (const programLink of shortenList(Object.keys(programsList), {
-		enabled: debug,
-		maxLength: 2
-	})) {
+	logger?.log('info', 'Scraping program pages - start');
+
+	for await (const programLink of shortenList(
+		Object.keys(result.programsList),
+		{
+			enabled: debug,
+			maxLength: 2
+		}
+	)) {
 		counter += 1;
 		callbacks?.onProgress?.(
 			counter,
-			debug ? 2 : Object.keys(programsList).length,
+			debug ? 2 : Object.keys(result.programsList).length,
 			'Getting subjects from programs'
 		);
+		logger?.log('info', `Scraping program pages - visiting ${programLink}`);
 
 		await page.goto(programLink);
 		await hydrateWindowWithUtilFunctions(page);
 
-		const result = await page.evaluate((baseUrl) => {
+		const res = await page.evaluate((baseUrl) => {
 			const semesterPanels = document.querySelectorAll(
 				'#structure .panel .panel-body'
 			);
@@ -196,17 +199,32 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 			};
 		}, baseUrl);
 
-		result.professors.forEach((professor) => {
-			professorsList[professor.externalLink] = professor;
+		logger?.log(
+			'info',
+			`Scraping program page - found ${res.subjects.length} subjects`
+		);
+		logger?.log(
+			'info',
+			`Scraping program page - found ${res.professors.length} professors`
+		);
+		logger?.log(
+			'info',
+			`Scraping program page - found ${res.programSubjects.length} program to subject references`
+		);
+
+		res.professors.forEach((professor) => {
+			result.professorsList[professor.externalLink] = professor;
 		});
 
-		result.subjects.forEach((subject) => {
-			subjectsList[subject.externalLink] = subject;
+		res.subjects.forEach((subject) => {
+			result.subjectsList[subject.externalLink] = subject;
 		});
 
-		result.programSubjects.forEach((programSubject) => {
-			programsList[programLink].subjects.push(programSubject);
+		res.programSubjects.forEach((programSubject) => {
+			result.programsList[programLink].subjects.push(programSubject);
 		});
+
+		logger?.log('info', `Scraping program page - done`);
 	}
 
 	// -----------------------------
@@ -214,14 +232,17 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 
 	counter = 0;
 
-	for await (const subjectLink of shortenList(Object.keys(subjectsList), {
-		enabled: debug,
-		maxLength: 3
-	})) {
+	for await (const subjectLink of shortenList(
+		Object.keys(result.subjectsList),
+		{
+			enabled: debug,
+			maxLength: 3
+		}
+	)) {
 		counter += 1;
 		callbacks?.onProgress?.(
 			counter,
-			debug ? 3 : Object.keys(subjectsList).length,
+			debug ? 3 : Object.keys(result.subjectsList).length,
 			'Linking professors to subjects'
 		);
 
@@ -248,7 +269,7 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 		}, baseUrl);
 
 		professors.forEach(({ link, title }) => {
-			const subject = subjectsList[subjectLink];
+			const subject = result.subjectsList[subjectLink];
 
 			if (subject.professorsLinks.find((p) => p.link === link)) {
 				subject.professorsLinks.find((p) => p.link === link)!.role = title;
@@ -261,14 +282,17 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 
 	counter = 0;
 
-	for await (const professorLink of shortenList(Object.keys(professorsList), {
-		enabled: debug,
-		maxLength: 5
-	})) {
+	for await (const professorLink of shortenList(
+		Object.keys(result.professorsList),
+		{
+			enabled: debug,
+			maxLength: 5
+		}
+	)) {
 		counter += 1;
 		callbacks?.onProgress?.(
 			counter,
-			debug ? 5 : Object.keys(professorsList).length,
+			debug ? 5 : Object.keys(result.professorsList).length,
 			'Assigning images to professors'
 		);
 
@@ -283,20 +307,13 @@ export const ffzgDriver: Driver = async ({ debug = false, callbacks }) => {
 			return src;
 		}, baseUrl);
 
-		professorsList[professorLink].imageUrl =
+		result.professorsList[professorLink].imageUrl =
 			imgUrl && (await checkImage(imgUrl)) ? imgUrl : null;
 	}
 
 	// -----------------------------
-	// Close browser
 
-	if (!debug) {
-		await browser.close();
-	}
+	await browser.close();
 
-	return {
-		programs: Object.values(programsList),
-		professors: Object.values(professorsList),
-		subjects: Object.values(subjectsList)
-	};
+	return result.getPayload();
 };

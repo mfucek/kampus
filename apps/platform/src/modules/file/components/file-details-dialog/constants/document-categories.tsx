@@ -15,13 +15,19 @@ export const mainCategories: DocumentFileType[] = [
 	'OTHER'
 ];
 
-export const coloquiumCategories: DocumentFileType[] = [
+export const coloquiumSubCategories: DocumentFileType[] = [
 	'COLOQUIUM_MID',
 	'COLOQUIUM_FINAL',
+	'COLOQUIUM_FIRST',
+	'COLOQUIUM_SECOND',
+	'COLOQUIUM_THIRD',
+	'COLOQUIUM_FOURTH',
+	'EXAM_THEORY',
+	'EXAM_PROBLEMS',
 	'SOLVED'
 ] as const;
 
-export const examCategories: DocumentFileType[] = [
+export const examSubCategories: DocumentFileType[] = [
 	'SUMMER_EXAM',
 	'FALL_EXAM',
 	'WINTER_EXAM',
@@ -29,12 +35,16 @@ export const examCategories: DocumentFileType[] = [
 	'CORRECTION_EXAM',
 	'ORAL_EXAM',
 	'DEAN_EXAM',
+	'ENTRANCE_EXAM',
+	'EXIT_EXAM',
+	'EXAM_THEORY',
+	'EXAM_PROBLEMS',
 	'SOLVED'
 ] as const;
 
 export const subCategories: Record<DocumentFileType, DocumentFileType[]> = {
-	EXAM: examCategories,
-	COLOQUIUM: coloquiumCategories,
+	EXAM: examSubCategories,
+	COLOQUIUM: coloquiumSubCategories,
 	LAB_EXERCISE: ['SOLVED'],
 	HOMEWORK: ['SOLVED'],
 	EXERCISES: ['SOLVED'],
@@ -56,7 +66,13 @@ export const subCategories: Record<DocumentFileType, DocumentFileType[]> = {
 	ORAL_EXAM: [],
 	SOLVED: [],
 	LECTURE: [],
-	PRESENTATION: []
+	PRESENTATION: [],
+	COLOQUIUM_FIRST: [],
+	COLOQUIUM_SECOND: [],
+	COLOQUIUM_THIRD: [],
+	COLOQUIUM_FOURTH: [],
+	EXAM_THEORY: [],
+	EXAM_PROBLEMS: []
 };
 
 export const categoryParents: Record<DocumentFileType, DocumentFileType[]> =

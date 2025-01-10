@@ -260,11 +260,12 @@ model Vote {
 // Files
 // ------------------
 
+// Used for files that are uploaded to the server
 model File {
   id String @id @default(cuid())
 
-  key  String   @unique
-  type FileType
+  key       String  @unique
+  extension String?
 
   authorId String?
 
@@ -278,6 +279,12 @@ model File {
   Post   Post?   @relation(fields: [postId], references: [id])
 }
 
+// used for files that are shown in posts' body
+// model PostFile {
+
+// }
+
+// Used for avatars, topic images, college images, etc.
 model ImageFile {
   fileId String @id @unique
   File   File   @relation(fields: [fileId], references: [id])
@@ -292,6 +299,7 @@ model ImageFile {
   User   User?   @relation(fields: [userId], references: [id])
 }
 
+// Used for study material files
 model DocumentFile {
   fileId String @id @unique
   File   File   @relation(fields: [fileId], references: [id])
@@ -306,6 +314,10 @@ enum DocumentFileType {
   COLOQUIUM
   COLOQUIUM_MID
   COLOQUIUM_FINAL
+  COLOQUIUM_FIRST
+  COLOQUIUM_SECOND
+  COLOQUIUM_THIRD
+  COLOQUIUM_FOURTH
   LAB_EXERCISE
   LECTURE
   PRESENTATION
@@ -325,13 +337,9 @@ enum DocumentFileType {
   ENTRANCE_EXAM
   EXIT_EXAM
   ORAL_EXAM
+  EXAM_THEORY
+  EXAM_PROBLEMS
   SOLVED
-}
-
-enum FileType {
-  IMAGE
-  PDF
-  ARCHIVE
 }
 
 // ------------------

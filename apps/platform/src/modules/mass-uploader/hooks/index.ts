@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { useComposerController } from '@/modules/composer/contexts/composer-controller-provider';
 import { useSubmitPost } from '@/modules/composer/hooks/use-submit-post';
-import { categoryLabels } from '@/modules/file/components/file-details-dialog/categoryLabels';
+import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';
 import {
 	type StagedFile,
 	useFileStagingContext

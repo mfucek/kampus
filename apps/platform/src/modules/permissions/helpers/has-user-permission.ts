@@ -29,15 +29,29 @@ export const hasUserPermission = async (
 	const permissions = user.Account.Permissions;
 	const permission = permissions.find((permission) => permission.rule);
 
-	console.log(scopeId, permissions);
+	// if no permission overrides, return role value
 	if (!permission) return roleValue;
 
 	const permissionValue = permission.value;
 	const permissionScopeType = permission.scopeType;
 	const permissionScopeId = permission.scopeId;
 
+	// global applies everywhere
 	if (permissionScopeType === ScopeType.GLOBAL) return permissionValue;
+
+	// if permission.scopeId matches topicId, return permissionValue
 	if (permissionScopeId === scopeId) return permissionValue;
+
+	// if topic (scopeId) is a child of college (permissionScopeId), return permissionValue
+	if (permissionScopeType === ScopeType.COLLEGE) {
+		const a = await db.topic.count({
+			where: {
+				collegeId: permissionScopeId!
+			}
+		});
+
+		if (a > 0) return permissionValue;
+	}
 
 	return roleValue;
 };

@@ -12,7 +12,7 @@ import {
 import { type DocumentFileType } from '@prisma/client';
 import { type FC, type PropsWithChildren, useEffect, useState } from 'react';
 import { useFileStagingContext } from '../../../file/contexts/file-staging-provider';
-import { categoryLabels } from './categoryLabels';
+import { categoryLabels } from './constants/category-labels';
 import { mainCategories, subCategories } from './constants/document-categories';
 import { removeCategoryFromSelectedCategories } from './constants/removeCategoryFromSelectedCategories';
 
@@ -39,30 +39,17 @@ export const DocumentDetails = () => {
 	const file = files[fileDetailsIndex!]!;
 
 	const [academicYear, setAcademicYear] = useState<string | null>(
-		file.documentOptions!.academicYear
+		file.documentOptions.academicYear
 	);
 	const [selectedCategories, setSelectedCategories] = useState<
 		DocumentFileType[]
-	>(file.documentOptions!.types);
+	>(file.documentOptions.types);
 	const [name, setName] = useState<string | null>(file.name);
 
 	const handleCategoryClick = (documentType: DocumentFileType) => {
 		const alreadySelected = selectedCategories.includes(documentType);
 
 		if (alreadySelected) {
-			// let alsoRemoveCategories: DocumentFileType[] = [];
-			// if (documentType === 'EXAM') {
-			// 	alsoRemoveCategories = examCategories;
-			// }
-			// if (documentType === 'COLOQUIUM') {
-			// 	alsoRemoveCategories = coloquiumCategories;
-			// }
-
-			// setSelectedCategories((prev) =>
-			// 	prev
-			// 		.filter((category) => category !== documentType)
-			// 		.filter((category) => !alsoRemoveCategories.includes(category))
-			// );
 			setSelectedCategories((prev) =>
 				removeCategoryFromSelectedCategories(prev, documentType)
 			);
@@ -122,20 +109,19 @@ export const DocumentDetails = () => {
 							<SelectContent>
 								{/* @ts-expect-error TODO */}
 								<SelectItem value={null}>-</SelectItem>
-								{Array.from({ length: 20 }, (_, index) => (
-									<SelectItem
-										key={`${new Date().getFullYear() - index}/${
-											new Date().getFullYear() - index + 1
-										}`}
-										value={`${new Date().getFullYear() - index}/${
-											new Date().getFullYear() - index + 1
-										}`}
-									>
-										{`${new Date().getFullYear() - index}/${
-											new Date().getFullYear() - index + 1
-										}`}
-									</SelectItem>
-								))}
+								{new Array(50).fill(0).map((_, i) => {
+									const currentlyInFirstHalfOfCurrentYear =
+										new Date().getMonth() < 6;
+									const currentYear = currentlyInFirstHalfOfCurrentYear
+										? new Date().getFullYear() - 1
+										: new Date().getFullYear();
+									const year = currentYear - i;
+									return (
+										<SelectItem key={i} value={`${year}/${year + 1}`}>
+											{`${year} / ${year + 1}`}
+										</SelectItem>
+									);
+								})}
 							</SelectContent>
 						</Select>
 					</div>
@@ -175,28 +161,32 @@ export const DocumentDetails = () => {
 							description="O kojem tipu ispita se radi?"
 						>
 							<div className="w-full -mr-2 -mb-2">
-								{subCategories.EXAM.map((value, i) => (
-									<div className="mr-2 mb-2 inline-block" key={i}>
-										<Button
-											variant={
-												selectedCategories.includes(value) ? 'solid' : 'outline'
-											}
-											theme={
-												selectedCategories.includes(value)
-													? 'accent'
-													: 'neutral'
-											}
-											size="sm"
-											type="button"
-											rounded
-											onClick={() => {
-												handleCategoryClick(value);
-											}}
-										>
-											{categoryLabels[value]}
-										</Button>
-									</div>
-								))}
+								{subCategories.EXAM.filter((value) => value !== 'SOLVED').map(
+									(value, i) => (
+										<div className="mr-2 mb-2 inline-block" key={i}>
+											<Button
+												variant={
+													selectedCategories.includes(value)
+														? 'solid'
+														: 'outline'
+												}
+												theme={
+													selectedCategories.includes(value)
+														? 'accent'
+														: 'neutral'
+												}
+												size="sm"
+												type="button"
+												rounded
+												onClick={() => {
+													handleCategoryClick(value);
+												}}
+											>
+												{categoryLabels[value]}
+											</Button>
+										</div>
+									)
+								)}
 							</div>
 						</Section>
 					)}
@@ -207,7 +197,9 @@ export const DocumentDetails = () => {
 							description="O kakvom tipu kolokvija se radi?"
 						>
 							<div className="w-full -mr-2 -mb-2">
-								{subCategories.COLOQUIUM.map((value, i) => (
+								{subCategories.COLOQUIUM.filter(
+									(value) => value !== 'SOLVED'
+								).map((value, i) => (
 									<div className="mr-2 mb-2 inline-block" key={i}>
 										<Button
 											variant={

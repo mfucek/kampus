@@ -161,5 +161,7 @@ export const fkitDriver: Driver = async ({
 
 	// -----------------------------
 
+	await browser.close();
+
 	return result.getPayload();
 };

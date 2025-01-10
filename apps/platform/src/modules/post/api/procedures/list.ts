@@ -120,7 +120,6 @@ export const listProcedure = publicProcedure
 						.filter((fr) => fr.postId === post.id)
 						.map(async (file) => ({
 							id: file.id,
-							type: file.type,
 							key: file.key,
 							documentFile: {
 								academicYear: file.DocumentFile?.academicYear ?? undefined,

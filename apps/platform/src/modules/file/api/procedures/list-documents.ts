@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { FileType, type Prisma } from '@prisma/client';
+import { type Prisma } from '@prisma/client';
 
 import { getFileUrl } from '@/lib/s3';
 import { publicProcedure } from '@/server/api/trpc';
@@ -32,15 +32,6 @@ export const listDocumentsProcedure = publicProcedure
 		const postId = scope.postId;
 
 		const where: Prisma.FileWhereInput = {
-			OR: [
-				{
-					type: FileType.ARCHIVE
-				},
-				{
-					type: FileType.PDF
-				}
-			],
-
 			// college scope
 			...(collegeId
 				? {
@@ -125,8 +116,7 @@ export const listDocumentsProcedure = publicProcedure
 				return {
 					file: {
 						id: file.id,
-						createdAt: file.createdAt,
-						type: file.type
+						createdAt: file.createdAt
 					},
 					document: documentData,
 					post: {

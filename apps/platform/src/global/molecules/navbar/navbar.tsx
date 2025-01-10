@@ -19,7 +19,7 @@ const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
 	const { isSignedIn } = useAuth();
-	const { openSignIn } = useClerk();
+	const { openSignUp } = useClerk();
 
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
@@ -53,7 +53,7 @@ export const Navbar = () => {
 					</ActionsGroup>
 					<Divider />
 					<Link href="/profile">
-						<div className="w-8 h-8 rounded-full border-neutral-weak bg-neutral-weak relative overflow-hidden clickable">
+						<div className="w-8 h-8 rounded-full border border-neutral-weak bg-neutral-weak relative overflow-hidden clickable">
 							{profilePictureUrl && (
 								<Image
 									src={profilePictureUrl}
@@ -74,7 +74,11 @@ export const Navbar = () => {
 			<>
 				<ThemeToggler />
 				<Button
-					onClick={() => openSignIn()}
+					onClick={() =>
+						openSignUp({
+							forceRedirectUrl: '/colleges'
+						})
+					}
 					theme="accent"
 					size="md"
 					variant="solid"

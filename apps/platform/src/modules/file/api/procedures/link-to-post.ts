@@ -1,5 +1,5 @@
 import { protectedProcedure } from '@/server/api/trpc';
-import { DocumentFileType, FileType } from '@prisma/client';
+import { DocumentFileType } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -9,15 +9,12 @@ export const linkToPostProcedure = protectedProcedure
 			files: z.array(
 				z.object({
 					key: z.string(),
-					type: z.nativeEnum(FileType),
 					postId: z.string(),
-					documentOptions: z
-						.object({
-							academicYear: z.string().optional(),
-							title: z.string().optional(),
-							types: z.array(z.nativeEnum(DocumentFileType))
-						})
-						.nullish()
+					documentOptions: z.object({
+						academicYear: z.string().optional(),
+						title: z.string().optional(),
+						types: z.array(z.nativeEnum(DocumentFileType))
+					})
 				})
 			)
 		})
@@ -27,9 +24,9 @@ export const linkToPostProcedure = protectedProcedure
 		const { files } = input;
 
 		for (const file of files) {
-			const { key, postId, type, documentOptions } = file;
+			const { key, postId, documentOptions } = file;
 
-			if (['PDF', 'ARCHIVE'].includes(type) && !documentOptions) {
+			if (!documentOptions) {
 				throw new TRPCError({
 					code: 'BAD_REQUEST',
 					message: 'Document options are required'
@@ -43,17 +40,14 @@ export const linkToPostProcedure = protectedProcedure
 						key,
 						postId,
 						authorId: ctx.user.id,
-						type,
-						ImageFile: type === 'IMAGE' ? { create: {} } : undefined,
-						DocumentFile: ['PDF', 'ARCHIVE'].includes(type)
-							? {
-									create: {
-										academicYear: documentOptions!.academicYear,
-										title: documentOptions!.title,
-										types: documentOptions!.types
-									}
-								}
-							: undefined
+						ImageFile: undefined,
+						DocumentFile: {
+							create: {
+								academicYear: documentOptions.academicYear,
+								title: documentOptions.title,
+								types: documentOptions.types
+							}
+						}
 					}
 				});
 			} catch (error) {

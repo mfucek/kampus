@@ -71,12 +71,11 @@ export const useSubmitPost = () => {
 				await linkToPost({
 					files: uploadedFiles.map((file) => ({
 						key: file.key,
-						type: file.type,
 						postId: post.id,
 						documentOptions: {
-							academicYear: file.documentOptions?.academicYear ?? undefined,
+							academicYear: file.documentOptions.academicYear ?? undefined,
 							title: file.name,
-							types: file.documentOptions?.types ?? []
+							types: file.documentOptions.types ?? []
 						}
 					}))
 				});

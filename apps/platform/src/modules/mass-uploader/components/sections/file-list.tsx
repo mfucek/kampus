@@ -31,7 +31,7 @@ import {
 import { UploadArea } from '@/modules/file/hooks/use-upload-area';
 
 const FileRow = (file: StagedFile, index: number) => {
-	const { updateFile } = useFileStagingContext();
+	const { updateFile, openFileDetailsDialog } = useFileStagingContext();
 
 	return (
 		<>
@@ -54,9 +54,20 @@ const FileRow = (file: StagedFile, index: number) => {
 					<SelectValue placeholder="Godina" />
 				</SelectTrigger>
 				<SelectContent>
-					<SelectItem value="2024/2025">2024 / 2025</SelectItem>
-					<SelectItem value="2023/2024">2023 / 2024</SelectItem>
-					<SelectItem value="2022/2023">2022 / 2023</SelectItem>
+					{/* @ts-expect-error TODO */}
+					<SelectItem value={null}>-</SelectItem>
+					{new Array(50).fill(0).map((_, i) => {
+						const currentlyInFirstHalfOfCurrentYear = new Date().getMonth() < 6;
+						const currentYear = currentlyInFirstHalfOfCurrentYear
+							? new Date().getFullYear() - 1
+							: new Date().getFullYear();
+						const year = currentYear - i;
+						return (
+							<SelectItem key={i} value={`${year}/${year + 1}`}>
+								{`${year} / ${year + 1}`}
+							</SelectItem>
+						);
+					})}
 				</SelectContent>
 			</Select>
 
@@ -69,11 +80,15 @@ const FileRow = (file: StagedFile, index: number) => {
 							</Button>
 						</PopoverTrigger>
 					))}
-					<PopoverTrigger asChild>
-						<Button size="xs" variant="outline" iconOnly rounded>
-							<Icon icon="add" />
-						</Button>
-					</PopoverTrigger>
+					<Button
+						size="xs"
+						variant="outline"
+						iconOnly
+						rounded
+						onClick={() => openFileDetailsDialog(index)}
+					>
+						<Icon icon="add" />
+					</Button>
 					<PopoverContent>
 						<div className="flex flex-row flex-wrap gap-2">
 							{shownCategoriesBasedOnSelectedCategories(

@@ -10,7 +10,7 @@ import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
-import { categoryLabels } from '@/modules/file/components/file-details-dialog/categoryLabels';
+import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';
 import { type DocumentFileType } from '@prisma/client';
 
 export const columns: ColumnDef<

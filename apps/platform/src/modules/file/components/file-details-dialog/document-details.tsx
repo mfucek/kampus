@@ -109,20 +109,19 @@ export const DocumentDetails = () => {
 							<SelectContent>
 								{/* @ts-expect-error TODO */}
 								<SelectItem value={null}>-</SelectItem>
-								{Array.from({ length: 20 }, (_, index) => (
-									<SelectItem
-										key={`${new Date().getFullYear() - index}/${
-											new Date().getFullYear() - index + 1
-										}`}
-										value={`${new Date().getFullYear() - index}/${
-											new Date().getFullYear() - index + 1
-										}`}
-									>
-										{`${new Date().getFullYear() - index}/${
-											new Date().getFullYear() - index + 1
-										}`}
-									</SelectItem>
-								))}
+								{new Array(50).fill(0).map((_, i) => {
+									const currentlyInFirstHalfOfCurrentYear =
+										new Date().getMonth() < 6;
+									const currentYear = currentlyInFirstHalfOfCurrentYear
+										? new Date().getFullYear() - 1
+										: new Date().getFullYear();
+									const year = currentYear - i;
+									return (
+										<SelectItem key={i} value={`${year}/${year + 1}`}>
+											{`${year} / ${year + 1}`}
+										</SelectItem>
+									);
+								})}
 							</SelectContent>
 						</Select>
 					</div>

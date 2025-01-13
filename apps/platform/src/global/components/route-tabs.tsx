@@ -70,7 +70,7 @@ export const Tab: FC<
 	const isActive = currentTab === route;
 
 	return (
-		<Link href={route}>
+		<Link href={route} replace scroll={false}>
 			<Button
 				variant={isActive ? 'solid' : 'outline'}
 				theme={isActive ? 'accent' : 'neutral'}

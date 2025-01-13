@@ -6,7 +6,6 @@ import { type FC } from 'react';
 import { Button } from '@/lib/shadcn/ui/button';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { api } from '@/lib/trpc/react';
-import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
 import { useAuth } from '@clerk/nextjs';
 import { type VoteType } from '@prisma/client';
 import { Reactions } from './reactions';
@@ -34,14 +33,14 @@ export const PostActions: FC<{ fullPost: PostActionsInterface }> = ({
 	const { post, votes } = fullPost;
 
 	const { isSignedIn } = useAuth();
-
 	const router = useRouter();
 	const utils = api.useUtils();
 	const { toast } = useToast();
+	// const { setPostId } = usePostId();
+
 	const { data: user } = api.account.getUser.useQuery(void {}, {
 		enabled: !!isSignedIn
 	});
-	const { setPostId } = usePostId();
 	const { mutateAsync: deletePost } = api.post.deletePost.useMutation({
 		onSuccess: async () => {
 			// Invalidate and refetch relevant queries
@@ -76,7 +75,8 @@ export const PostActions: FC<{ fullPost: PostActionsInterface }> = ({
 	};
 
 	const handleReply = () => {
-		setPostId(post.id);
+		router.push(`/post/${post.id}`);
+		// setPostId(post.id);
 	};
 
 	const numberOfReplies = post._count.replies;

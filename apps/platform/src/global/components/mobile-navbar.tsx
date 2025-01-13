@@ -91,7 +91,7 @@ export const MobileNavbar = () => {
 	const isSearch = pathname === '/colleges';
 	const isHome = !isNotifications && !isSettings && !isSearch;
 
-	const hideNavbar = ['/post'].some(
+	const hideNavbar = ['/post/', '/settings/'].some(
 		(pathBeginning) =>
 			pathname.startsWith(pathBeginning) && pathname !== pathBeginning
 	);

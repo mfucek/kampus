@@ -13,12 +13,14 @@ const SettingsMenu = () => {
 	const { signOut } = useClerk();
 	const pathname = usePathname();
 
+	const { isMobile } = useIsMobile();
+
 	const isActive = (path: string) => {
 		return pathname === path ? 'solid-weak' : 'ghost';
 	};
 
 	return (
-		<div className="px-3 md:px-0">
+		<div className="px-3 md:px-0 w-full md:w-auto">
 			<div className="w-full h-full md:bg-section rounded-lg md:w-[320px] flex shrink-0 flex-col gap-6">
 				<MobileProfileCard />
 
@@ -28,7 +30,7 @@ const SettingsMenu = () => {
 						<Icon icon="user-add" />
 						<span className="w-full text-left">Pozovi prijatelja</span>
 					</Button> */}
-						<Link href="/settings/profile">
+						<Link href="/settings/profile" replace={!isMobile}>
 							<Button
 								variant={isActive('/settings/profile')}
 								className="w-full hidden md:flex md:h-14"
@@ -40,7 +42,7 @@ const SettingsMenu = () => {
 
 						<div className="h-px w-full bg-background hidden md:block" />
 
-						<Link href="/settings/subscription">
+						<Link href="/settings/subscription" replace={!isMobile}>
 							<Button
 								variant={isActive('/settings/subscription')}
 								className="w-full md:h-14"
@@ -55,7 +57,7 @@ const SettingsMenu = () => {
 
 					<RuleProtected rule="CAN_MANAGE_USERS">
 						<div className="flex flex-col bg-section py-1 md:py-0 rounded-xl">
-							<Link href="/settings/manage-users">
+							<Link href="/settings/manage-users" replace={!isMobile}>
 								<Button
 									variant={isActive('/settings/manage-users')}
 									className="w-full md:h-14"
@@ -72,7 +74,7 @@ const SettingsMenu = () => {
 					<div className="h-px w-full bg-background hidden md:block" />
 
 					<div className="flex flex-col bg-section py-1 md:py-0 rounded-xl">
-						<Link href="/settings/appearance">
+						<Link href="/settings/appearance" replace={!isMobile}>
 							<Button
 								variant={isActive('/settings/appearance')}
 								className="w-full md:h-14"

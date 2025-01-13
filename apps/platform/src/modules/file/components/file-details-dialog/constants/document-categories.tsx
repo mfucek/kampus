@@ -3,6 +3,7 @@ import { DocumentFileType } from '@prisma/client';
 export const mainCategories: DocumentFileType[] = [
 	'EXAM',
 	'COLOQUIUM',
+	'POP_EXAM',
 	'LAB_EXERCISE',
 	'EXERCISES',
 	'HOMEWORK',
@@ -45,6 +46,7 @@ export const examSubCategories: DocumentFileType[] = [
 export const subCategories: Record<DocumentFileType, DocumentFileType[]> = {
 	EXAM: examSubCategories,
 	COLOQUIUM: coloquiumSubCategories,
+	POP_EXAM: ['SOLVED'],
 	LAB_EXERCISE: ['SOLVED'],
 	HOMEWORK: ['SOLVED'],
 	EXERCISES: ['SOLVED'],

@@ -1,9 +1,8 @@
-import { Suspense, type FC, type PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
 import { Tab, Tabs } from '@/global/components/route-tabs';
-import { Spinner } from '@/global/components/spinner';
 import { api } from '@/lib/trpc/server';
 import { RuleProtected } from '@/modules/permissions/components/protected';
 import { RuleType } from '@prisma/client';
@@ -30,20 +29,19 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
 			<PageHeader title={college.name} tags={['Fakultet']} />
 
-			<Suspense fallback={<Spinner />}>
-				<Tabs>
-					<Tab route={makeRoute('')}>Opca Rasprava</Tab>
-					<Tab route={makeRoute('/programs')}>Smjerovi</Tab>
-					<Tab route={makeRoute('/all-subjects')}>Svi predmeti</Tab>
-					<Tab route={makeRoute('/all-staff')}>Svi nastavnici</Tab>
-					<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={college.id}>
-						<Tab route={makeRoute('/mass-upload')}>
-							Mass Upload (svi smjerovi)
-						</Tab>
-					</RuleProtected>
-				</Tabs>
-				<Suspense fallback={<Spinner />}>{children}</Suspense>
-			</Suspense>
+			<Tabs>
+				<Tab route={makeRoute('')}>Opca Rasprava</Tab>
+				<Tab route={makeRoute('/programs')}>Smjerovi</Tab>
+				<Tab route={makeRoute('/all-subjects')}>Svi predmeti</Tab>
+				<Tab route={makeRoute('/all-staff')}>Svi nastavnici</Tab>
+				<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={college.id}>
+					<Tab route={makeRoute('/mass-upload')}>
+						Mass Upload (svi smjerovi)
+					</Tab>
+				</RuleProtected>
+			</Tabs>
+
+			{children}
 		</Container>
 	);
 };

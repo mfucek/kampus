@@ -10,6 +10,7 @@ import {
 	TooltipContent,
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
+import { cn } from '@/lib/shadcn/utils';
 import { tiptapExtensions } from '@/lib/tiptap/extensions';
 import { api } from '@/lib/trpc/react';
 import { type FullPost } from '@/modules/post/types/full-post';
@@ -22,7 +23,14 @@ export const Post: FC<{
 	depthInfo: number[];
 	previousThreadDepth?: number[];
 	nextThreadDepth?: number[];
-}> = ({ fullPost, depthInfo, previousThreadDepth, nextThreadDepth }) => {
+	addPadding?: boolean;
+}> = ({
+	fullPost,
+	depthInfo,
+	previousThreadDepth,
+	nextThreadDepth,
+	addPadding = false
+}) => {
 	const { post } = fullPost;
 
 	const { data: imageUrl } = api.account.getUserProfilePictureUrl.useQuery({
@@ -44,7 +52,7 @@ export const Post: FC<{
 
 	const PostBody = () => {
 		return (
-			<div className="flex flex-col gap-2 w-full">
+			<div className={cn('flex flex-col gap-2 w-full', addPadding && 'pb-4')}>
 				<div className="flex flex-row gap-2 h-6 items-center">
 					<span className="caption">{post.author.displayName}</span>
 					{post.author.badge && (
@@ -71,14 +79,17 @@ export const Post: FC<{
 						})}
 					</span>
 				</div>
+
 				{!post.body && (
 					<p className="body-2 text-neutral-strong">
 						[ This post has been deleted ]
 					</p>
 				)}
+
 				{post.body && editor && <EditorContent editor={editor} />}
 
-				<PostFiles files={fullPost.files} />
+				<PostFiles files={fullPost.documentFiles} />
+
 				<PostActions fullPost={fullPost} />
 			</div>
 		);

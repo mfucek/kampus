@@ -7,6 +7,8 @@ import { getFileUrl } from '@/lib/s3';
 import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type RecursivePost } from '../../types/recursive-post';
 
+const MAX_DEPTH = 5;
+
 export const getThreadProcedure = publicProcedure
 	.use(optionalAuthMiddleware)
 	.input(z.object({ postId: z.string() }))
@@ -18,7 +20,14 @@ export const getThreadProcedure = publicProcedure
 			userId = ctx.user.id;
 		}
 
-		const fetchReplies = async (postId: string): Promise<RecursivePost> => {
+		const fetchReplies = async (
+			postId: string,
+			depth = 0
+		): Promise<RecursivePost | null> => {
+			if (depth > MAX_DEPTH) {
+				return null;
+			}
+
 			const post = await db.post.findUnique({
 				where: { id: postId },
 				include: {
@@ -26,12 +35,12 @@ export const getThreadProcedure = publicProcedure
 					_count: {
 						select: { Replies: true }
 					},
-					Files: {
+					DocumentFiles: {
 						include: {
-							DocumentFile: true,
-							ImageFile: true
+							File: true
 						}
-					}
+					},
+					Votes: true
 				}
 			});
 
@@ -39,9 +48,7 @@ export const getThreadProcedure = publicProcedure
 				throw new TRPCError({ code: 'NOT_FOUND', message: 'Post not found' });
 			}
 
-			const votes = await db.vote.findMany({
-				where: { postId: post.id }
-			});
+			const votes = Array.from(post.Votes);
 
 			const likes = votes.filter((vote) => vote.type === VoteType.UP).length;
 			const dislikes = votes.filter(
@@ -56,13 +63,13 @@ export const getThreadProcedure = publicProcedure
 			});
 
 			const recursiveReplies = await Promise.all(
-				replies.map((reply) => fetchReplies(reply.id))
+				replies.map((reply) => fetchReplies(reply.id, depth + 1))
 			);
 
-			const filesWithUrls = await Promise.all(
-				post.Files.map(async (file) => ({
-					...file,
-					url: await getFileUrl(file.key)
+			const documentFilesWithUrls = await Promise.all(
+				post.DocumentFiles.map(async (documentFile) => ({
+					...documentFile,
+					url: await getFileUrl(documentFile.File.key)
 				}))
 			);
 
@@ -74,33 +81,29 @@ export const getThreadProcedure = publicProcedure
 					createdAt: post.createdAt,
 					author: {
 						id: post.Author.id,
-						createdAt: post.Author.createdAt,
-						updatedAt: post.Author.updatedAt,
 						displayName: post.Author.displayName,
 						imageUrl: post.Author.imageUrl,
-						accountId: post.Author.accountId,
 						badge: post.Author.badge
 					},
 					_count: {
 						replies: post._count.Replies
 					}
 				},
-				replies: recursiveReplies,
+				replies: recursiveReplies.filter((reply) => reply !== null),
 				votes: {
 					likes,
 					dislikes,
 					userVote
 				},
-				files: filesWithUrls.map((file) => ({
-					...file,
-					documentFile: file.DocumentFile
-						? {
-								academicYear: file.DocumentFile.academicYear ?? undefined,
-								types: file.DocumentFile.types,
-								title: file.DocumentFile.title ?? undefined
-							}
-						: null,
-					imageFile: file.ImageFile ? file.ImageFile : null
+				documentFiles: documentFilesWithUrls.map((file) => ({
+					fileId: file.File.id,
+					contentType: file.File.contentType,
+					size: file.File.size,
+					key: file.File.key,
+					academicYear: file.academicYear,
+					title: file.title,
+					types: file.types,
+					url: file.url
 				}))
 			};
 

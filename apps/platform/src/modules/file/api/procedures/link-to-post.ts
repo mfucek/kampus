@@ -10,6 +10,8 @@ export const linkToPostProcedure = protectedProcedure
 				z.object({
 					key: z.string(),
 					postId: z.string(),
+					contentType: z.string(),
+					size: z.number(),
 					documentOptions: z.object({
 						academicYear: z.string().optional(),
 						title: z.string().optional(),
@@ -24,28 +26,28 @@ export const linkToPostProcedure = protectedProcedure
 		const { files } = input;
 
 		for (const file of files) {
-			const { key, postId, documentOptions } = file;
-
-			if (!documentOptions) {
+			if (!file.documentOptions) {
 				throw new TRPCError({
 					code: 'BAD_REQUEST',
 					message: 'Document options are required'
 				});
 			}
 
-			// create file
+			// create document file
 			try {
 				await db.file.create({
 					data: {
-						key,
-						postId,
+						key: file.key,
+						contentType: file.contentType,
+						size: file.size,
 						authorId: ctx.user.id,
 						ImageFile: undefined,
 						DocumentFile: {
 							create: {
-								academicYear: documentOptions.academicYear,
-								title: documentOptions.title,
-								types: documentOptions.types
+								academicYear: file.documentOptions.academicYear,
+								title: file.documentOptions.title,
+								types: file.documentOptions.types,
+								postId: file.postId
 							}
 						}
 					}

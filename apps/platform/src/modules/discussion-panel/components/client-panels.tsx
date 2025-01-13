@@ -8,6 +8,7 @@ import {
 	type ImperativePanelGroupHandle
 } from 'react-resizable-panels';
 
+import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
 import { ResizeHandle } from '@/lib/react-resizable-handles/components/resize-handle';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -21,6 +22,7 @@ import {
 import { cn } from '@/lib/shadcn/utils';
 import { useIsMobile } from '@/utils/useMediaQuery';
 import { ThreadContent } from '../layouts/thread-content';
+import { PostHeader } from './post-header';
 import { usePostId } from './post-id-provider';
 
 export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
@@ -53,7 +55,15 @@ export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 							</Button>
 						</div>
 						<div className="w-full h-full overflow-y-scroll">
-							<ThreadContent />
+							{/* Content */}
+							<Container className="py-10">
+								<div className="w-full h-full flex flex-col px-4">
+									<div className="flex flex-col w-full gap-10">
+										<PostHeader postId={postId} />
+										<ThreadContent postId={postId} />
+									</div>
+								</div>
+							</Container>
 						</div>
 					</DrawerContent>
 				</Drawer>
@@ -120,7 +130,16 @@ export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 									<Icon icon="close" />
 								</Button>
 							</div>
-							<ThreadContent />
+
+							{/* Content */}
+							<Container className="py-10">
+								<div className="w-full h-full flex flex-col px-4">
+									<div className="flex flex-col w-full gap-10">
+										<PostHeader postId={postId} />
+										<ThreadContent postId={postId} />
+									</div>
+								</div>
+							</Container>
 						</div>
 					</Panel>
 				)}

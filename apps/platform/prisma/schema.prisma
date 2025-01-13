@@ -143,8 +143,8 @@ model Subject {
 
   ects Int?
 
-  subjectExternalCode String?
-  subjectExternalLink String?
+  externalCodes String[] @default([])
+  externalLinks String[] @default([])
 
   // Relationships
   Staffs   SubjectStaff[]

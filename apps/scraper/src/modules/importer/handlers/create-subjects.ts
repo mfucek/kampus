@@ -35,7 +35,7 @@ export const createSubjects = async ({
 	const existingSubjectSlugs = new Set(existingSubjects.map((s) => s.slug));
 	const existingSubjectExternalLinks = new Set(
 		existingSubjects
-			.map((s) => s.Subject!.subjectExternalLink)
+			.flatMap((s) => s.Subject!.externalLinks)
 			.filter(Boolean) as string[]
 	);
 
@@ -67,8 +67,8 @@ export const createSubjects = async ({
 						data: {
 							Topic: { connect: { id: newTopic.id } },
 							ects: subject.ects,
-							subjectExternalCode: subject.externalCode,
-							subjectExternalLink: subject.externalLink
+							externalCodes: [subject.externalCode],
+							externalLinks: [subject.externalLink]
 						}
 					});
 

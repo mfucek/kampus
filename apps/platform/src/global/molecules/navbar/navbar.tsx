@@ -10,6 +10,7 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { feedbackFormURL } from '@/modules/feedback/constants';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+import { useIsMobile } from '@/utils/useMediaQuery';
 import { Icon } from '../../components/icon';
 import { ActionsGroup } from './actions-group';
 import { Breadcrumbs } from './breadcrumbs';
@@ -21,10 +22,14 @@ export const Navbar = () => {
 	const { isSignedIn } = useAuth();
 	const { openSignUp } = useClerk();
 
+	const { isMobile } = useIsMobile();
+
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
 			enabled: !!isSignedIn
 		});
+
+	if (isMobile) return null;
 
 	const Actions = () => {
 		if (isSignedIn) {
@@ -52,7 +57,7 @@ export const Navbar = () => {
 						{/* <NotificationsButton /> */}
 					</ActionsGroup>
 					<Divider />
-					<Link href="/profile">
+					<Link href="/settings/profile">
 						<div className="w-8 h-8 rounded-full border border-neutral-weak bg-neutral-weak relative overflow-hidden clickable">
 							{profilePictureUrl && (
 								<Image

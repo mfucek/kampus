@@ -68,6 +68,7 @@
 	/* Overline */
 
 	.overline {
+		text-decoration: none !important;
 		@apply font-nunito text-[8px] font-black leading-[8px] tracking-[0.4px] uppercase;
 	}
 

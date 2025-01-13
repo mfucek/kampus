@@ -8,6 +8,7 @@ import { Icon } from '@/global/components/icon';
 import {
 	Tooltip,
 	TooltipContent,
+	TooltipProvider,
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
@@ -56,22 +57,24 @@ export const Post: FC<{
 				<div className="flex flex-row gap-2 h-6 items-center">
 					<span className="caption">{post.author.displayName}</span>
 					{post.author.badge && (
-						<Tooltip>
-							<TooltipTrigger>
-								{post.author.badge === 'Sponzor' ? (
-									<div className="caption px-1 rounded-full bg-accent-medium text-accent">
-										<Icon icon="crown" className="bg-accent" size={12} />
-									</div>
-								) : (
-									<span className="caption px-2 rounded-full bg-warning-medium text-warning">
-										{post.author.badge}
-									</span>
-								)}
-							</TooltipTrigger>
-							<TooltipContent side="top">
-								Ovaj korisnik podrzava platfromu!
-							</TooltipContent>
-						</Tooltip>
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger>
+									{post.author.badge === 'Sponzor' ? (
+										<div className="caption px-1 rounded-full bg-accent-medium text-accent">
+											<Icon icon="crown" className="bg-accent" size={12} />
+										</div>
+									) : (
+										<span className="caption px-2 rounded-full bg-warning-medium text-warning">
+											{post.author.badge}
+										</span>
+									)}
+								</TooltipTrigger>
+								<TooltipContent side="top">
+									Ovaj korisnik podrzava platfromu!
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 					)}
 					<span className="body-3 text-neutral-strong">
 						{formatDistance(post.createdAt, new Date(), {

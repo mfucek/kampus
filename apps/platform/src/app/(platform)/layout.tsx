@@ -7,12 +7,12 @@ import { Suspense, type FC, type PropsWithChildren } from 'react';
 const Layout: FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<>
-			<div className="flex flex-col w-screen h-screen md:overflow-x-hidden overscroll-x-none">
+			<div className="flex flex-col w-full md:h-screen overflow-x-hidden overscroll-x-none">
 				<Navbar />
 				<Suspense
 					fallback={
 						<>
-							<div className="bg-background md:p-2 w-full h-full">
+							<div className="bg-background md:p-2 w-full md:h-full">
 								<div className="rounded-lg bg-section flex flex-col items-center justify-center min-h-full">
 									<SpinnerReloadErrorMessage />
 								</div>

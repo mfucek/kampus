@@ -75,7 +75,7 @@ export const Navbar = () => {
 						<ThemeToggler size="sm" />
 					</ActionsGroup>
 					<Divider />
-					<Link href="/profile">
+					<Link href="/settings/profile">
 						<div className="w-8 h-8 rounded-full border border-neutral-weak bg-neutral-weak relative overflow-hidden clickable">
 							{profilePictureUrl && (
 								<Image

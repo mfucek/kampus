@@ -8,12 +8,12 @@ import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
 
 import { AnalyticsProvider } from '@/lib/posthog';
-import { TooltipProvider } from '@/lib/shadcn/ui/tooltip';
 import { TRPCReactProvider } from '@/lib/trpc/react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '../modules/theme/providers/theme-provider';
 
 import { isDevOrStg } from '@/constants/is-dev-or-staging';
+import { MobileNavbar } from '@/global/components/mobile-navbar';
 import { Toaster } from '@/lib/shadcn/ui/toaster';
 import NextTopLoader from 'nextjs-toploader';
 
@@ -47,16 +47,15 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="en" className={GeistSans.variable}>
-			<body className="bg-background min-h-screen bg-opacity-100">
+			<body className="bg-background min-h-screen bg-opacity-100 overscroll-none">
 				<NextTopLoader color="#3461ff" shadow={false} showSpinner={false} />
 				<ClerkProvider localization={{ locale: 'hr-HR' }}>
 					<TRPCReactProvider>
 						<AnalyticsProvider>
 							<ThemeProvider>
-								<TooltipProvider>
-									{children}
-									<Toaster />
-								</TooltipProvider>
+								<div className="min-h-screen overflow-x-hidden">{children}</div>
+								<Toaster />
+								<MobileNavbar />
 							</ThemeProvider>
 						</AnalyticsProvider>
 					</TRPCReactProvider>

@@ -5,6 +5,7 @@ import { Button } from '@/lib/shadcn/ui/button';
 import {
 	Tooltip,
 	TooltipContent,
+	TooltipProvider,
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
@@ -122,28 +123,30 @@ export const Reactions: FC<{
 			>
 				<Icon icon="like" size={18} />
 			</Button>
-			<Tooltip>
-				<TooltipTrigger>
-					<span
-						className={cn(
-							'button-sm',
-							!reaction &&
-								(count < 0
-									? 'text-danger'
-									: count > 0
-										? 'text-success'
-										: 'text-neutral')
-						)}
-					>
-						{count}
-					</span>
-				</TooltipTrigger>
-				<TooltipContent side="top">
-					<span className="body-2">
-						{likes} / {dislikes}
-					</span>
-				</TooltipContent>
-			</Tooltip>
+			<TooltipProvider>
+				<Tooltip>
+					<TooltipTrigger>
+						<span
+							className={cn(
+								'button-sm',
+								!reaction &&
+									(count < 0
+										? 'text-danger'
+										: count > 0
+											? 'text-success'
+											: 'text-neutral')
+							)}
+						>
+							{count}
+						</span>
+					</TooltipTrigger>
+					<TooltipContent side="top">
+						<span className="body-2">
+							{likes} / {dislikes}
+						</span>
+					</TooltipContent>
+				</Tooltip>
+			</TooltipProvider>
 			<Button
 				theme={reactionToTheme(reaction)}
 				variant={

@@ -3,7 +3,7 @@ import { type FC, type HTMLAttributes } from 'react';
 
 import { cn } from '@/lib/shadcn/utils';
 
-const contentPaddingVariants = cva('', {
+const contentPaddingVariants = cva('w-full', {
 	variants: {
 		size: {
 			sm: 'px-2 @md:px-0',

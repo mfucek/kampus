@@ -19,7 +19,7 @@ export const PricingSection = () => {
 			return;
 		}
 
-		router.push('/profile#subscription-plan');
+		router.push('/settings/profile#subscription-plan');
 	};
 
 	const handleGoToSubscriptionCheckoutSessionPro = async () => {
@@ -28,7 +28,7 @@ export const PricingSection = () => {
 			return;
 		}
 
-		router.push('/profile#subscription-plan');
+		router.push('/settings/profile#subscription-plan');
 	};
 
 	const handleCreateAccount = () => {

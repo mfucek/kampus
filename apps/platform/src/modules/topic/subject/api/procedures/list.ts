@@ -104,7 +104,7 @@ export const listProcedure = publicProcedure
 				id: subject.id,
 				name: subject.name,
 				shortName: subject.shortName,
-				externalCode: subject.Subject?.subjectExternalCode,
+				externalCode: '',
 				type: subject.type,
 				slug: subject.slug,
 				collegeId: subject.collegeId

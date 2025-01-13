@@ -7,6 +7,8 @@ import { getFileUrl } from '@/lib/s3';
 import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type RecursivePost } from '../../types/recursive-post';
 
+const MAX_DEPTH = 5;
+
 export const getThreadProcedure = publicProcedure
 	.use(optionalAuthMiddleware)
 	.input(z.object({ postId: z.string() }))
@@ -18,7 +20,14 @@ export const getThreadProcedure = publicProcedure
 			userId = ctx.user.id;
 		}
 
-		const fetchReplies = async (postId: string): Promise<RecursivePost> => {
+		const fetchReplies = async (
+			postId: string,
+			depth = 0
+		): Promise<RecursivePost | null> => {
+			if (depth > MAX_DEPTH) {
+				return null;
+			}
+
 			const post = await db.post.findUnique({
 				where: { id: postId },
 				include: {
@@ -56,7 +65,7 @@ export const getThreadProcedure = publicProcedure
 			});
 
 			const recursiveReplies = await Promise.all(
-				replies.map((reply) => fetchReplies(reply.id))
+				replies.map((reply) => fetchReplies(reply.id, depth + 1))
 			);
 
 			const filesWithUrls = await Promise.all(
@@ -85,7 +94,7 @@ export const getThreadProcedure = publicProcedure
 						replies: post._count.Replies
 					}
 				},
-				replies: recursiveReplies,
+				replies: recursiveReplies.filter((reply) => reply !== null),
 				votes: {
 					likes,
 					dislikes,

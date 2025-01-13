@@ -31,5 +31,6 @@ export const categoryLabels: Record<DocumentFileType, string> = {
 	COLOQUIUM_THIRD: 'Treći kolokvij',
 	COLOQUIUM_FOURTH: 'Četvrti kolokvij',
 	EXAM_THEORY: 'Teorija',
-	EXAM_PROBLEMS: 'Zadatci'
+	EXAM_PROBLEMS: 'Zadatci',
+	POP_EXAM: 'Blic'
 };

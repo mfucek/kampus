@@ -19,35 +19,35 @@ export const MobileProfileCard = () => {
 	const { data: user } = api.account.getCurrentUser.useQuery();
 
 	return (
-		<ContentPadding
-			size="lg"
-			className="flex flex-row md:hidden gap-3 items-center mt-6"
-		>
-			<div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-neutral-medium">
-				<Image
-					src={profilePictureUrl ?? '/images/default-profile.png'}
-					alt="Profile picture"
-					width={48}
-					height={48}
-					className="object-cover"
-				/>
-			</div>
+		<Link href="/settings/profile">
+			<ContentPadding
+				size="lg"
+				className="flex flex-row md:hidden gap-3 items-center mt-6"
+			>
+				<div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-neutral-medium">
+					<Image
+						src={profilePictureUrl ?? '/images/default-profile.png'}
+						alt="Profile picture"
+						width={48}
+						height={48}
+						className="object-cover"
+					/>
+				</div>
 
-			<div className="flex flex-col w-full">
-				<p className="title-3 text-neutral">{user?.displayName}</p>
-				<p className="caption text-neutral-strong">{'Korisnik'}</p>
-				{/* <div className="flex flex-row">
+				<div className="flex flex-col w-full">
+					<p className="title-3 text-neutral">{user?.displayName}</p>
+					<p className="caption text-neutral-strong">{'Korisnik'}</p>
+					{/* <div className="flex flex-row">
 					<p className="caption text-neutral-strong">{'{faks}'}</p>
 					<p className="caption text-neutral-medium">{'・'}</p>
 					<p className="caption text-neutral-strong">{'{akgod}'}</p>
 				</div> */}
-			</div>
+				</div>
 
-			<Link href="/settings/profile">
 				<Button variant="ghost" size="lg" iconOnly>
 					<Icon icon="edit" />
 				</Button>
-			</Link>
-		</ContentPadding>
+			</ContentPadding>
+		</Link>
 	);
 };

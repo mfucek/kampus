@@ -72,6 +72,8 @@ export const useSubmitPost = () => {
 					files: uploadedFiles.map((file) => ({
 						key: file.key,
 						postId: post.id,
+						contentType: file.file.type,
+						size: file.file.size,
 						documentOptions: {
 							academicYear: file.documentOptions.academicYear ?? undefined,
 							title: file.name,

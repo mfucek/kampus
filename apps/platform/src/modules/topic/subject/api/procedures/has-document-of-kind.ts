@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { protectedProcedure } from '@/server/api/trpc';
 import { DocumentFileType } from '@prisma/client';
-export const hasFileOfKindProcedure = protectedProcedure
+export const hasDocumentOfKindProcedure = protectedProcedure
 	.input(
 		z.object({
 			types: z.array(
@@ -16,35 +16,29 @@ export const hasFileOfKindProcedure = protectedProcedure
 		const { db } = ctx;
 		const { types, year, subjectId } = input;
 
-		const filesRaw = await db.documentFile.findMany({
+		const documentFilesRaw = await db.documentFile.findMany({
 			where: {
 				academicYear: year,
 				types: {
 					equals: types
 				},
-				File: {
-					Post: {
-						topicId: subjectId
-					}
+				Post: {
+					topicId: subjectId
 				}
 			},
 			include: {
-				File: {
+				Post: {
 					include: {
-						Post: {
-							include: {
-								Author: true
-							}
-						}
+						Author: true
 					}
 				}
 			}
 		});
 
-		const posts = filesRaw.map((file) => ({
-			id: file.File.Post!.id,
-			author: file.File.Post!.Author.displayName,
-			createdAt: file.File.Post!.createdAt
+		const posts = documentFilesRaw.map((file) => ({
+			id: file.Post!.id,
+			author: file.Post!.Author.displayName,
+			createdAt: file.Post!.createdAt
 		}));
 
 		return posts.length > 0 ? posts : null;

@@ -31,7 +31,7 @@ export const listDocumentsProcedure = publicProcedure
 		const authorId = scope.authorId;
 		const postId = scope.postId;
 
-		const where: Prisma.FileWhereInput = {
+		const where = {
 			// college scope
 			...(collegeId
 				? {
@@ -53,7 +53,9 @@ export const listDocumentsProcedure = publicProcedure
 			// author scope
 			...(authorId
 				? {
-						authorId
+						File: {
+							authorId
+						}
 					}
 				: {}),
 
@@ -64,59 +66,60 @@ export const listDocumentsProcedure = publicProcedure
 					}
 				: {}),
 
-			DocumentFile: {
-				// name filter
-				...(filters?.name
-					? {
-							title: {
-								contains: filters.name,
-								mode: 'insensitive'
-							}
+			// name filter
+			...(filters?.name
+				? {
+						title: {
+							contains: filters.name,
+							mode: 'insensitive'
 						}
-					: {}),
+					}
+				: {}),
 
-				// document type filter
-				...(filters?.documentTypes
-					? {
-							types: {
-								hasEvery: filters.documentTypes
-							}
+			// document type filter
+			...(filters?.documentTypes
+				? {
+						types: {
+							hasEvery: filters.documentTypes
 						}
-					: {})
-			}
+					}
+				: {})
+		} satisfies Prisma.DocumentFileWhereInput;
+
+		const include: Prisma.DocumentFileInclude = {
+			File: true
 		};
 
-		const include: Prisma.FileInclude = {
-			DocumentFile: true
-		};
-
-		const filesRaw = await db.file.findMany({
+		const documentFilesRaw = await db.documentFile.findMany({
 			where,
 			include,
 			orderBy: {
-				id: 'desc'
+				fileId: 'desc'
 			},
 			take: limit,
 			skip: cursor ? 1 : 0,
-			cursor: cursor ? { id: cursor } : undefined
+			cursor: cursor ? { fileId: cursor } : undefined
 		});
 
 		const files = await Promise.all(
-			filesRaw.map(async (file) => {
-				const downloadUrl = await getFileUrl(file.key);
+			documentFilesRaw.map(async (documentFile) => {
+				const downloadUrl = await getFileUrl(documentFile.File.key);
 
 				const documentData = {
-					title: file.DocumentFile!.title,
-					academicYear: file.DocumentFile!.academicYear,
-					types: file.DocumentFile!.types
+					title: documentFile.title,
+					academicYear: documentFile.academicYear,
+					types: documentFile.types
 				};
 
-				const originalPostId = file.postId;
+				const originalPostId = documentFile.postId;
 
 				return {
 					file: {
-						id: file.id,
-						createdAt: file.createdAt
+						id: documentFile.File.id,
+						contentType: documentFile.File.contentType,
+						size: documentFile.File.size,
+						key: documentFile.File.key,
+						createdAt: documentFile.File.createdAt
 					},
 					document: documentData,
 					post: {
@@ -128,12 +131,12 @@ export const listDocumentsProcedure = publicProcedure
 		);
 
 		const totalPages = Math.ceil(
-			(await db.file.count({
+			(await db.documentFile.count({
 				where
 			})) / limit
 		);
 
-		const nextCursor = filesRaw[filesRaw.length - 1]?.id;
+		const nextCursor = documentFilesRaw[documentFilesRaw.length - 1]?.File.id;
 
 		const output = {
 			files: files,

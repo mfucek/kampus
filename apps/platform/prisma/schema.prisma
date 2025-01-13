@@ -229,8 +229,9 @@ model Post {
   // content
   body Json?
 
-  Votes Vote[]
-  Files File[]
+  Votes         Vote[]
+  DocumentFiles DocumentFile[]
+
   // notifications Notification[]
   // subscriptions Subscription[]
 }
@@ -264,8 +265,9 @@ model Vote {
 model File {
   id String @id @default(cuid())
 
-  key       String  @unique
-  extension String?
+  key         String @unique
+  contentType String @default("")
+  size        Int    @default(0)
 
   authorId String?
 
@@ -274,9 +276,6 @@ model File {
 
   DocumentFile DocumentFile?
   ImageFile    ImageFile?
-
-  postId String?
-  Post   Post?   @relation(fields: [postId], references: [id])
 }
 
 // used for files that are shown in posts' body
@@ -303,6 +302,9 @@ model ImageFile {
 model DocumentFile {
   fileId String @id @unique
   File   File   @relation(fields: [fileId], references: [id])
+
+  postId String?
+  Post   Post?   @relation(fields: [postId], references: [id])
 
   title        String?
   academicYear String?

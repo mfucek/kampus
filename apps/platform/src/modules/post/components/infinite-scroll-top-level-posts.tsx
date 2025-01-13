@@ -42,7 +42,7 @@ const DynamicPost: FC<{
 							replies: post.replies.count
 						}
 					},
-					files: post.files,
+					documentFiles: post.documentFiles,
 					votes: {
 						likes: post.votes.likes,
 						dislikes: post.votes.dislikes,

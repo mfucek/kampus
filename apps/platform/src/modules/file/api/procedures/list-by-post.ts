@@ -9,7 +9,9 @@ export const listByPostProcedure = publicProcedure
 
 		const filesRaw = await db.file.findMany({
 			where: {
-				postId: input.postId
+				DocumentFile: {
+					postId: input.postId
+				}
 			},
 			include: {
 				DocumentFile: true,
@@ -20,8 +22,7 @@ export const listByPostProcedure = publicProcedure
 		const files = await Promise.all(
 			filesRaw.map(async (file) => ({
 				...file,
-				documentFile: file.DocumentFile,
-				imageFile: file.ImageFile
+				documentFile: file.DocumentFile
 			}))
 		);
 

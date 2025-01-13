@@ -18,7 +18,8 @@ const NavButton: FC<{
 	label: string;
 	selected: boolean;
 	href: string;
-}> = ({ icon, image, label, selected = false, href }) => {
+	onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+}> = ({ icon, image, label, selected = false, href, onClick }) => {
 	const textClass = cva('overline', {
 		variants: {
 			selected: {
@@ -29,7 +30,7 @@ const NavButton: FC<{
 	});
 
 	const imageContainerClass = cva(
-		'w-6 h-6 rounded-full overflow-hidden bg-neutral-weak border',
+		'w-6 h-6 rounded-full overflow-hidden bg-neutral-medium border',
 		{
 			variants: {
 				selected: {
@@ -57,6 +58,7 @@ const NavButton: FC<{
 				'items-center',
 				'flex-1 h-14 bg-opacity-100'
 			)}
+			onClick={onClick}
 		>
 			{icon && (
 				<Icon icon={icon} className={iconClass({ selected })} size={24} />
@@ -72,12 +74,12 @@ const NavButton: FC<{
 };
 
 export const MobileNavbar = () => {
+	const pathname = usePathname();
+
 	const { isSignedIn } = useAuth();
 	const { openSignUp } = useClerk();
 
 	const { isMobile } = useIsMobile();
-
-	const pathname = usePathname();
 
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
@@ -85,14 +87,20 @@ export const MobileNavbar = () => {
 		});
 
 	const isNotifications = pathname === '/notifications';
-	const isProfile = pathname === '/settings/profile';
+	const isSettings = pathname === '/settings';
 	const isSearch = pathname === '/colleges';
-	const isHome = !isNotifications && !isProfile && !isSearch;
+	const isHome = !isNotifications && !isSettings && !isSearch;
 
 	const hideNavbar = ['/post'].some(
 		(pathBeginning) =>
 			pathname.startsWith(pathBeginning) && pathname !== pathBeginning
 	);
+
+	const isOnPWA =
+		typeof window !== 'undefined' &&
+		window.matchMedia('(display-mode: standalone)').matches;
+
+	// if (isOnPWA && isHome) return null;
 
 	if (!isMobile || hideNavbar) return null;
 
@@ -123,8 +131,14 @@ export const MobileNavbar = () => {
 			<NavButton
 				image={profilePictureUrl ?? null}
 				label="Profile"
-				selected={isProfile}
-				href="/settings/profile"
+				selected={isSettings}
+				onClick={(e) => {
+					if (!isSignedIn) {
+						e.preventDefault();
+						openSignUp({ forceRedirectUrl: pathname });
+					}
+				}}
+				href="/settings"
 			/>
 		</div>
 	);

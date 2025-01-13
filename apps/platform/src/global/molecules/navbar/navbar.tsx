@@ -11,6 +11,7 @@ import { api } from '@/lib/trpc/react';
 import { feedbackFormURL } from '@/modules/feedback/constants';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
 import { useIsMobile } from '@/utils/useMediaQuery';
+import { usePathname } from 'next/navigation';
 import { Icon } from '../../components/icon';
 import { ActionsGroup } from './actions-group';
 import { Breadcrumbs } from './breadcrumbs';
@@ -19,6 +20,8 @@ import { Divider } from './divider';
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
+	const pathname = usePathname();
+
 	const { isSignedIn } = useAuth();
 	const { openSignUp } = useClerk();
 
@@ -81,7 +84,7 @@ export const Navbar = () => {
 				<Button
 					onClick={() =>
 						openSignUp({
-							forceRedirectUrl: '/colleges'
+							forceRedirectUrl: pathname
 						})
 					}
 					theme="accent"

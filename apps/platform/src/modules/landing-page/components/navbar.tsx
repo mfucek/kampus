@@ -11,7 +11,9 @@ import { Divider } from '@/global/molecules/navbar/divider';
 import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+import { useIsMobile } from '@/utils/useMediaQuery';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
@@ -19,10 +21,16 @@ export const Navbar = () => {
 	const { isSignedIn } = useAuth();
 	const { openSignIn, openSignUp } = useClerk();
 
+	const { isMobile } = useIsMobile();
+
+	const pathname = usePathname();
+
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
 			enabled: !!isSignedIn
 		});
+
+	if (isMobile) return null;
 
 	const Links = () => {
 		const scrollToSection = (id: string) => {
@@ -98,7 +106,7 @@ export const Navbar = () => {
 				<ThemeToggler size="sm" />
 				<div className="hidden md:block">
 					<Button
-						onClick={() => openSignUp({ forceRedirectUrl: '/colleges' })}
+						onClick={() => openSignUp({ forceRedirectUrl: pathname })}
 						theme="neutral"
 						size="sm"
 						variant="solid-weak"
@@ -107,7 +115,7 @@ export const Navbar = () => {
 					</Button>
 				</div>
 				<Button
-					onClick={() => openSignIn({ forceRedirectUrl: '/colleges' })}
+					onClick={() => openSignIn({ forceRedirectUrl: pathname })}
 					theme="accent"
 					size="sm"
 					variant="solid"

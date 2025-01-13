@@ -3,9 +3,10 @@
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
+import { useIsMobile } from '@/utils/useMediaQuery';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useIntersectionObserver } from '../hooks/use-intersection-observer';
+import { useEffect, useRef, useState } from 'react';
 import { ContentPadding } from '../layouts/content-padding';
 import { Icon } from './icon';
 
@@ -18,13 +19,30 @@ export const PageHeader = ({
 	tags?: string[];
 	imageSrc?: string;
 }) => {
-	const { isInView, elementRef } = useIntersectionObserver();
+	const [floatingVisible, setFloatingVisible] = useState(false);
+	const elementRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setFloatingVisible(window.scrollY > 50);
+		};
+
+		window.addEventListener('scroll', handleScroll);
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
+	}, []);
 
 	const router = useRouter();
+	const { isMobile } = useIsMobile();
 
 	const SmallContent = () => {
 		return (
-			<ContentPadding size="lg" className="pl-0 bg-opacity-100">
+			<ContentPadding
+				size="lg"
+				className={cn(isMobile && 'pl-0', 'bg-opacity-100')}
+			>
 				<div className="flex flex-row w-full items-center gap-0 py-4">
 					<Button
 						variant="ghost"
@@ -44,13 +62,18 @@ export const PageHeader = ({
 
 	return (
 		<>
-			<ContentPadding size="lg">
-				<div
-					className="flex flex-row items-center gap-4 md:gap-6"
-					ref={elementRef}
-				>
+			<ContentPadding size="lg" className={cn(isMobile && 'pl-0')}>
+				<div className="flex flex-row items-center" ref={elementRef}>
+					<Button
+						variant="ghost"
+						size="lg"
+						className="shrink-0 h-full block md:hidden"
+						onClick={() => router.back()}
+					>
+						<Icon icon="arrow-left" />
+					</Button>
 					{imageSrc && (
-						<div className="w-[72px] h-[96px] md:w-[120px] md:h-[160px] bg-section md:bg-neutral-weak rounded-xl overflow-hidden">
+						<div className="w-[72px] h-[96px] md:w-[120px] md:h-[160px] bg-section md:bg-neutral-weak rounded-xl overflow-hidden mr-4 md:mr-6">
 							<Image src={imageSrc} alt={title} fill className="object-cover" />
 						</div>
 					)}
@@ -66,18 +89,18 @@ export const PageHeader = ({
 					</div>
 				</div>
 			</ContentPadding>
-			<div
+			{/* <div
 				className={cn(
 					'fixed top-0 left-0 right-0 md:hidden block',
 					'bg-section border-b border-neutral-weak bg-opacity-90 backdrop-blur-sm',
 					'z-10',
 					'flex',
 					'duration-300 translate-y-[-100%]',
-					!isInView && 'translate-y-0'
+					floatingVisible && 'translate-y-0'
 				)}
 			>
 				<SmallContent />
-			</div>
+			</div> */}
 		</>
 	);
 };

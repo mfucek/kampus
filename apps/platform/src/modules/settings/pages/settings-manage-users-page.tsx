@@ -1,0 +1,17 @@
+import { PageHeader } from '@/global/components/page-header';
+
+import { Container } from '@/global/components/container';
+import { RuleProtected } from '@/modules/permissions/components/protected';
+import { ManageUsersSection } from '@/modules/user/components/sections/manage-users';
+
+export const SettingsManageUsersPage = () => {
+	return (
+		<Container className="flex flex-col gap-10 pt-10 pb-20">
+			<PageHeader title="Manage Users" />
+
+			<RuleProtected rule="CAN_MANAGE_USERS">
+				<ManageUsersSection />
+			</RuleProtected>
+		</Container>
+	);
+};

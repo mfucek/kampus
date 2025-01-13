@@ -1,3 +1,3 @@
-import { ProfileSettingsPage } from '@/modules/user/pages/profile-settings-page';
+import { SettingsProfilePage } from '@/modules/settings/pages/settings-profile-page';
 
-export default ProfileSettingsPage;
+export default SettingsProfilePage;

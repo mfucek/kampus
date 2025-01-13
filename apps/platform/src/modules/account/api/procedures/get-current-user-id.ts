@@ -1,9 +1,9 @@
 import { protectedProcedure } from '@/server/api/trpc';
 
-export const getCurrentUserProcedure = protectedProcedure.query(
+export const getCurrentUserIdProcedure = protectedProcedure.query(
 	async ({ ctx }) => {
 		const { user } = ctx;
 
-		return user;
+		return user.id;
 	}
 );

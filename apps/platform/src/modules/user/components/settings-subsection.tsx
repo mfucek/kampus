@@ -1,3 +1,4 @@
+import { ContentPadding } from '@/global/layouts/content-padding';
 import type { FC, PropsWithChildren } from 'react';
 
 export const SettingsSubSection: FC<
@@ -7,12 +8,14 @@ export const SettingsSubSection: FC<
 	}
 > = ({ children, title, description }) => {
 	return (
-		<div className="flex flex-col gap-6">
-			<div className="flex flex-col gap-2">
-				<p className="title-3">{title}</p>
-				<p className="body-2 text-neutral-strong">{description}</p>
+		<ContentPadding size="lg">
+			<div className="flex flex-col gap-6">
+				<div className="flex flex-col gap-2">
+					<p className="title-3">{title}</p>
+					<p className="body-2 text-neutral-strong">{description}</p>
+				</div>
+				{children}
 			</div>
-			{children}
-		</div>
+		</ContentPadding>
 	);
 };

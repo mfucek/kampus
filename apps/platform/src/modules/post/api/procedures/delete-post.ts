@@ -29,13 +29,7 @@ export const deletePostProcedure = protectedProcedure
 
 			const fileIds = await tx.file.findMany({
 				where: {
-					postId: input.postId
-				}
-			});
-
-			await tx.imageFile.deleteMany({
-				where: {
-					File: {
+					DocumentFile: {
 						postId: input.postId
 					}
 				}
@@ -44,14 +38,18 @@ export const deletePostProcedure = protectedProcedure
 			await tx.documentFile.deleteMany({
 				where: {
 					File: {
-						postId: input.postId
+						id: {
+							in: fileIds.map((file) => file.id)
+						}
 					}
 				}
 			});
 
 			await tx.file.deleteMany({
 				where: {
-					postId: input.postId
+					id: {
+						in: fileIds.map((file) => file.id)
+					}
 				}
 			});
 
@@ -95,4 +93,6 @@ export const deletePostProcedure = protectedProcedure
 		if (deletedFileKeys.length > 0) {
 			await deleteFiles(deletedFileKeys);
 		}
+
+		return { success: true };
 	});

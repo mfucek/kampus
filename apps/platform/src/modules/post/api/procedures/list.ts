@@ -60,7 +60,7 @@ export const listProcedure = publicProcedure
 			Votes: true,
 			_count: {
 				select: {
-					Files: true,
+					DocumentFiles: true,
 					Replies: true
 				}
 			}
@@ -81,21 +81,19 @@ export const listProcedure = publicProcedure
 		console.timeEnd('listProcedure');
 
 		console.time('filesRaw');
-		const filesRaw = await db.file.findMany({
+		const documentFilesRaw = await db.documentFile.findMany({
 			where: {
 				postId: {
 					in: postsRaw.map((post) => post.id)
 				}
 			},
 			include: {
-				DocumentFile: true,
-				ImageFile: true
+				File: true
 			},
 			relationLoadStrategy: 'join'
 		});
 		console.timeEnd('filesRaw');
 
-		console.time('random-bullshit-mapping');
 		const posts = await Promise.all(
 			postsRaw.map(async (post) => {
 				const votes = {
@@ -115,19 +113,18 @@ export const listProcedure = publicProcedure
 				// 	}
 				// });
 
-				const files = await Promise.all(
-					filesRaw
+				const documentFiles = await Promise.all(
+					documentFilesRaw
 						.filter((fr) => fr.postId === post.id)
 						.map(async (file) => ({
-							id: file.id,
-							key: file.key,
-							documentFile: {
-								academicYear: file.DocumentFile?.academicYear ?? undefined,
-								title: file.DocumentFile?.title ?? undefined,
-								types: file.DocumentFile?.types ?? []
-							},
-							imageFile: file.ImageFile,
-							url: await getFileUrl(file.key)
+							fileId: file.File.id,
+							contentType: file.File.contentType,
+							size: file.File.size,
+							key: file.File.key,
+							academicYear: file.academicYear ?? null,
+							title: file.title ?? null,
+							types: file.types,
+							url: await getFileUrl(file.File.key)
 						}))
 				);
 
@@ -165,12 +162,10 @@ export const listProcedure = publicProcedure
 					replies: {
 						count: post._count.Replies
 					},
-					files: files
+					documentFiles: documentFiles
 				};
 			})
 		);
-
-		console.timeEnd('random-bullshit-mapping');
 
 		const totalPages = Math.ceil(
 			(await db.post.count({

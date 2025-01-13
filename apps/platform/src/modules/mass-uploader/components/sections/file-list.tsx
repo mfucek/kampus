@@ -156,19 +156,20 @@ const FileActions = (file: StagedFile, index: number) => {
 
 	const { setPostId } = usePostId();
 
-	const { data: duplicatesData } = api.subject.hasFileOfKind.useQuery(
-		{
-			types: file.documentOptions.types,
-			year: file.documentOptions.academicYear!,
-			subjectId: topicId!
-		},
-		{
-			enabled:
-				!!topicId &&
-				!!file.documentOptions.academicYear &&
-				noOverlap<DocumentFileType>(file.documentOptions.types, ignoredTypes)
-		}
-	);
+	const { data: duplicatesData } =
+		api.subject.hasDocumentOfKindProcedure.useQuery(
+			{
+				types: file.documentOptions.types,
+				year: file.documentOptions.academicYear!,
+				subjectId: topicId!
+			},
+			{
+				enabled:
+					!!topicId &&
+					!!file.documentOptions.academicYear &&
+					noOverlap<DocumentFileType>(file.documentOptions.types, ignoredTypes)
+			}
+		);
 
 	return (
 		<>

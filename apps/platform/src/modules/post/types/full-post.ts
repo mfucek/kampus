@@ -27,18 +27,14 @@ export type FullPost = {
 		dislikes: number;
 		userVote: VoteType | null;
 	};
-	files: {
-		id: string;
+	documentFiles: {
+		fileId: string;
+		contentType: string;
+		size: number;
 		key: string;
-		documentFile:
-			| {
-					academicYear?: string;
-					title?: string;
-					types: DocumentFileType[];
-			  }
-			| undefined
-			| null;
-		imageFile: object | null;
+		academicYear: string | null;
+		title: string | null;
+		types: DocumentFileType[];
 		url?: string | null;
 	}[];
 };

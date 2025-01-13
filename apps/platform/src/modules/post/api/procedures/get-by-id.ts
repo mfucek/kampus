@@ -23,10 +23,9 @@ export const getPostByIdProcedure = publicProcedure
 					}
 				},
 				Author: true,
-				Files: {
+				DocumentFiles: {
 					include: {
-						DocumentFile: true,
-						ImageFile: true
+						File: true
 					}
 				}
 			}
@@ -56,19 +55,16 @@ export const getPostByIdProcedure = publicProcedure
 			}
 		} satisfies FullPost['post'];
 
-		const files = await Promise.all(
-			postRaw.Files.map(async (file) => ({
-				id: file.id,
-				key: file.key,
-				imageFile: file.ImageFile,
-				url: await getFileUrl(file.key),
-				documentFile: file.DocumentFile
-					? {
-							academicYear: file.DocumentFile.academicYear ?? undefined,
-							types: file.DocumentFile.types,
-							title: file.DocumentFile.title ?? undefined
-						}
-					: null
+		const documentFiles = await Promise.all(
+			postRaw.DocumentFiles.map(async (documentFile) => ({
+				fileId: documentFile.File.id,
+				contentType: documentFile.File.contentType,
+				size: documentFile.File.size,
+				key: documentFile.File.key,
+				academicYear: documentFile.academicYear,
+				types: documentFile.types,
+				title: documentFile.title,
+				url: await getFileUrl(documentFile.File.key)
 			}))
 		);
 
@@ -77,7 +73,7 @@ export const getPostByIdProcedure = publicProcedure
 		const output = {
 			post: post,
 			votes: votes,
-			files: files
+			documentFiles: documentFiles
 		} satisfies FullPost;
 
 		return output;

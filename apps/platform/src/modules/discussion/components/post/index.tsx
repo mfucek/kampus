@@ -79,14 +79,17 @@ export const Post: FC<{
 						})}
 					</span>
 				</div>
+
 				{!post.body && (
 					<p className="body-2 text-neutral-strong">
 						[ This post has been deleted ]
 					</p>
 				)}
+
 				{post.body && editor && <EditorContent editor={editor} />}
 
-				<PostFiles files={fullPost.files} />
+				<PostFiles files={fullPost.documentFiles} />
+
 				<PostActions fullPost={fullPost} />
 			</div>
 		);

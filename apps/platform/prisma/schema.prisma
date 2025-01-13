@@ -14,21 +14,16 @@ datasource db {
 // ------------------
 
 model Account {
-  id String @id @default(cuid())
-
-  clerkUserId String @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id               String        @id @default(cuid())
+  clerkUserId      String        @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
   stripeCustomerId String?
+  package          PackageType?
+  status           AccountStatus @default(INACTIVE)
+  activeUntil      DateTime?
 
-  package     PackageType?
-  status      AccountStatus @default(INACTIVE)
-  activeUntil DateTime?
-
-  user User?
-
+  user        User?
   role        RoleType     @default(BASE)
   Permissions Permission[]
 }
@@ -50,15 +45,12 @@ enum AccountStatus {
 // ------------------
 
 model User {
-  id String @id @default(cuid())
-
+  id          String   @id @default(cuid())
   displayName String
   imageUrl    String?
-
-  badge String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  badge       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   accountId String  @unique
   Account   Account @relation(fields: [accountId], references: [id])
@@ -77,15 +69,12 @@ model User {
 // ------------------
 
 model College {
-  id String @id @default(cuid())
-
-  slug String @unique
-  name String
-
+  id      String  @id @default(cuid())
+  slug    String  @unique
+  name    String
   iconSrc String?
 
-  Image ImageFile?
-
+  Image  ImageFile?
   Topics Topic[]
   Posts  Post[]
 }
@@ -95,27 +84,22 @@ model College {
 // ------------------
 
 model Topic {
-  id String @id @default(cuid())
-
+  id        String    @id @default(cuid())
   slug      String
   name      String
   shortName String?
+  type      TopicType
 
   collegeId String
   College   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
-
-  type TopicType
 
   Program Program?
   Subject Subject?
   Staff   Staff?
 
-  Posts Post[]
-
+  Posts     Post[]
   Image     ImageFile?
   Summaries Summary[]
-
-  // @@unique([collegeId, slug])
 }
 
 enum TopicType {
@@ -125,28 +109,22 @@ enum TopicType {
 }
 
 model Staff {
-  topicId String @id @unique
-  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
-
-  imageUrl String?
-
+  topicId           String  @id @unique
+  Topic             Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  imageUrl          String?
   staffExternalCode String?
   staffExternalLink String?
 
-  // Relationships
   Subjects SubjectStaff[]
 }
 
 model Subject {
-  topicId String @id @unique
-  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
-
-  ects Int?
-
+  topicId       String   @id @unique
+  Topic         Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  ects          Int?
   externalCodes String[] @default([])
   externalLinks String[] @default([])
 
-  // Relationships
   Staffs   SubjectStaff[]
   Programs ProgramSubject[]
 }
@@ -157,11 +135,9 @@ model Program {
 
   programExternalCode String?
   programExternalLink String?
+  departments         String[] @default([])
+  type                String?
 
-  departments String[] @default([])
-  type        String?
-
-  // Relationships
   Subjects ProgramSubject[]
 }
 
@@ -177,9 +153,6 @@ model SubjectStaff {
   Staff   Staff  @relation(fields: [staffId], references: [topicId], onDelete: Cascade)
 
   staffRole String?
-
-  // @@unique([subjectId, staffId])
-  // @@id([subjectId, staffId])
 }
 
 model ProgramSubject {
@@ -193,9 +166,6 @@ model ProgramSubject {
 
   semester  Int?
   groupName String?
-
-  // @@unique([programId, subjectId])
-  // @@id([programId, subjectId])
 }
 
 // ------------------
@@ -203,10 +173,10 @@ model ProgramSubject {
 // ------------------
 
 model Post {
-  id String @id @default(cuid())
-
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  body      Json?
 
   authorId String
   Author   User   @relation(fields: [authorId], references: [id])
@@ -226,9 +196,6 @@ model Post {
   replyTo   Post?   @relation(fields: [replyToId], references: [id], name: "PostReplies")
   Replies   Post[]  @relation("PostReplies")
 
-  // content
-  body Json?
-
   Votes         Vote[]
   DocumentFiles DocumentFile[]
 
@@ -246,8 +213,7 @@ enum VoteType {
 }
 
 model Vote {
-  id String @id @default(cuid())
-
+  id   String   @id @default(cuid())
   type VoteType
 
   postId String
@@ -263,16 +229,13 @@ model Vote {
 
 // Used for files that are uploaded to the server
 model File {
-  id String @id @default(cuid())
-
-  key         String @unique
-  contentType String @default("")
-  size        Int    @default(0)
-
-  authorId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  key         String   @unique
+  contentType String   @default("")
+  size        Int      @default(0)
+  authorId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   DocumentFile DocumentFile?
   ImageFile    ImageFile?
@@ -361,9 +324,8 @@ model Permission {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   expiresAt DateTime?
-
-  rule  RuleType
-  value Boolean
+  rule      RuleType
+  value     Boolean
 
   scopeType ScopeType
   scopeId   String?
@@ -371,11 +333,8 @@ model Permission {
 
 enum RuleType {
   CAN_POST
-
   CAN_CHANGE_PROFILE_BADGE
-
   CAN_MASS_UPLOAD
-
   CAN_MANAGE_USERS
 }
 
@@ -389,8 +348,7 @@ enum ScopeType {
 // ------------------
 
 model Summary {
-  id String @id @default(cuid())
-
+  id        String      @id @default(cuid())
   title     String
   content   String
   sentiment SummaryType
@@ -428,15 +386,12 @@ enum SummaryType {
 // ------------------
 
 model Notification {
-  id String @id @default(cuid())
-
-  createdAt DateTime @default(now())
-
-  type NotificationType
-  read Boolean          @default(false)
-
-  postId   String?
-  authorId String?
+  id        String           @id @default(cuid())
+  createdAt DateTime         @default(now())
+  type      NotificationType
+  read      Boolean          @default(false)
+  postId    String?
+  authorId  String?
   // topicId String?
 
   recepientId String

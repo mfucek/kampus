@@ -1,7 +1,6 @@
 'use client';
 
 import { Icon } from '@/global/components/icon';
-import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
 import { RuleProtected } from '@/modules/permissions/components/protected';
 import { useIsMobile } from '@/utils/useMediaQuery';
@@ -19,7 +18,7 @@ const SettingsMenu = () => {
 	};
 
 	return (
-		<ContentPadding size="md">
+		<div className="px-3 md:px-0">
 			<div className="w-full h-full md:bg-section rounded-lg md:w-[320px] flex shrink-0 flex-col gap-6">
 				<MobileProfileCard />
 
@@ -97,7 +96,7 @@ const SettingsMenu = () => {
 					</div>
 				</div>
 			</div>
-		</ContentPadding>
+		</div>
 	);
 };
 

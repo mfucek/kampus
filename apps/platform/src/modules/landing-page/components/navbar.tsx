@@ -11,6 +11,7 @@ import { Divider } from '@/global/molecules/navbar/divider';
 import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+import { useIsPWA } from '@/utils/use-is-pwa';
 import { useIsMobile } from '@/utils/useMediaQuery';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -22,6 +23,7 @@ export const Navbar = () => {
 	const { openSignIn, openSignUp } = useClerk();
 
 	const { isMobile } = useIsMobile();
+	const { isPWA } = useIsPWA();
 
 	const pathname = usePathname();
 
@@ -30,7 +32,7 @@ export const Navbar = () => {
 			enabled: !!isSignedIn
 		});
 
-	if (isMobile) return null;
+	if (isMobile && isPWA) return null;
 
 	const Links = () => {
 		const scrollToSection = (id: string) => {

@@ -26,7 +26,7 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 	const makeRoute = (page: string) => `/${collegeSlug}${page}`;
 
 	return (
-		<Container className="flex flex-col gap-10 pt-10 pb-20">
+		<Container className="flex flex-col gap-10 pt-6 md:pt-10 pb-20">
 			<PageHeader title={college.name} tags={['Fakultet']} />
 
 			<Tabs>

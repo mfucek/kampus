@@ -74,13 +74,13 @@ const NavButton: FC<{
 	);
 };
 
-export const MobileNavbar = () => {
+export const PWANavbar = () => {
 	const pathname = usePathname();
 
 	const { isSignedIn } = useAuth();
 	const { openSignUp } = useClerk();
 
-	const { isMobile } = useIsMobile();
+	const { isDesktop } = useIsMobile();
 	const { isPWA } = useIsPWA();
 
 	const { data: profilePictureUrl } =
@@ -91,7 +91,6 @@ export const MobileNavbar = () => {
 	const isNotifications = pathname === '/notifications';
 	const isSettings = pathname === '/settings';
 	const isSearch = pathname === '/colleges';
-	const isHome = pathname === '/' || pathname === '/home';
 	const isOnContent = !isNotifications && !isSettings && !isSearch;
 
 	const hideNavbar = ['/post/', '/settings/'].some(
@@ -99,8 +98,7 @@ export const MobileNavbar = () => {
 			pathname.startsWith(pathBeginning) && pathname !== pathBeginning
 	);
 
-	if (!isMobile || hideNavbar) return null;
-	if (!isPWA && isHome) return null;
+	if (isDesktop || !isPWA || hideNavbar) return null;
 
 	return (
 		<div
@@ -112,21 +110,18 @@ export const MobileNavbar = () => {
 			)}
 		>
 			<NavButton icon="home" label="Home" selected={isOnContent} href="/home" />
-
 			<NavButton
 				icon="search"
 				label="Search"
 				selected={isSearch}
 				href="/colleges"
 			/>
-
 			{/* <NavButton
 				icon="bell"
 				label="Notifications"
 				selected={isNotifications}
 				href="/notifications"
 			/> */}
-
 			<NavButton
 				image={profilePictureUrl ?? null}
 				label="Profile"

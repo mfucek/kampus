@@ -13,7 +13,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '../modules/theme/providers/theme-provider';
 
 import { isDevOrStg } from '@/constants/is-dev-or-staging';
-import { MobileNavbar } from '@/global/components/mobile-navbar';
+import { PWANavbar } from '@/global/components/pwa-navbar';
 import { Toaster } from '@/lib/shadcn/ui/toaster';
 import { ViewportSizeProvider } from '@/utils/useMediaQuery';
 import NextTopLoader from 'nextjs-toploader';
@@ -59,7 +59,7 @@ export default function RootLayout({
 										{children}
 									</div>
 									<Toaster />
-									<MobileNavbar />
+									<PWANavbar />
 								</ThemeProvider>
 							</ViewportSizeProvider>
 						</AnalyticsProvider>

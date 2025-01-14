@@ -90,7 +90,12 @@ export const listDocumentsProcedure = publicProcedure
 			File: true,
 			Post: {
 				include: {
-					Votes: true
+					Votes: true,
+					_count: {
+						select: {
+							Replies: true
+						}
+					}
 				}
 			}
 		} satisfies Prisma.DocumentFileInclude;
@@ -134,7 +139,8 @@ export const listDocumentsProcedure = publicProcedure
 					},
 					document: documentData,
 					post: {
-						id: documentFile.postId
+						id: documentFile.postId,
+						replyCount: documentFile.Post?._count.Replies ?? 0
 					},
 					votes: {
 						score

@@ -75,6 +75,7 @@ export const columns: ColumnDef<
 
 			return (
 				<div className="flex flex-row gap-1 justify-end">
+					{data.post.id}
 					<Button
 						theme="neutral"
 						variant="solid-weak"
@@ -83,7 +84,7 @@ export const columns: ColumnDef<
 							if (data.post.id) setPostId(data.post.id);
 						}}
 					>
-						{data.votes.score}
+						{data.post.replyCount}
 						<Icon icon="chat-single" />
 					</Button>
 					<a href={data.url} target="_blank" rel="noreferrer">

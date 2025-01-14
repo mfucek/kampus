@@ -4,6 +4,7 @@ import { type FC } from 'react';
 
 import { cn } from '@/lib/shadcn/utils';
 import { api } from '@/lib/trpc/react';
+import { useIsPWA } from '@/utils/use-is-pwa';
 import { useIsMobile } from '@/utils/useMediaQuery';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import { cva } from 'class-variance-authority';
@@ -80,6 +81,7 @@ export const MobileNavbar = () => {
 	const { openSignUp } = useClerk();
 
 	const { isMobile } = useIsMobile();
+	const { isPWA } = useIsPWA();
 
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
@@ -89,18 +91,16 @@ export const MobileNavbar = () => {
 	const isNotifications = pathname === '/notifications';
 	const isSettings = pathname === '/settings';
 	const isSearch = pathname === '/colleges';
-	const isHome = !isNotifications && !isSettings && !isSearch;
+	const isHome = pathname === '/' || pathname === '/home';
+	const isOnContent = !isNotifications && !isSettings && !isSearch;
 
 	const hideNavbar = ['/post/', '/settings/'].some(
 		(pathBeginning) =>
 			pathname.startsWith(pathBeginning) && pathname !== pathBeginning
 	);
 
-	// const isOnPWA =
-	// 	typeof window !== 'undefined' &&
-	// 	window.matchMedia('(display-mode: standalone)').matches;
-
 	if (!isMobile || hideNavbar) return null;
+	if (!isPWA && isHome) return null;
 
 	return (
 		<div
@@ -111,7 +111,7 @@ export const MobileNavbar = () => {
 				'flex flex-row'
 			)}
 		>
-			<NavButton icon="home" label="Home" selected={isHome} href="/" />
+			<NavButton icon="home" label="Home" selected={isOnContent} href="/home" />
 
 			<NavButton
 				icon="search"

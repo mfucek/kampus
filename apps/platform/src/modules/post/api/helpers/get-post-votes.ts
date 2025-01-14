@@ -1,4 +1,4 @@
-import { type PrismaClient, VoteType } from '@prisma/client';
+import { type PrismaClient, Vote, VoteType } from '@prisma/client';
 
 export const getPostVotes = async (
 	postId: string,
@@ -11,9 +11,15 @@ export const getPostVotes = async (
 		}
 	});
 
+	return sortPostVotes(votes, userId);
+};
+
+export const sortPostVotes = (
+	votes: Vote[],
+	userId: string | null | undefined
+) => {
 	const likes = votes.filter((vote) => vote.type === VoteType.UP).length;
 	const dislikes = votes.filter((vote) => vote.type === VoteType.DOWN).length;
-
 	const userVote = votes.find((vote) => vote.userId === userId)?.type ?? null;
 
 	return {

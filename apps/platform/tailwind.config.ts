@@ -151,7 +151,8 @@ export default {
 	],
 	plugins: [
 		require('@tailwindcss/container-queries'),
-		require('tailwindcss-animate')
+		require('tailwindcss-animate'),
+		require('tailwindcss-displaymodes')
 	],
 	darkMode: ['class', 'class']
 } satisfies Config;

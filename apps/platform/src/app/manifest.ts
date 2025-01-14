@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
 		description:
 			'Tvoj virtualni kampus za razmjenu znanja, iskustava i materijala. Spojimo sve studente u Hrvatskoj!',
 		start_url: '/',
-		display: 'fullscreen',
+		display: 'standalone',
 		orientation: 'portrait',
 		theme_color: '#101213',
 		background_color: '#000000',

@@ -84,7 +84,13 @@ export const PostActions: FC<{ fullPost: PostActionsInterface }> = ({
 	return (
 		<div className="flex flex-row gap-2" suppressHydrationWarning>
 			<Reactions votes={votes} postId={post.id} />
-			<Button theme="neutral" variant="ghost" size="xs" onClick={handleReply}>
+			<Button
+				theme="neutral"
+				variant={numberOfReplies > 0 ? 'solid-weak' : 'ghost'}
+				size="xs"
+				onClick={handleReply}
+				rounded
+			>
 				{numberOfReplies ? `${numberOfReplies} replies` : 'Reply'}
 			</Button>
 			<Button theme="neutral" variant="ghost" size="xs" onClick={handleShare}>

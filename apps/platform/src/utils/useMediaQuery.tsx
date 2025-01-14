@@ -9,8 +9,7 @@ import {
 } from 'react';
 
 const ViewportSizeContext = createContext({
-	isMobile: false,
-	isDesktop: false
+	isMobile: false
 });
 
 export const ViewportSizeProvider = ({ children }: { children: ReactNode }) => {
@@ -24,12 +23,13 @@ export const ViewportSizeProvider = ({ children }: { children: ReactNode }) => {
 				setIsMobile(false);
 			}
 		};
+		handleResize();
 		window.addEventListener('resize', handleResize);
 		return () => window.removeEventListener('resize', handleResize);
 	}, []);
 
 	return (
-		<ViewportSizeContext.Provider value={{ isMobile, isDesktop: !isMobile }}>
+		<ViewportSizeContext.Provider value={{ isMobile }}>
 			{children}
 		</ViewportSizeContext.Provider>
 	);
@@ -40,6 +40,6 @@ export const useIsMobile = () => {
 
 	return {
 		isMobile: context.isMobile,
-		isDesktop: context.isDesktop
+		isDesktop: !context.isMobile
 	};
 };

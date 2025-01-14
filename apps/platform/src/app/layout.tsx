@@ -15,6 +15,7 @@ import { ThemeProvider } from '../modules/theme/providers/theme-provider';
 import { isDevOrStg } from '@/constants/is-dev-or-staging';
 import { MobileNavbar } from '@/global/components/mobile-navbar';
 import { Toaster } from '@/lib/shadcn/ui/toaster';
+import { ViewportSizeProvider } from '@/utils/useMediaQuery';
 import NextTopLoader from 'nextjs-toploader';
 
 export const metadata: Metadata = {
@@ -52,11 +53,15 @@ export default function RootLayout({
 				<ClerkProvider localization={{ locale: 'hr-HR' }}>
 					<TRPCReactProvider>
 						<AnalyticsProvider>
-							<ThemeProvider>
-								<div className="min-h-screen overflow-x-hidden">{children}</div>
-								<Toaster />
-								<MobileNavbar />
-							</ThemeProvider>
+							<ViewportSizeProvider>
+								<ThemeProvider>
+									<div className="min-h-screen overflow-x-hidden">
+										{children}
+									</div>
+									<Toaster />
+									<MobileNavbar />
+								</ThemeProvider>
+							</ViewportSizeProvider>
 						</AnalyticsProvider>
 					</TRPCReactProvider>
 				</ClerkProvider>

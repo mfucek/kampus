@@ -2,7 +2,7 @@
 
 import { Dialog } from '@/lib/shadcn/ui/dialog';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { FileDetailsDialog } from '@/modules/file/components/file-details-dialog';
+import { FileDetailsDialogContent } from '@/modules/file/components/file-details-dialog';
 import { type DocumentFileType } from '@prisma/client';
 import {
 	type Dispatch,
@@ -185,7 +185,7 @@ export const FileStagingProvider: FC<{
 				onOpenChange={setFileDetailsDialogOpen}
 			>
 				{children}
-				<FileDetailsDialog />
+				<FileDetailsDialogContent />
 			</Dialog>
 		</FileStagingContext.Provider>
 	);

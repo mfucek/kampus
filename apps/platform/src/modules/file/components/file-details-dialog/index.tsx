@@ -17,7 +17,7 @@ import { FileDetailsDialogActions } from './file-details-dialog-actions';
 import { FileDetailsList } from './file-details-list';
 import { NoFilesMessage } from './no-files-message';
 
-export const FileDetailsDialog = () => {
+export const FileDetailsDialogContent = () => {
 	const { files, fileDetailsIndex, addFiles } = useFileStagingContext();
 	const { uploadAreaProps, isDragging } = useUploadArea(addFiles);
 

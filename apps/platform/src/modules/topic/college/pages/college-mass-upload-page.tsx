@@ -1,5 +1,5 @@
 import { api } from '@/lib/trpc/server';
-import { CollegeMassUploader } from '../../../mass-uploader/components/college-mass-uploader';
+import { MassUploader } from '../../../mass-uploader/components/college-mass-uploader';
 
 interface PageProps {
 	params: Promise<{
@@ -23,9 +23,6 @@ export const CollegeMassUploadPage = async ({ params }: PageProps) => {
 	});
 
 	return (
-		<CollegeMassUploader
-			collegeId={college.id}
-			subjects={allSubjects.subjects}
-		/>
+		<MassUploader collegeId={college.id} subjects={allSubjects.subjects} />
 	);
 };

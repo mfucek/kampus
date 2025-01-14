@@ -2,15 +2,30 @@ import { type JSONContent } from '@tiptap/react';
 import { z } from 'zod';
 
 import { getFileUrl } from '@/lib/s3';
-import { publicProcedure } from '@/server/api/trpc';
+import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 import { type FullPost } from '../../types/full-post';
 import { getPostVotes } from '../helpers/get-post-votes';
 
 export const getPostByIdProcedure = publicProcedure
+	.use(optionalAuthMiddleware)
 	.input(z.object({ postId: z.string() }))
 	.query(async ({ input, ctx }) => {
-		const { db } = ctx;
+		const { auth, db } = ctx;
+		const clerkUserId = auth?.userId;
+
+		const user = clerkUserId
+			? ((
+					await db.account.findUnique({
+						where: {
+							clerkUserId: clerkUserId
+						},
+						include: {
+							user: true
+						}
+					})
+				)?.user ?? null)
+			: null;
 
 		const postRaw = await db.post.findUnique({
 			where: {
@@ -68,7 +83,7 @@ export const getPostByIdProcedure = publicProcedure
 			}))
 		);
 
-		const votes = await getPostVotes(postRaw.id, null, db);
+		const votes = await getPostVotes(postRaw.id, user?.id, db);
 
 		const output = {
 			post: post,

@@ -8,6 +8,7 @@ import { Button } from '@/lib/shadcn/ui/button';
 import {
 	Tooltip,
 	TooltipContent,
+	TooltipProvider,
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { useFileStagingContext } from '@/modules/file/contexts/file-staging-provider';
@@ -124,23 +125,25 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 				>
 					<Icon icon="image" />
 				</Button> */}
-				<Tooltip>
-					<TooltipTrigger asChild>
-						<Button
-							size="xs"
-							theme="neutral"
-							variant={'ghost'}
-							iconOnly
-							onClick={() => openFileDialog()}
-							disabled={locked}
-						>
-							<Icon icon="file" />
-						</Button>
-					</TooltipTrigger>
-					<TooltipContent>
-						Dodaj materijale - skripte, bilješke, itd.
-					</TooltipContent>
-				</Tooltip>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								size="xs"
+								theme="neutral"
+								variant={'ghost'}
+								iconOnly
+								onClick={() => openFileDialog()}
+								disabled={locked}
+							>
+								<Icon icon="file" />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>
+							Dodaj materijale - skripte, bilješke, itd.
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			</div>
 
 			{/* <div className="self-stretch w-px bg-neutral-medium my-1" />

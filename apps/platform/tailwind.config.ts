@@ -147,11 +147,13 @@ export default {
 		'theme-success',
 		'theme-danger',
 		'theme-warning',
-		'theme-info'
+		'theme-info',
+		'input'
 	],
 	plugins: [
 		require('@tailwindcss/container-queries'),
-		require('tailwindcss-animate')
+		require('tailwindcss-animate'),
+		require('tailwindcss-displaymodes')
 	],
-	darkMode: ['class', 'class']
+	darkMode: ['class']
 } satisfies Config;

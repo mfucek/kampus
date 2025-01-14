@@ -1,4 +1,3 @@
-import { VoteType } from '@prisma/client';
 import { type JSONContent } from '@tiptap/react';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
@@ -6,6 +5,7 @@ import { z } from 'zod';
 import { getFileUrl } from '@/lib/s3';
 import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type RecursivePost } from '../../types/recursive-post';
+import { sortPostVotes } from '../helpers/get-post-votes';
 
 const MAX_DEPTH = 5;
 
@@ -13,12 +13,21 @@ export const getThreadProcedure = publicProcedure
 	.use(optionalAuthMiddleware)
 	.input(z.object({ postId: z.string() }))
 	.query(async ({ input, ctx }) => {
-		const { db } = ctx;
+		const { auth, db } = ctx;
+		const clerkUserId = auth?.userId;
 
-		let userId = null;
-		if (ctx.user) {
-			userId = ctx.user.id;
-		}
+		const user = clerkUserId
+			? ((
+					await db.account.findUnique({
+						where: {
+							clerkUserId: clerkUserId
+						},
+						include: {
+							user: true
+						}
+					})
+				)?.user ?? null)
+			: null;
 
 		const fetchReplies = async (
 			postId: string,
@@ -48,14 +57,7 @@ export const getThreadProcedure = publicProcedure
 				throw new TRPCError({ code: 'NOT_FOUND', message: 'Post not found' });
 			}
 
-			const votes = Array.from(post.Votes);
-
-			const likes = votes.filter((vote) => vote.type === VoteType.UP).length;
-			const dislikes = votes.filter(
-				(vote) => vote.type === VoteType.DOWN
-			).length;
-			const userVote =
-				votes.find((vote) => vote.userId === userId)?.type ?? null;
+			const votes = sortPostVotes(post.Votes, user?.id);
 
 			const replies = await db.post.findMany({
 				where: { replyToId: postId },
@@ -90,11 +92,7 @@ export const getThreadProcedure = publicProcedure
 					}
 				},
 				replies: recursiveReplies.filter((reply) => reply !== null),
-				votes: {
-					likes,
-					dislikes,
-					userVote
-				},
+				votes: votes,
 				documentFiles: documentFilesWithUrls.map((file) => ({
 					fileId: file.File.id,
 					contentType: file.File.contentType,

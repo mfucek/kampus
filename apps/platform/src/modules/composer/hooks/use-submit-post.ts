@@ -46,8 +46,9 @@ export const useSubmitPost = () => {
 	const handleSubmit = async (overrides?: {
 		bodyOverride?: JSONContent;
 		filesOverride?: StagedFile[];
+		replyToIdOverride?: string;
 	}) => {
-		const { bodyOverride, filesOverride } = overrides ?? {};
+		const { bodyOverride, filesOverride, replyToIdOverride } = overrides ?? {};
 
 		setIsSubmitting(true);
 		setLocked(true);
@@ -55,7 +56,7 @@ export const useSubmitPost = () => {
 			body: bodyOverride ?? body,
 			collegeId: collegeId,
 			topicId: topicId,
-			replyToId: replyToId
+			replyToId: replyToIdOverride ?? replyToId
 		});
 
 		const filesToUpload = filesOverride ?? files;
@@ -107,6 +108,8 @@ export const useSubmitPost = () => {
 		setLocked(false);
 
 		router.refresh();
+
+		return post;
 	};
 
 	return { handleSubmit, isSubmitting };

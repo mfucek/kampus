@@ -1,6 +1,10 @@
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
+import packageJson from '../package.json' assert { type: 'json' };
+
+const version = packageJson.version;
+
 export const env = createEnv({
 	/**
 	 * Specify your server-side environment variables schema here. This way you can ensure the app
@@ -37,7 +41,8 @@ export const env = createEnv({
 	client: {
 		// NEXT_PUBLIC_CLIENTVAR: z.string(),
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
-		NEXT_PUBLIC_DEPLOYMENT: z.enum(['staging', 'production'])
+		NEXT_PUBLIC_DEPLOYMENT: z.enum(['staging', 'production']),
+		NEXT_PUBLIC_VERSION: z.string()
 	},
 
 	/**
@@ -66,7 +71,8 @@ export const env = createEnv({
 		STRIPE_PRICE_ID_MONTHLY_CHEAP: process.env.STRIPE_PRICE_ID_MONTHLY_CHEAP,
 		STRIPE_PRICE_ID_MONTHLY_PRO: process.env.STRIPE_PRICE_ID_MONTHLY_PRO,
 		STRIPE_PRICE_ID_LIFETIME: process.env.STRIPE_PRICE_ID_LIFETIME,
-		NEXT_PUBLIC_DEPLOYMENT: process.env.NEXT_PUBLIC_DEPLOYMENT
+		NEXT_PUBLIC_DEPLOYMENT: process.env.NEXT_PUBLIC_DEPLOYMENT,
+		NEXT_PUBLIC_VERSION: version
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

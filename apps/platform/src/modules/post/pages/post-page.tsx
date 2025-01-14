@@ -18,7 +18,7 @@ export const PostPage = ({ params }: PageProps) => {
 
 	return (
 		<>
-			<Container className="py-10">
+			<Container>
 				<div className="w-full h-full flex flex-col px-4">
 					<div className="flex flex-col w-full gap-10">
 						<PostHeader postId={postId} />

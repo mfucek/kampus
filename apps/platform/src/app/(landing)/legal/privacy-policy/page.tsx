@@ -78,11 +78,11 @@ const Page = () => {
 					geographically, the applicable privacy law may mean you have certain
 					rights regarding your personal information. Learn more about your
 					privacy rights . How do you exercise your rights? The easiest way to
-					exercise your rights is by visiting http://www.kampus.hr/profile , or
-					by contacting us. We will consider and act upon any request in
-					accordance with applicable data protection laws. Want to learn more
-					about what we do with any information we collect? Review the Privacy
-					Notice in full .
+					exercise your rights is by visiting
+					http://www.kampus.hr/settings/profile , or by contacting us. We will
+					consider and act upon any request in accordance with applicable data
+					protection laws. Want to learn more about what we do with any
+					information we collect? Review the Privacy Notice in full .
 				</p>
 
 				<h3 className="title-3">TABLE OF CONTENTS</h3>
@@ -718,7 +718,7 @@ const Page = () => {
 					the right to withdraw your consent to our processing of your personal
 					information. These rights may be limited in some circumstances by
 					applicable law. To request to review, update, or delete your personal
-					information, please visit: http://www.kampus.hr/profile .
+					information, please visit: http://www.kampus.hr/settings/profile .
 				</p>
 			</Container>
 		</main>

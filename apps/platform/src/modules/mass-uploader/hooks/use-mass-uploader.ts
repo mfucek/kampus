@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useToast } from '@/lib/shadcn/ui/use-toast';
+import { useComposerBodyContext } from '@/modules/composer/contexts/composer-body-provider';
 import { useComposerController } from '@/modules/composer/contexts/composer-controller-provider';
 import { useSubmitPost } from '@/modules/composer/hooks/use-submit-post';
 import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';
@@ -10,11 +11,15 @@ import {
 	type StagedFile,
 	useFileStagingContext
 } from '@/modules/file/contexts/file-staging-provider';
+import { composerSectionDefaultBody } from '../components/sections/composer-section';
 
 export const useMassUploader = () => {
 	const { files, setFiles } = useFileStagingContext();
 	const { topicId } = useComposerController();
 	const { handleSubmit } = useSubmitPost();
+
+	const { body: bodyFromContext, setBody: setContextBody } =
+		useComposerBodyContext();
 
 	const { toast } = useToast();
 
@@ -50,7 +55,25 @@ export const useMassUploader = () => {
 				return;
 			}
 
-			uploadInProgressRef.current = true; // Mark the upload as running
+			// Mark the upload as running
+			uploadInProgressRef.current = true;
+
+			// Create parent post
+			const parentPost = await handleSubmit({
+				// add body override so that the composer body is not reset after publishing
+				bodyOverride: bodyFromContext ?? composerSectionDefaultBody,
+				filesOverride: []
+			});
+
+			if (!parentPost) {
+				toast({
+					title: 'Dogodila se greška',
+					description: 'Greška pri kreaciji parent posta',
+					variant: 'danger'
+				});
+				return;
+			}
+
 			for (const file of [...files]) {
 				if (isCancelledRef.current || !uploadingInProgress) {
 					toast({
@@ -70,7 +93,7 @@ export const useMassUploader = () => {
 				}
 
 				try {
-					await publishFile(file);
+					await publishFile(file, parentPost.id);
 				} catch (e: unknown) {
 					toast({
 						title: `Greška pri uploadanju datoteke: ${file.name}`,
@@ -83,7 +106,9 @@ export const useMassUploader = () => {
 				// Remove the uploaded file from the list
 				setFiles((prevFiles: StagedFile[]) => prevFiles.slice(1));
 			}
-			uploadInProgressRef.current = false; // Mark upload as finished
+
+			// Mark upload as finished
+			uploadInProgressRef.current = false;
 			setUploadingInProgress(false);
 		};
 
@@ -107,7 +132,7 @@ export const useMassUploader = () => {
 		};
 	}, [uploadingInProgress, files, setFiles]);
 
-	const publishFile = async (file: StagedFile) => {
+	const publishFile = async (file: StagedFile, parentPostId: string) => {
 		const isSolved = file.documentOptions?.types.includes('SOLVED')
 			? ' (ima rješenje i/ili postupak)'
 			: '';
@@ -149,7 +174,11 @@ export const useMassUploader = () => {
 			]
 		};
 
-		await handleSubmit({ bodyOverride: body, filesOverride: [file] });
+		await handleSubmit({
+			bodyOverride: body,
+			filesOverride: [file],
+			replyToIdOverride: parentPostId
+		});
 
 		toast({
 			title: 'Materijal objavljen',

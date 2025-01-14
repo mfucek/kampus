@@ -37,8 +37,11 @@ export const useComposerBodyContext = () => {
 
 export const ComposerBodyProvider: FC<{
 	children: ReactNode;
-}> = ({ children }) => {
-	const [body, setBody] = useState<JSONContent | null>(defaultData.body);
+	defaultBody?: JSONContent;
+}> = ({ children, defaultBody }) => {
+	const [body, setBody] = useState<JSONContent | null>(
+		defaultBody ?? defaultData.body
+	);
 	const [characterCount, setCharacterCount] = useState(
 		defaultData.characterCount
 	);

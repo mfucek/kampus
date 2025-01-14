@@ -11,6 +11,7 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { type ListAllCollegesItem } from '@/modules/topic/college/api/procedures/list-all';
 import { type ListTopCollegesItem } from '@/modules/topic/college/api/procedures/list-top-colleges';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 const CollegeCard: FC<{
 	college: ListTopCollegesItem;
@@ -48,6 +49,8 @@ export const HeroSearch: FC<{
 	topColleges: ListTopCollegesItem[];
 	allColleges: ListAllCollegesItem[];
 }> = ({ topColleges, allColleges }) => {
+	const pathname = usePathname();
+
 	const { isSignedIn } = useAuth();
 	const { openSignUp } = useClerk();
 
@@ -76,7 +79,7 @@ export const HeroSearch: FC<{
 
 	<>
 		<Button
-			onClick={() => openSignUp({ afterSignInUrl: '/colleges' })}
+			onClick={() => openSignUp({ afterSignInUrl: pathname })}
 			theme="accent"
 			size="md"
 			variant="solid"

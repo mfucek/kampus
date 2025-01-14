@@ -22,7 +22,13 @@ export const columns: ColumnDef<
 	},
 	{
 		accessorKey: 'document.academicYear',
-		header: 'Akademska godina'
+		header: 'Godina',
+		cell: ({ row }) => {
+			const data = row.original;
+			return data.document.academicYear
+				? data.document.academicYear.split('/').join(' / ')
+				: '-';
+		}
 	},
 	{
 		accessorKey: 'document.types',
@@ -45,6 +51,21 @@ export const columns: ColumnDef<
 		)
 	},
 	{
+		id: 'score',
+		header: 'Ocjena',
+		cell: ({ row }) => {
+			const score = row.original.votes.score;
+			return (
+				<Badge
+					variant={'secondary'}
+					theme={score == 0 ? 'neutral' : score > 0 ? 'success' : 'danger'}
+				>
+					{score}
+				</Badge>
+			);
+		}
+	},
+	{
 		id: 'actions-open',
 		cell: ({ row }) => {
 			// eslint-disable-next-line react-hooks/rules-of-hooks
@@ -54,6 +75,7 @@ export const columns: ColumnDef<
 
 			return (
 				<div className="flex flex-row gap-1 justify-end">
+					{data.post.id}
 					<Button
 						theme="neutral"
 						variant="solid-weak"
@@ -62,13 +84,12 @@ export const columns: ColumnDef<
 							if (data.post.id) setPostId(data.post.id);
 						}}
 					>
+						{data.post.replyCount}
 						<Icon icon="chat-single" />
-						Open discussion
 					</Button>
 					<a href={data.url} target="_blank" rel="noreferrer">
-						<Button theme="neutral" variant="solid-weak" size="sm">
+						<Button theme="neutral" variant="solid-weak" size="sm" iconOnly>
 							<Icon icon="download" />
-							Download
 						</Button>
 					</a>
 				</div>

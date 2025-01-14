@@ -11,7 +11,10 @@ import { Divider } from '@/global/molecules/navbar/divider';
 import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+import { useIsPWA } from '@/utils/use-is-pwa';
+import { useIsMobile } from '@/utils/useMediaQuery';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
@@ -19,10 +22,17 @@ export const Navbar = () => {
 	const { isSignedIn } = useAuth();
 	const { openSignIn, openSignUp } = useClerk();
 
+	const { isMobile } = useIsMobile();
+	const { isPWA } = useIsPWA();
+
+	const pathname = usePathname();
+
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
 			enabled: !!isSignedIn
 		});
+
+	if (isMobile && isPWA) return null;
 
 	const Links = () => {
 		const scrollToSection = (id: string) => {
@@ -75,7 +85,7 @@ export const Navbar = () => {
 						<ThemeToggler size="sm" />
 					</ActionsGroup>
 					<Divider />
-					<Link href="/profile">
+					<Link href="/settings/profile">
 						<div className="w-8 h-8 rounded-full border border-neutral-weak bg-neutral-weak relative overflow-hidden clickable">
 							{profilePictureUrl && (
 								<Image
@@ -98,7 +108,7 @@ export const Navbar = () => {
 				<ThemeToggler size="sm" />
 				<div className="hidden md:block">
 					<Button
-						onClick={() => openSignUp({ forceRedirectUrl: '/colleges' })}
+						onClick={() => openSignUp({ forceRedirectUrl: pathname })}
 						theme="neutral"
 						size="sm"
 						variant="solid-weak"
@@ -107,7 +117,7 @@ export const Navbar = () => {
 					</Button>
 				</div>
 				<Button
-					onClick={() => openSignIn({ forceRedirectUrl: '/colleges' })}
+					onClick={() => openSignIn({ forceRedirectUrl: pathname })}
 					theme="accent"
 					size="sm"
 					variant="solid"

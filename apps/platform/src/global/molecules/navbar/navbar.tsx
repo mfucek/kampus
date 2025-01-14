@@ -10,6 +10,9 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { api } from '@/lib/trpc/react';
 import { feedbackFormURL } from '@/modules/feedback/constants';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+import { useIsPWA } from '@/utils/use-is-pwa';
+import { useIsMobile } from '@/utils/useMediaQuery';
+import { usePathname } from 'next/navigation';
 import { Icon } from '../../components/icon';
 import { ActionsGroup } from './actions-group';
 import { Breadcrumbs } from './breadcrumbs';
@@ -18,13 +21,20 @@ import { Divider } from './divider';
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
+	const pathname = usePathname();
+
 	const { isSignedIn } = useAuth();
 	const { openSignUp } = useClerk();
+
+	const { isMobile } = useIsMobile();
+	const { isPWA } = useIsPWA();
 
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
 			enabled: !!isSignedIn
 		});
+
+	if (isMobile && isPWA) return null;
 
 	const Actions = () => {
 		if (isSignedIn) {
@@ -52,7 +62,7 @@ export const Navbar = () => {
 						{/* <NotificationsButton /> */}
 					</ActionsGroup>
 					<Divider />
-					<Link href="/profile">
+					<Link href="/settings/profile">
 						<div className="w-8 h-8 rounded-full border border-neutral-weak bg-neutral-weak relative overflow-hidden clickable">
 							{profilePictureUrl && (
 								<Image
@@ -76,21 +86,21 @@ export const Navbar = () => {
 				<Button
 					onClick={() =>
 						openSignUp({
-							forceRedirectUrl: '/colleges'
+							forceRedirectUrl: pathname
 						})
 					}
 					theme="accent"
 					size="md"
 					variant="solid"
 				>
-					Sign In
+					Ulogiraj se
 				</Button>
 			</>
 		);
 	};
 
 	return (
-		<div className="md:bg-section md:border-b md:border-b-neutral-weak h-14 flex flex-row justify-between items-center px-2 shrink-0">
+		<div className="bg-section md:border-b md:border-b-neutral-weak h-14 flex flex-row justify-between items-center px-2 shrink-0">
 			<div className="flex flex-row gap-3 items-center">
 				<Link href="/" className="flex flex-row">
 					{isStaging && (

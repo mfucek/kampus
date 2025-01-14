@@ -26,7 +26,7 @@ export const FileUploadSection = ({
 	return (
 		<ContentPadding>
 			<Section
-				title="3. Prenesi materijale"
+				title="4. Prenesi materijale"
 				description={`Dovuci dokumente u popis dolje, dodaj kategoriju na svaki dokument i, ako ima smisla, dodaj akademsku godinu (npr. za ispite). Ako nedostaje neka kategorija javi mi se, pa ju dodamo!`}
 			>
 				<div className="flex flex-row flex-1 justify-end gap-2">

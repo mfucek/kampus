@@ -13,6 +13,10 @@ export const useComposerEditor = () => {
 
 	// re-rendering fix
 	const [_contentKey, setContentKey] = useState(0);
+	useEffect(() => {
+		setContentKey((prev) => prev + 1);
+	}, [body]);
+
 	const enabled = !locked;
 
 	const editor = useEditor({

@@ -37,7 +37,7 @@ export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
 
 	if (isMobile) {
 		return (
-			<div className="bg-background md:p-2 w-full h-full">
+			<div className="bg-background md:p-2 w-full md:h-full">
 				<div className="rounded-lg md:bg-section flex flex-col items-center min-h-full">
 					{children}
 				</div>

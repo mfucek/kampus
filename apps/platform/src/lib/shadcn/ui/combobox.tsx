@@ -28,7 +28,8 @@ export const Combobox = <T,>({
 	onChange,
 	makeKey,
 	makeName,
-	placeholder
+	placeholder,
+	className
 }: {
 	values: T[];
 	value: T | null;
@@ -36,6 +37,7 @@ export const Combobox = <T,>({
 	makeKey: (value: T) => string;
 	makeName: (value: T) => string;
 	placeholder: string;
+	className?: string;
 }) => {
 	const [open, setOpen] = useState(false);
 	const { isDesktop } = useIsMobile();
@@ -87,9 +89,9 @@ export const Combobox = <T,>({
 						role="combobox"
 						rounded
 						aria-expanded={open}
-						className="w-[200px] justify-between"
+						className={cn(className)}
 					>
-						<span className="input">{selectedName ?? placeholder}</span>
+						{selectedName ?? placeholder}
 						<Icon icon="chevron-down" className="bg-neutral-medium" />
 					</Button>
 				</PopoverTrigger>
@@ -103,8 +105,8 @@ export const Combobox = <T,>({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="outline" className="w-[150px] justify-start" rounded>
-					<span className="input">{selectedName ?? placeholder}</span>
+				<Button variant="outline" className={cn(className)} rounded>
+					{selectedName ?? placeholder}
 					<Icon icon="chevron-down" className="bg-neutral-medium" />
 				</Button>
 			</DrawerTrigger>

@@ -5,6 +5,7 @@ import { getFileUrl } from '@/lib/s3';
 import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
+import { sortPostVotes } from '../helpers/get-post-votes';
 
 const paginationSchema = z.object({
 	limit: z.number().min(1).max(100).nullish(),
@@ -96,13 +97,6 @@ export const listProcedure = publicProcedure
 
 		const posts = await Promise.all(
 			postsRaw.map(async (post) => {
-				const votes = {
-					likes: post.Votes.filter((vote) => vote.type === 'UP').length,
-					dislikes: post.Votes.filter((vote) => vote.type === 'DOWN').length,
-					userVote:
-						post.Votes.find((vote) => vote.userId === user?.id)?.type ?? null
-				};
-
 				// const filesRaw = await db.file.findMany({
 				// 	where: {
 				// 		postId: post.id
@@ -128,6 +122,8 @@ export const listProcedure = publicProcedure
 						}))
 				);
 
+				const votes = sortPostVotes(post.Votes, user?.id);
+
 				return {
 					post: {
 						id: post.id,
@@ -148,11 +144,7 @@ export const listProcedure = publicProcedure
 							badge: post.Author.badge
 						}
 					},
-					votes: {
-						likes: votes.likes,
-						dislikes: votes.dislikes,
-						userVote: votes.userVote
-					},
+					votes: votes,
 					author: {
 						id: post.Author.id,
 						displayName: post.Author.displayName,

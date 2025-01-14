@@ -86,9 +86,14 @@ export const listDocumentsProcedure = publicProcedure
 				: {})
 		} satisfies Prisma.DocumentFileWhereInput;
 
-		const include: Prisma.DocumentFileInclude = {
-			File: true
-		};
+		const include = {
+			File: true,
+			Post: {
+				include: {
+					Votes: true
+				}
+			}
+		} satisfies Prisma.DocumentFileInclude;
 
 		const documentFilesRaw = await db.documentFile.findMany({
 			where,
@@ -111,7 +116,13 @@ export const listDocumentsProcedure = publicProcedure
 					types: documentFile.types
 				};
 
-				const originalPostId = documentFile.postId;
+				const likes =
+					documentFile.Post?.Votes.filter((vote) => vote.type === 'UP')
+						.length ?? 0;
+				const dislikes =
+					documentFile.Post?.Votes.filter((vote) => vote.type === 'DOWN')
+						.length ?? 0;
+				const score = likes - dislikes;
 
 				return {
 					file: {
@@ -123,7 +134,10 @@ export const listDocumentsProcedure = publicProcedure
 					},
 					document: documentData,
 					post: {
-						id: originalPostId
+						id: documentFile.postId
+					},
+					votes: {
+						score
 					},
 					url: downloadUrl
 				};

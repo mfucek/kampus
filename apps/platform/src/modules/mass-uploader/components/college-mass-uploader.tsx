@@ -3,12 +3,16 @@
 import { Divider } from '@/global/components/divider';
 import { ListLayout } from '@/global/layouts/list-layout';
 import { FileStagingProvider } from '@/modules/file/contexts/file-staging-provider';
-import { useMassUploader } from '../hooks';
+import { useMassUploader } from '../hooks/use-mass-uploader';
 
 import { ComposerBodyProvider } from '@/modules/composer/contexts/composer-body-provider';
 import { ComposerControllerProvider } from '@/modules/composer/contexts/composer-controller-provider';
 import { type SubjectListItem } from '@/modules/topic/subject/api/procedures/list';
 import { useState } from 'react';
+import {
+	ComposerSection,
+	composerSectionDefaultBody
+} from './sections/composer-section';
 import { FileListSection } from './sections/file-list';
 import { FileUploadSection } from './sections/file-upload';
 import { IntroSection } from './sections/intro';
@@ -46,7 +50,7 @@ export const MassUploader = ({
 
 	return (
 		<FileStagingProvider>
-			<ComposerBodyProvider>
+			<ComposerBodyProvider defaultBody={composerSectionDefaultBody}>
 				<ListLayout size="lg">
 					<IntroSection />
 
@@ -57,6 +61,13 @@ export const MassUploader = ({
 						subject={targetSubject}
 						setSubject={setTargetSubject}
 					/>
+
+					{targetSubject && (
+						<>
+							<Divider />
+							<ComposerSection />
+						</>
+					)}
 
 					{targetSubject && (
 						<>

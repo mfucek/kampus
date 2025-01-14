@@ -4,14 +4,9 @@ import { Icon } from '@/global/components/icon';
 import { Section } from '@/global/components/section';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from '@/lib/shadcn/ui/select';
 import { type SubjectListItem } from '@/modules/topic/subject/api/procedures/list';
+
+import { Combobox } from '@/lib/shadcn/ui/combobox';
 
 export const SubjectSelectionSection = ({
 	subjects,
@@ -29,26 +24,14 @@ export const SubjectSelectionSection = ({
 				description="U izborniku desno odaberi predmet"
 			>
 				<div className="flex flex-row flex-1 justify-end gap-2">
-					<Select
-						value={subject?.id}
-						onValueChange={(value) =>
-							setSubject(subjects.find((s) => s.id === value) ?? null)
-						}
-					>
-						<SelectTrigger className="w-full md:w-fit">
-							<SelectValue placeholder="Select a subject" />
-						</SelectTrigger>
-						<SelectContent>
-							{subjects.sort().map((s) => (
-								<SelectItem key={s.id} value={s.id}>
-									{s.name}{' '}
-									<span className="text-neutral-strong">
-										{`(${s.externalCode})`}
-									</span>
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
+					<Combobox
+						values={subjects}
+						value={subject}
+						onChange={(subject) => setSubject(subject)}
+						placeholder="Odaberi predmet..."
+						makeKey={(s) => s.id}
+						makeName={(s) => s.name}
+					/>
 					{subject && (
 						<a
 							href={`/${subject.college.slug}/subject/${subject.slug}`}

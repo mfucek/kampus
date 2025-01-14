@@ -14,7 +14,22 @@ import { FileUploadSection } from './sections/file-upload';
 import { IntroSection } from './sections/intro';
 import { SubjectSelectionSection } from './sections/subject-selection';
 
-export const CollegeMassUploader = ({
+const DocumentUploader = () => {
+	const { startUploading, uploadingInProgress } = useMassUploader();
+
+	return (
+		<>
+			<FileUploadSection
+				startUploading={startUploading}
+				uploadingInProgress={uploadingInProgress}
+			/>
+
+			<FileListSection />
+		</>
+	);
+};
+
+export const MassUploader = ({
 	collegeId,
 	subjects
 }: {
@@ -50,27 +65,12 @@ export const CollegeMassUploader = ({
 								collegeId={collegeId}
 								topicId={targetSubject.id}
 							>
-								<MassUploader />
+								<DocumentUploader />
 							</ComposerControllerProvider>
 						</>
 					)}
 				</ListLayout>
 			</ComposerBodyProvider>
 		</FileStagingProvider>
-	);
-};
-
-export const MassUploader = () => {
-	const { startUploading, uploadingInProgress } = useMassUploader();
-
-	return (
-		<>
-			<FileUploadSection
-				startUploading={startUploading}
-				uploadingInProgress={uploadingInProgress}
-			/>
-
-			<FileListSection />
-		</>
 	);
 };

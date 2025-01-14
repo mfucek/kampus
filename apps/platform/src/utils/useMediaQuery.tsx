@@ -1,0 +1,45 @@
+'use client';
+
+import {
+	createContext,
+	type ReactNode,
+	useContext,
+	useEffect,
+	useState
+} from 'react';
+
+const ViewportSizeContext = createContext({
+	isMobile: false,
+	isDesktop: false
+});
+
+export const ViewportSizeProvider = ({ children }: { children: ReactNode }) => {
+	const [isMobile, setIsMobile] = useState(false);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth < 768) {
+				setIsMobile(true);
+			} else {
+				setIsMobile(false);
+			}
+		};
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
+	return (
+		<ViewportSizeContext.Provider value={{ isMobile, isDesktop: !isMobile }}>
+			{children}
+		</ViewportSizeContext.Provider>
+	);
+};
+
+export const useIsMobile = () => {
+	const context = useContext(ViewportSizeContext);
+
+	return {
+		isMobile: context.isMobile,
+		isDesktop: context.isDesktop
+	};
+};

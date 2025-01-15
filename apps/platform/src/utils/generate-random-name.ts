@@ -134,7 +134,7 @@ export const generateRandomName = () => {
 	const randomAdjective =
 		adjectives[Math.floor(Math.random() * adjectives.length)];
 	const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-	const randomNumber = Math.floor(100 + Math.random() * 900); // Random 3-digit number
+	const randomNumber = Math.floor(10 + Math.random() * 90); // Random 2-digit number
 
 	return `${randomAdjective}${randomNoun}${randomNumber}`;
 };

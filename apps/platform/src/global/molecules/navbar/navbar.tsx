@@ -41,9 +41,9 @@ export const Navbar = () => {
 			return (
 				<>
 					<ActionsGroup className="hidden md:flex">
-						<Button size="sm" variant="solid-weak" theme="accent">
+						{/* <Button size="sm" variant="solid-weak" theme="accent">
 							Podrzi nas
-						</Button>
+						</Button> */}
 						<a
 							href={feedbackFormURL}
 							className="hidden md:block"

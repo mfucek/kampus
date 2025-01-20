@@ -20,8 +20,11 @@ export const FaqSection = () => {
 						<AccordionItem value="item-1">
 							<AccordionTrigger>Je li Kampus.hr besplatan?</AccordionTrigger>
 							<AccordionContent>
-								Da, osnovno korištenje Kampus.hr je potpuno besplatan. Premium
-								članstvo donosi dodatne pogodnosti, ali nije obavezno.
+								{/* Da, osnovno korištenje Kampus.hr je potpuno besplatan. Premium
+								članstvo donosi dodatne pogodnosti, ali nije obavezno. */}
+								Da, Kampus je u beta fazi potpuno besplatan. Kasnije će se
+								uvesti model pretplate gdje bi se prikazivale reklame pri
+								preuzimanju materijala kod besplatanih korisnika.
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="item-2">

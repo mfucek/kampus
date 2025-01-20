@@ -6,7 +6,7 @@ import { headers } from 'next/headers';
 
 import { NextRequest } from 'next/server';
 
-import { db } from '@/lib/prisma/db';
+import { db } from '@/lib/db';
 import { getAuth } from '@clerk/nextjs/server';
 import { User } from '@prisma/client';
 

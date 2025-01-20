@@ -1,4 +1,4 @@
-import { db } from '@/lib/prisma/db';
+import { db } from '@/lib/db';
 import { type RuleType, ScopeType } from '@prisma/client';
 import { rolePermissions } from '../constants/roles';
 

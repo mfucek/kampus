@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { db } from '@/lib/prisma/db';
+import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 

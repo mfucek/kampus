@@ -1,4 +1,4 @@
-import { db } from '@/lib/prisma/db';
+import { db } from '@/lib/db';
 import { getFileUrl } from '@/lib/s3';
 
 export const getUserWithAvatarUrl = async (userId: string) => {

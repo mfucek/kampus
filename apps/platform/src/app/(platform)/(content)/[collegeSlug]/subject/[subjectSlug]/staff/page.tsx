@@ -1,4 +1,4 @@
-import { db } from '@/lib/prisma/db';
+import { db } from '@/lib/db';
 import { SubjectStaffPage } from '@/modules/topic/subject/pages/subject-staff-page';
 
 export default SubjectStaffPage;

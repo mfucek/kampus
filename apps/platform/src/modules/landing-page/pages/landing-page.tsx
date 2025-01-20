@@ -3,7 +3,6 @@ import { Footer } from '../components/footer';
 import { FaqSection } from '../components/section/faq';
 import { FeaturesSection } from '../components/section/features';
 import { HeroSection } from '../components/section/hero';
-import { PricingSection } from '../components/section/pricing';
 import { ReadMoreSection } from '../components/section/read-more';
 
 export const LandingPage: FC = async () => {
@@ -15,7 +14,7 @@ export const LandingPage: FC = async () => {
 					<ReadMoreSection />
 					<FeaturesSection />
 					{/* <BenefitsSection /> */}
-					<PricingSection />
+					{/* <PricingSection /> */}
 					<FaqSection />
 				</div>
 			</main>

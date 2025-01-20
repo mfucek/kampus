@@ -50,7 +50,7 @@ export const Navbar = () => {
 							className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
 							onClick={() => scrollToSection('features')}
 						>
-							Značajke
+							O platformi
 						</a>
 						<a
 							className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
@@ -58,12 +58,12 @@ export const Navbar = () => {
 						>
 							Kako radi
 						</a>
-						<a
+						{/* <a
 							className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
 							onClick={() => scrollToSection('pricing')}
 						>
 							Članstvo
-						</a>
+						</a> */}
 						<a
 							className="text-sm font-medium hover:underline underline-offset-4 cursor-pointer"
 							onClick={() => scrollToSection('faq')}

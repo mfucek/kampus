@@ -25,7 +25,7 @@ export const ComposerWrapper: FC<{
 			className={cn(
 				'flex flex-col gap-3 w-full relative',
 				'rounded-xl overflow-hidden p-3',
-				'border md:border-neutral-weak',
+				'border border-neutral-weak',
 				isSignedIn && 'bg-section',
 				!isSignedIn && 'bg-section md:bg-neutral-weak',
 				className

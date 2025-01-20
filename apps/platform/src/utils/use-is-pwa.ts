@@ -12,9 +12,5 @@ export const useIsPWA = () => {
 		);
 	}, []);
 
-	useEffect(() => {
-		console.log('isPWA', isPWA);
-	}, [isPWA]);
-
 	return { isPWA };
 };

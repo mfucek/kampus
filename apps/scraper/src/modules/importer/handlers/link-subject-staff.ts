@@ -61,19 +61,23 @@ export const linkSubjectStaff = async ({
 		where: {
 			collegeId: collegeId,
 			type: 'SUBJECT',
-			Subject: {
-				subjectExternalLink: {
-					not: null
+			NOT: {
+				Subject: {
+					externalLinks: {
+						isEmpty: true
+					}
 				}
 			}
 		},
 		select: {
 			id: true,
-			Subject: { select: { subjectExternalLink: true } }
+			Subject: { select: { externalLinks: true } }
 		}
 	});
 	for (const s of dbSubjects) {
-		subjectCache.set(s.Subject!.subjectExternalLink!, s.id);
+		for (const link of s.Subject!.externalLinks) {
+			subjectCache.set(link, s.id);
+		}
 	}
 
 	// link -> id

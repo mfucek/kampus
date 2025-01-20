@@ -1,4 +1,4 @@
-import { db } from '@/lib/prisma/db';
+import { db } from '@/lib/db';
 import { type Metadata } from 'next';
 
 const defaultDescription =

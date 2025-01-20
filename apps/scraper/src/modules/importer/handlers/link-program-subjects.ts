@@ -83,8 +83,13 @@ export const linkProgramSubjects = async ({
 			collegeId: collegeId,
 			type: 'SUBJECT',
 			Subject: {
-				subjectExternalLink: {
-					not: null
+				// subjectExternalLink: {
+				// 	not: null
+				// }
+				NOT: {
+					externalLinks: {
+						isEmpty: true
+					}
 				}
 			}
 		},
@@ -92,13 +97,15 @@ export const linkProgramSubjects = async ({
 			id: true,
 			Subject: {
 				select: {
-					subjectExternalLink: true
+					externalLinks: true
 				}
 			}
 		}
 	});
 	for (const s of dbSubjects) {
-		subjectCache.set(s.Subject!.subjectExternalLink!, s.id);
+		for (const link of s.Subject!.externalLinks) {
+			subjectCache.set(link, s.id);
+		}
 	}
 
 	// ------------------

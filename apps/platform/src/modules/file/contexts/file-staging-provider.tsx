@@ -57,7 +57,9 @@ export const useFileStagingContext = () => {
 	const context = useContext(FileStagingContext);
 
 	if (!context) {
-		throw new Error('useComposer must be used within a FileStagingProvider');
+		throw new Error(
+			'useFileStagingContext must be used within a FileStagingProvider'
+		);
 	}
 
 	return context;

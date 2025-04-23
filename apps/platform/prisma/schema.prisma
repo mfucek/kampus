@@ -176,7 +176,10 @@ model Post {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  body      Json?
+
+  hidden Boolean @default(false)
+
+  body Json?
 
   authorId String
   Author   User   @relation(fields: [authorId], references: [id])

@@ -53,7 +53,8 @@ export const listProcedure = publicProcedure
 				: {}),
 			...(topicId ? { topicId: topicId, replyToId: null } : {}),
 			...(replyToPostId ? { replyToId: replyToPostId } : {}),
-			...(authorId ? { authorId: authorId } : {})
+			...(authorId ? { authorId: authorId } : {}),
+			hidden: false
 		};
 
 		const include = {

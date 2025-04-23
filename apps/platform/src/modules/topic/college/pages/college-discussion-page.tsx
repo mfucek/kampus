@@ -10,6 +10,7 @@ import {
 } from '@/lib/shadcn/ui/select';
 import { Composer } from '@/modules/composer/components';
 import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
+import { FC } from 'react';
 
 interface PageProps {
 	params: Promise<{
@@ -17,7 +18,8 @@ interface PageProps {
 	}>;
 }
 
-export const CollegeDiscussionPage = async ({ params }: PageProps) => {
+// export const CollegeDiscussionPage = async ({ params }: PageProps) => {
+export const CollegeDiscussionPage: FC<PageProps> = async ({ params }) => {
 	const { collegeSlug } = await params;
 	const college = await api.college.getBySlug({
 		collegeSlug

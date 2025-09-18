@@ -1,10 +1,10 @@
-import { getS3UploadPresignedUrl } from '@/lib/s3';
+import { getFileUploadUrl } from '@/lib/s3/get-file-upload-url';
 import { protectedProcedure } from '@/server/api/trpc';
 import { nanoid } from 'nanoid';
 
 export const makeUploadUrlProcedure = protectedProcedure //
 	.mutation(async () => {
 		const key = nanoid();
-		const url = await getS3UploadPresignedUrl(key);
+		const url = await getFileUploadUrl(key);
 		return { url, key };
 	});

@@ -1,7 +1,7 @@
 import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
-import { getFileUrl } from '@/lib/s3';
+import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
 import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
@@ -119,7 +119,7 @@ export const listProcedure = publicProcedure
 							academicYear: file.academicYear ?? null,
 							title: file.title ?? null,
 							types: file.types,
-							url: await getFileUrl(file.File.key)
+							url: await getFileDownloadUrl(file.File.key)
 						}))
 				);
 

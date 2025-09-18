@@ -1,7 +1,7 @@
 import { type JSONContent } from '@tiptap/react';
 import { z } from 'zod';
 
-import { getFileUrl } from '@/lib/s3';
+import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
 import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 import { type FullPost } from '../../types/full-post';
@@ -79,7 +79,7 @@ export const getPostByIdProcedure = publicProcedure
 				academicYear: documentFile.academicYear,
 				types: documentFile.types,
 				title: documentFile.title,
-				url: await getFileUrl(documentFile.File.key)
+				url: await getFileDownloadUrl(documentFile.File.key)
 			}))
 		);
 

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { type Prisma } from '@prisma/client';
 
-import { getFileUrl } from '@/lib/s3';
+import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
 import { publicProcedure } from '@/server/api/trpc';
 import { fileFiltersSchema } from '../../schemas/file-filters';
 import { fileScopeSchema } from '../../schemas/file-scope';
@@ -113,7 +113,7 @@ export const listDocumentsProcedure = publicProcedure
 
 		const files = await Promise.all(
 			documentFilesRaw.map(async (documentFile) => {
-				const downloadUrl = await getFileUrl(documentFile.File.key);
+				const downloadUrl = await getFileDownloadUrl(documentFile.File.key);
 
 				const documentData = {
 					title: documentFile.title,

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { getFileUrl } from '@/lib/s3';
+import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
 import { publicProcedure } from '@/server/api/trpc';
 
 export const getUserProfilePictureUrlProcedure = publicProcedure
@@ -19,7 +19,7 @@ export const getUserProfilePictureUrlProcedure = publicProcedure
 
 		if (!profilePicture) return null;
 
-		const url = await getFileUrl(profilePicture.File.key);
+		const url = await getFileDownloadUrl(profilePicture.File.key);
 
 		return url;
 	});

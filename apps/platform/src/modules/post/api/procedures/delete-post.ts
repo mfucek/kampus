@@ -1,4 +1,4 @@
-import { deleteFiles } from '@/lib/s3';
+import { deleteFiles } from '@/lib/s3/delete-files';
 import { protectedProcedure } from '@/server/api/trpc';
 import { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';

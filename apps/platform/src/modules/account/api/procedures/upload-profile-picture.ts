@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { deleteFile } from '@/lib/s3';
+import { deleteFile } from '@/lib/s3/delete-file';
 import { protectedProcedure } from '@/server/api/trpc';
 
 export const uploadProfilePictureProcedure = protectedProcedure

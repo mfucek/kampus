@@ -1,4 +1,4 @@
-import { getFileUrl } from '@/lib/s3';
+import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
 import { protectedProcedure } from '@/server/api/trpc';
 
 export const getCurrentUserProfilePictureUrlProcedure =
@@ -16,7 +16,7 @@ export const getCurrentUserProfilePictureUrlProcedure =
 
 		if (!profilePicture) return null;
 
-		const url = await getFileUrl(profilePicture.File.key);
+		const url = await getFileDownloadUrl(profilePicture.File.key);
 
 		return url;
 	});

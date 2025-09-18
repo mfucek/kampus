@@ -5,16 +5,17 @@
 	"type": "module",
 	"scripts": {
 		"build": "next build",
-		"db:generate": "prisma generate --no-hints # prisma migrate dev",
-		"db:migrate": "prisma migrate deploy",
+		"db:generate": "prisma generate",
+		"db:migrate": "prisma migrate dev",
+		"db:deploy": "prisma migrate deploy",
 		"db:push": "prisma db push",
+		"db:migrate:pull": "mkdir -p prisma/migrations/0_init && prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql && npx prisma migrate resolve --applied 0_init",
 		"db:studio": "prisma studio --browser none",
 		"stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks/stripe",
-		"dev": "next dev --turbopack",
+		"dev": "next dev",
 		"postinstall": "prisma generate",
 		"lint": "next lint",
 		"start": "next start",
-		"tunnel": "lt --port 3000 --subdomain kampus-clerk",
 		"knip": "knip"
 	},
 	"dependencies": {

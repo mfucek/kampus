@@ -2,7 +2,7 @@ import { type JSONContent } from '@tiptap/react';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { getFileUrl } from '@/lib/s3';
+import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
 import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
 import { type RecursivePost } from '../../types/recursive-post';
 import { sortPostVotes } from '../helpers/get-post-votes';
@@ -71,7 +71,7 @@ export const getThreadProcedure = publicProcedure
 			const documentFilesWithUrls = await Promise.all(
 				post.DocumentFiles.map(async (documentFile) => ({
 					...documentFile,
-					url: await getFileUrl(documentFile.File.key)
+					url: await getFileDownloadUrl(documentFile.File.key)
 				}))
 			);
 

@@ -16,7 +16,7 @@ export const ComposerFooter = () => {
 
 	const remaining = MAX_CHARACTERS - characterCount;
 
-	// const { isMobile } = useIsMobile();
+	// const { isMobile } = useViewportSize();
 
 	return (
 		<div className="flex flex-row gap-2 items-center">

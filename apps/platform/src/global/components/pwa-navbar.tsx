@@ -3,9 +3,9 @@
 import { type FC } from 'react';
 
 import { api } from '@/deps/trpc/react';
+import { useViewportSize } from '@/deps/viewport-size';
 import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { cn } from '@/lib/shadcn/utils';
-import { useIsMobile } from '@/utils/useMediaQuery';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import { cva } from 'class-variance-authority';
 import Image from 'next/image';
@@ -80,7 +80,7 @@ export const PWANavbar = () => {
 	const { isSignedIn } = useAuth();
 	const { openSignUp } = useClerk();
 
-	const { isDesktop } = useIsMobile();
+	const { isDesktop } = useViewportSize();
 	const { isPWA } = useIsPWA();
 
 	const { data: profilePictureUrl } =

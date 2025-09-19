@@ -1,9 +1,9 @@
 'use client';
 
+import { useViewportSize } from '@/deps/viewport-size';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
-import { useIsMobile } from '@/utils/useMediaQuery';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -35,7 +35,7 @@ export const PageHeader = ({
 	}, []);
 
 	const router = useRouter();
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 
 	const SmallContent = () => {
 		return (

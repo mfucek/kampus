@@ -1,11 +1,11 @@
 'use client';
 
-import { useIsMobile } from '@/utils/useMediaQuery';
+import { useViewportSize } from '@/deps/viewport-size';
 import { usePathname } from 'next/navigation';
 import { SettingsMenu } from '../components/settings-menu';
 
 export const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 	const pathname = usePathname();
 
 	const isSettings = pathname === '/settings';

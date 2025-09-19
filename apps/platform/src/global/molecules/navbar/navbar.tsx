@@ -5,13 +5,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { api } from '@/deps/trpc/react';
+import { useViewportSize } from '@/deps/viewport-size';
 import { env } from '@/env';
 import { Logo } from '@/global/components/logo';
 import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
 import { feedbackFormURL } from '@/modules/feedback/constants';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
-import { useIsMobile } from '@/utils/useMediaQuery';
 import { usePathname } from 'next/navigation';
 import { Icon } from '../../components/icon';
 import { ActionsGroup } from './actions-group';
@@ -26,7 +26,7 @@ export const Navbar = () => {
 	const { isSignedIn } = useAuth();
 	const { openSignUp } = useClerk();
 
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 	const { isPWA } = useIsPWA();
 
 	const { data: profilePictureUrl } =

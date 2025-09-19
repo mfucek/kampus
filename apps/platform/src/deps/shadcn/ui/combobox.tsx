@@ -17,7 +17,8 @@ import {
 	PopoverTrigger
 } from '@/lib/shadcn/ui/popover';
 import { cn } from '@/lib/shadcn/utils';
-import { useIsMobile } from '@/utils/useMediaQuery';
+
+import { useViewportSize } from '@/deps/viewport-size';
 import { Button } from './button';
 import { DialogHeader, DialogTitle } from './dialog';
 import { Drawer, DrawerContent, DrawerTrigger } from './drawer';
@@ -40,7 +41,7 @@ export const Combobox = <T,>({
 	className?: string;
 }) => {
 	const [open, setOpen] = useState(false);
-	const { isDesktop } = useIsMobile();
+	const { isDesktop } = useViewportSize();
 
 	const selectedValue = value ?? null;
 	const selectedName = selectedValue ? makeName(selectedValue) : null;

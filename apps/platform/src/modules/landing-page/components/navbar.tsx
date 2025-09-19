@@ -2,21 +2,18 @@
 
 import Link from 'next/link';
 
-import { env } from '@/env';
-
 import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { useViewportSize } from '@/deps/viewport-size';
 import { Logo } from '@/global/components/logo';
 import { ActionsGroup } from '@/global/molecules/navbar/actions-group';
 import { Divider } from '@/global/molecules/navbar/divider';
+import { isStaging } from '@/lib/environment';
 import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
 import { SignIn } from '@/modules/onboarding/components/sign-in';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
 import Image from 'next/image';
-
-const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
 	const { isSignedIn } = useAuth();

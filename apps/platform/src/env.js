@@ -29,6 +29,7 @@ export const env = createEnv({
 
 	client: {
 		// Environment
+		NEXT_PUBLIC_NODE_ENV: z.enum(['development', 'staging', 'production']),
 		NEXT_PUBLIC_URL: z.string(),
 		NEXT_PUBLIC_DEPLOYMENT: z.enum(['staging', 'production']),
 		NEXT_PUBLIC_VERSION: z.string()
@@ -37,6 +38,7 @@ export const env = createEnv({
 	runtimeEnv: {
 		// Environment
 		NODE_ENV: process.env.NODE_ENV,
+		NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
 		NEXT_PUBLIC_DEPLOYMENT: process.env.NEXT_PUBLIC_DEPLOYMENT,
 		NEXT_PUBLIC_VERSION: version,
 		NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,

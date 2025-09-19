@@ -9,6 +9,7 @@ import {
 } from 'react-resizable-panels';
 
 import { ResizeHandle } from '@/deps/react-resizable-handles/components/resize-handle';
+import { useViewportSize } from '@/deps/viewport-size';
 import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -20,13 +21,12 @@ import {
 	DrawerTitle
 } from '@/lib/shadcn/ui/drawer';
 import { cn } from '@/lib/shadcn/utils';
-import { useIsMobile } from '@/utils/useMediaQuery';
 import { ThreadContent } from '../layouts/thread-content';
 import { PostHeader } from './post-header';
 import { usePostId } from './post-id-provider';
 
 export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 
 	const { postId, setPostId } = usePostId();
 	const router = useRouter();

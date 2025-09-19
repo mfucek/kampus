@@ -35,7 +35,7 @@ export const ViewportSizeProvider = ({ children }: { children: ReactNode }) => {
 	);
 };
 
-export const useViewport = () => {
+export const useViewportSize = () => {
 	const context = useContext(ViewportSizeContext);
 
 	return {

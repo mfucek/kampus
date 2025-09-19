@@ -1,10 +1,10 @@
 'use client';
 
+import { useViewportSize } from '@/deps/viewport-size';
 import { env } from '@/env';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { RuleProtected } from '@/modules/permissions/components/protected';
-import { useIsMobile } from '@/utils/useMediaQuery';
 import { useClerk } from '@clerk/nextjs';
 import { cva } from 'class-variance-authority';
 import Link from 'next/link';
@@ -33,7 +33,7 @@ const isActive = (pathname: string, path: string) => {
 
 const UserSection = () => {
 	const pathname = usePathname();
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 
 	return (
 		<div className="flex flex-col bg-section py-1 md:py-0 rounded-xl">
@@ -57,7 +57,7 @@ const UserSection = () => {
 
 const AdminSection = () => {
 	const pathname = usePathname();
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 
 	return (
 		<div className="flex flex-col bg-section py-1 md:py-0 rounded-xl">
@@ -76,7 +76,7 @@ const AdminSection = () => {
 
 const PreferencesSection = () => {
 	const pathname = usePathname();
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 	const { signOut } = useClerk();
 
 	return (

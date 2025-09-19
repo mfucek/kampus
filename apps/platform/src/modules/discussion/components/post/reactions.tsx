@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -10,7 +11,6 @@ import {
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
-import { useAuth, useClerk } from '@clerk/nextjs';
 import { VoteType } from '@prisma/client';
 import { useState, type FC } from 'react';
 
@@ -34,7 +34,6 @@ export const Reactions: FC<{
 	postId: string;
 }> = ({ votes, postId }) => {
 	const { isSignedIn } = useAuth();
-	const { openSignIn } = useClerk();
 
 	// const userVoteAfterCheck = api.vote.getVotesByPostIdWithUser.useMutation();
 	const [optimisticVote, setOptimisticVote] = useState<
@@ -82,7 +81,7 @@ export const Reactions: FC<{
 
 	const handleUpvote = async () => {
 		if (!isSignedIn) {
-			openSignIn();
+			// openSignIn();
 			return;
 		}
 		await createVote.mutateAsync({
@@ -93,7 +92,7 @@ export const Reactions: FC<{
 
 	const handleDownvote = async () => {
 		if (!isSignedIn) {
-			openSignIn();
+			// openSignIn();
 			return;
 		}
 		await createVote.mutateAsync({

@@ -2,11 +2,12 @@
 
 import { type FC } from 'react';
 
+import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { useViewportSize } from '@/deps/viewport-size';
 import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { cn } from '@/lib/shadcn/utils';
-import { useAuth, useClerk } from '@clerk/nextjs';
+import { SignIn } from '@/modules/onboarding/components/sign-in';
 import { cva } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -78,14 +79,13 @@ export const PWANavbar = () => {
 	const pathname = usePathname();
 
 	const { isSignedIn } = useAuth();
-	const { openSignUp } = useClerk();
 
 	const { isDesktop } = useViewportSize();
 	const { isPWA } = useIsPWA();
 
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
-			enabled: !!isSignedIn
+			enabled: false // !!isSignedIn
 		});
 
 	const isNotifications = pathname === '/notifications';
@@ -122,18 +122,25 @@ export const PWANavbar = () => {
 				selected={isNotifications}
 				href="/notifications"
 			/> */}
-			<NavButton
-				image={profilePictureUrl ?? null}
-				label="Profile"
-				selected={isSettings}
-				onClick={(e) => {
-					if (!isSignedIn) {
-						e.preventDefault();
-						openSignUp({ forceRedirectUrl: pathname });
-					}
-				}}
-				href="/settings"
-			/>
+			{!isSignedIn && (
+				<SignIn>
+					<NavButton
+						image={profilePictureUrl ?? null}
+						label="Profile"
+						selected={isSettings}
+						onClick={(e) => e.preventDefault()}
+						href="/settings"
+					/>
+				</SignIn>
+			)}
+			{isSignedIn && (
+				<NavButton
+					image={profilePictureUrl ?? null}
+					label="Profile"
+					selected={isSettings}
+					href="/settings"
+				/>
+			)}
 		</div>
 	);
 };

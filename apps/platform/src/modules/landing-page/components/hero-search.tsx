@@ -1,6 +1,5 @@
 'use client';
 
-import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useState, type FC } from 'react';
 
@@ -51,9 +50,6 @@ export const HeroSearch: FC<{
 }> = ({ topColleges, allColleges }) => {
 	const pathname = usePathname();
 
-	const { isSignedIn } = useAuth();
-	const { openSignUp } = useClerk();
-
 	const [search, setSearch] = useState('');
 
 	const scrollToSection = (id: string) => {
@@ -71,15 +67,15 @@ export const HeroSearch: FC<{
 		)
 		.filter((_, index) => index < 3);
 
-	if (isSignedIn) {
-		<Link href="/colleges">
-			<Button>Idi na platformu</Button>
-		</Link>;
-	}
+	// if (isSignedIn) {
+	// 	<Link href="/colleges">
+	// 		<Button>Idi na platformu</Button>
+	// 	</Link>;
+	// }
 
 	<>
 		<Button
-			onClick={() => openSignUp({ afterSignInUrl: pathname })}
+			// onClick={() => openSignUp({ afterSignInUrl: pathname })}
 			theme="accent"
 			size="md"
 			variant="solid"

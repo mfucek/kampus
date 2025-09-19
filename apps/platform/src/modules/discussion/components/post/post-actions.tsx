@@ -6,7 +6,8 @@ import { type FC } from 'react';
 import { api } from '@/deps/trpc/react';
 import { Button } from '@/lib/shadcn/ui/button';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { useAuth } from '@clerk/nextjs';
+
+import { useAuth } from '@/deps/better-auth/use-auth';
 import { type VoteType } from '@prisma/client';
 import { Reactions } from './reactions';
 

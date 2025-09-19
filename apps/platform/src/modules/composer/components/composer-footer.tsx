@@ -3,7 +3,9 @@
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { MAX_CHARACTERS } from '@/modules/discussion/constants/composer';
-import { useAuth, useClerk } from '@clerk/nextjs';
+
+import { useAuth } from '@/deps/better-auth/use-auth';
+import { SignIn } from '@/modules/onboarding/components/sign-in';
 import { useComposerBodyContext } from '../contexts/composer-body-provider';
 import { useSubmitPost } from '../hooks/use-submit-post';
 
@@ -12,7 +14,6 @@ export const ComposerFooter = () => {
 	const { characterCount } = useComposerBodyContext();
 
 	const { isSignedIn } = useAuth();
-	const { openSignIn } = useClerk();
 
 	const remaining = MAX_CHARACTERS - characterCount;
 
@@ -48,14 +49,11 @@ export const ComposerFooter = () => {
 				</Button>
 			)}
 			{!isSignedIn && (
-				<Button
-					theme="accent"
-					variant="solid"
-					size="sm"
-					onClick={() => openSignIn()}
-				>
-					Ulogiraj se
-				</Button>
+				<SignIn>
+					<Button theme="accent" variant="solid" size="sm">
+						Ulogiraj se
+					</Button>
+				</SignIn>
 			)}
 		</div>
 	);

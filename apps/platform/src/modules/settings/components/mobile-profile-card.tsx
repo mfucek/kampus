@@ -1,22 +1,20 @@
 'use client';
 
+import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
-import { useAuth } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export const MobileProfileCard = () => {
-	const { isSignedIn } = useAuth();
+	const { isSignedIn, user } = useAuth();
 
 	const { data: profilePictureUrl } =
 		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
 			enabled: !!isSignedIn
 		});
-
-	const { data: user } = api.account.getCurrentUser.useQuery();
 
 	return (
 		<Link href="/settings/profile">
@@ -35,7 +33,7 @@ export const MobileProfileCard = () => {
 				</div>
 
 				<div className="flex flex-col w-full">
-					<p className="title-3 text-neutral">{user?.displayName}</p>
+					<p className="title-3 text-neutral">{user?.name}</p>
 					<p className="caption text-neutral-strong">{'Korisnik'}</p>
 					{/* <div className="flex flex-row">
 					<p className="caption text-neutral-strong">{'{faks}'}</p>

@@ -1,9 +1,9 @@
 'use client';
 
-import { useAuth, useClerk } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { useViewportSize } from '@/deps/viewport-size';
 import { env } from '@/env';
@@ -11,8 +11,8 @@ import { Logo } from '@/global/components/logo';
 import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
 import { feedbackFormURL } from '@/modules/feedback/constants';
+import { SignIn } from '@/modules/onboarding/components/sign-in';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
-import { usePathname } from 'next/navigation';
 import { Icon } from '../../components/icon';
 import { ActionsGroup } from './actions-group';
 import { Breadcrumbs } from './breadcrumbs';
@@ -21,10 +21,7 @@ import { Divider } from './divider';
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
-	const pathname = usePathname();
-
 	const { isSignedIn } = useAuth();
-	const { openSignUp } = useClerk();
 
 	const { isMobile } = useViewportSize();
 	const { isPWA } = useIsPWA();
@@ -83,18 +80,11 @@ export const Navbar = () => {
 		return (
 			<>
 				<ThemeToggler />
-				<Button
-					onClick={() =>
-						openSignUp({
-							forceRedirectUrl: pathname
-						})
-					}
-					theme="accent"
-					size="md"
-					variant="solid"
-				>
-					Ulogiraj se
-				</Button>
+				<SignIn>
+					<Button theme="accent" size="md" variant="solid">
+						Ulogiraj se
+					</Button>
+				</SignIn>
 			</>
 		);
 	};

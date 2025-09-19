@@ -1,11 +1,11 @@
 'use client';
 
+import { useAuth } from '@/deps/better-auth/use-auth';
 import { useViewportSize } from '@/deps/viewport-size';
 import { env } from '@/env';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { RuleProtected } from '@/modules/permissions/components/protected';
-import { useClerk } from '@clerk/nextjs';
 import { cva } from 'class-variance-authority';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -77,7 +77,7 @@ const AdminSection = () => {
 const PreferencesSection = () => {
 	const pathname = usePathname();
 	const { isMobile } = useViewportSize();
-	const { signOut } = useClerk();
+	const { signOut } = useAuth();
 
 	return (
 		<div className="flex flex-col bg-section py-1 md:py-0 rounded-xl">
@@ -97,7 +97,7 @@ const PreferencesSection = () => {
 				variant={isActive(pathname, '/settings/appearance')}
 				className="w-full md:h-14"
 				theme="danger"
-				onClick={() => signOut({ redirectUrl: '/' })}
+				onClick={() => signOut()}
 			>
 				<Icon icon="log-out" />
 				<span className="w-full text-left text-theme">Odjavi se</span>

@@ -11,14 +11,14 @@ export const env = createEnv({
 		NODE_ENV: z
 			.enum(['development', 'test', 'production'])
 			.default('development'),
-		URL: z.string(),
 
 		// Database (Prisma)
 		DATABASE_URL: z.string().url(),
 
-		// Auth (Clerk)
-		CLERK_SECRET_KEY: z.string(),
-		CLERK_WEBHOOK_SECRET: z.string(),
+		// Auth (Better Auth)
+		BETTER_AUTH_SECRET: z.string(),
+		GOOGLE_CLIENT_ID: z.string(),
+		GOOGLE_CLIENT_SECRET: z.string(),
 
 		// Payment (Stripe)
 		STRIPE_SECRET_KEY: z.string(),
@@ -38,7 +38,8 @@ export const env = createEnv({
 	},
 
 	client: {
-		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
+		// Environment
+		NEXT_PUBLIC_URL: z.string(),
 		NEXT_PUBLIC_DEPLOYMENT: z.enum(['staging', 'production']),
 		NEXT_PUBLIC_VERSION: z.string()
 	},
@@ -48,15 +49,15 @@ export const env = createEnv({
 		NODE_ENV: process.env.NODE_ENV,
 		NEXT_PUBLIC_DEPLOYMENT: process.env.NEXT_PUBLIC_DEPLOYMENT,
 		NEXT_PUBLIC_VERSION: version,
+		NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
 
 		// Database (Prisma)
 		DATABASE_URL: process.env.DATABASE_URL,
 
-		// Auth (Clerk)
-		CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
-		CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
-		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
-			process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+		// Auth (Better Auth)
+		BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+		GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+		GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 
 		// Payment (Stripe)
 		STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
@@ -68,7 +69,6 @@ export const env = createEnv({
 		STRIPE_PRICE_ID_MONTHLY_CHEAP: process.env.STRIPE_PRICE_ID_MONTHLY_CHEAP,
 		STRIPE_PRICE_ID_MONTHLY_PRO: process.env.STRIPE_PRICE_ID_MONTHLY_PRO,
 		STRIPE_PRICE_ID_LIFETIME: process.env.STRIPE_PRICE_ID_LIFETIME,
-		URL: process.env.URL,
 
 		// Object Storage (Cloudflare)
 		CLOUDFLARE_ACCESS_ID: process.env.CLOUDFLARE_ACCESS_ID,

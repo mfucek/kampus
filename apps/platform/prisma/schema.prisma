@@ -6,63 +6,96 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
 }
 
 // ------------------
-// Clerk account
-// ------------------
-
-model Account {
-  id               String        @id @default(cuid())
-  clerkUserId      String        @unique
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  stripeCustomerId String?
-  package          PackageType?
-  status           AccountStatus @default(INACTIVE)
-  activeUntil      DateTime?
-
-  user        User?
-  role        RoleType     @default(BASE)
-  Permissions Permission[]
-}
-
-enum PackageType {
-  MONTHLY_CHEAP
-  MONTHLY_PRO
-  LIFETIME
-}
-
-enum AccountStatus {
-  ACTIVE
-  INACTIVE
-  CANCELLED
-}
-
-// ------------------
-// Users
+// Better Auth account
 // ------------------
 
 model User {
-  id          String   @id @default(cuid())
-  displayName String
-  imageUrl    String?
-  badge       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String  @id
+  name          String
+  email         String
+  emailVerified Boolean @default(false)
+  image         String?
 
-  accountId String  @unique
-  Account   Account @relation(fields: [accountId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  sessions  Session[]
+  accounts  Account[]
 
-  votes Vote[]
-  posts Post[]
+  // authorization
+  role        RoleType     @default(BASE)
+  Permissions Permission[]
 
-  image ImageFile?
+  // billing
+  // stripeCustomerId String?
+  // package          PackageType?
 
-  notifications Notification[]
+  // custom fields
+  badge     String?
+  ImageFile ImageFile?
+
+  // relations
+  Votes         Vote[]
+  Posts         Post[]
+  Notifications Notification[]
   // subscriptions Subscription[]
+
+  @@unique([email])
+  @@map("user")
 }
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+// enum PackageType {
+//   MONTHLY_CHEAP
+//   MONTHLY_PRO
+//   LIFETIME
+// }
 
 // ------------------
 // Colleges
@@ -321,8 +354,8 @@ enum RoleType {
 }
 
 model Permission {
-  accountId String  @id
-  Account   Account @relation(fields: [accountId], references: [id])
+  userId String @id
+  User   User   @relation(fields: [userId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

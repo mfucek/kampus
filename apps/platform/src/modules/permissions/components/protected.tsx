@@ -1,6 +1,6 @@
 'use client';
 
-import { api } from '@/lib/trpc/react';
+import { api } from '@/deps/trpc/react';
 import { type RuleType } from '@prisma/client';
 import { type FC, type PropsWithChildren, type ReactNode } from 'react';
 

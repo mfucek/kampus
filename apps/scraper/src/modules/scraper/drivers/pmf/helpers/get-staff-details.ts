@@ -1,4 +1,4 @@
-import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
+import { hydrateWindowWithUtilFunctions } from '@/deps/puppeteer/utils/hydrate-window-with-util-functions';
 import type { DriverCallbacks, Professor } from '@/types';
 import type { Logger } from '@/utils/logger';
 import { shortenList } from '@/utils/shorten-list';

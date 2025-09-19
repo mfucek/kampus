@@ -1,5 +1,5 @@
+import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
-import { api } from '@/lib/trpc/server';
 import { HeroLogo } from '../hero-logo';
 import { HeroSearch } from '../hero-search';
 import { RadialGrid } from '../radial-grid';

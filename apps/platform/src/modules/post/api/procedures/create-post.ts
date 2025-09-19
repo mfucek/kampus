@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { validateJSONContent } from '@/lib/tiptap/validate-json-content';
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { validateJSONContent } from '@/deps/tiptap/validate-json-content';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 import { type JSONContent } from '@tiptap/react';
 
 export const createPostProcedure = protectedProcedure

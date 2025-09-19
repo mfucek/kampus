@@ -1,5 +1,5 @@
-import { getFileUploadUrl } from '@/lib/s3/get-file-upload-url';
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { getFileUploadUrl } from '@/deps/s3/get-file-upload-url';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 import { nanoid } from 'nanoid';
 
 export const getUploadUrlProcedure = protectedProcedure.mutation(async () => {

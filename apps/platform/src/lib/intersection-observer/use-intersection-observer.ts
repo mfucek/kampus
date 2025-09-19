@@ -10,8 +10,7 @@ export const useIntersectionObserver = ({
 	rootMargin = '0px'
 }: UseIntersectionObserverProps = {}) => {
 	const [isInView, setIsInView] = useState(false);
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-redundant-type-constituents
-	const elementRef = useRef<HTMLElement | any | null>(null);
+	const elementRef = useRef<any>(null);
 
 	useEffect(() => {
 		const element = elementRef.current;
@@ -34,7 +33,7 @@ export const useIntersectionObserver = ({
 				observer.unobserve(element);
 			}
 		};
-	}, [threshold, rootMargin]);
+	}, [threshold, rootMargin, elementRef]);
 
 	return { elementRef, isInView };
 };

@@ -2,9 +2,9 @@
 
 import { type FC } from 'react';
 
+import { api } from '@/deps/trpc/react';
+import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { cn } from '@/lib/shadcn/utils';
-import { api } from '@/lib/trpc/react';
-import { useIsPWA } from '@/utils/use-is-pwa';
 import { useIsMobile } from '@/utils/useMediaQuery';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import { cva } from 'class-variance-authority';

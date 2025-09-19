@@ -1,5 +1,5 @@
+import { api } from '@/deps/trpc/server';
 import { CacheHelper } from '@/global/components/cache-helper';
-import { api } from '@/lib/trpc/server';
 import { CollegeProgramsList } from '@/modules/topic/college/components/college-programs-list';
 
 interface PageProps {

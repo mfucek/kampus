@@ -1,5 +1,5 @@
+import { api } from '@/deps/trpc/react';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { api } from '@/lib/trpc/react';
 import { useState } from 'react';
 
 export const useProfileImageUpload = () => {

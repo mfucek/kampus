@@ -1,4 +1,4 @@
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 
 export const listProcedure = protectedProcedure.query(async ({ ctx }) => {
 	const { db } = ctx;

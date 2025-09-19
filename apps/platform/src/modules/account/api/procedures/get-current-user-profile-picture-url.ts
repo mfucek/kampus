@@ -1,5 +1,5 @@
-import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 
 export const getCurrentUserProfilePictureUrlProcedure =
 	protectedProcedure.query(async ({ ctx }) => {

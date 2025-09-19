@@ -2,7 +2,9 @@
 
 import { type FC, useEffect, useState } from 'react';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
+import { useDebouncedEffect } from '@/lib/debouncing/use-debounced-effect';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Input } from '@/lib/shadcn/ui/input';
 import {
@@ -12,10 +14,8 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
-import { api } from '@/lib/trpc/react';
 import { type TSubjectFilters } from '@/modules/topic/subject/schemas/subject-filters';
 import { type TSubjectScope } from '@/modules/topic/subject/schemas/subject-scope';
-import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
 import { SubjectsTable } from './subjects-table';
 
 const SubjectsTableWithData: FC<{

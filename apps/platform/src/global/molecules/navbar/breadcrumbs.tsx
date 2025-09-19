@@ -1,8 +1,8 @@
 'use client';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
-import { api } from '@/lib/trpc/react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 

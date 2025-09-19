@@ -2,7 +2,7 @@
 
 import { type FC } from 'react';
 
-import { api } from '@/lib/trpc/react';
+import { api } from '@/deps/trpc/react';
 import { Composer } from '@/modules/composer/components';
 import { ComposerSkeleton } from '@/modules/composer/components/composer-skeleton';
 import { Post } from '@/modules/discussion/components/post';

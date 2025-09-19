@@ -1,4 +1,4 @@
-import { createTRPCRouter } from '@/lib/trpc/trpc';
+import { createTRPCRouter } from '@/deps/trpc/trpc';
 
 import { listProcedure } from '@/modules/account/api/procedures/list';
 import { addProcedure } from '@/modules/permissions/api/procedures/add';

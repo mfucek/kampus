@@ -1,4 +1,4 @@
-import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
+import { hydrateWindowWithUtilFunctions } from '@/deps/puppeteer/utils/hydrate-window-with-util-functions';
 import type { ProfessorReference, Subject, SubjectReference } from '@/types';
 import { sanitizeTitle } from '@/utils/sanitize-title';
 import { shortenList } from '@/utils/shorten-list';

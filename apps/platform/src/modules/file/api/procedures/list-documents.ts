@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 import { type Prisma } from '@prisma/client';
 
-import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
-import { publicProcedure } from '@/lib/trpc/trpc';
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
+import { publicProcedure } from '@/deps/trpc/trpc';
 import { fileFiltersSchema } from '../../schemas/file-filters';
 import { fileScopeSchema } from '../../schemas/file-scope';
 

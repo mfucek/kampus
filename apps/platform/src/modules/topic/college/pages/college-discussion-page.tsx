@@ -1,4 +1,4 @@
-import { api } from '@/lib/trpc/server';
+import { api } from '@/deps/trpc/server';
 
 import { ContentPadding } from '@/global/layouts/content-padding';
 import {

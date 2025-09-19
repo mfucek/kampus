@@ -1,9 +1,9 @@
 'use client';
 
+import { api } from '@/deps/trpc/react';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Input } from '@/lib/shadcn/ui/input';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { api } from '@/lib/trpc/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useProfileImageUpload } from '../../hooks/use-profile-image-upload';

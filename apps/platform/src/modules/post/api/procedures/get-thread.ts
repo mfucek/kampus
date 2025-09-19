@@ -2,8 +2,8 @@ import { type JSONContent } from '@tiptap/react';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
-import { optionalAuthMiddleware, publicProcedure } from '@/lib/trpc/trpc';
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
+import { optionalAuthMiddleware, publicProcedure } from '@/deps/trpc/trpc';
 import { type RecursivePost } from '../../types/recursive-post';
 import { sortPostVotes } from '../helpers/get-post-votes';
 

@@ -1,9 +1,9 @@
 'use client';
 
-import { PosthogProvider } from '@/lib/posthog';
-import { TRPCReactProvider } from '@/lib/trpc/react';
+import { PosthogProvider } from '@/deps/posthog';
+import { TRPCReactProvider } from '@/deps/trpc/react';
+import { ViewportSizeProvider } from '@/deps/viewport-size';
 import { ThemeProvider } from '@/modules/theme/providers/theme-provider';
-import { ViewportSizeProvider } from '@/utils/useMediaQuery';
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
 	return (

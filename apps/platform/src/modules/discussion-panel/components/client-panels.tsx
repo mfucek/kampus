@@ -8,9 +8,9 @@ import {
 	type ImperativePanelGroupHandle
 } from 'react-resizable-panels';
 
+import { ResizeHandle } from '@/deps/react-resizable-handles/components/resize-handle';
 import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
-import { ResizeHandle } from '@/lib/react-resizable-handles/components/resize-handle';
 import { Button } from '@/lib/shadcn/ui/button';
 import {
 	Drawer,

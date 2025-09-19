@@ -1,4 +1,4 @@
-import { db } from '@/lib/db';
+import { db } from '@/deps/prisma';
 import { CollegeProgramsPage } from '@/modules/topic/college/pages/college-programs-page';
 
 export default CollegeProgramsPage;

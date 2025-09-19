@@ -1,4 +1,4 @@
-import { createTRPCRouter } from '@/lib/trpc/trpc';
+import { createTRPCRouter } from '@/deps/trpc/trpc';
 
 import { linkToPostProcedure } from './procedures/link-to-post';
 import { listByPostProcedure } from './procedures/list-by-post';

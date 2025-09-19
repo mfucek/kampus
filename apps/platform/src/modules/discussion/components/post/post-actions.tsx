@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { type FC } from 'react';
 
+import { api } from '@/deps/trpc/react';
 import { Button } from '@/lib/shadcn/ui/button';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { api } from '@/lib/trpc/react';
 import { useAuth } from '@clerk/nextjs';
 import { type VoteType } from '@prisma/client';
 import { Reactions } from './reactions';

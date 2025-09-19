@@ -2,8 +2,8 @@ import * as p from '@clack/prompts';
 
 import { type Topic } from '@prisma/client';
 
-import { Spinner } from '@/lib/clack/spinner';
-import { db } from '@/lib/prisma/db';
+import { Spinner } from '@/deps/clack/spinner';
+import { db } from '@/deps/prisma/db';
 import { type Program } from '@/types';
 import { slugify } from '@/utils/slugify';
 

@@ -3,10 +3,10 @@
 import { type ColumnDef } from '@tanstack/react-table';
 import { type FC } from 'react';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
-import { api } from '@/lib/trpc/react';
 import { ListPermissionsItem } from '../api/procedures/list';
 
 export const columns: ColumnDef<ListPermissionsItem>[] = [

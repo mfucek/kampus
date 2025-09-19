@@ -3,8 +3,8 @@
 import { useEffect, type FC } from 'react';
 import { useInView } from 'react-intersection-observer';
 
+import { api } from '@/deps/trpc/react';
 import { Spinner } from '@/global/components/spinner';
-import { api } from '@/lib/trpc/react';
 import { Post } from '@/modules/discussion/components/post';
 import { NoPostsCard } from '@/modules/discussion/components/post/no-posts-card';
 import { PostSkeleton } from '@/modules/discussion/components/post/skeleton';

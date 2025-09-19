@@ -51,18 +51,6 @@ const UserSection = () => {
 					<span className="w-full text-left">Profil</span>
 				</Button>
 			</Link>
-
-			<Divider visibility="desktop" />
-
-			<Link href="/settings/subscription" replace={!isMobile}>
-				<Button
-					variant={isActive(pathname, '/settings/subscription')}
-					className="w-full md:h-14"
-				>
-					<Icon icon="crown" />
-					<span className="w-full text-left">Pretplata</span>
-				</Button>
-			</Link>
 		</div>
 	);
 };

@@ -1,6 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from '@/lib/trpc/trpc';
 
-import { stripeRouter } from '@/lib/stripe/api/router';
+// import { stripeRouter } from '@/lib/stripe/api/router';
 
 import { accountRouter } from '@/modules/account/api/router';
 import { fileRouter } from '@/modules/file/api/router';
@@ -15,7 +15,7 @@ import { voteRouter } from '@/modules/vote/api/router';
 export const appRouter = createTRPCRouter({
 	post: postRouter,
 	college: collegeRouter,
-	stripe: stripeRouter,
+	// stripe: stripeRouter,
 	account: accountRouter,
 	subject: subjectRouter,
 	program: programRouter,

@@ -84,8 +84,8 @@ export const PWANavbar = () => {
 	const { isPWA } = useIsPWA();
 
 	const { data: profilePictureUrl } =
-		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
-			enabled: false // !!isSignedIn
+		api.user.profilePicture.sessionUser.getUrl.useQuery(void {}, {
+			enabled: !!isSignedIn
 		});
 
 	const isNotifications = pathname === '/notifications';

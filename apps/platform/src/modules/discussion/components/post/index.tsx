@@ -34,7 +34,7 @@ export const Post: FC<{
 }) => {
 	const { post } = fullPost;
 
-	const { data: imageUrl } = api.account.getUserProfilePictureUrl.useQuery({
+	const { data: imageUrl } = api.user.profilePicture.getUrl.useQuery({
 		userId: post.author.id
 	});
 
@@ -55,7 +55,7 @@ export const Post: FC<{
 		return (
 			<div className={cn('flex flex-col gap-2 w-full', addPadding && 'pb-4')}>
 				<div className="flex flex-row gap-2 h-6 items-center">
-					<span className="caption">{post.author.displayName}</span>
+					<span className="caption">{post.author.name}</span>
 					{post.author.badge && (
 						<TooltipProvider>
 							<Tooltip>

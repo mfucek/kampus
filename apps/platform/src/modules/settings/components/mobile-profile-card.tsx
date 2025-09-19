@@ -12,7 +12,7 @@ export const MobileProfileCard = () => {
 	const { isSignedIn, user } = useAuth();
 
 	const { data: profilePictureUrl } =
-		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
+		api.user.profilePicture.sessionUser.getUrl.useQuery(void {}, {
 			enabled: !!isSignedIn
 		});
 

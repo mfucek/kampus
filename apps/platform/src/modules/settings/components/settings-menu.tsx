@@ -110,7 +110,7 @@ const InfoSection = () => {
 	return (
 		<div className="flex flex-col gap-2 text-center items-center pb-10">
 			<p className="body-3 text-neutral-strong">
-				Kampus v{env.NEXT_PUBLIC_VERSION}-beta
+				Kampus Beta v{env.NEXT_PUBLIC_VERSION}
 			</p>
 			<p className="body-3 text-neutral-strong">
 				Made with ❤️ by{' '}
@@ -120,14 +120,6 @@ const InfoSection = () => {
 					target="_blank"
 				>
 					Wireframe Studio{' '}
-				</a>
-				/{' '}
-				<a
-					href="https://mfucek.com"
-					className="button-sm hover:underline underline-offset-4 text-neutral"
-					target="_blank"
-				>
-					Matija Fućek{' '}
 				</a>
 			</p>
 			<p className="body-3 text-neutral-strong">

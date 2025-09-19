@@ -13,21 +13,7 @@ export const getThreadProcedure = publicProcedure
 	.use(optionalAuthMiddleware)
 	.input(z.object({ postId: z.string() }))
 	.query(async ({ input, ctx }) => {
-		const { auth, db } = ctx;
-		const clerkUserId = auth?.userId;
-
-		const user = clerkUserId
-			? ((
-					await db.account.findUnique({
-						where: {
-							clerkUserId: clerkUserId
-						},
-						include: {
-							user: true
-						}
-					})
-				)?.user ?? null)
-			: null;
+		const { user, db } = ctx;
 
 		const fetchReplies = async (
 			postId: string,
@@ -83,8 +69,8 @@ export const getThreadProcedure = publicProcedure
 					createdAt: post.createdAt,
 					author: {
 						id: post.Author.id,
-						displayName: post.Author.displayName,
-						imageUrl: post.Author.imageUrl,
+						name: post.Author.name,
+						imageUrl: post.Author.image,
 						badge: post.Author.badge
 					},
 					_count: {

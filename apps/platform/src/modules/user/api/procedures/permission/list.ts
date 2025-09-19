@@ -3,11 +3,11 @@ import { z } from 'zod';
 import { protectedProcedure } from '@/deps/trpc/trpc';
 
 export const listProcedure = protectedProcedure
-	.input(z.object({ accountId: z.string() }))
+	.input(z.object({ userId: z.string() }))
 	.query(async ({ ctx, input }) => {
 		const permissionsRaw = await ctx.db.permission.findMany({
 			where: {
-				accountId: input.accountId
+				userId: input.userId
 			}
 		});
 

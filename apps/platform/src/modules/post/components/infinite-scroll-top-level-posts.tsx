@@ -26,7 +26,7 @@ const DynamicPost: FC<{
 					post: {
 						author: {
 							id: post.author.id,
-							displayName: post.author.displayName,
+							name: post.author.displayName,
 							imageUrl: post.author.imageUrl ?? '',
 							badge: post.author.badge ?? ''
 						},

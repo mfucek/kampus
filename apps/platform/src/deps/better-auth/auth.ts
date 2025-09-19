@@ -26,5 +26,14 @@ export const auth = betterAuth({
 		sendVerificationEmail: async ({ user, url }) => {
 			// implement your logic here to send email verification
 		}
+	},
+	user: {
+		additionalFields: {
+			badge: {
+				type: 'string',
+				required: false,
+				input: false
+			}
+		}
 	}
 });

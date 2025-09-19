@@ -3,22 +3,24 @@ import { z } from 'zod';
 import { protectedProcedure } from '@/deps/trpc/trpc';
 import { RuleType, ScopeType } from '@prisma/client';
 
-export const removeProcedure = protectedProcedure
+export const addProcedure = protectedProcedure
 	.input(
 		z.object({
-			accountId: z.string(),
+			userId: z.string(),
 			rule: z.nativeEnum(RuleType),
 			scopeType: z.nativeEnum(ScopeType),
-			scopeId: z.string().nullable()
+			scopeId: z.string().nullable(),
+			value: z.boolean()
 		})
 	)
 	.mutation(async ({ ctx, input }) => {
-		const permissionRaw = await ctx.db.permission.delete({
-			where: {
-				accountId: input.accountId,
+		const permissionRaw = await ctx.db.permission.create({
+			data: {
 				rule: input.rule,
+				userId: input.userId,
 				scopeType: input.scopeType,
-				scopeId: input.scopeId
+				scopeId: input.scopeId,
+				value: input.value
 			}
 		});
 

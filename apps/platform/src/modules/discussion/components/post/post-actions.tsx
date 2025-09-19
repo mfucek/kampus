@@ -37,9 +37,8 @@ export const PostActions: FC<{ fullPost: PostActionsInterface }> = ({
 	const router = useRouter();
 	const utils = api.useUtils();
 	const { toast } = useToast();
-	// const { setPostId } = usePostId();
 
-	const { data: user } = api.account.getUser.useQuery(void {}, {
+	const { data: user } = api.user.get.useQuery(void {}, {
 		enabled: !!isSignedIn
 	});
 	const { mutateAsync: deletePost } = api.post.deletePost.useMutation({

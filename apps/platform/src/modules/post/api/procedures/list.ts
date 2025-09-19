@@ -22,24 +22,10 @@ export const listProcedure = publicProcedure
 			.merge(paginationSchema)
 	)
 	.query(async ({ ctx, input }) => {
-		const { auth, db } = ctx;
-		const clerkUserId = auth?.userId;
+		const { user, db } = ctx;
 
 		const { scope, cursor } = input;
 		const limit = input.limit ?? 5;
-
-		const user = clerkUserId
-			? ((
-					await db.account.findUnique({
-						where: {
-							clerkUserId: clerkUserId
-						},
-						include: {
-							user: true
-						}
-					})
-				)?.user ?? null)
-			: null;
 
 		const collegeId = scope.college?.id;
 		const topicId = scope.topic?.id;
@@ -140,16 +126,16 @@ export const listProcedure = publicProcedure
 						},
 						author: {
 							id: post.Author.id,
-							displayName: post.Author.displayName,
-							imageUrl: post.Author.imageUrl,
+							name: post.Author.name,
+							imageUrl: post.Author.image,
 							badge: post.Author.badge
 						}
 					},
 					votes: votes,
 					author: {
 						id: post.Author.id,
-						displayName: post.Author.displayName,
-						imageUrl: post.Author.imageUrl,
+						name: post.Author.name,
+						imageUrl: post.Author.image,
 						badge: post.Author.badge
 					},
 					replies: {

@@ -1,7 +1,7 @@
 import { env } from '@/env';
 import { createAuthClient } from 'better-auth/client';
 
-const authClient = createAuthClient({
+export const authClient = createAuthClient({
 	baseURL: env.NEXT_PUBLIC_URL
 });
 

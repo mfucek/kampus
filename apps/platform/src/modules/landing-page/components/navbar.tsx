@@ -1,10 +1,10 @@
 'use client';
 
-import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 
 import { env } from '@/env';
 
+import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { useViewportSize } from '@/deps/viewport-size';
 import { Logo } from '@/global/components/logo';
@@ -12,6 +12,7 @@ import { ActionsGroup } from '@/global/molecules/navbar/actions-group';
 import { Divider } from '@/global/molecules/navbar/divider';
 import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
+import { SignIn } from '@/modules/onboarding/components/sign-in';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -19,8 +20,9 @@ import { usePathname } from 'next/navigation';
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
+	// const { isSignedIn } = useAuth();
+	// const { openSignIn, openSignUp } = useClerk();
 	const { isSignedIn } = useAuth();
-	const { openSignIn, openSignUp } = useClerk();
 
 	const { isMobile } = useViewportSize();
 	const { isPWA } = useIsPWA();
@@ -108,7 +110,7 @@ export const Navbar = () => {
 				<ThemeToggler size="sm" />
 				<div className="hidden md:block">
 					<Button
-						onClick={() => openSignUp({ forceRedirectUrl: pathname })}
+						// onClick={() => openSignUp({ forceRedirectUrl: pathname })}
 						theme="neutral"
 						size="sm"
 						variant="solid-weak"
@@ -116,14 +118,16 @@ export const Navbar = () => {
 						Registriraj se
 					</Button>
 				</div>
-				<Button
-					onClick={() => openSignIn({ forceRedirectUrl: pathname })}
-					theme="accent"
-					size="sm"
-					variant="solid"
-				>
-					Ulogiraj se
-				</Button>
+				<SignIn>
+					<Button
+						// onClick={() => openSignIn({ forceRedirectUrl: pathname })}
+						theme="accent"
+						size="sm"
+						variant="solid"
+					>
+						Ulogiraj se
+					</Button>
+				</SignIn>
 			</ActionsGroup>
 		);
 	};

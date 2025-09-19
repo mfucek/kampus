@@ -44,7 +44,7 @@ export const useCaptureEvent = () => {
 	return { capture };
 };
 
-export const AnalyticsProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
+export const PosthogProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
 	if (!isProduction) {
 		return <>{children}</>;
 	}

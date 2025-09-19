@@ -7,16 +7,10 @@ import '@/styles/tiptap.css';
 import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
 
-import { AnalyticsProvider } from '@/lib/posthog';
-import { TRPCReactProvider } from '@/lib/trpc/react';
-import { ClerkProvider } from '@clerk/nextjs';
-import { ThemeProvider } from '../modules/theme/providers/theme-provider';
-
 import { isDevOrStg } from '@/constants/is-dev-or-staging';
 import { PWANavbar } from '@/global/components/pwa-navbar';
-import { Toaster } from '@/lib/shadcn/ui/toaster';
-import { ViewportSizeProvider } from '@/utils/useMediaQuery';
-import NextTopLoader from 'nextjs-toploader';
+import { BodyOverlays } from './body-overlays';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
 	title: 'Kampus.hr | Platforma za sve studente',
@@ -47,25 +41,15 @@ export default function RootLayout({
 	children
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="en" className={GeistSans.variable}>
-			<body className="bg-background min-h-screen bg-opacity-100 overscroll-none">
-				<NextTopLoader color="#3461ff" shadow={false} showSpinner={false} />
-				<ClerkProvider localization={{ locale: 'hr-HR' }}>
-					<TRPCReactProvider>
-						<AnalyticsProvider>
-							<ViewportSizeProvider>
-								<ThemeProvider>
-									<div className="min-h-screen overflow-x-hidden">
-										{children}
-									</div>
-									<Toaster />
-									<PWANavbar />
-								</ThemeProvider>
-							</ViewportSizeProvider>
-						</AnalyticsProvider>
-					</TRPCReactProvider>
-				</ClerkProvider>
-			</body>
-		</html>
+		<Providers>
+			<html lang="hr-HR" className={GeistSans.variable}>
+				<body className="bg-background min-h-screen bg-opacity-100 overscroll-none">
+					<BodyOverlays>
+						<div className="min-h-screen overflow-x-hidden">{children}</div>
+						<PWANavbar />
+					</BodyOverlays>
+				</body>
+			</html>
+		</Providers>
 	);
 }

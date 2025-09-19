@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { protectedProcedure } from '@/server/api/trpc';
+import { protectedProcedure } from '@/lib/trpc/trpc';
 import { RuleType, ScopeType } from '@prisma/client';
 
 export const addProcedure = protectedProcedure

@@ -1,4 +1,4 @@
-import { publicProcedure } from '@/server/api/trpc';
+import { publicProcedure } from '@/lib/trpc/trpc';
 
 export const listAllProcedure = publicProcedure.query(async ({ ctx }) => {
 	const { db } = ctx;

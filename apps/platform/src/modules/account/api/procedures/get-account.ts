@@ -1,4 +1,4 @@
-import { protectedProcedure } from '@/server/api/trpc';
+import { protectedProcedure } from '@/lib/trpc/trpc';
 
 export const getAccoutProcedure = protectedProcedure.query(async ({ ctx }) => {
 	const { db, auth } = ctx;

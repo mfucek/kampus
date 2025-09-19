@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { deleteFile } from '@/lib/s3/delete-file';
-import { protectedProcedure } from '@/server/api/trpc';
+import { protectedProcedure } from '@/lib/trpc/trpc';
 
 export const uploadProfilePictureProcedure = protectedProcedure
 	.input(z.object({ key: z.string() }))

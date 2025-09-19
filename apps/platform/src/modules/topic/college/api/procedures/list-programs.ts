@@ -1,7 +1,7 @@
 import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
-import { publicProcedure } from '@/server/api/trpc';
+import { publicProcedure } from '@/lib/trpc/trpc';
 
 export const listProgramsProcedure = publicProcedure
 	.input(

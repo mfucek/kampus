@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { type Prisma } from '@prisma/client';
 
 import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
-import { publicProcedure } from '@/server/api/trpc';
+import { publicProcedure } from '@/lib/trpc/trpc';
 import { fileFiltersSchema } from '../../schemas/file-filters';
 import { fileScopeSchema } from '../../schemas/file-scope';
 

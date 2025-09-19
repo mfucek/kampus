@@ -11,21 +11,7 @@ export const getPostByIdProcedure = publicProcedure
 	.use(optionalAuthMiddleware)
 	.input(z.object({ postId: z.string() }))
 	.query(async ({ input, ctx }) => {
-		const { auth, db } = ctx;
-		const clerkUserId = auth?.userId;
-
-		const user = clerkUserId
-			? ((
-					await db.account.findUnique({
-						where: {
-							clerkUserId: clerkUserId
-						},
-						include: {
-							user: true
-						}
-					})
-				)?.user ?? null)
-			: null;
+		const { user, db } = ctx;
 
 		const postRaw = await db.post.findUnique({
 			where: {
@@ -53,8 +39,8 @@ export const getPostByIdProcedure = publicProcedure
 		const post = {
 			author: {
 				id: postRaw.Author.id,
-				displayName: postRaw.Author.displayName,
-				imageUrl: postRaw.Author.imageUrl,
+				name: postRaw.Author.name,
+				imageUrl: postRaw.Author.image,
 				badge: postRaw.Author.badge
 			},
 			authorId: postRaw.authorId,

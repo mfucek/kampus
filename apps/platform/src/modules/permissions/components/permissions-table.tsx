@@ -7,7 +7,7 @@ import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
-import { ListPermissionsItem } from '../api/procedures/list';
+import { ListPermissionsItem } from '../../user/api/procedures/permission/list';
 
 export const columns: ColumnDef<ListPermissionsItem>[] = [
 	{
@@ -28,9 +28,9 @@ export const columns: ColumnDef<ListPermissionsItem>[] = [
 			const utils = api.useUtils();
 
 			const { mutateAsync: removePermission } =
-				api.account.permissions.remove.useMutation({
+				api.user.permissions.remove.useMutation({
 					onSuccess: async () => {
-						await utils.account.permissions.invalidate();
+						await utils.user.permissions.invalidate();
 					}
 				});
 
@@ -42,7 +42,7 @@ export const columns: ColumnDef<ListPermissionsItem>[] = [
 						size="sm"
 						onClick={() =>
 							removePermission({
-								accountId: row.original.accountId,
+								userId: row.original.userId,
 								rule: row.original.rule,
 								scopeId: row.original.scopeId,
 								scopeType: row.original.scopeType

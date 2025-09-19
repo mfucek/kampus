@@ -14,7 +14,7 @@ export type FullPost = {
 		replyToId: string | null;
 		author: {
 			id: string;
-			displayName: string;
+			name: string;
 			imageUrl: string | null;
 			badge: string | null;
 		};

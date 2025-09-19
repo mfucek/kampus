@@ -12,21 +12,17 @@ export const hasUserPermission = async (
 			id: userId
 		},
 		include: {
-			Account: {
-				include: {
-					Permissions: true
-				}
-			}
+			Permissions: true
 		}
 	});
 
-	if (!user?.Account) return false;
+	if (!user) return false;
 
 	// default role permission
-	const roleValue = rolePermissions[user.Account.role][rule];
+	const roleValue = rolePermissions[user.role][rule];
 
 	// rule override
-	const permissions = user.Account.Permissions;
+	const permissions = user.Permissions;
 	const permission = permissions.find((permission) => permission.rule);
 
 	// if no permission overrides, return role value

@@ -11,7 +11,7 @@ export const RuleProtected: FC<
 		scopeId?: string;
 	} & PropsWithChildren
 > = ({ children, denied, rule, scopeId }) => {
-	const { data: canAccess } = api.account.hasPermission.useQuery({
+	const { data: canAccess } = api.user.permissions.hasPermission.useQuery({
 		rule,
 		scopeId
 	});

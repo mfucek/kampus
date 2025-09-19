@@ -10,29 +10,28 @@ import { useProfileImageUpload } from '../../hooks/use-profile-image-upload';
 import { SettingsSubSection } from '../settings-subsection';
 
 export const PublicProfileSection = () => {
-	const { data: user } = api.account.getUser.useQuery();
-	const { data: account } = api.account.getAccount.useQuery();
+	const { data: user } = api.user.get.useQuery();
 
 	const { uploading, openFilePicker } = useProfileImageUpload();
 
 	const { data: profilePictureUrl, isPending: profilePictureUrlPending } =
-		api.account.getCurrentUserProfilePictureUrl.useQuery();
+		api.user.profilePicture.sessionUser.getUrl.useQuery();
 
 	const {
 		mutateAsync: updateDisplayName,
 		isPending: updateDisplayNamePending
-	} = api.account.updateDisplayName.useMutation();
+	} = api.user.name.update.useMutation();
 
 	const { mutateAsync: updateBadge, isPending: updateBadgePending } =
-		api.account.updateBadge.useMutation();
+		api.user.badge.update.useMutation();
 
-	const [displayName, setDisplayName] = useState(user?.displayName ?? '');
+	const [displayName, setDisplayName] = useState(user?.name ?? '');
 	const [badge, setBadge] = useState(user?.badge ?? '');
 
 	const { toast } = useToast();
 
 	useEffect(() => {
-		setDisplayName(user?.displayName ?? '');
+		setDisplayName(user?.name ?? '');
 		setBadge(user?.badge ?? '');
 	}, [user]);
 
@@ -68,9 +67,9 @@ export const PublicProfileSection = () => {
 		}
 	};
 
-	const isLegendPlan = ['MONTHLY_PRO', 'LIFETIME'].includes(
-		account?.package ?? ''
-	);
+	// const isLegendPlan = ['MONTHLY_PRO', 'LIFETIME'].includes(
+	// 	account?.package ?? ''
+	// );
 
 	return (
 		<>
@@ -141,13 +140,13 @@ export const PublicProfileSection = () => {
 					<Input
 						value={badge}
 						onChange={(e) => setBadge(e.target.value)}
-						disabled={!isLegendPlan}
+						disabled={true}
 					/>
 					<Button
 						variant="solid-weak"
 						onClick={handleUpdateBadge}
 						loading={updateBadgePending}
-						disabled={!isLegendPlan}
+						disabled={true}
 					>
 						Save
 					</Button>

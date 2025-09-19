@@ -6,10 +6,10 @@ export const useProfileImageUpload = () => {
 	const maxSize = 5 * 1024 ** 2;
 
 	const { mutateAsync: getPresignedUrl } =
-		api.account.getUploadUrl.useMutation();
+		api.user.profilePicture.getUploadUrl.useMutation();
 
 	const { mutateAsync: uploadProfilePicture } =
-		api.account.uploadProfilePicture.useMutation();
+		api.user.profilePicture.uploadProfilePicture.useMutation();
 
 	const { toast } = useToast();
 
@@ -64,7 +64,7 @@ export const useProfileImageUpload = () => {
 	const onSuccess = async (key: string) => {
 		try {
 			await uploadProfilePicture({ key });
-			await utils.account.getCurrentUserProfilePictureUrl.invalidate();
+			await utils.user.profilePicture.sessionUser.getUrl.invalidate();
 			toast({
 				title: 'Success',
 				description: 'Your profile picture has been updated successfully',

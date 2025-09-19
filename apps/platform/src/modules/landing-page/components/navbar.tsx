@@ -15,22 +15,17 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { SignIn } from '@/modules/onboarding/components/sign-in';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
-	// const { isSignedIn } = useAuth();
-	// const { openSignIn, openSignUp } = useClerk();
 	const { isSignedIn } = useAuth();
 
 	const { isMobile } = useViewportSize();
 	const { isPWA } = useIsPWA();
 
-	const pathname = usePathname();
-
 	const { data: profilePictureUrl } =
-		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
+		api.user.profilePicture.sessionUser.getUrl.useQuery(void {}, {
 			enabled: !!isSignedIn
 		});
 

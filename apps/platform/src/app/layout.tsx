@@ -7,8 +7,8 @@ import '@/styles/tiptap.css';
 import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
 
-import { isDevOrStg } from '@/constants/is-dev-or-staging';
 import { PWANavbar } from '@/global/components/pwa-navbar';
+import { isDevOrStg } from '@/lib/environment';
 import { BodyOverlays } from './body-overlays';
 import { Providers } from './providers';
 

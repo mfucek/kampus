@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
-import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
+import { optionalAuthMiddleware, publicProcedure } from '@/lib/trpc/trpc';
 import { type RecursivePost } from '../../types/recursive-post';
 import { sortPostVotes } from '../helpers/get-post-votes';
 

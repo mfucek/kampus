@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { publicProcedure } from '@/server/api/trpc';
+import { publicProcedure } from '@/lib/trpc/trpc';
 
 export const getBySlugProcedure = publicProcedure
 	.input(z.object({ staffSlug: z.string(), collegeSlug: z.string() }))

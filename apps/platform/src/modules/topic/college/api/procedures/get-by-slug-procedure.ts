@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { publicProcedure } from '@/server/api/trpc';
+import { publicProcedure } from '@/lib/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 
 export const getBySlugProcedure = publicProcedure

@@ -1,4 +1,4 @@
-import { protectedProcedure } from '@/server/api/trpc';
+import { protectedProcedure } from '@/lib/trpc/trpc';
 
 export const getCurrentUserProcedure = protectedProcedure.query(
 	async ({ ctx }) => {

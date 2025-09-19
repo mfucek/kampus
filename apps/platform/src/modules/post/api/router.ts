@@ -1,4 +1,4 @@
-import { createTRPCRouter } from '@/server/api/trpc';
+import { createTRPCRouter } from '@/lib/trpc/trpc';
 
 import { createPostProcedure } from './procedures/create-post';
 import { deletePostProcedure } from './procedures/delete-post';

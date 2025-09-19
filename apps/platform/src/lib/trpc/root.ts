@@ -1,4 +1,4 @@
-import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
+import { createCallerFactory, createTRPCRouter } from '@/lib/trpc/trpc';
 
 import { stripeRouter } from '@/lib/stripe/api/router';
 

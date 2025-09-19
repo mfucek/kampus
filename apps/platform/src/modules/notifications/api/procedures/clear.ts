@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { protectedProcedure } from '@/server/api/trpc';
+import { protectedProcedure } from '@/lib/trpc/trpc';
 
 /**
  * Clear a notification by notification id or clear multiple notifications by post id

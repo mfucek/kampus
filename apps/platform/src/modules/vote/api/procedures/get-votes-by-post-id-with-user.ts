@@ -1,4 +1,4 @@
-import { protectedProcedure } from '@/server/api/trpc';
+import { protectedProcedure } from '@/lib/trpc/trpc';
 import { VoteType } from '@prisma/client';
 import { z } from 'zod';
 

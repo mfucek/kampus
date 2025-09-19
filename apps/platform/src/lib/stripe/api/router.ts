@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
+import { createTRPCRouter, protectedProcedure } from '@/lib/trpc/trpc';
 import { PackageType } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import Stripe from 'stripe';

@@ -1,4 +1,4 @@
-import { createTRPCRouter } from '@/server/api/trpc';
+import { createTRPCRouter } from '@/lib/trpc/trpc';
 
 import { clearProcedure } from './procedures/clear';
 import { clearAllProcedure } from './procedures/clear-all';

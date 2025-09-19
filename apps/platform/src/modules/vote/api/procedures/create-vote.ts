@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { VoteType } from '@prisma/client';
 
-import { protectedProcedure } from '@/server/api/trpc';
+import { protectedProcedure } from '@/lib/trpc/trpc';
 
 export const createVoteProcedure = protectedProcedure
 	.input(

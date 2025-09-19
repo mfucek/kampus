@@ -2,7 +2,7 @@ import { type JSONContent } from '@tiptap/react';
 import { z } from 'zod';
 
 import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
-import { optionalAuthMiddleware, publicProcedure } from '@/server/api/trpc';
+import { optionalAuthMiddleware, publicProcedure } from '@/lib/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 import { type FullPost } from '../../types/full-post';
 import { getPostVotes } from '../helpers/get-post-votes';

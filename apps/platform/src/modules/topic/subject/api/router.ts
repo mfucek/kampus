@@ -1,4 +1,4 @@
-import { createTRPCRouter } from '@/server/api/trpc';
+import { createTRPCRouter } from '@/lib/trpc/trpc';
 
 import { getByIdProcedure } from './procedures/get-by-id';
 import { getBySlugProcedure } from './procedures/get-by-slug';

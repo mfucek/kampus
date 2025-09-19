@@ -1,5 +1,5 @@
 import { getFileUploadUrl } from '@/lib/s3/get-file-upload-url';
-import { protectedProcedure } from '@/server/api/trpc';
+import { protectedProcedure } from '@/lib/trpc/trpc';
 import { nanoid } from 'nanoid';
 
 export const makeUploadUrlProcedure = protectedProcedure //

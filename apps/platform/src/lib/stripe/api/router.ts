@@ -10,10 +10,10 @@ export const stripeRouter = createTRPCRouter({
 		.input(z.object({ package: z.nativeEnum(PackageType) }))
 		.query(async ({ ctx, input }) => {
 			const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-				apiVersion: '2024-11-20.acacia'
+				apiVersion: '2025-02-24.acacia'
 			});
 
-			const url = env.URL;
+			const url = env.NEXT_PUBLIC_URL;
 
 			let price_key = '';
 			switch (input.package) {
@@ -54,10 +54,10 @@ export const stripeRouter = createTRPCRouter({
 
 	getLifetimeCheckoutURL: protectedProcedure.query(async () => {
 		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-			apiVersion: '2024-11-20.acacia'
+			apiVersion: '2025-02-24.acacia'
 		});
 
-		const url = env.URL;
+		const url = env.NEXT_PUBLIC_URL;
 
 		const checkoutSession = await stripe.checkout.sessions.create({
 			mode: 'payment',
@@ -96,7 +96,7 @@ export const stripeRouter = createTRPCRouter({
 		const stripeCustomerId = account.stripeCustomerId;
 
 		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-			apiVersion: '2024-11-20.acacia'
+			apiVersion: '2025-02-24.acacia'
 		});
 
 		const subscription = await stripe.subscriptions.list({
@@ -136,7 +136,7 @@ export const stripeRouter = createTRPCRouter({
 		const stripeCustomerId = account.stripeCustomerId;
 
 		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-			apiVersion: '2024-11-20.acacia'
+			apiVersion: '2025-02-24.acacia'
 		});
 
 		const subscription = await stripe.subscriptions.list({

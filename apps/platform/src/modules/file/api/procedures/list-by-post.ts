@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { publicProcedure } from '@/lib/trpc/trpc';
+import { publicProcedure } from '@/deps/trpc/trpc';
 
 export const listByPostProcedure = publicProcedure
 	.input(z.object({ postId: z.string() }))

@@ -1,7 +1,7 @@
 'use client';
 
+import { api } from '@/deps/trpc/react';
 import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { api } from '@/lib/trpc/react';
 import { type JSONContent } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

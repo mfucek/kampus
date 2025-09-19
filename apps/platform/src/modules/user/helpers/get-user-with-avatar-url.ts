@@ -1,5 +1,5 @@
-import { db } from '@/lib/db';
-import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
+import { db } from '@/deps/prisma';
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
 
 export const getUserWithAvatarUrl = async (userId: string) => {
 	const userRaw = await db.user.findFirst({

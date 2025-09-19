@@ -1,6 +1,6 @@
 import { type Notification, type PackageType } from '@prisma/client';
 
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 import { getUserWithAvatarUrl } from '@/modules/user/helpers/get-user-with-avatar-url';
 
 type NotificationReplyIndividual = {

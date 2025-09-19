@@ -1,4 +1,4 @@
-import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
+import { hydrateWindowWithUtilFunctions } from '@/deps/puppeteer/utils/hydrate-window-with-util-functions';
 import type { DriverCallbacks, ProfessorReference, Subject } from '@/types';
 import type { Logger } from '@/utils/logger';
 import { sanitizeTitle } from '@/utils/sanitize-title';

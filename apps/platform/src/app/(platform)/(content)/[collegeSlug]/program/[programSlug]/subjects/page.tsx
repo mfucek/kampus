@@ -1,4 +1,4 @@
-import { db } from '@/lib/db';
+import { db } from '@/deps/prisma';
 import { ProgramSubjectsPage } from '@/modules/topic/program/pages/program-subjects-page';
 
 export default ProgramSubjectsPage;

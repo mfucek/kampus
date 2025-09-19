@@ -1,5 +1,5 @@
-import { deleteFiles } from '@/lib/s3/delete-files';
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { deleteFiles } from '@/deps/s3/delete-files';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 import { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';

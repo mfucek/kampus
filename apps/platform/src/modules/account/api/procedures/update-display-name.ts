@@ -1,4 +1,4 @@
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 import { z } from 'zod';
 
 export const updateDisplayNameProcedure = protectedProcedure

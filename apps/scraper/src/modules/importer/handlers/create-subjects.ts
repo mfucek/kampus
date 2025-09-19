@@ -1,5 +1,5 @@
-import { Spinner } from '@/lib/clack/spinner';
-import { db } from '@/lib/prisma/db';
+import { Spinner } from '@/deps/clack/spinner';
+import { db } from '@/deps/prisma/db';
 import { type Subject } from '@/types';
 import { slugify } from '@/utils/slugify';
 

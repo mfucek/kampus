@@ -1,5 +1,6 @@
 'use client';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import {
@@ -9,7 +10,6 @@ import {
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
-import { api } from '@/lib/trpc/react';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import { VoteType } from '@prisma/client';
 import { useState, type FC } from 'react';

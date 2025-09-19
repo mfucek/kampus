@@ -1,8 +1,8 @@
 import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 
-import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
-import { optionalAuthMiddleware, publicProcedure } from '@/lib/trpc/trpc';
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
+import { optionalAuthMiddleware, publicProcedure } from '@/deps/trpc/trpc';
 import { type JSONContent } from '@tiptap/react';
 import { postScopeSchema } from '../../schemas/post-scope';
 import { sortPostVotes } from '../helpers/get-post-votes';

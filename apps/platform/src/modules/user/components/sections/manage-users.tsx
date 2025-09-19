@@ -2,6 +2,7 @@
 
 import { type FC, useState } from 'react';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -21,7 +22,6 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
-import { api } from '@/lib/trpc/react';
 import { type ListAccountsItem } from '@/modules/account/api/procedures/list';
 import { PermissionsTable } from '@/modules/permissions/components/permissions-table';
 import { RuleType } from '@prisma/client';

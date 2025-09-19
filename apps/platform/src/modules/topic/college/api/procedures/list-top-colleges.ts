@@ -1,4 +1,4 @@
-import { publicProcedure } from '@/lib/trpc/trpc';
+import { publicProcedure } from '@/deps/trpc/trpc';
 
 export const listTopCollegesProcedure = publicProcedure.query(
 	async ({ ctx }) => {

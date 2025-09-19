@@ -1,4 +1,4 @@
-import { createTRPCRouter } from '@/lib/trpc/trpc';
+import { createTRPCRouter } from '@/deps/trpc/trpc';
 import { createVoteProcedure } from './procedures/create-vote';
 import { getVotesByPostIdProcedure } from './procedures/get-votes-by-post-id';
 import { getVotesByPostIdWithUserProcedure } from './procedures/get-votes-by-post-id-with-user';

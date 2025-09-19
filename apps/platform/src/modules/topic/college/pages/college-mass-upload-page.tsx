@@ -1,4 +1,4 @@
-import { api } from '@/lib/trpc/server';
+import { api } from '@/deps/trpc/server';
 import { MassUploader } from '../../../mass-uploader/components/college-mass-uploader';
 
 interface PageProps {

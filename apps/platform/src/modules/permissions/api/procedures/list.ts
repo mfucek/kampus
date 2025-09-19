@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 
 export const listProcedure = protectedProcedure
 	.input(z.object({ accountId: z.string() }))

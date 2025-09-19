@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { getFileDownloadUrl } from '@/lib/s3/get-file-download-url';
-import { publicProcedure } from '@/lib/trpc/trpc';
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
+import { publicProcedure } from '@/deps/trpc/trpc';
 
 export const getUserProfilePictureUrlProcedure = publicProcedure
 	.input(z.object({ userId: z.string() }))

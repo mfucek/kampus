@@ -1,11 +1,11 @@
 'use client';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { Section } from '@/global/components/section';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Combobox } from '@/lib/shadcn/ui/combobox';
-import { api } from '@/lib/trpc/react';
 import { type SubjectListItem } from '@/modules/topic/subject/api/procedures/list';
 
 export const SubjectSelectionSection = ({

@@ -1,5 +1,5 @@
+import { api } from '@/deps/trpc/server';
 import { ContentPadding } from '@/global/layouts/content-padding';
-import { api } from '@/lib/trpc/server';
 import { SubjectsTableAdvanced } from '@/modules/topic/subject/components/subjects-table-advanced';
 
 interface PageProps {

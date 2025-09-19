@@ -1,4 +1,4 @@
-import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
+import { hydrateWindowWithUtilFunctions } from '@/deps/puppeteer/utils/hydrate-window-with-util-functions';
 import type { Program } from '@/types';
 import { sanitizeTitle } from '@/utils/sanitize-title';
 import { slugify } from '@/utils/slugify';

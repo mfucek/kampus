@@ -2,8 +2,8 @@ import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
-import { auth } from '@/lib/better-auth/auth';
-import { db } from '@/lib/db';
+import { auth } from '@/deps/better-auth/auth';
+import { db } from '@/deps/prisma';
 
 // type AuthObject = ReturnType<typeof getAuth>;
 

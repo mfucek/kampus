@@ -2,7 +2,7 @@
 
 import { type FC } from 'react';
 
-import { api } from '@/lib/trpc/react';
+import { api } from '@/deps/trpc/react';
 import { Post } from '@/modules/discussion/components/post';
 import { NoPostsCard } from '@/modules/discussion/components/post/no-posts-card';
 import { PostSkeleton } from '@/modules/discussion/components/post/skeleton';

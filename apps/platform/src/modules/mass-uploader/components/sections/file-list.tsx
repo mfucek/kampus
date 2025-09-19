@@ -3,6 +3,7 @@
 import { type DocumentFileType } from '@prisma/client';
 import { formatDistance } from 'date-fns';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -18,7 +19,6 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
-import { api } from '@/lib/trpc/react';
 import { useComposerController } from '@/modules/composer/contexts/composer-controller-provider';
 import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
 import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';

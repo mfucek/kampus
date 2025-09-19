@@ -5,13 +5,13 @@ import Link from 'next/link';
 
 import { env } from '@/env';
 
+import { api } from '@/deps/trpc/react';
 import { Logo } from '@/global/components/logo';
 import { ActionsGroup } from '@/global/molecules/navbar/actions-group';
 import { Divider } from '@/global/molecules/navbar/divider';
+import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
-import { api } from '@/lib/trpc/react';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
-import { useIsPWA } from '@/utils/use-is-pwa';
 import { useIsMobile } from '@/utils/useMediaQuery';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';

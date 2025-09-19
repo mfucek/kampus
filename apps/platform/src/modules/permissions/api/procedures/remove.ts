@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 import { RuleType, ScopeType } from '@prisma/client';
 
 export const removeProcedure = protectedProcedure

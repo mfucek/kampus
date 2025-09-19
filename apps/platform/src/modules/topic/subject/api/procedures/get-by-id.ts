@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { publicProcedure } from '@/lib/trpc/trpc';
+import { publicProcedure } from '@/deps/trpc/trpc';
 
 export const getByIdProcedure = publicProcedure
 	.input(z.object({ subjectId: z.string() }))

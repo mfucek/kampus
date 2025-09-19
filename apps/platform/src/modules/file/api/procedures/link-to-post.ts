@@ -1,4 +1,4 @@
-import { protectedProcedure } from '@/lib/trpc/trpc';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 import { DocumentFileType } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';

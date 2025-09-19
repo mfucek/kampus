@@ -4,13 +4,13 @@ import { useAuth, useClerk } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { api } from '@/deps/trpc/react';
 import { env } from '@/env';
 import { Logo } from '@/global/components/logo';
+import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
-import { api } from '@/lib/trpc/react';
 import { feedbackFormURL } from '@/modules/feedback/constants';
 import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
-import { useIsPWA } from '@/utils/use-is-pwa';
 import { useIsMobile } from '@/utils/useMediaQuery';
 import { usePathname } from 'next/navigation';
 import { Icon } from '../../components/icon';

@@ -4,6 +4,8 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { formatDistance } from 'date-fns';
 import { type FC } from 'react';
 
+import { tiptapExtensions } from '@/deps/tiptap/extensions';
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import {
 	Tooltip,
@@ -12,8 +14,6 @@ import {
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
-import { tiptapExtensions } from '@/lib/tiptap/extensions';
-import { api } from '@/lib/trpc/react';
 import { type FullPost } from '@/modules/post/types/full-post';
 import { PostActions } from './post-actions';
 import { PostFiles } from './post-files';

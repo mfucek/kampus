@@ -1,9 +1,9 @@
 import { Suspense, type PropsWithChildren } from 'react';
 
+import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
 import { Spinner } from '@/global/components/spinner';
-import { api } from '@/lib/trpc/server';
 
 interface LayoutProps {
 	params: Promise<{

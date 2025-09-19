@@ -7,7 +7,9 @@ import { type DocumentFileType } from '@prisma/client';
 import { type TFileFilters } from '../schemas/file-filters';
 import { type TFileScope } from '../schemas/file-scope';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
+import { useDebouncedEffect } from '@/lib/debouncing/use-debounced-effect';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Input } from '@/lib/shadcn/ui/input';
 import {
@@ -18,8 +20,6 @@ import {
 	SelectValue
 } from '@/lib/shadcn/ui/select';
 import { cn } from '@/lib/shadcn/utils';
-import { api } from '@/lib/trpc/react';
-import { useDebouncedEffect } from '@/utils/useDebouncedEffect';
 import { DocumentsTable } from './documents-table';
 import { categoryLabels } from './file-details-dialog/constants/category-labels';
 import { mainCategories } from './file-details-dialog/constants/document-categories';

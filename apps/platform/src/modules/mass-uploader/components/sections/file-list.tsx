@@ -20,7 +20,7 @@ import {
 	SelectValue
 } from '@/lib/shadcn/ui/select';
 import { useComposerController } from '@/modules/composer/contexts/composer-controller-provider';
-import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
+import { usePostId } from '@/modules/discussion/discussion-panel/components/post-id-provider';
 import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';
 import { removeCategoryFromSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/removeCategoryFromSelectedCategories';
 import { shownCategoriesBasedOnSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/shownCategoriesBasedOnSelectedCategories';

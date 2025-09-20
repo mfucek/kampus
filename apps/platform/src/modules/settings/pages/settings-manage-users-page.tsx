@@ -1,8 +1,8 @@
 import { PageHeader } from '@/global/components/page-header';
 
 import { Container } from '@/global/components/container';
-import { RuleProtected } from '@/modules/permissions/components/protected';
 import { ManageUsersSection } from '@/modules/user/components/sections/manage-users';
+import { RuleProtected } from '@/modules/user/permissions/components/protected';
 
 export const SettingsManageUsersPage = () => {
 	return (

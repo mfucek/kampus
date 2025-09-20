@@ -22,7 +22,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
-import { PermissionsTable } from '@/modules/permissions/components/permissions-table';
+import { PermissionsTable } from '@/modules/user/permissions/components/permissions-table';
 import { RuleType } from '@prisma/client';
 import { ListUsersItem } from '../../api/procedures/list';
 

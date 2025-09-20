@@ -3,10 +3,10 @@
 import { type FC } from 'react';
 
 import { api } from '@/deps/trpc/react';
-import { Post } from '@/modules/discussion/components/post';
-import { NoPostsCard } from '@/modules/discussion/components/post/no-posts-card';
-import { PostSkeleton } from '@/modules/discussion/components/post/skeleton';
-import { unpackThread } from '@/modules/discussion/utils/unpack-thread';
+import { Post } from '@/modules/discussion/discussion/components/post';
+import { NoPostsCard } from '@/modules/discussion/discussion/components/post/no-posts-card';
+import { PostSkeleton } from '@/modules/discussion/discussion/components/post/skeleton';
+import { unpackThread } from '@/modules/discussion/discussion/utils/unpack-thread';
 
 export const ThreadContent: FC<{ postId: string | null }> = ({ postId }) => {
 	const { data: thread } = api.post.getThread.useQuery(

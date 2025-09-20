@@ -9,7 +9,7 @@ import {
 	SelectValue
 } from '@/lib/shadcn/ui/select';
 import { Composer } from '@/modules/composer/components';
-import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
+import { InfiniteScrollTopLevelPosts } from '@/modules/discussion/post/components/infinite-scroll-top-level-posts';
 import { FC } from 'react';
 
 interface PageProps {

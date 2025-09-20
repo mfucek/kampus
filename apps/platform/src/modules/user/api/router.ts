@@ -1,7 +1,7 @@
 import { createTRPCRouter } from '@/deps/trpc/trpc';
 
 import { updateBadgeProcedure } from '@/modules/user/api/procedures/badge/update-badge-procedure';
-import { updateDisplayNameProcedure } from '@/modules/user/api/procedures/name/update-display-name';
+import { updateNameProcedure } from '@/modules/user/api/procedures/name/update-name';
 import { hasPermissionProcedure } from '@/modules/user/api/procedures/permission/has-permission';
 import { getUploadUrlProcedure } from '@/modules/user/api/procedures/profile-picture/get-upload-url';
 import { uploadProfilePictureProcedure } from '@/modules/user/api/procedures/profile-picture/upload-profile-picture';
@@ -28,7 +28,7 @@ export const userRouter = createTRPCRouter({
 		update: updateBadgeProcedure
 	}),
 	name: createTRPCRouter({
-		update: updateDisplayNameProcedure
+		update: updateNameProcedure
 	}),
 	permissions: createTRPCRouter({
 		list: listPermissionsProcedure,

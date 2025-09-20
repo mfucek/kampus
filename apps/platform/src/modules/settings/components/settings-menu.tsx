@@ -5,7 +5,7 @@ import { useViewportSize } from '@/deps/viewport-size';
 import { env } from '@/env';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { RuleProtected } from '@/modules/permissions/components/protected';
+import { RuleProtected } from '@/modules/user/permissions/components/protected';
 import { cva } from 'class-variance-authority';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

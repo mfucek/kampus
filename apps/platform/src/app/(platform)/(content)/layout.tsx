@@ -1,6 +1,6 @@
 import { SpinnerReloadErrorMessage } from '@/global/components/reload-error-message';
-import { ClientPanels } from '@/modules/discussion-panel/components/client-panels';
-import { PostIdProvider } from '@/modules/discussion-panel/components/post-id-provider';
+import { ClientPanels } from '@/modules/discussion/discussion-panel/components/client-panels';
+import { PostIdProvider } from '@/modules/discussion/discussion-panel/components/post-id-provider';
 import { Suspense, type FC, type PropsWithChildren } from 'react';
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {

@@ -5,9 +5,9 @@ import { useInView } from 'react-intersection-observer';
 
 import { api } from '@/deps/trpc/react';
 import { Spinner } from '@/global/components/spinner';
-import { Post } from '@/modules/discussion/components/post';
-import { NoPostsCard } from '@/modules/discussion/components/post/no-posts-card';
-import { PostSkeleton } from '@/modules/discussion/components/post/skeleton';
+import { Post } from '@/modules/discussion/discussion/components/post';
+import { NoPostsCard } from '@/modules/discussion/discussion/components/post/no-posts-card';
+import { PostSkeleton } from '@/modules/discussion/discussion/components/post/skeleton';
 import { type ListPostsItem } from '../api/procedures/list';
 import { type TPostScope } from '../schemas/post-scope';
 
@@ -26,7 +26,7 @@ const DynamicPost: FC<{
 					post: {
 						author: {
 							id: post.author.id,
-							name: post.author.displayName,
+							name: post.author.name,
 							imageUrl: post.author.imageUrl ?? '',
 							badge: post.author.badge ?? ''
 						},

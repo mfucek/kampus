@@ -17,27 +17,25 @@ export const PublicProfileSection = () => {
 	const { data: profilePictureUrl, isPending: profilePictureUrlPending } =
 		api.user.profilePicture.sessionUser.getUrl.useQuery();
 
-	const {
-		mutateAsync: updateDisplayName,
-		isPending: updateDisplayNamePending
-	} = api.user.name.update.useMutation();
+	const { mutateAsync: updateName, isPending: updateNamePending } =
+		api.user.name.update.useMutation();
 
 	const { mutateAsync: updateBadge, isPending: updateBadgePending } =
 		api.user.badge.update.useMutation();
 
-	const [displayName, setDisplayName] = useState(user?.name ?? '');
+	const [name, setName] = useState(user?.name ?? '');
 	const [badge, setBadge] = useState(user?.badge ?? '');
 
 	const { toast } = useToast();
 
 	useEffect(() => {
-		setDisplayName(user?.name ?? '');
+		setName(user?.name ?? '');
 		setBadge(user?.badge ?? '');
 	}, [user]);
 
-	const handleUpdateDisplayName = async () => {
+	const handleUpdateName = async () => {
 		try {
-			await updateDisplayName({ displayName });
+			await updateName({ name });
 
 			toast({
 				title: 'Success',
@@ -111,14 +109,11 @@ export const PublicProfileSection = () => {
 				description="Set your display name."
 			>
 				<div className="flex flex-row gap-2">
-					<Input
-						value={displayName}
-						onChange={(e) => setDisplayName(e.target.value)}
-					/>
+					<Input value={name} onChange={(e) => setName(e.target.value)} />
 					<Button
 						variant="solid-weak"
-						onClick={handleUpdateDisplayName}
-						loading={updateDisplayNamePending}
+						onClick={handleUpdateName}
+						loading={updateNamePending}
 					>
 						Save
 					</Button>

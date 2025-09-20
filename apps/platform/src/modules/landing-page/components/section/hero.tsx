@@ -7,8 +7,8 @@ import { Scribbles } from '../scribbles';
 
 export const HeroSection = async () => {
 	const [topColleges, allColleges] = await Promise.all([
-		api.college.listTopColleges(),
-		api.college.listAll()
+		api.topic.college.listTopColleges(),
+		api.topic.college.listAll()
 	]);
 
 	return (

@@ -21,7 +21,7 @@ export const PostLayout: FC<LayoutProps & PropsWithChildren> = async ({
 		postId
 	});
 
-	const college = await api.college.getById({
+	const college = await api.topic.college.getById({
 		collegeId: post.post.collegeId
 	});
 

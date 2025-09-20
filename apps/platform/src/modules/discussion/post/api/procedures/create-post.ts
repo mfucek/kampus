@@ -8,7 +8,7 @@ export const createPostProcedure = protectedProcedure
 	.input(
 		z.object({
 			body: z.any(),
-			collegeId: z.string(),
+			collegeId: z.string().optional(),
 			topicId: z.string().optional(),
 			replyToId: z.string().optional()
 		})

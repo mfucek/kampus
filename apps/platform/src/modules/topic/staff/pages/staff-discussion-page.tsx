@@ -13,7 +13,7 @@ interface PageProps {
 export const StaffDiscussionPage = async ({ params }: PageProps) => {
 	const { collegeSlug, staffSlug } = await params;
 
-	const staff = await api.staff.getBySlug({
+	const staff = await api.topic.staff.getBySlug({
 		staffSlug,
 		collegeSlug
 	});

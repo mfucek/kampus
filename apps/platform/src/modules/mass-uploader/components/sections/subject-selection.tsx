@@ -6,7 +6,7 @@ import { Section } from '@/global/components/section';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Combobox } from '@/lib/shadcn/ui/combobox';
-import { type SubjectListItem } from '@/modules/topic/subject/api/procedures/list';
+import { type SubjectListItem } from '@/modules/topic/api/procedures/subject/list-paginated';
 
 export const SubjectSelectionSection = ({
 	subjects,
@@ -17,7 +17,7 @@ export const SubjectSelectionSection = ({
 	subject: SubjectListItem | null;
 	setSubject: (subject: SubjectListItem | null) => void;
 }) => {
-	const { data: subjectData } = api.subject.getById.useQuery(
+	const { data: subjectData } = api.topic.subject.getById.useQuery(
 		{
 			subjectId: subject?.subject?.topicId ?? ''
 		},

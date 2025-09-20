@@ -7,8 +7,8 @@ import { Icon, type IconName } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
-import { type ListAllCollegesItem } from '@/modules/topic/college/api/procedures/list-all';
-import { type ListTopCollegesItem } from '@/modules/topic/college/api/procedures/list-top-colleges';
+import { type CollegesListItem } from '@/modules/topic/api/procedures/college/list-all';
+import { type ListTopCollegesItem } from '@/modules/topic/api/procedures/college/list-top-colleges';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
@@ -46,7 +46,7 @@ const CollegeCard: FC<{
 
 export const HeroSearch: FC<{
 	topColleges: ListTopCollegesItem[];
-	allColleges: ListAllCollegesItem[];
+	allColleges: CollegesListItem[];
 }> = ({ topColleges, allColleges }) => {
 	const pathname = usePathname();
 

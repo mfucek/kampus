@@ -13,19 +13,19 @@ export const Breadcrumbs = () => {
 	const subjectSlug = useParams().subjectSlug as string;
 	const topicSlug = staffSlug || subjectSlug;
 
-	const college = api.college.getBySlug.useQuery(
+	const college = api.topic.college.getBySlug.useQuery(
 		{ collegeSlug },
 		{ enabled: !!collegeSlug }
 	);
 	const collegeName = college.data?.name;
 
-	const staff = api.staff.getBySlug.useQuery(
+	const staff = api.topic.staff.getBySlug.useQuery(
 		{ collegeSlug, staffSlug },
 		{ enabled: !!staffSlug && !!collegeSlug }
 	);
 	const staffName = staff.data?.name;
 
-	const subject = api.subject.getBySlug.useQuery(
+	const subject = api.topic.subject.getBySlug.useQuery(
 		{ collegeSlug, subjectSlug },
 		{ enabled: !!subjectSlug && !!collegeSlug }
 	);

@@ -157,7 +157,7 @@ const FileActions = (file: StagedFile, index: number) => {
 	const { setPostId } = usePostId();
 
 	const { data: duplicatesData } =
-		api.subject.hasDocumentOfKindProcedure.useQuery(
+		api.topic.subject.hasDocumentOfKindProcedure.useQuery(
 			{
 				types: file.documentOptions.types,
 				year: file.documentOptions.academicYear!,

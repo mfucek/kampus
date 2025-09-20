@@ -11,12 +11,12 @@ interface PageProps {
 export const SubjectStaffPage = async ({ params }: PageProps) => {
 	const { subjectSlug, collegeSlug } = await params;
 
-	const subject = await api.subject.getBySlug({
+	const subject = await api.topic.subject.getBySlug({
 		subjectSlug,
 		collegeSlug
 	});
 
-	const staffs = await api.subject.listStaff({
+	const staffs = await api.topic.subject.listStaff({
 		subjectId: subject.id
 	});
 

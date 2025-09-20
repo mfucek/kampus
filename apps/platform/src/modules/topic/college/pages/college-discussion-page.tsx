@@ -21,7 +21,7 @@ interface PageProps {
 // export const CollegeDiscussionPage = async ({ params }: PageProps) => {
 export const CollegeDiscussionPage: FC<PageProps> = async ({ params }) => {
 	const { collegeSlug } = await params;
-	const college = await api.college.getBySlug({
+	const college = await api.topic.college.getBySlug({
 		collegeSlug
 	});
 

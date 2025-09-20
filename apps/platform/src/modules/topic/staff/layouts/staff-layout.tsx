@@ -18,7 +18,7 @@ export const StaffLayout = async ({
 }: PropsWithChildren<LayoutProps>) => {
 	const { staffSlug, collegeSlug } = await params;
 
-	const staff = await api.staff.getBySlug({
+	const staff = await api.topic.staff.getBySlug({
 		staffSlug,
 		collegeSlug
 	});

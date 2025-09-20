@@ -1,4 +1,4 @@
-import { type Notification, type PackageType } from '@prisma/client';
+import { type Notification } from '@prisma/client';
 
 import { protectedProcedure } from '@/deps/trpc/trpc';
 import { getUserWithAvatarUrl } from '@/modules/user/helpers/get-user-with-avatar-url';
@@ -13,7 +13,7 @@ type NotificationReplyIndividual = {
 	};
 	aggregate: false;
 	author: {
-		displayName: string;
+		name: string;
 		avatarUrl: string;
 	};
 };
@@ -44,7 +44,7 @@ type NotificationVote = {
 	| {
 			aggregate: false;
 			author: {
-				displayName: string;
+				name: string;
 				avatarUrl: string;
 			};
 	  }
@@ -56,15 +56,6 @@ type NotificationVote = {
 			};
 	  }
 );
-
-type NotificationPackage = {
-	id: string;
-	type: 'PACKAGE_UPGRADE' | 'PACKAGE_DOWNGRADE';
-	createdAt: Date;
-	package: {
-		name: PackageType;
-	};
-};
 
 export const listProcedure = protectedProcedure.query(async ({ ctx }) => {
 	const { db, user } = ctx;
@@ -112,7 +103,7 @@ export const listProcedure = protectedProcedure.query(async ({ ctx }) => {
 					},
 					aggregate: false,
 					author: {
-						displayName: '',
+						name: '',
 						avatarUrl: ''
 					}
 				};

@@ -1,5 +1,5 @@
-import { type FullPost } from '@/modules/post/types/full-post';
-import { type RecursivePost } from '@/modules/post/types/recursive-post';
+import { type FullPost } from '@/modules/discussion/post/types/full-post';
+import { type RecursivePost } from '@/modules/discussion/post/types/recursive-post';
 
 type UnpackedPost = FullPost & {
 	depthInfo: number[];

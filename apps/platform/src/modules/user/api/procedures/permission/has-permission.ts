@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { optionalAuthMiddleware, publicProcedure } from '@/deps/trpc/trpc';
-import { hasUserPermission } from '@/modules/permissions/helpers/has-user-permission';
+import { hasUserPermission } from '@/modules/user/permissions/helpers/has-user-permission';
 import { RuleType } from '@prisma/client';
 
 export const hasPermissionProcedure = publicProcedure

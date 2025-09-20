@@ -37,7 +37,7 @@ export const hasDocumentOfKindProcedure = protectedProcedure
 
 		const posts = documentFilesRaw.map((file) => ({
 			id: file.Post!.id,
-			author: file.Post!.Author.displayName,
+			author: file.Post!.Author.name,
 			createdAt: file.Post!.createdAt
 		}));
 

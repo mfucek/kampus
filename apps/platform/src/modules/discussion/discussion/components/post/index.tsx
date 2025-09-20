@@ -14,7 +14,7 @@ import {
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
-import { type FullPost } from '@/modules/post/types/full-post';
+import { type FullPost } from '@/modules/discussion/post/types/full-post';
 import { PostActions } from './post-actions';
 import { PostFiles } from './post-files';
 import { PostThreading } from './post-threading';

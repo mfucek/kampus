@@ -1,10 +1,10 @@
 import { protectedProcedure } from '@/deps/trpc/trpc';
 import { z } from 'zod';
 
-export const updateDisplayNameProcedure = protectedProcedure
+export const updateNameProcedure = protectedProcedure
 	.input(
 		z.object({
-			displayName: z.string()
+			name: z.string()
 		})
 	)
 	.mutation(async ({ ctx, input }) => {
@@ -15,7 +15,7 @@ export const updateDisplayNameProcedure = protectedProcedure
 				id: user.id
 			},
 			data: {
-				displayName: input.displayName
+				name: input.name
 			}
 		});
 

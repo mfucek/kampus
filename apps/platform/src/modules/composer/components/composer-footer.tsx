@@ -2,7 +2,7 @@
 
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
-import { MAX_CHARACTERS } from '@/modules/discussion/constants/composer';
+import { MAX_CHARACTERS } from '@/modules/composer/constants/composer';
 
 import { useAuth } from '@/deps/better-auth/use-auth';
 import { SignIn } from '@/modules/onboarding/components/sign-in';

@@ -4,7 +4,7 @@ import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
 import { Tab, Tabs } from '@/global/components/route-tabs';
-import { RuleProtected } from '@/modules/permissions/components/protected';
+import { RuleProtected } from '@/modules/user/permissions/components/protected';
 import { RuleType } from '@prisma/client';
 
 interface LayoutProps {

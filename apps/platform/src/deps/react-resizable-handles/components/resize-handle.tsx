@@ -4,7 +4,7 @@ import { type FC, useState } from 'react';
 import { PanelResizeHandle } from 'react-resizable-panels';
 
 import { cn } from '@/lib/shadcn/utils';
-import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
+import { usePostId } from '@/modules/discussion/discussion-panel/components/post-id-provider';
 
 type ResizeHandleProps = {
 	horizontal?: boolean;

@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 
 import { Icon } from '@/global/components/icon';
-import { FullPost } from '@/modules/post/types/full-post';
+import { FullPost } from '@/modules/discussion/post/types/full-post';
 
 type DocumentFile = FullPost['documentFiles'][number];
 

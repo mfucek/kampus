@@ -1,8 +1,8 @@
 'use client';
 
 import { Container } from '@/global/components/container';
-import { PostHeader } from '@/modules/discussion-panel/components/post-header';
-import { ThreadContent } from '@/modules/discussion-panel/layouts/thread-content';
+import { PostHeader } from '@/modules/discussion/discussion-panel/components/post-header';
+import { ThreadContent } from '@/modules/discussion/discussion-panel/layouts/thread-content';
 import { use } from 'react';
 
 interface PageProps {

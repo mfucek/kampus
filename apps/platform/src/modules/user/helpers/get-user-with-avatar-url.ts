@@ -7,7 +7,7 @@ export const getUserWithAvatarUrl = async (userId: string) => {
 			id: userId
 		},
 		include: {
-			image: {
+			ImageFile: {
 				include: {
 					File: true
 				}
@@ -19,19 +19,18 @@ export const getUserWithAvatarUrl = async (userId: string) => {
 		return null;
 	}
 
-	const avatarKey = userRaw.image?.File?.key;
+	const avatarKey = userRaw.ImageFile?.File?.key;
 	const avatarUrl = avatarKey ? await getFileDownloadUrl(avatarKey) : null;
 
 	const user = {
 		id: userRaw.id,
-		displayName: userRaw.displayName,
-		imageUrl: userRaw.image?.File.key
-			? await getFileDownloadUrl(userRaw.image?.File.key)
+		displayName: userRaw.name,
+		imageUrl: userRaw.ImageFile?.File?.key
+			? await getFileDownloadUrl(userRaw.ImageFile?.File?.key)
 			: null,
 		badge: userRaw.badge,
 		createdAt: userRaw.createdAt,
-		updatedAt: userRaw.updatedAt,
-		accountId: userRaw.accountId
+		updatedAt: userRaw.updatedAt
 	};
 
 	return { user, avatarUrl };

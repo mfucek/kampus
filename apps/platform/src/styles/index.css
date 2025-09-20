@@ -1,8 +1,170 @@
-/* Main Tailwind CSS configuration */
-@import "./tailwind.css";
+@import 'tailwindcss';
 
-/* Import other CSS files */
-@import "./colors.css";
-@import "./typography.css";
-@import "./tiptap.css";
-@import "./globals.css";
+@layer base;
+@layer components;
+@layer utilities;
+
+@plugin "tailwindcss-displaymodes";
+
+@import './colors.css';
+@import './typography.css';
+@import './tiptap.css';
+
+/* Base styles */
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 20 14.3% 4.1%;
+
+		--card: 0 0% 100%;
+		--card-foreground: 20 14.3% 4.1%;
+
+		--popover: 0 0% 100%;
+		--popover-foreground: 20 14.3% 4.1%;
+
+		--primary: 24 9.8% 10%;
+		--primary-foreground: 60 9.1% 97.8%;
+
+		--secondary: 60 4.8% 95.9%;
+		--secondary-foreground: 24 9.8% 10%;
+
+		--muted: 60 4.8% 95.9%;
+		--muted-foreground: 25 5.3% 44.7%;
+
+		--accent: 60 4.8% 95.9%;
+		--accent-foreground: 24 9.8% 10%;
+
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 60 9.1% 97.8%;
+
+		--border: 20 5.9% 90%;
+		--input: 20 5.9% 90%;
+		--ring: 20 14.3% 4.1%;
+
+		--radius: 0.5rem;
+	}
+
+	.dark {
+		--background: 20 14.3% 4.1%;
+		--foreground: 60 9.1% 97.8%;
+
+		--card: 20 14.3% 4.1%;
+		--card-foreground: 60 9.1% 97.8%;
+
+		--popover: 20 14.3% 4.1%;
+		--popover-foreground: 60 9.1% 97.8%;
+
+		--primary: 60 9.1% 97.8%;
+		--primary-foreground: 24 9.8% 10%;
+
+		--secondary: 12 6.5% 15.1%;
+		--secondary-foreground: 60 9.1% 97.8%;
+
+		--muted: 12 6.5% 15.1%;
+		--muted-foreground: 24 5.4% 63.9%;
+
+		--accent: 12 6.5% 15.1%;
+		--accent-foreground: 60 9.1% 97.8%;
+
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 60 9.1% 97.8%;
+
+		--border: 12 6.5% 15.1%;
+		--input: 12 6.5% 15.1%;
+		--ring: 24 5.7% 82.9%;
+	}
+}
+
+/* Clickable elements */
+.clickable {
+	@apply cursor-pointer transition-transform duration-300 hover:duration-200 sm:hover:translate-y-[-2px] sm:active:translate-y-[1px];
+}
+
+/* Scrollbar styles */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: hsl(var(--color-neutral)) hsl(var(--color-section));
+}
+
+/* Webkit scrollbar styles */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: hsl(var(--color-section));
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: hsl(var(--color-neutral));
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: hsl(var(--color-neutral) / 0.8);
+}
+
+.scrollbar-hidden {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+	display: none;
+}
+
+@theme {
+	--breakpoint-xs: 400px;
+	--breakpoint-sm: 640px;
+	--breakpoint-md: 768px;
+	--breakpoint-lg: 1024px;
+	--breakpoint-xl: 1280px;
+	--breakpoint-2xl: 1600px;
+}
+
+@theme {
+	--container-xs: 400px;
+	--container-sm: 640px;
+	--container-md: 768px;
+	--container-lg: 1024px;
+	--container-xl: 1280px;
+	--container-2xl: 1600px;
+}
+
+@theme {
+	/* Custom keyframes */
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+	--animate-push-fade-right: push-fade-right 0.5s ease-out;
+}
+
+/* Custom keyframes */
+@keyframes accordion-down {
+	from {
+		height: 0;
+	}
+	to {
+		height: var(--radix-accordion-content-height);
+	}
+}
+
+@keyframes accordion-up {
+	from {
+		height: var(--radix-accordion-content-height);
+	}
+	to {
+		height: 0;
+	}
+}
+
+@keyframes push-fade-right {
+	from {
+		opacity: 0;
+		transform: translateX(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}

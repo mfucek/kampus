@@ -55,11 +55,7 @@ const NavButton: FC<{
 	return (
 		<Link
 			href={href}
-			className={cn(
-				'flex flex-col gap-1',
-				'items-center',
-				'flex-1 py-2'
-			)}
+			className={cn('flex flex-col gap-1', 'items-center', 'flex-1 py-2')}
 			onClick={onClick}
 		>
 			{icon && (

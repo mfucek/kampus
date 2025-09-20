@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;500;600;700;800;900&display=swap');
 /* Note: Gilroy font needs to be added separately as it's not available on Google Fonts */
 
-@import 'tailwindcss';
-
 /* Base styles */
 @theme {
 	--font-nunito: 'Nunito Sans', sans-serif;
@@ -140,40 +138,4 @@
 	@apply font-nunito font-bold;
 
 	@apply text-[11px] leading-[16px];
-}
-
-/* HTML Tags */
-
-h1 {
-	@apply display-1;
-}
-
-h2 {
-	@apply display-2;
-}
-
-h3 {
-	@apply display-3;
-}
-
-h4 {
-	@apply title-1;
-}
-
-h5 {
-	@apply title-2;
-}
-
-h6 {
-	@apply title-3;
-}
-
-p {
-	@apply body-1;
-}
-
-/* Default overrides */
-
-* {
-	@apply text-neutral;
 }

@@ -58,7 +58,7 @@ const NavButton: FC<{
 			className={cn(
 				'flex flex-col gap-1',
 				'items-center',
-				'flex-1 py-2 bg-opacity-100'
+				'flex-1 py-2'
 			)}
 			onClick={onClick}
 		>
@@ -103,7 +103,7 @@ export const PWANavbar = () => {
 	return (
 		<div
 			className={cn(
-				'sticky bottom-0 left-0 right-0 bg-section bg-opacity-[0.9] backdrop-blur-2xl border-t border-t-neutral-weak',
+				'sticky bottom-0 left-0 right-0 bg-section/90 backdrop-blur-2xl border-t border-t-neutral-weak',
 				'standalone:pb-8',
 				'z-20',
 				'flex flex-row'

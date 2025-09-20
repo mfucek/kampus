@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/* Theme configuration */
+@theme {
+  --font-family-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  
+  /* Custom colors using CSS variables */
+  --color-section: #ffffff;
+  --color-background: #eeeeee;
+  --color-foreground: #ffffffc0;
+  
+  --color-neutral-default: #000000;
+  --color-neutral-strong: #1a1a1a;
+  --color-neutral-medium: #666666;
+  --color-neutral-weak: #cccccc;
+  --color-neutral-contrast: #ffffff;
+  
+  --color-accent-default: #3b82f6;
+  --color-accent-strong: #1d4ed8;
+  --color-accent-medium: #60a5fa;
+  --color-accent-weak: #dbeafe;
+  --color-accent-contrast: #ffffff;
+  
+  --color-success-default: #10b981;
+  --color-success-strong: #047857;
+  --color-success-medium: #34d399;
+  --color-success-weak: #d1fae5;
+  --color-success-contrast: #ffffff;
+  
+  --color-danger-default: #ef4444;
+  --color-danger-strong: #dc2626;
+  --color-danger-medium: #f87171;
+  --color-danger-weak: #fecaca;
+  --color-danger-contrast: #ffffff;
+  
+  --color-warning-default: #f59e0b;
+  --color-warning-strong: #d97706;
+  --color-warning-medium: #fbbf24;
+  --color-warning-weak: #fef3c7;
+  --color-warning-contrast: #ffffff;
+  
+  --color-info-default: #06b6d4;
+  --color-info-strong: #0891b2;
+  --color-info-medium: #22d3ee;
+  --color-info-weak: #cffafe;
+  --color-info-contrast: #ffffff;
+  
+  --color-theme-default: #8b5cf6;
+  --color-theme-strong: #7c3aed;
+  --color-theme-medium: #a78bfa;
+  --color-theme-weak: #ede9fe;
+  --color-theme-contrast: #ffffff;
+  
+  /* Custom screens */
+  --breakpoint-xs: 400px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  
+  /* Custom keyframes */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-push-fade-right: push-fade-right 0.5s ease-out;
+}
+
+/* Custom keyframes */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes push-fade-right {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Safelist utilities */
+@source inline() {
+  .theme-neutral {}
+  .theme-accent {}
+  .theme-success {}
+  .theme-danger {}
+  .theme-warning {}
+  .theme-info {}
+  .input {}
+}

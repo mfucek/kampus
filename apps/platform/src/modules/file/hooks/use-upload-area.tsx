@@ -55,11 +55,11 @@ export const UploadAreaOverlay: FC<{ isDragging: boolean }> = ({
 	return (
 		<div
 			className={cn(
-				'absolute flex items-center justify-center duration-300 inset-2 bg-accent-medium backdrop-blur-sm rounded-xl pointer-events-none bg-opacity-50 border border-accent-strong',
+				'absolute flex items-center justify-center duration-300 inset-2 bg-accent-medium/50 backdrop-blur-sm rounded-xl pointer-events-none border border-accent-strong',
 				isDragging ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
 			)}
 		>
-			<Icon icon="add-circle" size={32} className="bg-accent bg-opacity-100" />
+			<Icon icon="add-circle" size={32} className="bg-accent" />
 		</div>
 	);
 };

@@ -15,7 +15,7 @@ export default function RootLayout({
 	return (
 		<Providers>
 			<html lang="hr-HR" className={GeistSans.variable}>
-				<body className="bg-background min-h-screen bg-opacity-100 overscroll-none">
+				<body className="bg-background min-h-screen overscroll-none">
 					<BodyOverlays>
 						<div className="min-h-screen overflow-x-hidden">{children}</div>
 						<PWANavbar />

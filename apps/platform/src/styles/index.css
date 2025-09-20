@@ -1,0 +1,8 @@
+/* Main Tailwind CSS configuration */
+@import "./tailwind.css";
+
+/* Import other CSS files */
+@import "./colors.css";
+@import "./typography.css";
+@import "./tiptap.css";
+@import "./globals.css";

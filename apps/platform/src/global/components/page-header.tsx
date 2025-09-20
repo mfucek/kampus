@@ -41,7 +41,7 @@ export const PageHeader = ({
 		return (
 			<ContentPadding
 				size="lg"
-				className={cn(isMobile && 'pl-0', 'bg-opacity-100')}
+				className={cn(isMobile && 'pl-0')}
 			>
 				<div className="flex flex-row w-full items-center gap-0 py-4">
 					<Button
@@ -92,7 +92,7 @@ export const PageHeader = ({
 			{/* <div
 				className={cn(
 					'fixed top-0 left-0 right-0 md:hidden block',
-					'bg-section border-b border-neutral-weak bg-opacity-90 backdrop-blur-sm',
+					'bg-section/90 border-b border-neutral-weak backdrop-blur-sm',
 					'z-10',
 					'flex',
 					'duration-300 translate-y-[-100%]',

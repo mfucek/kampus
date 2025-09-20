@@ -12,7 +12,7 @@ import { cva } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Icon, type IconName } from './icon';
+import { Icon, type IconName } from '../../../global/components/icon';
 
 const NavButton: FC<{
 	icon?: IconName;

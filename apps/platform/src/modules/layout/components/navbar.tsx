@@ -13,10 +13,10 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { ThemeToggler } from '@/lib/theme/components/theme-toggler';
 import { feedbackFormURL } from '@/modules/feedback/constants';
 import { SignIn } from '@/modules/onboarding/components/sign-in';
-import { Icon } from '../../components/icon';
-import { ActionsGroup } from './actions-group';
-import { Breadcrumbs } from './breadcrumbs';
-import { Divider } from './divider';
+import { Icon } from '../../../global/components/icon';
+import { ActionsGroup } from '../../../global/molecules/navbar/actions-group';
+import { Breadcrumbs } from '../../../global/molecules/navbar/breadcrumbs';
+import { Divider } from '../../../global/molecules/navbar/divider';
 
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 

@@ -9,8 +9,8 @@ import { Icon } from '@/global/components/icon';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
-import { usePostId } from '@/modules/discussion/discussion-panel/components/post-id-provider';
 import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';
+import { usePostId } from '@/modules/layout/components/post-id-provider';
 import { type DocumentFileType } from '@prisma/client';
 
 export const columns: ColumnDef<

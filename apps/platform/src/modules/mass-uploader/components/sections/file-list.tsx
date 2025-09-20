@@ -20,7 +20,6 @@ import {
 	SelectValue
 } from '@/lib/shadcn/ui/select';
 import { useComposerController } from '@/modules/composer/contexts/composer-controller-provider';
-import { usePostId } from '@/modules/discussion/discussion-panel/components/post-id-provider';
 import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';
 import { removeCategoryFromSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/removeCategoryFromSelectedCategories';
 import { shownCategoriesBasedOnSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/shownCategoriesBasedOnSelectedCategories';
@@ -29,6 +28,7 @@ import {
 	useFileStagingContext
 } from '@/modules/file/contexts/file-staging-provider';
 import { UploadArea } from '@/modules/file/hooks/use-upload-area';
+import { usePostId } from '@/modules/layout/components/post-id-provider';
 
 const FileRow = (file: StagedFile, index: number) => {
 	const { updateFile, openFileDetailsDialog } = useFileStagingContext();

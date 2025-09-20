@@ -21,8 +21,8 @@ import {
 	DrawerTitle
 } from '@/lib/shadcn/ui/drawer';
 import { cn } from '@/lib/shadcn/utils';
-import { ThreadContent } from '../layouts/thread-content';
-import { PostHeader } from './post-header';
+import { PostHeader } from '../../discussion/discussion-panel/components/post-header';
+import { ThreadContent } from '../../discussion/discussion-panel/layouts/thread-content';
 import { usePostId } from './post-id-provider';
 
 export const ClientPanels: React.FC<PropsWithChildren> = ({ children }) => {

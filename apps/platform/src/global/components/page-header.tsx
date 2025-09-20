@@ -39,10 +39,7 @@ export const PageHeader = ({
 
 	const SmallContent = () => {
 		return (
-			<ContentPadding
-				size="lg"
-				className={cn(isMobile && 'pl-0')}
-			>
+			<ContentPadding size="lg" className={cn(isMobile && 'pl-0')}>
 				<div className="flex flex-row w-full items-center gap-0 py-4">
 					<Button
 						variant="ghost"

@@ -1,93 +1,145 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;500;600;700;800;900&display=swap');
 /* Note: Gilroy font needs to be added separately as it's not available on Google Fonts */
 
+@import 'tailwindcss';
+
 /* Base styles */
-@layer base {
-	/* Custom font classes */
-	@layer utilities {
-		.font-nunito {
-			font-family: 'Nunito Sans', sans-serif;
-		}
-		.font-gilroy {
-			font-family: 'Gilroy', sans-serif;
-		}
-	}
+@theme {
+	--font-nunito: 'Nunito Sans', sans-serif;
+	--font-gilroy: 'Gilroy', sans-serif;
+}
 
-	/* Display */
+/* Base styles */
+@utility display-1 {
+	@apply font-gilroy font-extrabold;
 
-	.display-1 {
-		@apply font-gilroy text-[48px] font-extrabold leading-[48px] sm:text-[64px] sm:leading-[64px];
-	}
+	@apply sm:text-[64px] sm:leading-[64px];
+	@apply text-[48px] leading-[48px];
+}
 
-	.display-2 {
-		@apply font-gilroy text-[32px] font-extrabold leading-[32px] sm:text-[48px] sm:leading-[48px];
-	}
+@utility display-2 {
+	@apply font-gilroy font-extrabold;
 
-	.display-3 {
-		@apply font-gilroy text-[28px] font-extrabold leading-[28px] sm:text-[32px] sm:leading-[32px];
-	}
+	@apply sm:text-[48px] sm:leading-[48px];
+	@apply text-[32px] leading-[32px];
+}
 
-	/* Title */
+@utility display-3 {
+	@apply font-gilroy font-extrabold;
 
-	.title-1 {
-		@apply font-nunito text-[18px] font-bold leading-[24px] tracking-[-0.54px] sm:text-[22px] sm:leading-[24px] sm:tracking-[-0.66px];
-	}
+	@apply sm:text-[32px] sm:leading-[32px];
+	@apply text-[28px] leading-[28px];
+}
 
-	.title-2 {
-		@apply font-nunito text-[16px] font-bold leading-[24px] tracking-[-0.48px] sm:text-[18px] sm:leading-[24px] sm:tracking-[-0.54px];
-	}
+/* Title */
 
-	.title-3 {
-		@apply font-nunito text-[15px] font-bold leading-[20px] tracking-[-0.45px] sm:text-[14px] sm:leading-[20px] sm:tracking-[-0.42px];
-	}
+@utility title-1 {
+	@apply font-nunito font-bold;
 
-	/* Body */
+	/* Desktop */
+	@apply sm:text-[22px] sm:leading-[24px] sm:tracking-[-0.66px];
+	/* Mobile */
+	@apply text-[18px] leading-[24px] tracking-[-0.54px];
+}
 
-	.body-1 {
-		@apply font-nunito text-[16px] font-normal leading-[24px] sm:text-[18px] sm:leading-[24px];
-	}
+@utility title-2 {
+	@apply font-nunito font-bold;
 
-	.body-2 {
-		@apply font-nunito text-[13px] font-normal leading-[20px] sm:text-[14px] sm:leading-[20px];
-	}
+	/* Desktop */
+	@apply sm:text-[18px] sm:leading-[24px] sm:tracking-[-0.54px];
+	/* Mobile */
+	@apply text-[16px] leading-[24px] tracking-[-0.48px];
+}
 
-	.body-3 {
-		@apply font-nunito text-[11px] font-normal leading-[16px] sm:text-[12px] sm:leading-[16px];
-	}
+@utility title-3 {
+	@apply font-nunito font-bold;
 
-	/* Caption */
+	/* Desktop */
+	@apply sm:text-[14px] sm:leading-[20px] sm:tracking-[-0.42px];
+	/* Mobile */
+	@apply text-[15px] leading-[20px] tracking-[-0.45px];
+}
 
-	.caption {
-		@apply font-nunito text-[11px] font-extrabold leading-[16px];
-	}
+/* Body */
 
-	/* Overline */
+@utility body-1 {
+	@apply font-nunito font-normal;
 
-	.overline {
-		text-decoration: none !important;
-		@apply font-nunito text-[8px] font-black leading-[8px] tracking-[0.4px] uppercase;
-	}
+	/* Desktop */
+	@apply sm:text-[18px] sm:leading-[24px];
+	/* Mobile */
+	@apply text-[16px] leading-[24px];
+}
 
-	/* Input */
+@utility body-2 {
+	@apply font-nunito font-normal;
 
-	.input {
-		@apply font-nunito text-[16px] font-normal leading-[24px] sm:text-[14px] sm:leading-[24px];
-	}
+	/* Desktop */
+	@apply sm:text-[14px] sm:leading-[20px];
+	/* Mobile */
+	@apply text-[13px] leading-[20px];
+}
 
-	/* Buttons */
+@utility body-3 {
+	@apply font-nunito font-normal;
 
-	.button-lg {
-		@apply font-nunito text-[15px] font-bold leading-[20px];
-	}
+	/* Desktop */
+	@apply sm:text-[12px] sm:leading-[16px];
+	/* Mobile */
+	@apply text-[11px] leading-[16px];
+}
 
-	.button-md {
-		@apply font-nunito text-[12px] font-bold leading-[16px] sm:text-[13px] sm:leading-[16px];
-	}
+/* Caption */
 
-	.button-sm {
-		@apply font-nunito text-[11px] font-bold leading-[16px];
-	}
+@utility caption {
+	@apply font-nunito font-extrabold;
+
+	@apply text-[11px] leading-[16px];
+}
+
+/* Overline */
+
+@utility overline {
+	text-decoration: none !important;
+
+	/* Desktop */
+	@apply font-nunito font-black uppercase;
+	/* Mobile */
+	@apply text-[8px] leading-[8px] tracking-[0.4px];
+}
+
+/* Input */
+
+@utility input {
+	@apply font-nunito font-normal;
+
+	/* Desktop */
+	@apply sm:text-[14px] sm:leading-[24px];
+	/* Mobile */
+	@apply text-[16px] leading-[24px];
+}
+
+/* Buttons */
+
+@utility button-lg {
+	@apply font-nunito font-bold;
+
+	@apply text-[15px] leading-[20px];
+}
+
+@utility button-md {
+	@apply font-nunito font-bold;
+
+	/* Desktop */
+	@apply sm:text-[13px] sm:leading-[16px];
+	/* Mobile */
+	@apply text-[12px] leading-[16px];
+}
+
+@utility button-sm {
+	@apply font-nunito font-bold;
+
+	@apply text-[11px] leading-[16px];
 }
 
 /* HTML Tags */
@@ -124,29 +176,4 @@ p {
 
 * {
 	@apply text-neutral;
-}
-
-/* TipTap */
-.tiptap .element-code {
-	@apply inline-block bg-neutral-weak p-1 px-2 rounded-md font-mono text-[13px] font-normal leading-[20px] sm:text-[14px] sm:leading-[20px];
-}
-
-.tiptap .element-paragraph {
-	@apply body-2;
-}
-
-.tiptap .element-link {
-	@apply text-accent underline;
-}
-
-ul {
-	@apply list-disc list-inside;
-}
-
-ol {
-	@apply list-decimal list-inside;
-}
-
-li {
-	@apply mb-2 body-2;
 }

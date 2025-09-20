@@ -112,7 +112,7 @@ export const HeroSearch: FC<{
 			<div className="flex flex-col-reverse md:flex-row bg-section rounded-2xl overflow-hidden">
 				<div className="flex flex-col gap-3 flex-1 py-4 overflow-hidden">
 					<div className="flex flex-row justify-between px-4">
-						<p className="title-3">Top fakulteti</p>
+						<p className="title-3 hello">Top fakulteti</p>
 						<Link
 							className="text-accent hover:underline button-md"
 							href="/colleges"

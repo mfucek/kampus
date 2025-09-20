@@ -11,7 +11,7 @@ import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
 import { groupByKey } from '@/utils/group-by-key';
 import Link from 'next/link';
-import { type ListProgramsItem } from '../api/procedures/list-programs';
+import { type ListProgramsItem } from '../../api/procedures/program/list-by-college-id';
 
 export const CollegeProgramsList = ({
 	programs

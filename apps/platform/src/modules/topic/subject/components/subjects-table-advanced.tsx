@@ -25,7 +25,7 @@ const SubjectsTableWithData: FC<{
 }> = ({ filters, scope, limit }) => {
 	const [page, setPage] = useState(0);
 
-	const query = api.subject.list.useInfiniteQuery(
+	const query = api.topic.subject.list.useInfiniteQuery(
 		{
 			scope,
 			limit,

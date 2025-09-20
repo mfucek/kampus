@@ -101,31 +101,19 @@ model Verification {
 // Colleges
 // ------------------
 
-model College {
-  id      String  @id @default(cuid())
-  slug    String  @unique
-  name    String
-  iconSrc String?
-
-  Image  ImageFile?
-  Topics Topic[]
-  Posts  Post[]
-}
-
 // ------------------
 // Topics
 // ------------------
 
 model Topic {
-  id        String    @id @default(cuid())
+  id        String  @id @default(cuid())
   slug      String
   name      String
   shortName String?
-  type      TopicType
 
-  collegeId String
-  College   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  type TopicType
 
+  College      College?
   Program      Program?
   Subject      Subject?
   Staff        Staff?
@@ -137,9 +125,10 @@ model Topic {
 }
 
 enum TopicType {
+  COLLEGE
+  PROGRAM
   SUBJECT
   STAFF
-  PROGRAM
   GENERAL
 }
 
@@ -150,19 +139,39 @@ model GeneralTopic {
   icon String?
 }
 
-model Staff {
-  topicId           String  @id @unique
-  Topic             Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  imageUrl          String?
-  staffExternalCode String?
-  staffExternalLink String?
+model College {
+  topicId String @id @unique
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
-  Subjects SubjectStaff[]
+  Programs Program[]
+  Subjects Subject[]
+  Staffs   Staff[]
+
+  externalLinks String[] @default([])
+}
+
+model Program {
+  topicId String @id @unique
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  collegeId String
+  College   College @relation(fields: [collegeId], references: [topicId], onDelete: Cascade)
+
+  programExternalCode String?
+  programExternalLink String?
+  departments         String[] @default([])
+  type                String?
+
+  Subjects ProgramSubject[]
 }
 
 model Subject {
-  topicId       String   @id @unique
-  Topic         Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId String @id @unique
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  collegeId String
+  College   College @relation(fields: [collegeId], references: [topicId], onDelete: Cascade)
+
   ects          Int?
   externalCodes String[] @default([])
   externalLinks String[] @default([])
@@ -171,16 +180,17 @@ model Subject {
   Programs ProgramSubject[]
 }
 
-model Program {
+model Staff {
   topicId String @id @unique
   Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
-  programExternalCode String?
-  programExternalLink String?
-  departments         String[] @default([])
-  type                String?
+  collegeId String
+  College   College @relation(fields: [collegeId], references: [topicId], onDelete: Cascade)
 
-  Subjects ProgramSubject[]
+  staffExternalCode String?
+  staffExternalLink String?
+
+  Subjects SubjectStaff[]
 }
 
 // Topic Relationships
@@ -226,14 +236,8 @@ model Post {
   authorId String
   Author   User   @relation(fields: [authorId], references: [id])
 
-  // college this post belongs to
-  collegeId String
-  College   College @relation(fields: [collegeId], references: [id])
-
-  // subject or staff this post belongs to
-  // if empty, this is college-specific post
-  topicId String?
-  Topic   Topic?  @relation(fields: [topicId], references: [id])
+  topicId String
+  Topic   Topic  @relation(fields: [topicId], references: [id])
 
   // direct replies
   // if empty, this is top level post
@@ -296,12 +300,11 @@ model ImageFile {
   fileId String @id @unique
   File   File   @relation(fields: [fileId], references: [id])
 
+  // Topic image
   topicId String? @unique
   Topic   Topic?  @relation(fields: [topicId], references: [id])
 
-  collegeId String?  @unique
-  College   College? @relation(fields: [collegeId], references: [id])
-
+  // Profile picture
   userId String? @unique
   User   User?   @relation(fields: [userId], references: [id])
 }

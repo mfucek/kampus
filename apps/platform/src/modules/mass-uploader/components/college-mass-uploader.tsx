@@ -7,7 +7,7 @@ import { useMassUploader } from '../hooks/use-mass-uploader';
 
 import { ComposerBodyProvider } from '@/modules/composer/contexts/composer-body-provider';
 import { ComposerControllerProvider } from '@/modules/composer/contexts/composer-controller-provider';
-import { type SubjectListItem } from '@/modules/topic/subject/api/procedures/list';
+import { type SubjectListItem } from '@/modules/topic/api/procedures/subject/list-paginated';
 import { useState } from 'react';
 import {
 	ComposerSection,

@@ -13,7 +13,7 @@ interface PageProps {
 export const ProgramDiscussionPage = async ({ params }: PageProps) => {
 	const { programSlug, collegeSlug } = await params;
 
-	const program = await api.program.getBySlug({
+	const program = await api.topic.program.getBySlug({
 		programSlug,
 		collegeSlug
 	});

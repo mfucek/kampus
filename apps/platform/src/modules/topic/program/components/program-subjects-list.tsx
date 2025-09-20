@@ -13,7 +13,7 @@ import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
 import { groupByKey } from '@/utils/group-by-key';
 import Link from 'next/link';
-import { type ListSubjectsOutput } from '../api/procedures/list-subjects';
+import { type ListSubjectsOutput } from '../../api/procedures/subject/list-by-program-id';
 
 export const ProgramSubjectsList: FC<{
 	subjects: ListSubjectsOutput[];

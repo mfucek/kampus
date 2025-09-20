@@ -4,7 +4,7 @@ import { Icon } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
 import { groupByKey } from '@/utils/group-by-key';
-import { type ListStaffItem } from '../api/procedures/list-staff';
+import { type ListStaffItem } from '../../api/procedures/staff/list-by-subject-id';
 
 export const SubjectStaffList = ({ staffs }: { staffs: ListStaffItem[] }) => {
 	const staffByRole = groupByKey(staffs, 'staffRole', 'Ostali');

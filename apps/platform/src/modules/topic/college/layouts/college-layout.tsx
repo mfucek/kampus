@@ -19,7 +19,7 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 }) => {
 	const { collegeSlug } = await params;
 
-	const college = await api.college.getBySlug({
+	const college = await api.topic.college.getBySlug({
 		collegeSlug
 	});
 

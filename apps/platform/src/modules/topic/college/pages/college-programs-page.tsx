@@ -11,11 +11,11 @@ interface PageProps {
 export const CollegeProgramsPage = async ({ params }: PageProps) => {
 	const { collegeSlug } = await params;
 
-	const college = await api.college.getBySlug({
+	const college = await api.topic.college.getBySlug({
 		collegeSlug
 	});
 
-	const programs = await api.college.listPrograms({
+	const programs = await api.topic.college.listPrograms({
 		collegeId: college.id
 	});
 

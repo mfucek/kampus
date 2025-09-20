@@ -22,7 +22,7 @@ export const ProgramLayout = async ({
 }: PropsWithChildren<LayoutProps>) => {
 	const { collegeSlug, programSlug } = await params;
 
-	const program = await api.program.getBySlug({
+	const program = await api.topic.program.getBySlug({
 		programSlug,
 		collegeSlug
 	});

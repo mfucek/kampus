@@ -20,7 +20,7 @@ export const SubjectLayout = async ({
 }: PropsWithChildren<LayoutProps>) => {
 	const { collegeSlug, subjectSlug } = await params;
 
-	const subject = await api.subject.getBySlug({
+	const subject = await api.topic.subject.getBySlug({
 		subjectSlug,
 		collegeSlug
 	});

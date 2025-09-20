@@ -4,7 +4,7 @@ import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { cn } from '@/lib/shadcn/utils';
-import { type ListAllCollegesItem } from '@/modules/topic/college/api/procedures/list-all';
+import { type CollegesListItem } from '@/modules/topic/api/procedures/college/list-all';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type FC, useEffect, useMemo, useState } from 'react';
@@ -18,7 +18,7 @@ type Point = {
 
 const random = (min: number, max: number) => Math.random() * (max - min) + min;
 
-export const FloatingColleges: FC<{ allColleges: ListAllCollegesItem[] }> = ({
+export const FloatingColleges: FC<{ allColleges: CollegesListItem[] }> = ({
 	allColleges
 }) => {
 	const positions = useMemo(() => {

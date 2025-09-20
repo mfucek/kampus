@@ -10,13 +10,13 @@ interface PageProps {
 export const CollegeMassUploadPage = async ({ params }: PageProps) => {
 	const { collegeSlug } = await params;
 
-	const college = await api.college.getBySlug({
+	const college = await api.topic.college.getBySlug({
 		collegeSlug
 	});
 
 	if (!college) return null;
 
-	const allSubjects = await api.subject.list({
+	const allSubjects = await api.topic.subject.list({
 		scope: {
 			collegeId: college.id
 		}

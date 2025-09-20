@@ -9,7 +9,7 @@ export type FullPost = {
 		createdAt: Date;
 		updatedAt: Date;
 		authorId: string;
-		collegeId: string;
+		collegeId: string | null;
 		topicId: string | null;
 		replyToId: string | null;
 		author: {

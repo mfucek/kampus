@@ -39,7 +39,7 @@ const UsersSection: FC<{ user: ListUsersItem }> = ({ user }) => {
 		}
 	});
 
-	const { data: colleges } = api.college.listAll.useQuery();
+	const { data: colleges } = api.topic.college.listAll.useQuery();
 
 	const [rule, setRule] = useState<RuleType | null>(null);
 	const [scopeId, setScopeId] = useState<string | null>(null);

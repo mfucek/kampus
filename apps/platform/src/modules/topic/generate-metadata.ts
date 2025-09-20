@@ -190,3 +190,46 @@ export const generateProgramMetadata = async ({
 		}
 	};
 };
+
+export const generateGeneralTopicMetadata = async ({
+	params
+}: {
+	params: Promise<{
+		generalTopicSlug: string;
+	}>;
+}): Promise<Metadata> => {
+	const { generalTopicSlug } = await params;
+
+	const generalTopic = await db.topic.findFirst({
+		where: {
+			slug: generalTopicSlug,
+			type: 'GENERAL'
+		}
+	});
+
+	if (!generalTopic) {
+		return {
+			title: defaultTitle,
+			description: 'Generalni topic nije pronađen!'
+		};
+	}
+
+	return {
+		title: generalTopic.name + titleSuffix,
+		description: defaultDescription,
+		twitter: {
+			card: 'summary_large_image',
+			title: generalTopic.name,
+			images: [defaultCoverImage]
+		},
+		openGraph: {
+			title: generalTopic.name + titleSuffix,
+			description: defaultDescription,
+			url: `https://kampus.hr/general/${generalTopicSlug}`,
+			type: 'website',
+			siteName: siteName,
+			images: [defaultCoverImage],
+			locale: 'hr-HR'
+		}
+	};
+};

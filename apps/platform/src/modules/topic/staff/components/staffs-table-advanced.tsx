@@ -24,7 +24,7 @@ const StaffsTableWithData: FC<{
 }> = ({ filters, scope, limit }) => {
 	const [page, setPage] = useState(0);
 
-	const query = api.staff.list.useInfiniteQuery(
+	const query = api.topic.staff.list.useInfiniteQuery(
 		{
 			scope,
 			limit,

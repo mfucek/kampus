@@ -1,10 +1,10 @@
 import { createTRPCRouter } from '@/deps/trpc/trpc';
 
-import { getByIdProcedure } from './procedures/get-by-id';
-import { getBySlugProcedure } from './procedures/get-by-slug';
-import { hasDocumentOfKindProcedure } from './procedures/has-document-of-kind';
-import { listProcedure } from './procedures/list';
-import { listStaffProcedure } from './procedures/list-staff';
+import { listStaffProcedure } from '../../api/procedures/staff/list-by-subject-id';
+import { getByIdProcedure } from '../../api/procedures/subject/get-by-id';
+import { getBySlugProcedure } from '../../api/procedures/subject/get-by-slug';
+import { hasDocumentOfKindProcedure } from '../../api/procedures/subject/has-document-of-kind';
+import { listProcedure } from '../../api/procedures/subject/list-paginated';
 
 export const subjectRouter = createTRPCRouter({
 	getById: getByIdProcedure,

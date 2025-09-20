@@ -1,3 +1,3 @@
-import { CollegeDiscussionPage } from '@/modules/topic/college/pages/college-discussion-page';
+import { GeneralTopicDiscussionPage } from '@/modules/topic/general-topic/pages/general-topic-discussion-page';
 
-export default CollegeDiscussionPage;
+export default GeneralTopicDiscussionPage;

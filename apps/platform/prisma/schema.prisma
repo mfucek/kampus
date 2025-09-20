@@ -126,9 +126,10 @@ model Topic {
   collegeId String
   College   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
 
-  Program Program?
-  Subject Subject?
-  Staff   Staff?
+  Program      Program?
+  Subject      Subject?
+  Staff        Staff?
+  GeneralTopic GeneralTopic?
 
   Posts     Post[]
   Image     ImageFile?
@@ -139,6 +140,14 @@ enum TopicType {
   SUBJECT
   STAFF
   PROGRAM
+  GENERAL
+}
+
+model GeneralTopic {
+  topicId String @id @unique
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  icon String?
 }
 
 model Staff {

@@ -1,6 +1,6 @@
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
-import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
+import { ThemeToggler } from '@/lib/theme/components/theme-toggler';
 import { SettingsSubSection } from '@/modules/user/components/settings-subsection';
 
 export const SettingsAppearancePage = () => {

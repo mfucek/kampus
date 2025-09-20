@@ -3,7 +3,7 @@
 import { PosthogProvider } from '@/deps/posthog';
 import { TRPCReactProvider } from '@/deps/trpc/react';
 import { ViewportSizeProvider } from '@/deps/viewport-size';
-import { ThemeProvider } from '@/modules/theme/providers/theme-provider';
+import { ThemeProvider } from '@/lib/theme/providers/theme-provider';
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
 	return (

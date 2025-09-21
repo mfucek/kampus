@@ -14,21 +14,20 @@ import {
 } from '@/lib/shadcn/ui/select';
 import { StaffsTable } from '@/modules/topic/staff/components/staffs-table';
 import type { TStaffFilters } from '@/modules/topic/staff/schemas/staff-filters';
-import type { TStaffScope } from '@/modules/topic/staff/schemas/staff-scope';
 import { type FC, useEffect, useState } from 'react';
 
 const StaffsTableWithData: FC<{
 	filters?: TStaffFilters;
-	scope?: TStaffScope;
+	collegeId: string;
 	limit: number;
-}> = ({ filters, scope, limit }) => {
+}> = ({ filters, collegeId, limit }) => {
 	const [page, setPage] = useState(0);
 
-	const query = api.topic.staff.list.useInfiniteQuery(
+	const query = api.topic.staff.listByCollegeId.useInfiniteQuery(
 		{
-			scope,
-			limit,
-			filters
+			collegeId,
+			limit
+			// filters
 		},
 		{
 			getNextPageParam: (lastPage) => lastPage.nextCursor
@@ -89,9 +88,9 @@ const StaffsTableWithData: FC<{
 	);
 };
 
-export const StaffsTableAdvanced: FC<{
-	scope?: TStaffScope;
-}> = ({ scope }) => {
+export const CollegeStaffsTablePaginated: FC<{
+	collegeId: string;
+}> = ({ collegeId }) => {
 	const [tableProps, setTableProps] = useState<{
 		filters: TStaffFilters;
 		limit: number;
@@ -159,7 +158,7 @@ export const StaffsTableAdvanced: FC<{
 				</Select>
 			</div>
 
-			<StaffsTableWithData scope={scope} {...tableProps} />
+			<StaffsTableWithData collegeId={collegeId} {...tableProps} />
 		</div>
 	);
 };

@@ -111,6 +111,6 @@ export const programsListByCollegeIdProcedure = publicProcedure
 		return { programs, ...(limit ? { nextCursor, totalPrograms } : {}) };
 	});
 
-export type ListProgramsItem = Awaited<
+export type ListProgramsByCollegeIdItem = Awaited<
 	ReturnType<typeof programsListByCollegeIdProcedure>
 >['programs'][number];

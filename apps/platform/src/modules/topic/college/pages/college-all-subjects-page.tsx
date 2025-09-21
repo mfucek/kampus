@@ -1,6 +1,6 @@
 import { api } from '@/deps/trpc/server';
 import { ContentPadding } from '@/global/layouts/content-padding';
-import { SubjectsTableAdvanced } from '@/modules/topic/subject/components/subjects-table-advanced';
+import { CollegeSubjectsTablePaginated } from '../../subject/components/college-subjects-table-paginated';
 
 interface PageProps {
 	params: Promise<{
@@ -17,7 +17,7 @@ export const CollegeAllSubjectsPage = async ({ params }: PageProps) => {
 
 	return (
 		<ContentPadding size="sm">
-			<SubjectsTableAdvanced scope={{ collegeId: college.id }} />
+			<CollegeSubjectsTablePaginated collegeId={college.topic.id} />
 		</ContentPadding>
 	);
 };

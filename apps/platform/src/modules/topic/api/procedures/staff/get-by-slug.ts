@@ -48,6 +48,12 @@ export const staffGetBySlugProcedure = publicProcedure
 			shortName: staffRaw.Topic.shortName
 		} satisfies StaffGetItem['topic'];
 
+		const postsCount = await db.post.count({
+			where: {
+				topicId: staffRaw.Topic.id
+			}
+		});
+
 		const staff = {
 			staffExternalCode: staffRaw.staffExternalCode,
 			staffExternalLink: staffRaw.staffExternalLink
@@ -64,6 +70,8 @@ export const staffGetBySlugProcedure = publicProcedure
 		return {
 			staff,
 			topic,
-			college: { topic: collegeTopic }
+			college: { topic: collegeTopic },
+			postsCount,
+			link: `/${staffRaw.College.Topic.slug}/staff/${staffRaw.Topic.slug}`
 		} satisfies StaffGetItem;
 	});

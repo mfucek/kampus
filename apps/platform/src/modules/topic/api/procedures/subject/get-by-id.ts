@@ -48,7 +48,13 @@ export const subjectGetByIdProcedure = publicProcedure
 			externalLinks: subjectRaw.externalLinks
 		};
 
-		const numberOfDocuments = await db.documentFile.count({
+		const postsCount = await db.post.count({
+			where: {
+				topicId: input.topicId
+			}
+		});
+
+		const documentsCount = await db.documentFile.count({
 			where: {
 				Post: {
 					topicId: input.topicId
@@ -64,10 +70,14 @@ export const subjectGetByIdProcedure = publicProcedure
 			shortName: subjectRaw.College.Topic.shortName
 		};
 
+		const link = `/${subjectRaw.College.Topic.slug}/subject/${subjectRaw.Topic.slug}`;
+
 		return {
 			subject,
 			topic,
-			numberOfDocuments,
+			documentsCount,
+			postsCount,
+			link,
 			college: { topic: collegeTopic }
 		};
 	});

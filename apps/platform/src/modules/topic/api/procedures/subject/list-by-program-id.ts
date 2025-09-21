@@ -114,6 +114,6 @@ export const subjectsListByProgramIdProcedure = publicProcedure
 		return { subjects, ...(limit ? { nextCursor, totalSubjects } : {}) };
 	});
 
-export type ListSubjectsItem = Awaited<
+export type ListSubjectsByProgramIdItem = Awaited<
 	ReturnType<typeof subjectsListByProgramIdProcedure>
 >['subjects'][number];

@@ -80,26 +80,39 @@ export const subjectsListByCollegeIdProcedure = publicProcedure
 
 		// DTOs
 
-		const subjects = subjectsRaw.map((subjectRaw) => ({
-			subject: {
-				ects: subjectRaw.ects,
-				externalCodes: subjectRaw.externalCodes,
-				externalLinks: subjectRaw.externalLinks
-			} satisfies SubjectGetItem['subject'],
-			topic: {
-				name: subjectRaw.Topic.name,
-				id: subjectRaw.Topic.id,
-				type: subjectRaw.Topic.type,
-				slug: subjectRaw.Topic.slug,
-				shortName: subjectRaw.Topic.shortName
-			} satisfies SubjectGetItem['topic'],
-			postsCount: subjectRaw.Topic._count.Posts,
-			link: `/${collegeRaw.Topic.slug}/subject/${subjectRaw.Topic.slug}`
-		}));
+		const subjects = subjectsRaw.map(
+			(subjectRaw) =>
+				({
+					subject: {
+						ects: subjectRaw.ects,
+						externalCodes: subjectRaw.externalCodes,
+						externalLinks: subjectRaw.externalLinks
+					} satisfies SubjectGetItem['subject'],
+					topic: {
+						name: subjectRaw.Topic.name,
+						id: subjectRaw.Topic.id,
+						type: subjectRaw.Topic.type,
+						slug: subjectRaw.Topic.slug,
+						shortName: subjectRaw.Topic.shortName
+					} satisfies SubjectGetItem['topic'],
+					college: {
+						topic: {
+							name: collegeRaw.Topic.name,
+							id: collegeRaw.Topic.id,
+							type: collegeRaw.Topic.type,
+							slug: collegeRaw.Topic.slug,
+							shortName: collegeRaw.Topic.shortName
+						}
+					} satisfies SubjectGetItem['college'],
+					postsCount: subjectRaw.Topic._count.Posts,
+					documentsCount: 0, //subjectRaw.Topic._count.Documents,
+					link: `/${collegeRaw.Topic.slug}/subject/${subjectRaw.Topic.slug}`
+				}) satisfies SubjectGetItem
+		);
 
 		return { subjects, ...(limit ? { nextCursor, totalSubjects } : {}) };
 	});
 
-export type ListSubjectsItem = Awaited<
+export type ListSubjectsByCollegeIdItem = Awaited<
 	ReturnType<typeof subjectsListByCollegeIdProcedure>
 >['subjects'][number];

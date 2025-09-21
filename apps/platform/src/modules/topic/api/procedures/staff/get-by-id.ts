@@ -42,6 +42,12 @@ export const staffGetByIdProcedure = publicProcedure
 			shortName: staffRaw.Topic.shortName
 		};
 
+		const postsCount = await db.post.count({
+			where: {
+				topicId: input.topicId
+			}
+		});
+
 		const collegeTopic = {
 			name: staffRaw.College.Topic.name,
 			id: staffRaw.College.Topic.id,
@@ -55,7 +61,13 @@ export const staffGetByIdProcedure = publicProcedure
 			staffExternalLink: staffRaw.staffExternalLink
 		};
 
-		return { staff, topic, college: { topic: collegeTopic } };
+		return {
+			staff,
+			topic,
+			college: { topic: collegeTopic },
+			postsCount,
+			link: `/${staffRaw.College.Topic.slug}/staff/${staffRaw.Topic.slug}`
+		};
 	});
 
 export type StaffGetItem = Awaited<ReturnType<typeof staffGetByIdProcedure>>;

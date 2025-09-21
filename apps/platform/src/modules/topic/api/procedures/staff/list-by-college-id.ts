@@ -80,21 +80,38 @@ export const staffsListByCollegeIdProcedure = publicProcedure
 
 		// DTOs
 
-		const staffs = staffsRaw.map((staffRaw) => ({
-			staff: {
+		const staffs = staffsRaw.map((staffRaw) => {
+			const staff = {
 				staffExternalLink: staffRaw.staffExternalLink,
 				staffExternalCode: staffRaw.staffExternalCode
-			} satisfies StaffGetItem['staff'],
-			topic: {
+			} satisfies StaffGetItem['staff'];
+
+			const topic = {
 				id: staffRaw.Topic.id,
 				name: staffRaw.Topic.name,
 				slug: staffRaw.Topic.slug,
 				type: staffRaw.Topic.type,
 				shortName: staffRaw.Topic.shortName
-			} satisfies StaffGetItem['topic'],
-			postsCount: staffRaw.Topic._count.Posts,
-			link: `/${collegeRaw.Topic.slug}/staff/${staffRaw.Topic.slug}`
-		}));
+			} satisfies StaffGetItem['topic'];
+
+			const collegeTopic = {
+				name: collegeRaw.Topic.name,
+				id: collegeRaw.Topic.id,
+				type: collegeRaw.Topic.type,
+				slug: collegeRaw.Topic.slug,
+				shortName: collegeRaw.Topic.shortName
+			} satisfies StaffGetItem['college']['topic'];
+
+			return {
+				staff,
+				topic,
+				postsCount: staffRaw.Topic._count.Posts,
+				link: `/${collegeRaw.Topic.slug}/staff/${staffRaw.Topic.slug}`,
+				college: {
+					topic: collegeTopic
+				}
+			};
+		});
 
 		return { staffs, ...(limit ? { nextCursor, totalStaffs } : {}) };
 	});

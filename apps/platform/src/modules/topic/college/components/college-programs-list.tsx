@@ -11,12 +11,12 @@ import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
 import { groupByKey } from '@/utils/group-by-key';
 import Link from 'next/link';
-import { type ListProgramsItem } from '../../api/procedures/program/list-by-college-id';
+import { type ListProgramsByCollegeIdItem } from '../../api/procedures/program/list-by-college-id';
 
 export const CollegeProgramsList = ({
 	programs
 }: {
-	programs: ListProgramsItem[];
+	programs: ListProgramsByCollegeIdItem[];
 }) => {
 	const programsByDepartment = groupByKey(
 		programs,

@@ -11,6 +11,7 @@ import { programGetBySlugProcedure } from './procedures/program/get-by-slug';
 import { programsListByCollegeIdProcedure } from './procedures/program/list-by-college-id';
 import { staffGetByIdProcedure } from './procedures/staff/get-by-id';
 import { staffGetBySlugProcedure } from './procedures/staff/get-by-slug';
+import { staffsListByCollegeIdProcedure } from './procedures/staff/list-by-college-id';
 import { staffsListBySubjectIdProcedure } from './procedures/staff/list-by-subject-id';
 import { subjectGetByIdProcedure } from './procedures/subject/get-by-id';
 import { subjectGetBySlugProcedure } from './procedures/subject/get-by-slug';
@@ -37,7 +38,7 @@ export const topicRouter = createTRPCRouter({
 	staff: createTRPCRouter({
 		getById: staffGetByIdProcedure,
 		getBySlug: staffGetBySlugProcedure,
-		listByCollegeId: staffsListBySubjectIdProcedure,
+		listByCollegeId: staffsListByCollegeIdProcedure,
 		listBySubjectId: staffsListBySubjectIdProcedure
 	}),
 	subject: createTRPCRouter({

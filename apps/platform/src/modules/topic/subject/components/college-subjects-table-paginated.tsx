@@ -15,21 +15,20 @@ import {
 	SelectValue
 } from '@/lib/shadcn/ui/select';
 import { type TSubjectFilters } from '@/modules/topic/subject/schemas/subject-filters';
-import { type TSubjectScope } from '@/modules/topic/subject/schemas/subject-scope';
 import { SubjectsTable } from './subjects-table';
 
 const SubjectsTableWithData: FC<{
 	filters?: TSubjectFilters;
-	scope?: TSubjectScope;
+	collegeId: string;
 	limit: number;
-}> = ({ filters, scope, limit }) => {
+}> = ({ filters, collegeId, limit }) => {
 	const [page, setPage] = useState(0);
 
-	const query = api.topic.subject.list.useInfiniteQuery(
+	const query = api.topic.subject.listByCollegeId.useInfiniteQuery(
 		{
-			scope,
-			limit,
-			filters
+			collegeId,
+			limit
+			// filters
 		},
 		{
 			getNextPageParam: (lastPage) => lastPage.nextCursor
@@ -90,9 +89,9 @@ const SubjectsTableWithData: FC<{
 	);
 };
 
-export const SubjectsTableAdvanced: FC<{
-	scope?: TSubjectScope;
-}> = ({ scope }) => {
+export const CollegeSubjectsTablePaginated: FC<{
+	collegeId: string;
+}> = ({ collegeId }) => {
 	const [tableProps, setTableProps] = useState<{
 		filters: TSubjectFilters;
 		limit: number;
@@ -160,7 +159,7 @@ export const SubjectsTableAdvanced: FC<{
 				</Select>
 			</div>
 
-			<SubjectsTableWithData scope={scope} {...tableProps} />
+			<SubjectsTableWithData collegeId={collegeId} {...tableProps} />
 		</div>
 	);
 };

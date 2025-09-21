@@ -21,8 +21,8 @@ export const SubjectDiscussionPage = async ({ params }: PageProps) => {
 	return (
 		<ContentPadding size="sm">
 			<div className="flex flex-col gap-10">
-				<Composer collegeId={subject.collegeId} topicId={subject.id} />
-				<InfiniteScrollTopLevelPosts scope={{ topic: { id: subject.id } }} />
+				<Composer topicId={subject.topic.id} />
+				<InfiniteScrollTopLevelPosts scope={{ topicId: subject.topic.id }} />
 			</div>
 		</ContentPadding>
 	);

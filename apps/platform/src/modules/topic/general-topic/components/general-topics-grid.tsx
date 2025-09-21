@@ -7,13 +7,13 @@ import { Input } from '@/lib/shadcn/ui/input';
 
 import { Container } from '@/global/components/container';
 import { ContentPadding } from '@/global/layouts/content-padding';
-import { ListGeneralTopicsItem } from '../../api/procedures/general-topic/list-all';
+import { GeneralTopicsListItem } from '../../api/procedures/general-topic/list-all';
 import { GeneralTopicCard } from './general-topic-card';
 
 export const GeneralTopicsGrid = ({
 	generalTopics
 }: {
-	generalTopics: ListGeneralTopicsItem[];
+	generalTopics: GeneralTopicsListItem[];
 }) => {
 	const [search, setSearch] = useState('');
 

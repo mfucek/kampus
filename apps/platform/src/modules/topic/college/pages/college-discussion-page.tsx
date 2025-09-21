@@ -28,7 +28,7 @@ export const CollegeDiscussionPage: FC<PageProps> = async ({ params }) => {
 	return (
 		<ContentPadding size="sm">
 			<div className="flex flex-col gap-10">
-				<Composer collegeId={college.id} />
+				<Composer topicId={college.topic.id} />
 
 				<div className="flex flex-col gap-2">
 					<div className="flex flex-row justify-between items-center">
@@ -47,9 +47,7 @@ export const CollegeDiscussionPage: FC<PageProps> = async ({ params }) => {
 					</div>
 					<InfiniteScrollTopLevelPosts
 						scope={{
-							college: {
-								id: college.id
-							}
+							topicId: college.topic.id
 						}}
 					/>
 				</div>

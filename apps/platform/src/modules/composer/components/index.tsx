@@ -12,16 +12,14 @@ import { ComposerFooter } from './composer-footer';
 import { ComposerWrapper } from './composer-wrapper';
 
 export const Composer: FC<{
-	collegeId: string;
-	topicId?: string;
+	topicId: string;
 	replyToId?: string;
 	className?: string;
-}> = ({ collegeId, topicId, replyToId, className }) => {
+}> = ({ className, replyToId, topicId }) => {
 	const { isSignedIn } = useAuth();
 
 	return (
 		<ComposerControllerProvider
-			collegeId={collegeId}
 			topicId={topicId}
 			replyToId={replyToId}
 			enabled={isSignedIn}

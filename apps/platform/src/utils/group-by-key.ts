@@ -72,26 +72,74 @@ export const groupByKey = <T>(
 	return grouped;
 };
 
-const ex1 = groupByKey(
+// Grouping by tag example
+const example_1 = groupByKey(
 	[
 		{
-			department: 'Department 1',
-			value: 'Something'
+			tag: 'frontend',
+			title: 'Full stack project #1'
+		},
+		{
+			tag: 'backend',
+			title: 'Project #2'
 		}
 	],
-	'department',
-	'Default Department'
+	'tag',
+	'No Tag'
 );
+// {
+// 	"frontend": [
+// 		{ tag: 'frontend', title: 'Full stack project #1' }
+// 	],
+// 	"backend": [
+// 		{ tag: 'backend', title: 'Project #2' }
+// 	]
+// }
 
-const ex2 = groupByKey(
+// Grouping by tags example
+const example_2 = groupByKey(
 	[
-		{
-			department: {
-				name: 'Department 1'
-			},
-			value: 'Something'
-		}
+		{ tags: ['frontend', 'backend'], title: 'Full stack project #1' },
+		{ tags: [], title: 'Full stack project #2' }
 	],
-	'department.name',
-	'Default Department'
+	'tags',
+	'No Tags'
 );
+// {
+// 	"frontend": [
+// 		{ tags: ['frontend', 'backend'], title: 'Full stack project #1' }
+// 	],
+// 	"backend": [
+// 		{ tags: ['frontend', 'backend'], title: 'Full stack project #1' }
+// 	],
+// 	"No Tags": [{ tags: [], title: 'Full stack project #2' }]
+// }
+
+// Mixed example
+const example_3 = groupByKey(
+	[
+		{ tags: ['frontend', 'react'], title: 'React Dashboard' },
+		{ tags: ['backend', 'node'], title: 'API Server' },
+		{ tags: ['frontend', 'vue'], title: 'Vue App' }
+	],
+	'tags',
+	'No Tags'
+);
+// {
+// 	"frontend": [
+// 		{ tags: ['frontend', 'react'], title: 'React Dashboard' },
+// 		{ tags: ['frontend', 'vue'], title: 'Vue App' }
+// 	],
+// 	"react": [
+// 		{ tags: ['frontend', 'react'], title: 'React Dashboard' }
+// 	],
+// 	"backend": [
+// 		{ tags: ['backend', 'node'], title: 'API Server' }
+// 	],
+// 	"node": [
+// 		{ tags: ['backend', 'node'], title: 'API Server' }
+// 	],
+// 	"vue": [
+// 		{ tags: ['frontend', 'vue'], title: 'Vue App' }
+// 	]
+// }

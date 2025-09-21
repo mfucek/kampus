@@ -15,8 +15,8 @@ export const CollegeProgramsPage = async ({ params }: PageProps) => {
 		collegeSlug
 	});
 
-	const programs = await api.topic.college.listPrograms({
-		collegeId: college.id
+	const { programs } = await api.topic.program.listByCollegeId({
+		collegeId: college.topic.id
 	});
 
 	return (

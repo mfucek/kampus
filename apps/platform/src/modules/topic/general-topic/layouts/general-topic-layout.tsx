@@ -22,7 +22,7 @@ export const GeneralTopicLayout: FC<LayoutProps & PropsWithChildren> = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-6 md:pt-10 pb-20">
-			<PageHeader title={generalTopic.name} tags={['Generalni topic']} />
+			<PageHeader title={generalTopic.topic.name} tags={['Generalni topic']} />
 
 			{children}
 		</Container>

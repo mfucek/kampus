@@ -27,14 +27,17 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-6 md:pt-10 pb-20">
-			<PageHeader title={college.name} tags={['Fakultet']} />
+			<PageHeader title={college.topic.name} tags={['Fakultet']} />
 
 			<Tabs>
 				<Tab route={makeRoute('')}>Opca Rasprava</Tab>
 				<Tab route={makeRoute('/programs')}>Smjerovi</Tab>
 				<Tab route={makeRoute('/all-subjects')}>Svi predmeti</Tab>
 				<Tab route={makeRoute('/all-staff')}>Svi nastavnici</Tab>
-				<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={college.id}>
+				<RuleProtected
+					rule={RuleType.CAN_MASS_UPLOAD}
+					scopeId={college.topic.id}
+				>
 					<Tab route={makeRoute('/mass-upload')}>
 						Mass Upload (svi smjerovi)
 					</Tab>

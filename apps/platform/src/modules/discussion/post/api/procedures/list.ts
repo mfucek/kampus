@@ -27,23 +27,16 @@ export const listProcedure = publicProcedure
 		const { scope, cursor } = input;
 		const limit = input.limit ?? 5;
 
-		const collegeId = scope.college?.id;
-		const topicId = scope.topic?.id;
-		const replyToPostId = scope.replyToPost?.id;
-		const authorId = scope.author?.id;
-
 		// @TODO: needs more exclusive work to specify what kind of posts we want to get
 		const where: Prisma.PostWhereInput = {
-			...(collegeId
-				? { collegeId: collegeId, topicId: null, replyToId: null }
-				: {}),
-			...(topicId ? { topicId: topicId, replyToId: null } : {}),
-			...(replyToPostId ? { replyToId: replyToPostId } : {}),
-			...(authorId ? { authorId: authorId } : {}),
+			...(scope.topicId ? { topicId: scope.topicId } : {}),
+			...(scope.replyToPostId ? { replyToId: scope.replyToPostId } : {}),
+			...(scope.authorId ? { authorId: scope.authorId } : {}),
 			hidden: false
 		};
 
 		const include = {
+			Topic: true,
 			Author: true,
 			Votes: true,
 			_count: {
@@ -117,7 +110,7 @@ export const listProcedure = publicProcedure
 						body: post.body as JSONContent,
 						createdAt: post.createdAt,
 						updatedAt: post.updatedAt,
-						collegeId: post.collegeId,
+						collegeId: post.Topic,
 						topicId: post.topicId,
 						replyToId: post.replyToId,
 						authorId: post.authorId,

@@ -1,4 +1,5 @@
 import { publicProcedure } from '@/deps/trpc/trpc';
+import { CollegeGetItem } from './get-by-id';
 
 export const collegesListAllProcedure = publicProcedure.query(
 	async ({ ctx }) => {
@@ -25,8 +26,19 @@ export const collegesListAllProcedure = publicProcedure.query(
 			}
 		});
 
+		// DTOs
+
 		const colleges = collegesRaw.map((college) => ({
-			...college,
+			topic: {
+				name: college.Topic.name,
+				id: college.Topic.id,
+				type: college.Topic.type,
+				slug: college.Topic.slug,
+				shortName: college.Topic.shortName
+			} satisfies CollegeGetItem['topic'],
+			college: {
+				externalLinks: college.externalLinks
+			} satisfies CollegeGetItem['college'],
 			link: `/${college.Topic.slug}`,
 			postsCount: college.Topic._count.Posts
 		}));

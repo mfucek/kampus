@@ -1,9 +1,9 @@
 import { type FC } from 'react';
 
-import { ListGeneralTopicsItem } from '../../api/procedures/general-topic/list-all';
+import { GeneralTopicsListItem } from '../../api/procedures/general-topic/list-all';
 
 export const GeneralTopicCard: FC<{
-	generalTopic: ListGeneralTopicsItem;
+	generalTopic: GeneralTopicsListItem;
 }> = ({ generalTopic }) => {
 	return (
 		<div className="p-4 md:p-6 flex flex-row gap-2 rounded-xl bg-section md:bg-neutral-weak items-center clickable h-full">

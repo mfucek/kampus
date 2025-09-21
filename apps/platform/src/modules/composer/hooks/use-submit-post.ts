@@ -16,7 +16,7 @@ import { useComposerController } from '../contexts/composer-controller-provider'
 export const useSubmitPost = () => {
 	const { body, setBody } = useComposerBodyContext();
 	const { files, setFiles } = useFileStagingContext();
-	const { collegeId, topicId, replyToId, setLocked } = useComposerController();
+	const { topicId, replyToId, setLocked } = useComposerController();
 	const { toast } = useToast();
 	const router = useRouter();
 	const utils = api.useUtils();
@@ -54,7 +54,6 @@ export const useSubmitPost = () => {
 		setLocked(true);
 		const post = await createPost({
 			body: bodyOverride ?? body,
-			collegeId: collegeId,
 			topicId: topicId,
 			replyToId: replyToIdOverride ?? replyToId
 		});

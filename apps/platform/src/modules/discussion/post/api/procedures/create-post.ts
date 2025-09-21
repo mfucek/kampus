@@ -8,8 +8,7 @@ export const createPostProcedure = protectedProcedure
 	.input(
 		z.object({
 			body: z.any(),
-			collegeId: z.string().optional(),
-			topicId: z.string().optional(),
+			topicId: z.string(),
 			replyToId: z.string().optional()
 		})
 	)
@@ -25,7 +24,6 @@ export const createPostProcedure = protectedProcedure
 		const post = await db.post.create({
 			data: {
 				body: input.body as JSONContent,
-				collegeId: input.collegeId,
 				topicId: input.topicId,
 				replyToId: input.replyToId,
 				authorId: user.id

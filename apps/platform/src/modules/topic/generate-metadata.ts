@@ -22,8 +22,12 @@ export const generateSubjectMetadata = async ({
 		where: {
 			slug: subjectSlug,
 			type: 'SUBJECT',
-			College: {
-				slug: collegeSlug
+			Subject: {
+				College: {
+					Topic: {
+						slug: collegeSlug
+					}
+				}
 			}
 		}
 	});
@@ -66,7 +70,12 @@ export const generateCollegeMetadata = async ({
 
 	const college = await db.college.findFirst({
 		where: {
-			slug: collegeSlug
+			Topic: {
+				slug: collegeSlug
+			}
+		},
+		include: {
+			Topic: true
 		}
 	});
 
@@ -78,17 +87,17 @@ export const generateCollegeMetadata = async ({
 	}
 
 	return {
-		title: college.name + titleSuffix,
+		title: college.Topic.name + titleSuffix,
 		description: defaultDescription,
 		twitter: {
 			card: 'summary_large_image',
-			title: college.name,
+			title: college.Topic.name,
 			images: [defaultCoverImage]
 		},
 		openGraph: {
-			title: college.name + titleSuffix,
+			title: college.Topic.name + titleSuffix,
 			description: defaultDescription,
-			url: `https://kampus.hr/${college.slug}`,
+			url: `https://kampus.hr/${college.Topic.slug}`,
 			type: 'website',
 			siteName: siteName,
 			images: [defaultCoverImage],
@@ -112,7 +121,9 @@ export const generateStaffMetadata = async ({
 			slug: staffSlug,
 			type: 'STAFF',
 			College: {
-				slug: collegeSlug
+				Topic: {
+					slug: collegeSlug
+				}
 			}
 		}
 	});
@@ -159,7 +170,9 @@ export const generateProgramMetadata = async ({
 			slug: programSlug,
 			type: 'PROGRAM',
 			College: {
-				slug: collegeSlug
+				Topic: {
+					slug: collegeSlug
+				}
 			}
 		}
 	});

@@ -9,13 +9,12 @@ import {
 } from 'react';
 
 const defaultData = {
-	collegeId: '',
+	topicId: '',
 	locked: false
 };
 
 const ComposerControllerContext = createContext<{
-	collegeId: string;
-	topicId?: string;
+	topicId: string;
 	replyToId?: string;
 	locked: boolean;
 	setLocked: (locked: boolean) => void;
@@ -38,17 +37,15 @@ export const useComposerController = () => {
 
 export const ComposerControllerProvider: FC<{
 	children: ReactNode;
-	collegeId: string;
-	topicId?: string;
+	topicId: string;
 	replyToId?: string;
 	enabled?: boolean;
-}> = ({ children, collegeId, topicId, replyToId, enabled = true }) => {
+}> = ({ children, topicId, replyToId, enabled = true }) => {
 	const [locked, setLocked] = useState(!enabled);
 
 	return (
 		<ComposerControllerContext.Provider
 			value={{
-				collegeId,
 				topicId,
 				replyToId,
 				locked,

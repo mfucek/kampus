@@ -55,9 +55,18 @@ export const subjectsListByProgramIdProcedure = publicProcedure
 							include: {
 								_count: {
 									select: {
-										Posts: true
+										Posts: {
+											where: {
+												replyToId: null
+											}
+										}
 									}
 								}
+							}
+						},
+						_count: {
+							select: {
+								Staffs: true
 							}
 						}
 					}
@@ -107,6 +116,7 @@ export const subjectsListByProgramIdProcedure = publicProcedure
 				semester: programSubject.semester,
 				groupName: programSubject.groupName
 			},
+			staffsCount: programSubject.Subject._count.Staffs,
 			postsCount: programSubject.Subject.Topic._count.Posts,
 			link: `/${collegeRaw.Topic.slug}/subject/${programSubject.Subject.Topic.slug}`
 		}));

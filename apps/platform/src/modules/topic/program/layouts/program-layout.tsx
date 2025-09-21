@@ -32,14 +32,17 @@ export const ProgramLayout = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
-			<PageHeader title={program.name} tags={['Smjer']} />
+			<PageHeader title={program.topic.name} tags={['Smjer']} />
 
 			<ContentPadding size="lg">
 				<Suspense fallback={<Spinner />}>
 					<Tabs>
 						<Tab route={makeRoute('')}>Rasprava</Tab>
 						<Tab route={makeRoute('/subjects')}>Predmeti</Tab>
-						<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={program.id}>
+						<RuleProtected
+							rule={RuleType.CAN_MASS_UPLOAD}
+							scopeId={program.topic.id}
+						>
 							<Tab route={makeRoute('/mass-upload')}>Mass Upload</Tab>
 						</RuleProtected>
 					</Tabs>

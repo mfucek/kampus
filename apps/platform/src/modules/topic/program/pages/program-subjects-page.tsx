@@ -17,13 +17,13 @@ export const ProgramSubjectsPage = async ({ params }: PageProps) => {
 		collegeSlug
 	});
 
-	const subjects = await api.topic.program.listSubjects({
-		programId: program.id
+	const subjects = await api.topic.subject.listByProgramId({
+		programId: program.topic.id
 	});
 
 	return (
 		<div className="flex flex-col gap-10">
-			<ProgramSubjectsList subjects={subjects} />
+			<ProgramSubjectsList subjects={subjects.subjects} />
 			<CacheHelper />
 		</div>
 	);

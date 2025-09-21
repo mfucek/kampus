@@ -4,10 +4,14 @@ import { Icon } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
 import { groupByKey } from '@/utils/group-by-key';
-import { type ListStaffItem } from '../../api/procedures/staff/list-by-subject-id';
+import { type ListStaffBySubjectIdItem } from '../../api/procedures/staff/list-by-subject-id';
 
-export const SubjectStaffList = ({ staffs }: { staffs: ListStaffItem[] }) => {
-	const staffByRole = groupByKey(staffs, 'staffRole', 'Ostali');
+export const SubjectStaffList = ({
+	staffs
+}: {
+	staffs: ListStaffBySubjectIdItem[];
+}) => {
+	const staffByRole = groupByKey(staffs, 'subjectStaff.staffRole', 'Ostali');
 
 	return (
 		<div className="flex flex-col gap-6 md:gap-10">
@@ -17,13 +21,13 @@ export const SubjectStaffList = ({ staffs }: { staffs: ListStaffItem[] }) => {
 					data={staff}
 					rows={(staff) => (
 						<>
-							<div className="text-neutral">{staff.name}</div>
+							<div className="text-neutral">{staff.topic.name}</div>
 						</>
 					)}
 					actions={(staff) => (
 						<>
 							<Button variant="outline" size="sm">
-								{staff.topLevelPosts}
+								{staff.postsCount}
 								<Icon icon="chat-single" />
 							</Button>
 						</>

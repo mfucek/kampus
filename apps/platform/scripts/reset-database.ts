@@ -1,8 +1,41 @@
-import { PrismaClient } from '@prisma/client';
+import { db } from '@/deps/prisma';
+import { r2Client } from '@/deps/s3/client';
+import { deleteFiles } from '@/deps/s3/delete-files';
+import { ListObjectsCommand } from '@aws-sdk/client-s3';
 
-const db = new PrismaClient({
-	datasourceUrl: process.env.DATABASE_URL
+// remove all s3 files in bucket
+
+const command = new ListObjectsCommand({
+	Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME
 });
+
+const response = await r2Client.send(command);
+
+const keys =
+	(response.Contents?.filter((content) => !!content.Key).map(
+		(content) => content.Key
+	) as string[]) ?? [];
+
+await deleteFiles(keys);
+
+// remove all non-user data
+
+await db.post.deleteMany();
+await db.vote.deleteMany();
+
+await db.documentFile.deleteMany();
+await db.imageFile.deleteMany();
+await db.file.deleteMany();
+
+await db.college.deleteMany();
+await db.program.deleteMany();
+await db.subject.deleteMany();
+await db.staff.deleteMany();
+await db.generalTopic.deleteMany();
+await db.summary.deleteMany();
+await db.topic.deleteMany();
+
+await db.notification.deleteMany();
 
 // create college
 
@@ -63,7 +96,21 @@ const subject_1 = await db.topic.create({
 				collegeId: college.id,
 				ects: 6,
 				externalCodes: ['S00001'],
-				externalLinks: ['https://www.testni-fakultet.hr/subject/1']
+				externalLinks: ['https://www.testni-fakultet.hr/subject/1'],
+				Staffs: {
+					createMany: {
+						data: [
+							{
+								staffId: staff_1.id,
+								staffRole: 'profesor'
+							},
+							{
+								staffId: staff_2.id,
+								staffRole: 'asistent'
+							}
+						]
+					}
+				}
 			}
 		}
 	}
@@ -79,7 +126,21 @@ const subject_2 = await db.topic.create({
 				collegeId: college.id,
 				ects: 6,
 				externalCodes: ['S00002'],
-				externalLinks: ['https://www.testni-fakultet.hr/subject/2']
+				externalLinks: ['https://www.testni-fakultet.hr/subject/2'],
+				Staffs: {
+					createMany: {
+						data: [
+							{
+								staffId: staff_1.id,
+								staffRole: 'profesor'
+							},
+							{
+								staffId: staff_2.id,
+								staffRole: 'asistent'
+							}
+						]
+					}
+				}
 			}
 		}
 	}
@@ -95,7 +156,21 @@ const subject_3 = await db.topic.create({
 				collegeId: college.id,
 				ects: 6,
 				externalCodes: ['S00003'],
-				externalLinks: ['https://www.testni-fakultet.hr/subject/3']
+				externalLinks: ['https://www.testni-fakultet.hr/subject/3'],
+				Staffs: {
+					createMany: {
+						data: [
+							{
+								staffId: staff_1.id,
+								staffRole: 'profesor'
+							},
+							{
+								staffId: staff_2.id,
+								staffRole: 'asistent'
+							}
+						]
+					}
+				}
 			}
 		}
 	}

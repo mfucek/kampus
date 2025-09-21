@@ -5,7 +5,6 @@ import { type FC, useEffect, useState } from 'react';
 import { type DocumentFileType } from '@prisma/client';
 
 import { type TFileFilters } from '../schemas/file-filters';
-import { type TFileScope } from '../schemas/file-scope';
 
 import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
@@ -28,14 +27,14 @@ import { shownCategoriesBasedOnSelectedCategories } from './file-details-dialog/
 
 const DocumentsTableWithData: FC<{
 	filters?: TFileFilters;
-	scope: TFileScope;
+	subjectId: string;
 	limit: number;
-}> = ({ filters, scope, limit }) => {
+}> = ({ filters, subjectId, limit }) => {
 	const [page, setPage] = useState(0);
 
 	const query = api.file.listDocuments.useInfiniteQuery(
 		{
-			scope,
+			scope: { topicId: subjectId },
 			limit,
 			filters
 		},
@@ -147,9 +146,9 @@ const DocumentTypeSelector: FC<{
 	);
 };
 
-export const DocumentsTableAdvanced: FC<{
-	scope: TFileScope;
-}> = ({ scope }) => {
+export const SubjectDocumentsTablePaginated: FC<{
+	subjectId: string;
+}> = ({ subjectId }) => {
 	const [tableProps, setTableProps] = useState<{
 		filters: TFileFilters;
 		limit: number;
@@ -228,7 +227,7 @@ export const DocumentsTableAdvanced: FC<{
 				}}
 			/>
 
-			<DocumentsTableWithData scope={scope} {...tableProps} />
+			<DocumentsTableWithData subjectId={subjectId} {...tableProps} />
 		</div>
 	);
 };

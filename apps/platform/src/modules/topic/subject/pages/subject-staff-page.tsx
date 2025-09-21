@@ -16,8 +16,8 @@ export const SubjectStaffPage = async ({ params }: PageProps) => {
 		collegeSlug
 	});
 
-	const staffs = await api.topic.subject.listStaff({
-		subjectId: subject.id
+	const { staffs } = await api.topic.staff.listBySubjectId({
+		subjectId: subject.topic.id
 	});
 
 	return (

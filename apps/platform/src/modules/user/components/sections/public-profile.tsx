@@ -1,11 +1,12 @@
 'use client';
 
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
 import { api } from '@/deps/trpc/react';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Input } from '@/lib/shadcn/ui/input';
-import { useToast } from '@/lib/shadcn/ui/use-toast';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import { useProfileImageUpload } from '../../hooks/use-profile-image-upload';
 import { SettingsSubSection } from '../settings-subsection';
 
@@ -26,8 +27,6 @@ export const PublicProfileSection = () => {
 	const [name, setName] = useState(user?.name ?? '');
 	const [badge, setBadge] = useState(user?.badge ?? '');
 
-	const { toast } = useToast();
-
 	useEffect(() => {
 		setName(user?.name ?? '');
 		setBadge(user?.badge ?? '');
@@ -37,16 +36,12 @@ export const PublicProfileSection = () => {
 		try {
 			await updateName({ name });
 
-			toast({
-				title: 'Success',
-				description: 'Your display name has been updated successfully',
-				variant: 'success'
+			toast.success('Ime ažurirano', {
+				description: `Od sada ste poznati kao ${name} 🥳`
 			});
 		} catch (error) {
-			toast({
-				title: 'Error',
-				description: 'An error occurred while updating your display name',
-				variant: 'danger'
+			toast.error('Pogreška', {
+				description: 'Pogreška pri ažuriranju imena'
 			});
 			console.error(error);
 		}
@@ -55,19 +50,17 @@ export const PublicProfileSection = () => {
 	const handleUpdateBadge = async () => {
 		try {
 			await updateBadge({ badge: badge || null });
-		} catch (error) {
-			console.error('Error updating badge:', error);
-			toast({
-				title: 'Error',
-				description: 'An error occurred while updating your badge',
-				variant: 'danger'
+
+			toast.success('Badge ažuriran', {
+				description: `Službeno imaš titulu ${badge} 😎`
 			});
+		} catch (error) {
+			toast.error('Pogreška pri ažuriranju badge-a', {
+				description: 'Pogreška pri ažuriranju badge-a'
+			});
+			console.error(error);
 		}
 	};
-
-	// const isLegendPlan = ['MONTHLY_PRO', 'LIFETIME'].includes(
-	// 	account?.package ?? ''
-	// );
 
 	return (
 		<>

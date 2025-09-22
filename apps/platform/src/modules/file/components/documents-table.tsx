@@ -10,7 +10,7 @@ import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
 import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';
-import { usePostId } from '@/modules/layout/components/post-id-provider';
+import { useLayout } from '@/modules/layout/contexts/use-layout';
 import { type DocumentFileType } from '@prisma/client';
 
 export const columns: ColumnDef<
@@ -68,13 +68,12 @@ export const columns: ColumnDef<
 	{
 		id: 'actions-open',
 		cell: ({ row }) => {
-			const { setPostId } = usePostId();
+			const { setPostId } = useLayout();
 
 			const data = row.original;
 
 			return (
 				<div className="flex flex-row gap-1 justify-end">
-					{data.post.id}
 					<Button
 						theme="neutral"
 						variant="solid-weak"

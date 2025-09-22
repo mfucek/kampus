@@ -27,7 +27,11 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-6 md:pt-10 pb-20">
-			<PageHeader title={college.topic.name} tags={['Fakultet']} />
+			<PageHeader
+				title={college.topic.name}
+				tags={['Fakultet']}
+				breadcrumbs={[{ title: college.topic.name, link: `/${collegeSlug}` }]}
+			/>
 
 			<Tabs>
 				<Tab route={makeRoute('')}>Opca Rasprava</Tab>

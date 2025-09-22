@@ -1,62 +1,45 @@
 'use client';
 
-import { api } from '@/deps/trpc/react';
+import Link from 'next/link';
+import { type FC } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
-export const Breadcrumbs = () => {
-	const collegeSlug = useParams().collegeSlug as string;
+export type Breadcrumb = {
+	title: string;
+	link: string;
+};
 
-	const staffSlug = useParams().staffSlug as string;
-	const subjectSlug = useParams().subjectSlug as string;
-	const topicSlug = staffSlug || subjectSlug;
-
-	const college = api.topic.college.getBySlug.useQuery(
-		{ collegeSlug },
-		{ enabled: !!collegeSlug }
-	);
-	const collegeName = college.data?.topic.name;
-
-	const staff = api.topic.staff.getBySlug.useQuery(
-		{ collegeSlug, staffSlug },
-		{ enabled: !!staffSlug && !!collegeSlug }
-	);
-	const staffName = staff.data?.topic.name;
-
-	const subject = api.topic.subject.getBySlug.useQuery(
-		{ collegeSlug, subjectSlug },
-		{ enabled: !!subjectSlug && !!collegeSlug }
-	);
-	const subjectName = subject.data?.topic.name;
-
+export const Breadcrumbs: FC<{ links: Breadcrumb[] }> = ({ links }) => {
 	return (
 		<div className="flex flex-row gap-0 items-center">
-			{collegeSlug && (
-				<>
-					<Link href={`/${collegeSlug}`}>
-						<div
+			{links.map((link, index) => {
+				const isLast = index === links.length - 1;
+
+				return (
+					<>
+						<Link
+							href={link.link}
 							className={cn(
-								'title-3',
+								'title-3 text-neutral-medium md:hover:text-neutral duration-200',
 								'max-w-[96px] truncate',
-								topicSlug &&
-									'text-neutral-strong hover:text-neutral hover:underline'
+								isLast && 'text-neutral-strong'
 							)}
 						>
-							{collegeName ?? collegeSlug}
-						</div>
-					</Link>
-				</>
-			)}
-			{topicSlug && (
-				<>
-					<Icon icon="chevron-right" className="bg-neutral-strong" size={20} />
-					<div className={cn('title-3', 'max-w-[96px] truncate')}>
-						{staffName ?? subjectName ?? topicSlug}
-					</div>
-				</>
-			)}
+							{link.title}
+						</Link>
+
+						{!isLast && (
+							<Icon
+								icon="chevron-right"
+								className="bg-neutral-medium"
+								size={20}
+							/>
+						)}
+					</>
+				);
+			})}
 		</div>
 	);
 };

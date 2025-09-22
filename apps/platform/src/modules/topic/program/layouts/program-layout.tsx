@@ -32,7 +32,17 @@ export const ProgramLayout = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
-			<PageHeader title={program.topic.name} tags={['Smjer']} />
+			<PageHeader
+				title={program.topic.name}
+				tags={['Smjer']}
+				breadcrumbs={[
+					{ title: program.college.topic.name, link: `/${collegeSlug}` },
+					{
+						title: program.topic.name,
+						link: `/${collegeSlug}/program/${programSlug}`
+					}
+				]}
+			/>
 
 			<ContentPadding size="lg">
 				<Suspense fallback={<Spinner />}>

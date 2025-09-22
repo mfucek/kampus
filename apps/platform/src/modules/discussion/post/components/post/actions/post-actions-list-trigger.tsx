@@ -26,7 +26,11 @@ export const PostActionsListTrigger = ({
 					<Icon icon="ellipsis" />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="flex flex-col gap-0 p-0 py-2" align="end">
+			<PopoverContent
+				className="flex flex-col gap-0 p-0 py-2"
+				align="end"
+				onClick={(e) => e.stopPropagation()}
+			>
 				<PostActionsList post={post} />
 			</PopoverContent>
 		</Popover>

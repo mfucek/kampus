@@ -8,15 +8,18 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { ContentPadding } from '../layouts/content-padding';
+import { type Breadcrumb, Breadcrumbs } from '../molecules/navbar/breadcrumbs';
 import { Icon } from './icon';
 
 export const PageHeader = ({
 	title,
 	tags = [],
+	breadcrumbs = [],
 	imageSrc
 }: {
 	title: string;
 	tags?: string[];
+	breadcrumbs?: Breadcrumb[];
 	imageSrc?: string;
 }) => {
 	const [_floatingVisible, setFloatingVisible] = useState(false);
@@ -54,30 +57,25 @@ export const PageHeader = ({
 							<Image src={imageSrc} alt={title} fill className="object-cover" />
 						</div>
 					)}
-					<div className="flex flex-col flex-1 gap-2">
-						<div className="flex flex-wrap">
-							{tags.map((tag) => (
-								<Badge key={tag} variant="tertiary" theme="neutral">
-									{tag}
-								</Badge>
-							))}
-						</div>
-						<div className="display-3">{title}</div>
+					<div className="flex flex-col flex-1 gap-3">
+						{breadcrumbs && breadcrumbs.length > 0 && (
+							<Breadcrumbs links={breadcrumbs} />
+						)}
+
+						<div className="display-3 text-neutral">{title}</div>
+
+						{tags && tags.length > 0 && (
+							<div className="flex flex-wrap">
+								{tags.map((tag) => (
+									<Badge key={tag} variant="tertiary" theme="neutral">
+										{tag}
+									</Badge>
+								))}
+							</div>
+						)}
 					</div>
 				</div>
 			</ContentPadding>
-			{/* <div
-				className={cn(
-					'fixed top-0 left-0 right-0 md:hidden block',
-					'bg-section/90 border-b border-neutral-weak backdrop-blur-sm',
-					'z-10',
-					'flex',
-					'duration-300 translate-y-[-100%]',
-					floatingVisible && 'translate-y-0'
-				)}
-			>
-				<SmallContent />
-			</div> */}
 		</>
 	);
 };
@@ -97,7 +95,6 @@ export const PageHeaderSkeleton = () => {
 					</div>
 					<div className="w-40 h-[32px] rounded-md bg-neutral-medium" />
 				</div>
-				<div className="w-20 h-40 bg-red-500">asd</div>
 			</div>
 		</ContentPadding>
 	);

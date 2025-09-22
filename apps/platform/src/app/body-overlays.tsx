@@ -1,5 +1,5 @@
+import { Toaster } from '@/lib/shadcn/ui/sonner';
 import NextTopLoader from 'nextjs-toploader';
-import { Toaster } from 'sonner';
 
 export const BodyOverlays = ({ children }: { children: React.ReactNode }) => {
 	return (

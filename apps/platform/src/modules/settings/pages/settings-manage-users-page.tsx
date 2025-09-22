@@ -7,7 +7,13 @@ import { RuleProtected } from '@/modules/user/permissions/components/protected';
 export const SettingsManageUsersPage = () => {
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
-			<PageHeader title="Manage Users" />
+			<PageHeader
+				title="Manage Users"
+				breadcrumbs={[
+					{ title: 'Settings', link: '/settings' },
+					{ title: 'Manage Users', link: '/settings/manage-users' }
+				]}
+			/>
 
 			<RuleProtected rule="CAN_MANAGE_USERS">
 				<ManageUsersSection />

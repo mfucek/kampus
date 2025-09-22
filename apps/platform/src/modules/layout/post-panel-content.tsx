@@ -11,6 +11,7 @@ import {
 	HighlightPostSkeleton
 } from '../discussion/post/components/highlight-post/highlight-post';
 import { ReplyLoader } from '../discussion/post/components/reply/reply-loader';
+import { RepliesTitle } from '../topic/components/replies-title';
 
 export const PostContent: FC<{ postId: string }> = ({ postId }) => {
 	const postQuery = api.post.getPostById.useQuery({
@@ -33,7 +34,7 @@ export const PostContent: FC<{ postId: string }> = ({ postId }) => {
 				topicId={postQuery.data.post.topicId}
 				replyToId={postQuery.data.post.id}
 			/>
-			Replies:
+			<RepliesTitle />
 			<ReplyLoader post={postQuery.data} />
 		</Container>
 	);

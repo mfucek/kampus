@@ -25,7 +25,20 @@ export const StaffLayout = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
-			<PageHeader title={staff.topic.name} tags={['Nastavnik']} />
+			<PageHeader
+				title={staff.topic.name}
+				tags={['Nastavnik']}
+				breadcrumbs={[
+					{
+						title: staff.college.topic.name,
+						link: `/${collegeSlug}`
+					},
+					{
+						title: staff.topic.name,
+						link: `/${collegeSlug}/staff/${staffSlug}`
+					}
+				]}
+			/>
 			<Suspense fallback={<Spinner />}>{children}</Suspense>
 		</Container>
 	);

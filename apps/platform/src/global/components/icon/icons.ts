@@ -12,6 +12,7 @@ export const icons = {
 	'arrow-right': '/assets/icons/arrow-right.svg',
 	'arrow-up': '/assets/icons/arrow-up.svg',
 	'bell': '/assets/icons/bell.svg',
+	'bookmark': '/assets/icons/bookmark.svg',
 	'book-open': '/assets/icons/book-open.svg',
 	'calendar-done': '/assets/icons/calendar-done.svg',
 	'calendar': '/assets/icons/calendar.svg',

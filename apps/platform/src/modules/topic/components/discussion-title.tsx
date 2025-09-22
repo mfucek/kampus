@@ -9,7 +9,7 @@ import {
 export const DiscussionTitle = () => {
 	return (
 		<div className="flex flex-row justify-between items-center">
-			<div className="title-2">Rasprava</div>
+			<div className="title-2 text-neutral">Rasprava</div>
 			<Select value="newest" disabled>
 				<SelectTrigger className="w-fit">
 					<SelectValue placeholder="Sortiraj" />

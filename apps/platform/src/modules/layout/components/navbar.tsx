@@ -21,7 +21,7 @@ import {
 } from '@/lib/shadcn/ui/command';
 import { ThemeToggler } from '@/lib/theme/components/theme-toggler';
 import { feedbackFormURL } from '@/modules/feedback/constants';
-import { SignIn } from '@/modules/onboarding/components/sign-in';
+import { useOnboarding } from '@/modules/onboarding/context/use-onboarding';
 import { useEffect, useState } from 'react';
 import { Icon } from '../../../global/components/icon';
 import { ActionsGroup } from '../../../global/molecules/navbar/actions-group';
@@ -130,6 +130,8 @@ export const Navbar = () => {
 	};
 
 	const Actions = () => {
+		const { showSignIn } = useOnboarding();
+
 		if (isSignedIn) {
 			return (
 				<>
@@ -176,11 +178,14 @@ export const Navbar = () => {
 		return (
 			<>
 				<ThemeToggler />
-				<SignIn>
-					<Button theme="accent" size="md" variant="solid">
-						Ulogiraj se
-					</Button>
-				</SignIn>
+				<Button
+					theme="accent"
+					size="md"
+					variant="solid"
+					onClick={() => showSignIn()}
+				>
+					Ulogiraj se
+				</Button>
 			</>
 		);
 	};

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { type FC } from 'react';
+import { Fragment, type FC } from 'react';
 
 import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
@@ -18,7 +18,7 @@ export const Breadcrumbs: FC<{ links: Breadcrumb[] }> = ({ links }) => {
 				const isLast = index === links.length - 1;
 
 				return (
-					<>
+					<Fragment key={index}>
 						<Link
 							href={link.link}
 							className={cn(
@@ -36,7 +36,7 @@ export const Breadcrumbs: FC<{ links: Breadcrumb[] }> = ({ links }) => {
 								size={20}
 							/>
 						)}
-					</>
+					</Fragment>
 				);
 			})}
 		</div>

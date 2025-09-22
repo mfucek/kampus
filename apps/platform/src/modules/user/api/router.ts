@@ -7,6 +7,7 @@ import { getUploadUrlProcedure } from '@/modules/user/api/procedures/profile-pic
 import { uploadProfilePictureProcedure } from '@/modules/user/api/procedures/profile-picture/upload-profile-picture';
 import { getUserProcedure } from './procedures/get';
 import { listProcedure } from './procedures/list';
+import { meProcedure } from './procedures/me';
 import { addProcedure as addPermissionsProcedure } from './procedures/permission/add';
 import { listProcedure as listPermissionsProcedure } from './procedures/permission/list';
 import { removeProcedure as removePermissionsProcedure } from './procedures/permission/remove';
@@ -14,6 +15,7 @@ import { getCurrentUserProfilePictureUrlProcedure } from './procedures/profile-p
 import { getUserProfilePictureUrlProcedure } from './procedures/profile-picture/get-user-profile-picture-url';
 
 export const userRouter = createTRPCRouter({
+	me: meProcedure,
 	get: getUserProcedure,
 	list: listProcedure,
 	profilePicture: createTRPCRouter({

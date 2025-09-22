@@ -1,8 +1,7 @@
 'use client';
 
 import { Container } from '@/global/components/container';
-import { PostHeader } from '@/modules/discussion/discussion-panel/components/post-header';
-import { ThreadContent } from '@/modules/discussion/discussion-panel/layouts/thread-content';
+import { PostContent } from '@/modules/layout/post-panel-content';
 import { use } from 'react';
 
 interface PageProps {
@@ -21,8 +20,7 @@ export const PostPage = ({ params }: PageProps) => {
 			<Container>
 				<div className="w-full h-full flex flex-col px-4">
 					<div className="flex flex-col w-full gap-10">
-						<PostHeader postId={postId} />
-						<ThreadContent postId={postId} />
+						<PostContent postId={postId} />
 					</div>
 				</div>
 			</Container>

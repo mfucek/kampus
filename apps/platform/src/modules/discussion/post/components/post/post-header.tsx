@@ -1,9 +1,8 @@
-import { Icon } from '@/global/components/icon';
 import { Badge } from '@/lib/shadcn/ui/badge';
-import { Button } from '@/lib/shadcn/ui/button';
 import Image from 'next/image';
 import { FC } from 'react';
 import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+import { PostActionsListTrigger } from './actions/post-actions-list-trigger';
 
 export const PostHeader: FC<{
 	post: PostListByTopicIdItem;
@@ -26,9 +25,7 @@ export const PostHeader: FC<{
 				)}
 			</div>
 
-			<Button theme="neutral" variant="ghost" size="sm" iconOnly>
-				<Icon icon="ellipsis" />
-			</Button>
+			<PostActionsListTrigger post={post} />
 		</div>
 	);
 };

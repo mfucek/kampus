@@ -1,16 +1,11 @@
 import { Icon } from '@/global/components/icon';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger
-} from '@/lib/shadcn/ui/popover';
 import { Skeleton } from '@/lib/shadcn/ui/skeleton';
 import Image from 'next/image';
 import { FC } from 'react';
 import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
-import { PostActionsList } from './actions/post-actions-list';
+import { PostActionsListTrigger } from './actions/post-actions-list-trigger';
 
 export const PostHeaderSmall: FC<{
 	post: PostListByTopicIdItem;
@@ -33,16 +28,7 @@ export const PostHeaderSmall: FC<{
 				)}
 			</div>
 
-			<Popover>
-				<PopoverTrigger asChild>
-					<Button theme="neutral" variant="ghost" size="sm" iconOnly>
-						<Icon icon="ellipsis" />
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent className="flex flex-col gap-0 p-0 py-2" align="end">
-					<PostActionsList post={post} />
-				</PopoverContent>
-			</Popover>
+			<PostActionsListTrigger post={post} />
 		</div>
 	);
 };

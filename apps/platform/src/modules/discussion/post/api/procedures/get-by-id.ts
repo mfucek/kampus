@@ -3,9 +3,8 @@ import { z } from 'zod';
 
 import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
 import { optionalAuthMiddleware, publicProcedure } from '@/deps/trpc/trpc';
+import { VoteType } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
-import { type FullPost } from '../../types/full-post';
-import { getPostVotes } from '../helpers/get-post-votes';
 
 export const getPostByIdProcedure = publicProcedure
 	.use(optionalAuthMiddleware)
@@ -18,15 +17,29 @@ export const getPostByIdProcedure = publicProcedure
 				id: input.postId
 			},
 			include: {
-				_count: {
-					select: {
-						Replies: true
+				Author: {
+					include: {
+						ImageFile: {
+							include: {
+								File: true
+							}
+						}
 					}
 				},
-				Author: true,
 				DocumentFiles: {
 					include: {
 						File: true
+					}
+				},
+				Votes: {
+					select: {
+						type: true,
+						userId: true
+					}
+				},
+				_count: {
+					select: {
+						Replies: true
 					}
 				}
 			}
@@ -36,46 +49,70 @@ export const getPostByIdProcedure = publicProcedure
 			throw new TRPCError({ code: 'NOT_FOUND', message: 'Post not found' });
 		}
 
+		// DTOs
+
+		const upVotes = postRaw.Votes.filter(
+			(vote) => vote.type === VoteType.UP
+		).length;
+		const downVotes = postRaw.Votes.filter(
+			(vote) => vote.type === VoteType.DOWN
+		).length;
+
+		let sessionUserVote = null;
+		if (user) {
+			sessionUserVote =
+				postRaw.Votes.find((vote) => vote.userId === user.id)?.type ?? null;
+		}
+
+		const profilePictureKey = postRaw.Author.ImageFile?.File.key;
+		const profilePictureUrl = profilePictureKey
+			? await getFileDownloadUrl(profilePictureKey)
+			: null;
+
 		const post = {
-			author: {
-				id: postRaw.Author.id,
-				name: postRaw.Author.name,
-				imageUrl: postRaw.Author.image,
-				badge: postRaw.Author.badge
-			},
-			authorId: postRaw.authorId,
 			id: postRaw.id,
 			body: postRaw.body as JSONContent,
 			createdAt: postRaw.createdAt,
 			updatedAt: postRaw.updatedAt,
-			collegeId: postRaw.collegeId,
-			topicId: postRaw.topicId,
 			replyToId: postRaw.replyToId,
-			_count: {
-				replies: postRaw._count.Replies
-			}
-		} satisfies FullPost['post'];
+			topicId: postRaw.topicId
+		};
 
-		const documentFiles = await Promise.all(
-			postRaw.DocumentFiles.map(async (documentFile) => ({
-				fileId: documentFile.File.id,
-				contentType: documentFile.File.contentType,
-				size: documentFile.File.size,
-				key: documentFile.File.key,
-				academicYear: documentFile.academicYear,
-				types: documentFile.types,
-				title: documentFile.title,
-				url: await getFileDownloadUrl(documentFile.File.key)
+		const reactions = {
+			up: upVotes,
+			down: downVotes,
+			sessionUserVote
+		};
+
+		const documents = await Promise.all(
+			postRaw.DocumentFiles.map(async (documentRaw) => ({
+				title: documentRaw.title,
+				id: documentRaw.File.id,
+				contentType: documentRaw.File.contentType,
+				size: documentRaw.File.size,
+				downloadUrl: await getFileDownloadUrl(documentRaw.File.key)
 			}))
 		);
 
-		const votes = await getPostVotes(postRaw.id, user?.id, db);
+		const author = {
+			id: postRaw.authorId,
+			name: postRaw.Author.name,
+			imageUrl: profilePictureUrl,
+			badge: postRaw.Author.badge
+		};
 
-		const output = {
-			post: post,
-			votes: votes,
-			documentFiles: documentFiles
-		} satisfies FullPost;
+		const repliesCount = postRaw._count.Replies;
 
-		return output;
+		const link = `/post/${postRaw.id}`;
+
+		return {
+			post,
+			reactions,
+			documents,
+			author,
+			link,
+			repliesCount
+		};
 	});
+
+export type GetPostByIdItem = Awaited<ReturnType<typeof getPostByIdProcedure>>;

@@ -95,8 +95,14 @@ export const useSubmitPost = () => {
 		}
 
 		// invalidate queries
-		await utils.post.invalidate();
-		await utils.post.list.invalidate();
+		await utils.post.getPostById.invalidate({ postId: post.id });
+
+		if (topicId && replyToId) {
+			await utils.post.listReplies.invalidate({ postId: replyToId });
+		}
+		if (topicId && !replyToId) {
+			await utils.post.listByTopicId.invalidate({ topicId });
+		}
 
 		setIsSubmitting(false);
 

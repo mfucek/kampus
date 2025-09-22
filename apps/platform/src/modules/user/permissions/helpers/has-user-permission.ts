@@ -38,11 +38,13 @@ export const hasUserPermission = async (
 	// if permission.scopeId matches topicId, return permissionValue
 	if (permissionScopeId === scopeId) return permissionValue;
 
-	// if topic (scopeId) is a child of college (permissionScopeId), return permissionValue
+	// if topic (scopeId) is related to college (permissionScopeId), return permissionValue
 	if (permissionScopeType === ScopeType.COLLEGE) {
 		const a = await db.topic.count({
 			where: {
-				collegeId: permissionScopeId!
+				College: {
+					topicId: permissionScopeId!
+				}
 			}
 		});
 

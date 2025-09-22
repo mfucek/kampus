@@ -1,7 +1,7 @@
 import {
 	createContext,
-	Dispatch,
-	SetStateAction,
+	type Dispatch,
+	type SetStateAction,
 	useContext,
 	useState
 } from 'react';
@@ -16,7 +16,7 @@ interface LayoutContextType {
 const defaultData: LayoutContextType = {
 	postId: null,
 	setPostId: () => {},
-	showBookmarks: true,
+	showBookmarks: false,
 	setShowBookmarks: () => {}
 };
 

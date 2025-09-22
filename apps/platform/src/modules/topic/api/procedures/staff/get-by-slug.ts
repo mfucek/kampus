@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { publicProcedure } from '@/deps/trpc/trpc';
-import { StaffGetItem } from './get-by-id';
+import { type StaffGetItem } from './get-by-id';
 
 export const staffGetBySlugProcedure = publicProcedure
 	.input(z.object({ staffSlug: z.string(), collegeSlug: z.string() }))

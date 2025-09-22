@@ -7,7 +7,7 @@ import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
-import { ListPermissionsItem } from '../../api/procedures/permission/list';
+import { type ListPermissionsItem } from '../../api/procedures/permission/list';
 
 export const columns: ColumnDef<ListPermissionsItem>[] = [
 	{

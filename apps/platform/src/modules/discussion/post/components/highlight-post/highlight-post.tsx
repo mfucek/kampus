@@ -1,5 +1,6 @@
-import { FC } from 'react';
-import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+import { type FC } from 'react';
+
+import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 import { PostActions } from '../post/actions/post-actions';
 import {
 	PostReactionAction,

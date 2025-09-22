@@ -19,7 +19,7 @@ export const PageHeader = ({
 	tags?: string[];
 	imageSrc?: string;
 }) => {
-	const [floatingVisible, setFloatingVisible] = useState(false);
+	const [_floatingVisible, setFloatingVisible] = useState(false);
 	const elementRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -36,26 +36,6 @@ export const PageHeader = ({
 
 	const router = useRouter();
 	const { isMobile } = useViewportSize();
-
-	const SmallContent = () => {
-		return (
-			<ContentPadding size="lg" className={cn(isMobile && 'pl-0')}>
-				<div className="flex flex-row w-full items-center gap-0 py-4">
-					<Button
-						variant="ghost"
-						size="lg"
-						className="shrink-0 h-full"
-						onClick={() => router.back()}
-					>
-						<Icon icon="arrow-left" />
-					</Button>
-					<div className="flex flex-col flex-1 gap-2">
-						<div className="title-1">{title}</div>
-					</div>
-				</div>
-			</ContentPadding>
-		);
-	};
 
 	return (
 		<>

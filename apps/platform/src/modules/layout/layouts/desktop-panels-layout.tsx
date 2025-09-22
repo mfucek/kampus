@@ -1,21 +1,21 @@
 'use client';
 
-import { FC, PropsWithChildren, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { type FC, type PropsWithChildren, useRef, useState } from 'react';
 import {
-	ImperativePanelGroupHandle,
-	ImperativePanelHandle,
+	type ImperativePanelGroupHandle,
+	type ImperativePanelHandle,
 	Panel,
 	PanelGroup
 } from 'react-resizable-panels';
-import { BookmarksContent } from '../bookmarks/bookmarks-content';
-import { useLayout } from '../contexts/use-layout';
 
 import { Icon } from '@/global/components/icon';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
-import { useRouter } from 'next/navigation';
+import { BookmarksContent } from '../bookmarks/bookmarks-content';
 import { PanelCloseWarning } from '../components/panel-close-warning';
 import { ResizeHandle } from '../components/resize-handle';
+import { useLayout } from '../contexts/use-layout';
 import { PostContent } from '../post-panel-content';
 
 export const DesktopPanelsLayout: FC<PropsWithChildren> = ({ children }) => {

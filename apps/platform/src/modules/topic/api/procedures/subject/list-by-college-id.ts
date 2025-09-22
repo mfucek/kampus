@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { publicProcedure } from '@/deps/trpc/trpc';
-import { SubjectGetItem } from './get-by-id';
+import { type SubjectGetItem } from './get-by-id';
 
 export const subjectsListByCollegeIdProcedure = publicProcedure
 	.input(
@@ -105,9 +105,8 @@ export const subjectsListByCollegeIdProcedure = publicProcedure
 						}
 					} satisfies SubjectGetItem['college'],
 					postsCount: subjectRaw.Topic._count.Posts,
-					documentsCount: 0, //subjectRaw.Topic._count.Documents,
 					link: `/${collegeRaw.Topic.slug}/subject/${subjectRaw.Topic.slug}`
-				}) satisfies SubjectGetItem
+				}) satisfies Omit<SubjectGetItem, 'documentsCount'>
 		);
 
 		return { subjects, ...(limit ? { nextCursor, totalSubjects } : {}) };

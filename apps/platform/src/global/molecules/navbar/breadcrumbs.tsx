@@ -17,19 +17,19 @@ export const Breadcrumbs = () => {
 		{ collegeSlug },
 		{ enabled: !!collegeSlug }
 	);
-	const collegeName = college.data?.name;
+	const collegeName = college.data?.topic.name;
 
 	const staff = api.topic.staff.getBySlug.useQuery(
 		{ collegeSlug, staffSlug },
 		{ enabled: !!staffSlug && !!collegeSlug }
 	);
-	const staffName = staff.data?.name;
+	const staffName = staff.data?.topic.name;
 
 	const subject = api.topic.subject.getBySlug.useQuery(
 		{ collegeSlug, subjectSlug },
 		{ enabled: !!subjectSlug && !!collegeSlug }
 	);
-	const subjectName = subject.data?.name;
+	const subjectName = subject.data?.topic.name;
 
 	return (
 		<div className="flex flex-row gap-0 items-center">

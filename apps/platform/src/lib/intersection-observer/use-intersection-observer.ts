@@ -10,7 +10,7 @@ export const useIntersectionObserver = ({
 	rootMargin = '0px'
 }: UseIntersectionObserverProps = {}) => {
 	const [isInView, setIsInView] = useState(false);
-	const elementRef = useRef<any>(null);
+	const elementRef = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
 		const element = elementRef.current;

@@ -5,7 +5,7 @@ import {
 	PopoverContent,
 	PopoverTrigger
 } from '@/lib/shadcn/ui/popover';
-import { PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
+import { type PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
 import { PostActionsList } from './post-actions-list';
 
 export const PostActionsListTrigger = ({

@@ -1,5 +1,7 @@
 'use client';
 
+import { type FC } from 'react';
+
 import { useAuth } from '@/deps/better-auth/use-auth';
 import { Button } from '@/lib/shadcn/ui/button';
 import {
@@ -10,7 +12,6 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from '@/lib/shadcn/ui/dialog';
-import { FC } from 'react';
 
 const SignInDialogContent = () => {
 	const { signInWithGoogle } = useAuth();

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { type FC } from 'react';
 
 import {
@@ -12,8 +13,7 @@ import { Icon } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
 import { groupByKey } from '@/utils/group-by-key';
-import Link from 'next/link';
-import { ListSubjectsByProgramIdItem } from '../../api/procedures/subject/list-by-program-id';
+import { type ListSubjectsByProgramIdItem } from '../../api/procedures/subject/list-by-program-id';
 
 export const ProgramSubjectsList: FC<{
 	subjects: ListSubjectsByProgramIdItem[];

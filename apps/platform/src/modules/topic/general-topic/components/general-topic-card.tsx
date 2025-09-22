@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 
-import { GeneralTopicsListItem } from '../../api/procedures/general-topic/list-all';
+import { type GeneralTopicsListItem } from '../../api/procedures/general-topic/list-all';
 
 export const GeneralTopicCard: FC<{
 	generalTopic: GeneralTopicsListItem;

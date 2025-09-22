@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 
-import { CollegeGetItem } from '../../api/procedures/college/get-by-id';
+import { type CollegeGetItem } from '../../api/procedures/college/get-by-id';
 
 export const CollegeCard: FC<{ college: CollegeGetItem }> = ({ college }) => {
 	return (

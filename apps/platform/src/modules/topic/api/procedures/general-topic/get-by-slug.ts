@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { publicProcedure } from '@/deps/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 
-import { GeneralTopicGetItem } from './get-by-id';
+import { type GeneralTopicGetItem } from './get-by-id';
 
 export const generalTopicGetBySlugProcedure = publicProcedure
 	.input(z.object({ generalTopicSlug: z.string() }))

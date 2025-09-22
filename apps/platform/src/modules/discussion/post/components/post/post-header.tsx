@@ -1,7 +1,8 @@
-import { Badge } from '@/lib/shadcn/ui/badge';
 import Image from 'next/image';
-import { FC } from 'react';
-import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+import { type FC } from 'react';
+
+import { Badge } from '@/lib/shadcn/ui/badge';
+import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 import { PostActionsListTrigger } from './actions/post-actions-list-trigger';
 
 export const PostHeader: FC<{

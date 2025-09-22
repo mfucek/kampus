@@ -3,11 +3,10 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { Input } from '@/lib/shadcn/ui/input';
-
 import { Container } from '@/global/components/container';
 import { ContentPadding } from '@/global/layouts/content-padding';
-import { GeneralTopicsListItem } from '../../api/procedures/general-topic/list-all';
+import { Input } from '@/lib/shadcn/ui/input';
+import { type GeneralTopicsListItem } from '../../api/procedures/general-topic/list-all';
 import { GeneralTopicCard } from './general-topic-card';
 
 export const GeneralTopicsGrid = ({

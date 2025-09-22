@@ -68,7 +68,6 @@ export const columns: ColumnDef<
 	{
 		id: 'actions-open',
 		cell: ({ row }) => {
-			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const { setPostId } = usePostId();
 
 			const data = row.original;

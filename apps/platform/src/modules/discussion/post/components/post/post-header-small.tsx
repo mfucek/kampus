@@ -1,10 +1,11 @@
+import { type FC } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Skeleton } from '@/lib/shadcn/ui/skeleton';
 import Image from 'next/image';
-import { FC } from 'react';
-import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 import { PostActionsListTrigger } from './actions/post-actions-list-trigger';
 
 export const PostHeaderSmall: FC<{

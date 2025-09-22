@@ -1,7 +1,9 @@
 'use client';
-import { cn } from '@/lib/shadcn/utils';
-import { FC, useState } from 'react';
+
+import { type FC, useState } from 'react';
 import { PanelResizeHandle } from 'react-resizable-panels';
+
+import { cn } from '@/lib/shadcn/utils';
 
 export const ResizeHandle: FC<{
 	willCollapse?: boolean;

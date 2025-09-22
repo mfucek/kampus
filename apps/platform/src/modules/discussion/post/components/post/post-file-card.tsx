@@ -1,9 +1,10 @@
+import Image from 'next/image';
+import { type FC } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
 import { formatFileSize } from '@/utils/format-file-size';
-import Image from 'next/image';
-import { FC } from 'react';
-import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 
 export const PostFileCard: FC<{
 	file: PostListByTopicIdItem['documents'][number];

@@ -1,7 +1,7 @@
 'use client';
 
 import { useViewportSize } from '@/deps/viewport-size';
-import { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 
 import { DesktopPanelsLayout } from './desktop-panels-layout';
 import { MobilePanelsLayout } from './mobile-panels-layout';

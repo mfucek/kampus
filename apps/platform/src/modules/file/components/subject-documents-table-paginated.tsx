@@ -34,7 +34,7 @@ const DocumentsTableWithData: FC<{
 
 	const query = api.file.listDocuments.useInfiniteQuery(
 		{
-			scope: { topicId: subjectId },
+			topicId: subjectId,
 			limit,
 			filters
 		},

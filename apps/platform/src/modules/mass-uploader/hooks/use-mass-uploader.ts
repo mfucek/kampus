@@ -18,8 +18,7 @@ export const useMassUploader = () => {
 	const { topicId } = useComposerController();
 	const { handleSubmit } = useSubmitPost();
 
-	const { body: bodyFromContext, setBody: setContextBody } =
-		useComposerBodyContext();
+	const { body: bodyFromContext } = useComposerBodyContext();
 
 	const { toast } = useToast();
 

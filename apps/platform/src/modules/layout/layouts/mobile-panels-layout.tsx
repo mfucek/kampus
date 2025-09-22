@@ -1,6 +1,7 @@
 'use client';
 
-import { FC, PropsWithChildren } from 'react';
+import { useRouter } from 'next/navigation';
+import { type FC, type PropsWithChildren } from 'react';
 import { useLayout } from '../contexts/use-layout';
 
 import { Container } from '@/global/components/container';
@@ -13,7 +14,6 @@ import {
 	DrawerHeader,
 	DrawerTitle
 } from '@/lib/shadcn/ui/drawer';
-import { useRouter } from 'next/navigation';
 import { PostContent } from '../post-panel-content';
 
 export const MobilePanelsLayout: FC<PropsWithChildren> = ({ children }) => {

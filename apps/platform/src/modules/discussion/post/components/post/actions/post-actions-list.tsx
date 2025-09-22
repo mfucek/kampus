@@ -1,10 +1,11 @@
+import { type FC } from 'react';
+
 import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { toast } from '@/lib/shadcn/ui/use-toast';
-import { FC } from 'react';
-import { PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
+import { type PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
 
 export const PostActionsList: FC<{ post: PostListByTopicIdItem }> = ({
 	post

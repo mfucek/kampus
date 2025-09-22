@@ -1,14 +1,13 @@
 'use client';
 
+import { useState } from 'react';
+
 import { Divider } from '@/global/components/divider';
 import { ListLayout } from '@/global/layouts/list-layout';
-import { FileStagingProvider } from '@/modules/file/contexts/file-staging-provider';
-import { useMassUploader } from '../hooks/use-mass-uploader';
-
 import { ComposerBodyProvider } from '@/modules/composer/contexts/composer-body-provider';
 import { ComposerControllerProvider } from '@/modules/composer/contexts/composer-controller-provider';
-import { type SubjectListItem } from '@/modules/topic/api/procedures/subject/list-paginated';
-import { useState } from 'react';
+import { FileStagingProvider } from '@/modules/file/contexts/file-staging-provider';
+import { useMassUploader } from '../hooks/use-mass-uploader';
 import {
 	ComposerSection,
 	composerSectionDefaultBody
@@ -16,7 +15,10 @@ import {
 import { FileListSection } from './sections/file-list';
 import { FileUploadSection } from './sections/file-upload';
 import { IntroSection } from './sections/intro';
-import { SubjectSelectionSection } from './sections/subject-selection';
+import {
+	type ISubject,
+	SubjectSelectionSection
+} from './sections/subject-selection';
 
 const DocumentUploader = () => {
 	const { startUploading, uploadingInProgress } = useMassUploader();
@@ -33,19 +35,11 @@ const DocumentUploader = () => {
 	);
 };
 
-export const MassUploader = ({
-	collegeId,
-	subjects
-}: {
-	collegeId: string;
-	subjects: SubjectListItem[];
-}) => {
-	const [targetSubject, setTargetSubject] = useState<SubjectListItem | null>(
-		null
-	);
+export const MassUploader = ({ subjects }: { subjects: ISubject[] }) => {
+	const [targetSubject, setTargetSubject] = useState<ISubject | null>(null);
 
 	const subjectsSorted = (subjects ?? []).sort((a, b) =>
-		a.name.localeCompare(b.name)
+		a.topic.name.localeCompare(b.topic.name)
 	);
 
 	return (
@@ -58,8 +52,8 @@ export const MassUploader = ({
 
 					<SubjectSelectionSection
 						subjects={subjectsSorted}
-						subject={targetSubject}
-						setSubject={setTargetSubject}
+						selectedSubject={targetSubject}
+						setSelectedSubject={setTargetSubject}
 					/>
 
 					{targetSubject && (
@@ -72,10 +66,7 @@ export const MassUploader = ({
 					{targetSubject && (
 						<>
 							<Divider />
-							<ComposerControllerProvider
-								collegeId={collegeId}
-								topicId={targetSubject.id}
-							>
+							<ComposerControllerProvider topicId={targetSubject.topic.id}>
 								<DocumentUploader />
 							</ComposerControllerProvider>
 						</>

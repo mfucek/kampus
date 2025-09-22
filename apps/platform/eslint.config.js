@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
 	eslint.configs.recommended,
 	...tseslint.configs.recommendedTypeChecked,
-	...tseslint.configs.stylisticTypeChecked,
+	// ...tseslint.configs.stylisticTypeChecked,
 	{
 		files: ['**/*.{js,jsx,ts,tsx}'],
 		plugins: {

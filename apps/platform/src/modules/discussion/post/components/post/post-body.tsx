@@ -1,8 +1,9 @@
+import { EditorContent, useEditor } from '@tiptap/react';
+import { type FC } from 'react';
+
 import { tiptapExtensions } from '@/deps/tiptap/extensions';
 import { Skeleton } from '@/lib/shadcn/ui/skeleton';
-import { EditorContent, useEditor } from '@tiptap/react';
-import { FC } from 'react';
-import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 
 export const PostBody: FC<{
 	body: PostListByTopicIdItem['post']['body'];

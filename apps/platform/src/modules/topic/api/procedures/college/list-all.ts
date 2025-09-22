@@ -1,5 +1,5 @@
 import { publicProcedure } from '@/deps/trpc/trpc';
-import { CollegeGetItem } from './get-by-id';
+import { type CollegeGetItem } from './get-by-id';
 
 export const collegesListAllProcedure = publicProcedure.query(
 	async ({ ctx }) => {

@@ -1,14 +1,17 @@
 'use client';
 
+import Link from 'next/link';
+import { type FC } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
 import { type ColumnDef } from '@tanstack/react-table';
-import Link from 'next/link';
-import { type FC } from 'react';
-import { SubjectGetItem } from '../../api/procedures/subject/get-by-id';
+import { type SubjectGetItem } from '../../api/procedures/subject/get-by-id';
 
-export const columns: ColumnDef<SubjectGetItem>[] = [
+interface ISubjectsTableItem extends Omit<SubjectGetItem, 'documentsCount'> {}
+
+export const columns: ColumnDef<ISubjectsTableItem>[] = [
 	{
 		accessorKey: 'topic.name',
 		header: 'Predmet'
@@ -43,7 +46,7 @@ export const columns: ColumnDef<SubjectGetItem>[] = [
 ];
 
 export const SubjectsTable: FC<{
-	subjects: SubjectGetItem[];
+	subjects: ISubjectsTableItem[];
 	loading?: boolean;
 }> = ({ subjects, loading = false }) => {
 	return <DataTable columns={columns} data={subjects} loading={loading} />;

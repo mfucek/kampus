@@ -24,7 +24,7 @@ import {
 } from '@/lib/shadcn/ui/select';
 import { PermissionsTable } from '@/modules/user/permissions/components/permissions-table';
 import { RuleType } from '@prisma/client';
-import { ListUsersItem } from '../../api/procedures/list';
+import { type ListUsersItem } from '../../api/procedures/list';
 
 const UsersSection: FC<{ user: ListUsersItem }> = ({ user }) => {
 	const utils = api.useUtils();
@@ -39,7 +39,7 @@ const UsersSection: FC<{ user: ListUsersItem }> = ({ user }) => {
 		}
 	});
 
-	const { data: colleges } = api.topic.college.listAll.useQuery();
+	const listAllCollegesQuery = api.topic.college.listAll.useQuery();
 
 	const [rule, setRule] = useState<RuleType | null>(null);
 	const [scopeId, setScopeId] = useState<string | null>(null);
@@ -131,9 +131,9 @@ const UsersSection: FC<{ user: ListUsersItem }> = ({ user }) => {
 									<SelectValue placeholder="Select Scope" />
 								</SelectTrigger>
 								<SelectContent>
-									{colleges?.map((college) => (
-										<SelectItem value={college.id} key={college.id}>
-											{college.name}
+									{listAllCollegesQuery.data?.colleges.map((college) => (
+										<SelectItem value={college.topic.id} key={college.topic.id}>
+											{college.topic.name}
 										</SelectItem>
 									))}
 								</SelectContent>

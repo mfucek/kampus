@@ -1,4 +1,4 @@
-import { type PrismaClient, Vote, VoteType } from '@prisma/client';
+import { type PrismaClient, type Vote, VoteType } from '@prisma/client';
 
 export const getPostVotes = async (
 	postId: string,

@@ -6,23 +6,30 @@ import { Section } from '@/global/components/section';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Combobox } from '@/lib/shadcn/ui/combobox';
-import { type SubjectListItem } from '@/modules/topic/api/procedures/subject/list-paginated';
+
+export interface ISubject {
+	topic: {
+		id: string;
+		name: string;
+	};
+	link: string;
+}
 
 export const SubjectSelectionSection = ({
 	subjects,
-	subject,
-	setSubject
+	selectedSubject,
+	setSelectedSubject
 }: {
-	subjects: SubjectListItem[];
-	subject: SubjectListItem | null;
-	setSubject: (subject: SubjectListItem | null) => void;
+	subjects: ISubject[];
+	selectedSubject: ISubject | null;
+	setSelectedSubject: (subject: ISubject | null) => void;
 }) => {
-	const { data: subjectData } = api.topic.subject.getById.useQuery(
+	const subjectQuery = api.topic.subject.getById.useQuery(
 		{
-			subjectId: subject?.subject?.topicId ?? ''
+			topicId: selectedSubject?.topic.id ?? ''
 		},
 		{
-			enabled: !!subject?.subject?.topicId
+			enabled: !!selectedSubject?.topic.id
 		}
 	);
 
@@ -36,18 +43,15 @@ export const SubjectSelectionSection = ({
 					<div className="flex flex-row justify-end gap-2">
 						<Combobox
 							values={subjects}
-							value={subject}
-							onChange={(subject) => setSubject(subject)}
+							value={selectedSubject}
+							onChange={(subject) => setSelectedSubject(subject ?? null)}
 							placeholder="Odaberi predmet..."
-							makeKey={(s) => s.id}
-							makeName={(s) => s.name}
+							makeKey={(s) => s.topic.id}
+							makeName={(s) => s.topic.name}
 							className="w-full md:w-fit"
 						/>
-						{subject && (
-							<a
-								href={`/${subject.college.slug}/subject/${subject.slug}`}
-								target="_blank"
-							>
+						{selectedSubject && (
+							<a href={selectedSubject.link} target="_blank">
 								<Button variant="outline" size="md" rounded iconOnly>
 									<Icon icon="arrow-linked" />
 								</Button>
@@ -55,7 +59,7 @@ export const SubjectSelectionSection = ({
 						)}
 					</div>
 
-					{subjectData && subjectData.numberOfDocuments > 0 && (
+					{subjectQuery.data && subjectQuery.data.documentsCount > 0 && (
 						<div className="flex flex-row gap-2 p-3 bg-info-weak border border-info-medium text-info body-2 justify-center items-center rounded-lg">
 							<Icon icon="status-info" className="bg-info" size={16} />
 							Ovaj predmet već sadrži neke materijale.

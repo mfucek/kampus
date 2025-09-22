@@ -25,13 +25,13 @@ export const useCaptureEvent = () => {
 
 	if (!isProduction || typeof window === 'undefined') {
 		return {
-			capture: (...params: any[]) => {
+			capture: (...params: unknown[]) => {
 				console.log('[Capture]', params);
 			}
 		};
 	}
 
-	const capture = (name: string, properties: Record<string, any>) => {
+	const capture = (name: string, properties: Record<string, unknown>) => {
 		if (window && pathname) {
 			let url = window.origin + pathname;
 			if (searchParams?.toString()) {

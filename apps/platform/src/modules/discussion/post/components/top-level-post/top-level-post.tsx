@@ -1,9 +1,10 @@
+import { type FC } from 'react';
+import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+
 import { useViewportSize } from '@/deps/viewport-size';
 import { cn } from '@/lib/shadcn/utils';
 import { useLayout } from '@/modules/layout/contexts/use-layout';
 import { useRouter } from 'next/navigation';
-import { FC } from 'react';
-import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 import { PostActions } from '../post/actions/post-actions';
 import {
 	PostDiscussionAction,

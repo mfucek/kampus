@@ -1,8 +1,9 @@
 'use client';
 
+import { type FC } from 'react';
+
 import { api } from '@/deps/trpc/react';
 import { Container } from '@/global/components/container';
-import { FC } from 'react';
 import { Composer } from '../composer/components';
 import { ComposerSkeleton } from '../composer/components/composer-skeleton';
 import {

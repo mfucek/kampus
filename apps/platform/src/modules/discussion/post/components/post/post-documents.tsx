@@ -1,5 +1,6 @@
-import { FC } from 'react';
-import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+import { type FC } from 'react';
+
+import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 import { PostFileCard } from './post-file-card';
 
 export const PostDocuments: FC<{

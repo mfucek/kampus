@@ -161,7 +161,7 @@ const FileActions = (file: StagedFile, index: number) => {
 			{
 				types: file.documentOptions.types,
 				year: file.documentOptions.academicYear!,
-				subjectId: topicId!
+				subjectId: topicId
 			},
 			{
 				enabled:

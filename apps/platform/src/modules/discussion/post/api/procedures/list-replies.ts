@@ -1,9 +1,10 @@
+import { type Prisma, VoteType } from '@prisma/client';
+import { type JSONContent } from '@tiptap/react';
+import z from 'zod';
+
 import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
 import { publicProcedure } from '@/deps/trpc/trpc';
-import { Prisma, VoteType } from '@prisma/client';
-import { JSONContent } from '@tiptap/react';
-import z from 'zod';
-import { GetPostByIdItem } from './get-by-id';
+import { type GetPostByIdItem } from './get-by-id';
 
 export const listRepliesProcedure = publicProcedure
 	.input(

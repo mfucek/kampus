@@ -1,14 +1,20 @@
 // Helper function to safely access nested properties using dot notation
-const getNestedValue = (obj: any, path: string): any => {
+const getNestedValue = (obj: unknown, path: string): unknown => {
 	return path.split('.').reduce((current, key) => {
-		return current && current[key] !== undefined ? current[key] : undefined;
+		return current &&
+			typeof current === 'object' &&
+			current !== null &&
+			key in current &&
+			current[key as keyof typeof current] !== undefined
+			? current[key as keyof typeof current]
+			: undefined;
 	}, obj);
 };
 
 // Type helper to extract all possible nested property paths as strings
 type NestedKeyOf<T, K extends keyof T = keyof T> = K extends string | number
 	? T[K] extends object
-		? T[K] extends any[]
+		? T[K] extends unknown[]
 			? `${K}` // Don't go deeper into arrays
 			: `${K}` | `${K}.${NestedKeyOf<T[K]>}`
 		: `${K}`
@@ -73,20 +79,20 @@ export const groupByKey = <T>(
 };
 
 // Grouping by tag example
-const example_1 = groupByKey(
-	[
-		{
-			tag: 'frontend',
-			title: 'Full stack project #1'
-		},
-		{
-			tag: 'backend',
-			title: 'Project #2'
-		}
-	],
-	'tag',
-	'No Tag'
-);
+// const example_1 = groupByKey(
+// 	[
+// 		{
+// 			tag: 'frontend',
+// 			title: 'Full stack project #1'
+// 		},
+// 		{
+// 			tag: 'backend',
+// 			title: 'Project #2'
+// 		}
+// 	],
+// 	'tag',
+// 	'No Tag'
+// );
 // {
 // 	"frontend": [
 // 		{ tag: 'frontend', title: 'Full stack project #1' }
@@ -97,14 +103,14 @@ const example_1 = groupByKey(
 // }
 
 // Grouping by tags example
-const example_2 = groupByKey(
-	[
-		{ tags: ['frontend', 'backend'], title: 'Full stack project #1' },
-		{ tags: [], title: 'Full stack project #2' }
-	],
-	'tags',
-	'No Tags'
-);
+// const example_2 = groupByKey(
+// 	[
+// 		{ tags: ['frontend', 'backend'], title: 'Full stack project #1' },
+// 		{ tags: [], title: 'Full stack project #2' }
+// 	],
+// 	'tags',
+// 	'No Tags'
+// );
 // {
 // 	"frontend": [
 // 		{ tags: ['frontend', 'backend'], title: 'Full stack project #1' }
@@ -116,15 +122,15 @@ const example_2 = groupByKey(
 // }
 
 // Mixed example
-const example_3 = groupByKey(
-	[
-		{ tags: ['frontend', 'react'], title: 'React Dashboard' },
-		{ tags: ['backend', 'node'], title: 'API Server' },
-		{ tags: ['frontend', 'vue'], title: 'Vue App' }
-	],
-	'tags',
-	'No Tags'
-);
+// const example_3 = groupByKey(
+// 	[
+// 		{ tags: ['frontend', 'react'], title: 'React Dashboard' },
+// 		{ tags: ['backend', 'node'], title: 'API Server' },
+// 		{ tags: ['frontend', 'vue'], title: 'Vue App' }
+// 	],
+// 	'tags',
+// 	'No Tags'
+// );
 // {
 // 	"frontend": [
 // 		{ tags: ['frontend', 'react'], title: 'React Dashboard' },

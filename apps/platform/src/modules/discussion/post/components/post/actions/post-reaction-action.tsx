@@ -1,3 +1,5 @@
+import { type FC, type MouseEventHandler, useState } from 'react';
+
 import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
@@ -11,8 +13,7 @@ import {
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
 import { VoteType } from '@prisma/client';
-import { FC, MouseEventHandler, useState } from 'react';
-import { PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
+import { type PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
 
 const reactionToTheme = (reaction: VoteType | null) => {
 	switch (reaction) {

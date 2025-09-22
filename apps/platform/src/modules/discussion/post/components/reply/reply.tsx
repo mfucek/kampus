@@ -1,6 +1,7 @@
+import { type FC, useState } from 'react';
+
 import { Composer } from '@/modules/composer/components';
-import { FC, useState } from 'react';
-import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 import { PostActions } from '../post/actions/post-actions';
 import {
 	PostReactionAction,
@@ -24,7 +25,7 @@ export const Reply: FC<{ post: PostListByTopicIdItem; depth?: number }> = ({
 }) => {
 	const hasReplies = post.repliesCount > 0;
 
-	const [showReplies, setShowReplies] = useState(depth <= 2);
+	const [showReplies, _setShowReplies] = useState(depth <= 2);
 	const [showComposer, setShowComposer] = useState(false);
 
 	return (

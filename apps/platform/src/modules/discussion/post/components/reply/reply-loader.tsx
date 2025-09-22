@@ -1,9 +1,10 @@
 'use client';
 
+import { type FC, type PropsWithChildren, useState } from 'react';
+
 import { api } from '@/deps/trpc/react';
 import { Button } from '@/lib/shadcn/ui/button';
-import { FC, PropsWithChildren, useState } from 'react';
-import { PostListRepliesItem } from '../../api/procedures/list-replies';
+import { type PostListRepliesItem } from '../../api/procedures/list-replies';
 import { NoPostsCard } from '../top-level-post/no-posts-card';
 import { Reply, ReplySkeleton } from './reply';
 

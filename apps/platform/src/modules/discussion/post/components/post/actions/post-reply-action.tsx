@@ -1,6 +1,7 @@
+import { type FC, type MouseEventHandler } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { FC, MouseEventHandler } from 'react';
 
 export const PostReplyAction: FC<{
 	onClick: MouseEventHandler<HTMLButtonElement>;

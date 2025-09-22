@@ -1,9 +1,10 @@
 'use client';
 
-import { api } from '@/deps/trpc/react';
-import { FC, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
+
+import { api } from '@/deps/trpc/react';
+import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 import { NoPostsCard } from './no-posts-card';
 import { TopLevelPost, TopLevelPostSkeleton } from './top-level-post';
 

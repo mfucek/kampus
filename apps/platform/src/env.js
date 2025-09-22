@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import packageJson from '../package.json' assert { type: 'json' };
 
+/* global process */
 const version = packageJson.version;
 
 export const env = createEnv({

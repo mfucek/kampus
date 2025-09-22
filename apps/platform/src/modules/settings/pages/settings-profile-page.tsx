@@ -10,8 +10,8 @@ export const SettingsProfilePage = () => {
 			<PageHeader
 				title="Public Profile"
 				breadcrumbs={[
-					{ title: 'Settings', link: '/settings' },
-					{ title: 'Public Profile', link: '/settings/profile' }
+					{ title: 'Postavke', link: '/settings' },
+					{ title: 'Profil', link: '/settings/profile' }
 				]}
 			/>
 

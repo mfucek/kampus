@@ -11,7 +11,7 @@ export const SettingsSubSection: FC<
 		<ContentPadding size="lg">
 			<div className="flex flex-col gap-6">
 				<div className="flex flex-col gap-2">
-					<p className="title-3">{title}</p>
+					<p className="title-3 text-neutral">{title}</p>
 					<p className="body-2 text-neutral-strong">{description}</p>
 				</div>
 				{children}

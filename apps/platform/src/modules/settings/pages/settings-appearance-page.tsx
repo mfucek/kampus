@@ -9,8 +9,8 @@ export const SettingsAppearancePage = () => {
 			<PageHeader
 				title="Appearance"
 				breadcrumbs={[
-					{ title: 'Settings', link: '/settings' },
-					{ title: 'Appearance', link: '/settings/appearance' }
+					{ title: 'Postavke', link: '/settings' },
+					{ title: 'Izgled', link: '/settings/appearance' }
 				]}
 			/>
 

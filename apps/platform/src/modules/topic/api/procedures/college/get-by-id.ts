@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
 import { publicProcedure } from '@/deps/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 
@@ -16,7 +17,15 @@ export const collegeGetByIdProcedure = publicProcedure
 				}
 			},
 			include: {
-				Topic: true
+				Topic: {
+					include: {
+						Image: {
+							include: {
+								File: true
+							}
+						}
+					}
+				}
 			}
 		});
 
@@ -34,7 +43,10 @@ export const collegeGetByIdProcedure = publicProcedure
 			id: collegeRaw.Topic.id,
 			type: collegeRaw.Topic.type,
 			slug: collegeRaw.Topic.slug,
-			shortName: collegeRaw.Topic.shortName
+			shortName: collegeRaw.Topic.shortName,
+			imageUrl: collegeRaw.Topic.Image?.File.key
+				? await getFileDownloadUrl(collegeRaw.Topic.Image.File.key)
+				: null
 		};
 
 		const college = {

@@ -10,8 +10,8 @@ export const SettingsManageUsersPage = () => {
 			<PageHeader
 				title="Manage Users"
 				breadcrumbs={[
-					{ title: 'Settings', link: '/settings' },
-					{ title: 'Manage Users', link: '/settings/manage-users' }
+					{ title: 'Postavke', link: '/settings' },
+					{ title: 'Upravljanje Korisnicima', link: '/settings/manage-users' }
 				]}
 			/>
 

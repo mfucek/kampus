@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
 import { publicProcedure } from '@/deps/trpc/trpc';
 import { type CollegeGetItem } from './get-by-id';
 
@@ -17,7 +18,15 @@ export const collegeGetBySlugProcedure = publicProcedure
 				}
 			},
 			include: {
-				Topic: true
+				Topic: {
+					include: {
+						Image: {
+							include: {
+								File: true
+							}
+						}
+					}
+				}
 			}
 		});
 
@@ -35,7 +44,10 @@ export const collegeGetBySlugProcedure = publicProcedure
 			id: collegeRaw.Topic.id,
 			type: collegeRaw.Topic.type,
 			slug: collegeRaw.Topic.slug,
-			shortName: collegeRaw.Topic.shortName
+			shortName: collegeRaw.Topic.shortName,
+			imageUrl: collegeRaw.Topic.Image?.File.key
+				? await getFileDownloadUrl(collegeRaw.Topic.Image.File.key)
+				: null
 		} satisfies CollegeGetItem['topic'];
 
 		const college = {

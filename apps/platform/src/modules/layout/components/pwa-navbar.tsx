@@ -7,7 +7,7 @@ import { api } from '@/deps/trpc/react';
 import { useViewportSize } from '@/deps/viewport-size';
 import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { cn } from '@/lib/shadcn/utils';
-import { SignIn } from '@/modules/onboarding/components/sign-in';
+import { useOnboarding } from '@/modules/onboarding/context/use-onboarding';
 import { cva } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -75,6 +75,7 @@ export const PWANavbar = () => {
 	const pathname = usePathname();
 
 	const { isSignedIn } = useAuth();
+	const { showSignIn } = useOnboarding();
 
 	const { isDesktop } = useViewportSize();
 	const { isPWA } = useIsPWA();
@@ -119,15 +120,16 @@ export const PWANavbar = () => {
 				href="/notifications"
 			/> */}
 			{!isSignedIn && (
-				<SignIn>
-					<NavButton
-						image={profilePictureUrl ?? null}
-						label="Profile"
-						selected={isSettings}
-						onClick={(e) => e.preventDefault()}
-						href="/settings"
-					/>
-				</SignIn>
+				<NavButton
+					image={profilePictureUrl ?? null}
+					label="Profile"
+					selected={isSettings}
+					onClick={(e) => {
+						e.preventDefault();
+						showSignIn();
+					}}
+					href="/settings"
+				/>
 			)}
 			{isSignedIn && (
 				<NavButton

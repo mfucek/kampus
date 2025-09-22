@@ -5,7 +5,7 @@ import { Button } from '@/lib/shadcn/ui/button';
 import { MAX_CHARACTERS } from '@/modules/composer/constants/composer';
 
 import { useAuth } from '@/deps/better-auth/use-auth';
-import { SignIn } from '@/modules/onboarding/components/sign-in';
+import { useOnboarding } from '@/modules/onboarding/context/use-onboarding';
 import { useComposerBodyContext } from '../contexts/composer-body-provider';
 import { useSubmitPost } from '../hooks/use-submit-post';
 
@@ -14,6 +14,7 @@ export const ComposerFooter = () => {
 	const { characterCount } = useComposerBodyContext();
 
 	const { isSignedIn } = useAuth();
+	const { showSignIn } = useOnboarding();
 
 	const remaining = MAX_CHARACTERS - characterCount;
 
@@ -49,11 +50,14 @@ export const ComposerFooter = () => {
 				</Button>
 			)}
 			{!isSignedIn && (
-				<SignIn>
-					<Button theme="accent" variant="solid" size="sm">
-						Ulogiraj se
-					</Button>
-				</SignIn>
+				<Button
+					theme="accent"
+					variant="solid"
+					size="sm"
+					onClick={() => showSignIn()}
+				>
+					Ulogiraj se
+				</Button>
 			)}
 		</div>
 	);

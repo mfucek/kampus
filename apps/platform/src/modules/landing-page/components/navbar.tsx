@@ -12,7 +12,7 @@ import { isStaging } from '@/lib/environment';
 import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
 import { ThemeToggler } from '@/lib/theme/components/theme-toggler';
-import { SignIn } from '@/modules/onboarding/components/sign-in';
+import { useOnboarding } from '@/modules/onboarding/context/use-onboarding';
 import Image from 'next/image';
 
 export const Navbar = () => {
@@ -72,6 +72,8 @@ export const Navbar = () => {
 	};
 
 	const Actions = () => {
+		const { showSignIn } = useOnboarding();
+
 		if (isSignedIn) {
 			return (
 				<>
@@ -110,16 +112,14 @@ export const Navbar = () => {
 						Registriraj se
 					</Button>
 				</div>
-				<SignIn>
-					<Button
-						// onClick={() => openSignIn({ forceRedirectUrl: pathname })}
-						theme="accent"
-						size="sm"
-						variant="solid"
-					>
-						Ulogiraj se
-					</Button>
-				</SignIn>
+				<Button
+					onClick={() => showSignIn()}
+					theme="accent"
+					size="sm"
+					variant="solid"
+				>
+					Ulogiraj se
+				</Button>
 			</ActionsGroup>
 		);
 	};

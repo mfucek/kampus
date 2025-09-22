@@ -6,7 +6,7 @@
 	--color-section: #ffffff;
 	--color-background: #eeeeee;
 	--color-foreground: #ffffffc0;
-	--color-overlay: #00000040;
+	--color-overlay: #000000cd;
 
 	--color-neutral: #000000;
 	--color-neutral-strong: color-mix(
@@ -122,6 +122,7 @@
 		--color-section: #101213;
 		--color-background: #000000;
 		--color-foreground: #000000c0;
+		--color-overlay: #000000cd;
 
 		--color-neutral: #ffffff;
 		--color-neutral-strong: color-mix(

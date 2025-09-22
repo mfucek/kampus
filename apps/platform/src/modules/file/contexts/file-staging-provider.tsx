@@ -1,7 +1,6 @@
 'use client';
 
 import { Dialog } from '@/lib/shadcn/ui/dialog';
-import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { FileDetailsDialogContent } from '@/modules/file/components/file-details-dialog';
 import { type DocumentFileType } from '@prisma/client';
 import {
@@ -13,6 +12,7 @@ import {
 	useContext,
 	useState
 } from 'react';
+import { toast } from 'sonner';
 import { fileToPostFile } from '../../composer/utils/file-to-postfile';
 
 export type DocumentOptions = {
@@ -68,8 +68,6 @@ export const useFileStagingContext = () => {
 export const FileStagingProvider: FC<{
 	children: ReactNode;
 }> = ({ children }) => {
-	const { toast } = useToast();
-
 	const [files, setFiles] = useState<StagedFile[]>(defaultData.files);
 	const [fileDetailsDialogOpen, setFileDetailsDialogOpen] = useState(false);
 	const [fileDetailsIndex, setFileDetailsIndex] = useState<number | null>(
@@ -90,10 +88,8 @@ export const FileStagingProvider: FC<{
 			}
 		} catch (error) {
 			console.error('Error adding file:', error);
-			toast({
-				title: 'Nedopušteni tip datoteke',
-				description: 'Dopušteni tipovi datoteka su: png, jpeg, pdf, zip',
-				variant: 'danger'
+			toast.error('Nedopušteni tip datoteke', {
+				description: 'Dopušteni tipovi datoteka su: png, jpeg, pdf, zip'
 			});
 		}
 	};
@@ -115,10 +111,8 @@ export const FileStagingProvider: FC<{
 				return sanitizedFile;
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			} catch (error) {
-				toast({
-					title: 'Nedopušteni tip datoteke',
-					description: 'Dopušteni tipovi datoteka su: png, jpeg, pdf, zip',
-					variant: 'danger'
+				toast.error('Nedopušteni tip datoteke', {
+					description: 'Dopušteni tipovi datoteka su: png, jpeg, pdf, zip'
 				});
 				return null;
 			}

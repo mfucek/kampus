@@ -1,11 +1,11 @@
 'use client';
 
 import { api } from '@/deps/trpc/react';
-import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { type JSONContent } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { toast } from 'sonner';
 import {
 	type StagedFile,
 	useFileStagingContext
@@ -17,7 +17,6 @@ export const useSubmitPost = () => {
 	const { body, setBody } = useComposerBodyContext();
 	const { files, setFiles } = useFileStagingContext();
 	const { topicId, replyToId, setLocked } = useComposerController();
-	const { toast } = useToast();
 	const router = useRouter();
 	const utils = api.useUtils();
 
@@ -83,10 +82,8 @@ export const useSubmitPost = () => {
 				});
 			} catch (error) {
 				console.error(error);
-				toast({
-					title: 'Greška pri uploadanju datoteka',
-					description: 'Molimo pokušajte ponovo',
-					variant: 'danger'
+				toast.error('Greška pri uploadanju datoteka', {
+					description: 'Molimo pokušajte ponovo'
 				});
 				setIsSubmitting(false);
 				setLocked(false);

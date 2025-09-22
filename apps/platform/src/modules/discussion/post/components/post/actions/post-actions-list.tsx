@@ -4,7 +4,7 @@ import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { toast } from '@/lib/shadcn/ui/use-toast';
+import { toast } from 'sonner';
 import { type PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
 
 export const PostActionsList: FC<{ post: PostListByTopicIdItem }> = ({
@@ -20,15 +20,13 @@ export const PostActionsList: FC<{ post: PostListByTopicIdItem }> = ({
 		// navigator.clipboard.writeText(window.location.href);
 		if (navigator.canShare()) {
 			await navigator.share({
-				title: 'Share this post',
+				title: 'Podijeli ovu objavu',
 				url: sharedUrl
 			});
 		} else {
 			await navigator.clipboard.writeText(sharedUrl);
-			toast({
-				title: 'Copied to clipboard',
-				description: 'You can now paste the link anywhere you want',
-				variant: 'success'
+			toast.success('Link kopiran', {
+				description: 'Možeš sada kopirati link gdje god želiš!'
 			});
 		}
 	};
@@ -51,7 +49,7 @@ export const PostActionsList: FC<{ post: PostListByTopicIdItem }> = ({
 				disabled
 			>
 				<Icon icon="edit" />
-				Edit
+				Uredi
 			</Button>
 
 			<Button
@@ -62,7 +60,7 @@ export const PostActionsList: FC<{ post: PostListByTopicIdItem }> = ({
 				onClick={handleShare}
 			>
 				<Icon icon="share" />
-				Share
+				Podijeli
 			</Button>
 
 			{isUserAuthor && (
@@ -74,7 +72,7 @@ export const PostActionsList: FC<{ post: PostListByTopicIdItem }> = ({
 					onClick={handleDeletePost}
 				>
 					<Icon icon="delete" />
-					Delete
+					Obriši
 				</Button>
 			)}
 		</>

@@ -15,7 +15,6 @@ import { feedbackFormURL } from '@/modules/feedback/constants';
 import { SignIn } from '@/modules/onboarding/components/sign-in';
 import { Icon } from '../../../global/components/icon';
 import { ActionsGroup } from '../../../global/molecules/navbar/actions-group';
-import { Breadcrumbs } from '../../../global/molecules/navbar/breadcrumbs';
 import { Divider } from '../../../global/molecules/navbar/divider';
 import { useLayout } from '../contexts/use-layout';
 
@@ -101,7 +100,7 @@ export const Navbar = () => {
 					iconOnly
 					onClick={() => setShowBookmarks((prev) => !prev)}
 				>
-					<Icon icon="book-open" />
+					<Icon icon="bookmark" />
 				</Button>
 				<Link href="/" className="flex flex-row">
 					{isStaging && (
@@ -123,9 +122,6 @@ export const Navbar = () => {
 						<span className="caption text-neutral">BETA</span>
 					</div>
 				</Link>
-				<div className="hidden md:block">
-					<Breadcrumbs />
-				</div>
 			</div>
 			<div className="flex flex-row gap-4 items-center">
 				<Actions />

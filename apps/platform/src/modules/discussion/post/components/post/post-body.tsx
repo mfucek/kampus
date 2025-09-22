@@ -22,7 +22,7 @@ export const PostBody: FC<{
 	});
 	if (!editor) return null;
 
-	return <EditorContent editor={editor} />;
+	return <EditorContent editor={editor} className="text-neutral" />;
 };
 
 export const PostBodySkeleton = () => {

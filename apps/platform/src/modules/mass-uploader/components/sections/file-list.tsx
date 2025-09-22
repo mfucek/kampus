@@ -28,7 +28,7 @@ import {
 	useFileStagingContext
 } from '@/modules/file/contexts/file-staging-provider';
 import { UploadArea } from '@/modules/file/hooks/use-upload-area';
-import { usePostId } from '@/modules/layout/components/post-id-provider';
+import { useLayout } from '@/modules/layout/contexts/use-layout';
 
 const FileRow = (file: StagedFile, index: number) => {
 	const { updateFile, openFileDetailsDialog } = useFileStagingContext();
@@ -154,7 +154,7 @@ const FileActions = (file: StagedFile, index: number) => {
 	const { removeFile, openFileDetailsDialog } = useFileStagingContext();
 	const { topicId } = useComposerController();
 
-	const { setPostId } = usePostId();
+	const { setPostId } = useLayout();
 
 	const { data: duplicatesData } =
 		api.topic.subject.hasDocumentOfKindProcedure.useQuery(

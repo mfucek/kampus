@@ -7,7 +7,13 @@ import { PublicProfileSection } from '@/modules/user/components/sections/public-
 export const SettingsProfilePage = () => {
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
-			<PageHeader title="Public Profile" />
+			<PageHeader
+				title="Public Profile"
+				breadcrumbs={[
+					{ title: 'Settings', link: '/settings' },
+					{ title: 'Public Profile', link: '/settings/profile' }
+				]}
+			/>
 
 			<PublicProfileSection />
 

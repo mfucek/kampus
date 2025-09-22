@@ -22,7 +22,14 @@ export const GeneralTopicLayout: FC<LayoutProps & PropsWithChildren> = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-6 md:pt-10 pb-20">
-			<PageHeader title={generalTopic.topic.name} tags={['Generalni topic']} />
+			<PageHeader
+				title={generalTopic.topic.name}
+				tags={['Generalni topic']}
+				breadcrumbs={[
+					{ title: 'General', link: '/explore' },
+					{ title: generalTopic.topic.name, link: `/${generalTopicSlug}` }
+				]}
+			/>
 
 			{children}
 		</Container>

@@ -30,7 +30,20 @@ export const SubjectLayout = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
-			<PageHeader title={subject.topic.name} tags={['Predmet']} />
+			<PageHeader
+				title={subject.topic.name}
+				tags={['Predmet']}
+				breadcrumbs={[
+					{
+						title: subject.college.topic.name,
+						link: `/${collegeSlug}`
+					},
+					{
+						title: subject.topic.name,
+						link: `/${collegeSlug}/subject/${subjectSlug}`
+					}
+				]}
+			/>
 
 			<ContentPadding size="lg">
 				<Suspense fallback={<Spinner />}>

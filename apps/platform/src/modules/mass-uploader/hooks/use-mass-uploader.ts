@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { useToast } from '@/lib/shadcn/ui/use-toast';
 import { useComposerBodyContext } from '@/modules/composer/contexts/composer-body-provider';
 import { useComposerController } from '@/modules/composer/contexts/composer-controller-provider';
 import { useSubmitPost } from '@/modules/composer/hooks/use-submit-post';
@@ -11,6 +10,7 @@ import {
 	type StagedFile,
 	useFileStagingContext
 } from '@/modules/file/contexts/file-staging-provider';
+import { toast } from 'sonner';
 import { composerSectionDefaultBody } from '../components/sections/composer-section';
 
 export const useMassUploader = () => {
@@ -19,8 +19,6 @@ export const useMassUploader = () => {
 	const { handleSubmit } = useSubmitPost();
 
 	const { body: bodyFromContext } = useComposerBodyContext();
-
-	const { toast } = useToast();
 
 	const [uploadingInProgress, setUploadingInProgress] = useState(false);
 	const startUploading = () => {
@@ -37,17 +35,13 @@ export const useMassUploader = () => {
 	useEffect(() => {
 		const uploadFiles = async () => {
 			if (!topicId) {
-				toast({
-					title: 'Nije odabran predmet',
-					variant: 'danger'
-				});
+				toast.error('Nije odabran predmet');
 				stopUploading();
 				return;
 			}
 
 			if (files.length === 0) {
-				toast({
-					title: 'Nema datoteka za upload',
+				toast.error('Nema datoteka za upload', {
 					description: 'Dodaj barem jednu datoteku.'
 				});
 				stopUploading();
@@ -65,28 +59,23 @@ export const useMassUploader = () => {
 			});
 
 			if (!parentPost) {
-				toast({
-					title: 'Dogodila se greška',
-					description: 'Greška pri kreaciji parent posta',
-					variant: 'danger'
+				toast.error('Dogodila se greška', {
+					description: 'Greška pri kreaciji parent posta'
 				});
 				return;
 			}
 
 			for (const file of [...files]) {
 				if (isCancelledRef.current || !uploadingInProgress) {
-					toast({
-						title: 'Upload prekinut',
-						variant: 'default'
+					toast.error('Upload prekinut', {
+						description: 'Upload prekinut'
 					});
 					break;
 				}
 
 				if (file.documentOptions?.types.length === 0) {
-					toast({
-						title: 'Odaberi barem jednu kategoriju.',
-						description: file.name,
-						variant: 'danger'
+					toast.error('Odaberi barem jednu kategoriju.', {
+						description: file.name
 					});
 					break;
 				}
@@ -94,10 +83,8 @@ export const useMassUploader = () => {
 				try {
 					await publishFile(file, parentPost.id);
 				} catch (e: unknown) {
-					toast({
-						title: `Greška pri uploadanju datoteke: ${file.name}`,
-						description: (e as Error).message,
-						variant: 'danger'
+					toast.error(`Greška pri uploadanju datoteke: ${file.name}`, {
+						description: (e as Error).message
 					});
 					break;
 				}
@@ -115,10 +102,8 @@ export const useMassUploader = () => {
 		if (uploadingInProgress && !uploadInProgressRef.current) {
 			isCancelledRef.current = false; // Reset cancellation state
 			uploadFiles().catch((e: Error) =>
-				toast({
-					title: 'Greška pri uploadanju datoteka',
-					description: e.message,
-					variant: 'danger'
+				toast.error('Greška pri uploadanju datoteka', {
+					description: e.message
 				})
 			);
 		}
@@ -179,10 +164,8 @@ export const useMassUploader = () => {
 			replyToIdOverride: parentPostId
 		});
 
-		toast({
-			title: 'Materijal objavljen',
-			description: file.name,
-			variant: 'success'
+		toast.success('Materijal objavljen', {
+			description: file.name
 		});
 	};
 

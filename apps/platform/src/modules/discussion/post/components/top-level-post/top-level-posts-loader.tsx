@@ -19,15 +19,30 @@ const TopLevelPostsPage: FC<{
 	);
 };
 
+export const EndOfPosts = () => {
+	return (
+		<p className="text-center body-2 text-neutral-medium py-6">
+			Kraj rasprave.
+		</p>
+	);
+};
+
 export const TopLevelPostsLoader: FC<{ topicId: string }> = ({ topicId }) => {
 	const POST_COUNT = 2;
 
 	const query = api.post.listByTopicId.useInfiniteQuery(
 		{ topicId, limit: POST_COUNT },
 		{
-			getNextPageParam: (lastPage) => lastPage.nextCursor
+			getNextPageParam: (lastPage) => lastPage.nextCursor,
+			refetchOnWindowFocus: false,
+			refetchIntervalInBackground: false,
+			refetchOnReconnect: false,
+			refetchInterval: false
 		}
 	);
+
+	const hasPosts = query.data?.pages?.[0]?.posts.length !== 0;
+	const hasNextPage = query.hasNextPage;
 
 	const LoadTrigger = () => {
 		const { ref, inView } = useInView({});
@@ -37,11 +52,6 @@ export const TopLevelPostsLoader: FC<{ topicId: string }> = ({ topicId }) => {
 				query.fetchNextPage().catch(console.error);
 			}
 		}, [inView]);
-
-		if (!query.hasNextPage)
-			return (
-				<p className="text-center body-2 text-neutral-strong">Kraj rasprave.</p>
-			);
 
 		return (
 			<div className="flex flex-col gap-2" ref={ref}>
@@ -58,8 +68,9 @@ export const TopLevelPostsLoader: FC<{ topicId: string }> = ({ topicId }) => {
 				<TopLevelPostsPage key={index} page={page.posts} />
 			))}
 
-			{query.data?.pages?.[0]?.posts.length === 0 && <NoPostsCard />}
-			{query.data?.pages?.[0]?.posts.length !== 0 && <LoadTrigger />}
+			{!hasPosts && <NoPostsCard />}
+			{hasPosts && hasNextPage && <LoadTrigger />}
+			{hasPosts && !hasNextPage && <EndOfPosts />}
 		</div>
 	);
 };

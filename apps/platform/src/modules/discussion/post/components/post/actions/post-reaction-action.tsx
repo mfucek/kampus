@@ -11,7 +11,7 @@ import {
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
 import { VoteType } from '@prisma/client';
-import { FC, useState } from 'react';
+import { FC, MouseEventHandler, useState } from 'react';
 import { PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
 
 const reactionToTheme = (reaction: VoteType | null) => {
@@ -31,24 +31,13 @@ export const PostReactionAction: FC<{
 }> = ({ reactions, postId }) => {
 	const { isSignedIn } = useAuth();
 
-	// const userVoteAfterCheck = api.vote.getVotesByPostIdWithUser.useMutation();
 	const [optimisticVote, setOptimisticVote] = useState<
 		VoteType | null | undefined
 	>(undefined);
 
-	const createVote = api.vote.createVote.useMutation({
-		onMutate: ({ type }) => {
-			// optimistic updating
-			setOptimisticVote(type);
-		},
-		onSuccess: () => {
-			// userVoteAfterCheck.mutateAsync({ postId });
-			// setOptimisticVote(undefined);
-		}
-	});
+	const createVote = api.vote.createVote.useMutation();
 
 	const likes = reactions.up;
-
 	const dislikes = reactions.down;
 
 	let reaction: VoteType | null = null;
@@ -77,7 +66,9 @@ export const PostReactionAction: FC<{
 		count -= 1;
 	}
 
-	const handleUpvote = async () => {
+	const handleUpvote: MouseEventHandler<HTMLButtonElement> = async (e) => {
+		e.stopPropagation();
+
 		if (!isSignedIn) {
 			// openSignIn();
 			return;
@@ -86,9 +77,13 @@ export const PostReactionAction: FC<{
 			postId,
 			type: reaction === VoteType.UP ? null : VoteType.UP
 		});
+
+		setOptimisticVote(VoteType.UP);
 	};
 
-	const handleDownvote = async () => {
+	const handleDownvote: MouseEventHandler<HTMLButtonElement> = async (e) => {
+		e.stopPropagation();
+
 		if (!isSignedIn) {
 			// openSignIn();
 			return;
@@ -97,6 +92,8 @@ export const PostReactionAction: FC<{
 			postId,
 			type: reaction === VoteType.DOWN ? null : VoteType.DOWN
 		});
+
+		setOptimisticVote(VoteType.DOWN);
 	};
 
 	return (

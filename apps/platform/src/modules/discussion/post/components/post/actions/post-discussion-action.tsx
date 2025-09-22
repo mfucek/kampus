@@ -1,15 +1,16 @@
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { usePostId } from '@/modules/layout/components/post-id-provider';
-import { FC } from 'react';
+import { useLayout } from '@/modules/layout/contexts/use-layout';
+import { FC, MouseEventHandler } from 'react';
 import { PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
 
 export const PostDiscussionAction: FC<{ post: PostListByTopicIdItem }> = ({
 	post
 }) => {
-	const { setPostId } = usePostId();
+	const { setPostId } = useLayout();
 
-	const handleReply = () => {
+	const handleReply: MouseEventHandler<HTMLButtonElement> = (e) => {
+		e.stopPropagation();
 		setPostId(post.post.id);
 	};
 

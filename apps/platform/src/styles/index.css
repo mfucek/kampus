@@ -76,7 +76,7 @@
 }
 
 /* Clickable elements */
-.clickable {
+@utility clickable {
 	@apply cursor-pointer transition-transform duration-300 hover:duration-200 sm:hover:translate-y-[-2px] sm:active:translate-y-[1px];
 }
 

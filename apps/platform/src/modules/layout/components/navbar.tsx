@@ -17,6 +17,7 @@ import { Icon } from '../../../global/components/icon';
 import { ActionsGroup } from '../../../global/molecules/navbar/actions-group';
 import { Breadcrumbs } from '../../../global/molecules/navbar/breadcrumbs';
 import { Divider } from '../../../global/molecules/navbar/divider';
+import { useLayout } from '../contexts/use-layout';
 
 const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
@@ -25,6 +26,7 @@ export const Navbar = () => {
 
 	const { isMobile } = useViewportSize();
 	const { isPWA } = useIsPWA();
+	const { showBookmarks, setShowBookmarks } = useLayout();
 
 	const { data: profilePictureUrl } =
 		api.user.profilePicture.sessionUser.getUrl.useQuery(void {}, {
@@ -92,6 +94,15 @@ export const Navbar = () => {
 	return (
 		<div className="bg-section md:border-b md:border-b-neutral-weak h-14 flex flex-row justify-between items-center px-2 shrink-0">
 			<div className="flex flex-row gap-3 items-center">
+				<Button
+					variant={showBookmarks ? 'solid-weak' : 'outline'}
+					theme={showBookmarks ? 'accent' : 'neutral'}
+					size="sm"
+					iconOnly
+					onClick={() => setShowBookmarks((prev) => !prev)}
+				>
+					<Icon icon="book-open" />
+				</Button>
 				<Link href="/" className="flex flex-row">
 					{isStaging && (
 						<div className="ml-1 px-2 flex items-center gap-2 bg-danger caption rounded-md">

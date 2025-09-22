@@ -3,6 +3,7 @@ import { publicProcedure } from '@/deps/trpc/trpc';
 import { Prisma, VoteType } from '@prisma/client';
 import { JSONContent } from '@tiptap/react';
 import z from 'zod';
+import { GetPostByIdItem } from './get-by-id';
 
 export const listByTopicIdProcedure = publicProcedure
 	.input(
@@ -98,6 +99,8 @@ export const listByTopicIdProcedure = publicProcedure
 					? await getFileDownloadUrl(profilePictureKey)
 					: null;
 
+				const link = `/post/${postRaw.id}`;
+
 				return {
 					post: {
 						id: postRaw.id,
@@ -106,28 +109,30 @@ export const listByTopicIdProcedure = publicProcedure
 						updatedAt: postRaw.updatedAt,
 						replyToId: postRaw.replyToId,
 						topicId: postRaw.topicId
-					},
+					} satisfies GetPostByIdItem['post'],
 					reactions: {
 						up: upVotes,
 						down: downVotes,
 						sessionUserVote
-					},
-					documents: await Promise.all(
+					} satisfies GetPostByIdItem['reactions'],
+					documents: (await Promise.all(
 						postRaw.DocumentFiles.map(async (documentRaw) => ({
 							title: documentRaw.title,
 							id: documentRaw.File.id,
 							contentType: documentRaw.File.contentType,
+							size: documentRaw.File.size,
 							downloadUrl: await getFileDownloadUrl(documentRaw.File.key)
 						}))
-					),
+					)) satisfies GetPostByIdItem['documents'],
 					author: {
 						id: postRaw.authorId,
 						name: postRaw.Author.name,
 						imageUrl: profilePictureUrl,
 						badge: postRaw.Author.badge
-					},
-					repliesCount: postRaw._count.Replies
-				};
+					} satisfies GetPostByIdItem['author'],
+					repliesCount: postRaw._count.Replies,
+					link
+				} satisfies GetPostByIdItem;
 			})
 		);
 

@@ -59,7 +59,22 @@ export const deletePostProcedure = protectedProcedure
 				}
 			});
 
+			await tx.vote.deleteMany({
+				where: {
+					postId: input.postId
+				}
+			});
+
+			// if post is a reply, delete any notifications it created
+			await tx.notification.deleteMany({
+				where: {
+					postId: input.postId
+				}
+			});
+
 			if (replyCount > 0) {
+				// if post has replies, remove body
+
 				await tx.post.update({
 					where: {
 						id: input.postId
@@ -70,21 +85,17 @@ export const deletePostProcedure = protectedProcedure
 				});
 
 				return { deletedFiles: fileIds };
+			} else {
+				// if post has no replies, delete post
+
+				await tx.post.delete({
+					where: {
+						id: input.postId
+					}
+				});
+
+				return { deletedFiles: fileIds };
 			}
-
-			await tx.vote.deleteMany({
-				where: {
-					postId: input.postId
-				}
-			});
-
-			await tx.post.delete({
-				where: {
-					id: input.postId
-				}
-			});
-
-			return { deletedFiles: fileIds };
 		});
 
 		// remove files from aws

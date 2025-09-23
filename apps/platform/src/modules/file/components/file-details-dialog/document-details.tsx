@@ -25,7 +25,7 @@ const Section: FC<
 	return (
 		<div className="flex flex-col md:flex-row gap-4 md:gap-2">
 			<div className="w-[200px] flex flex-col gap-1">
-				<p className="caption">{title}</p>
+				<p className="caption text-neutral">{title}</p>
 				<p className="body-3 text-neutral-strong">{description}</p>
 			</div>
 			{children}
@@ -87,10 +87,10 @@ export const DocumentDetails = () => {
 	return (
 		<form className="flex flex-col md:gap-0 gap-10 w-full h-full">
 			<div className="px-3 md:p-6 flex flex-col gap-3 md:border-b border-b-neutral-weak">
-				<p className="title-3">Detalji</p>
+				<p className="title-3 text-neutral">Detalji</p>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full">
 					<div className="flex flex-col gap-2">
-						<p className="caption">Naziv dokumenta</p>
+						<p className="caption text-neutral">Naziv dokumenta</p>
 						<Input
 							placeholder="Naziv dokumenta"
 							value={name ?? ''}
@@ -98,7 +98,7 @@ export const DocumentDetails = () => {
 						/>
 					</div>
 					<div className="flex flex-col gap-2">
-						<p className="caption">Akademska godina</p>
+						<p className="caption text-neutral">Akademska godina</p>
 						<Select
 							defaultValue={academicYear ?? undefined}
 							onValueChange={(value) => setAcademicYear(value)}

@@ -1,3 +1,3 @@
-import { PanelsLayout } from '@/modules/layout/layouts/panels-layout';
+import { PanelsLayout } from '@/modules/layout/panels/panels-layout';
 
 export default PanelsLayout;

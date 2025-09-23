@@ -1,4 +1,4 @@
-import { db } from '@/lib/db';
+import { db } from '@/deps/prisma';
 import { SubjectStaffPage } from '@/modules/topic/subject/pages/subject-staff-page';
 
 export default SubjectStaffPage;
@@ -6,26 +6,20 @@ export default SubjectStaffPage;
 export const dynamic = 'force-static';
 
 export const generateStaticParams = async () => {
-	const subjects = await db.topic.findMany({
-		where: {
-			type: 'SUBJECT',
-			Subject: {
-				isNot: null
-			}
-		},
-		select: {
+	const subjects = await db.subject.findMany({
+		include: {
+			Topic: true,
 			College: {
-				select: {
-					slug: true
+				include: {
+					Topic: true
 				}
-			},
-			slug: true
+			}
 		}
 	});
 
 	const slugs = subjects.map((subject) => ({
-		collegeSlug: subject.College.slug,
-		subjectSlug: subject.slug
+		collegeSlug: subject.College.Topic.slug,
+		subjectSlug: subject.Topic.slug
 	}));
 
 	return slugs;

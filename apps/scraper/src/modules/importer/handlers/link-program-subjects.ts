@@ -1,7 +1,7 @@
 import * as p from '@clack/prompts';
 
-import { Spinner } from '@/lib/clack/spinner';
-import { db } from '@/lib/prisma/db';
+import { Spinner } from '@/deps/clack/spinner';
+import { db } from '@/deps/prisma/db';
 import { type Program } from '@/types';
 
 interface LinkProgramSubjectsOptions {

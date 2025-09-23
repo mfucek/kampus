@@ -14,7 +14,7 @@ import {
 } from './button';
 
 const selectTriggerVariants = cva(
-	'flex items-center justify-between rounded-full border border-theme-medium ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 [&>span]:text-left [&>span>span]:break-all',
+	'flex items-center justify-between rounded-full border border-theme-medium ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 [&>span]:text-left [&>span>span]:break-all text-neutral',
 	{
 		variants: {
 			theme: {

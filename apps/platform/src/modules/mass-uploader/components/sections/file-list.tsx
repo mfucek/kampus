@@ -3,6 +3,7 @@
 import { type DocumentFileType } from '@prisma/client';
 import { formatDistance } from 'date-fns';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -18,9 +19,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
-import { api } from '@/lib/trpc/react';
 import { useComposerController } from '@/modules/composer/contexts/composer-controller-provider';
-import { usePostId } from '@/modules/discussion-panel/components/post-id-provider';
 import { categoryLabels } from '@/modules/file/components/file-details-dialog/constants/category-labels';
 import { removeCategoryFromSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/removeCategoryFromSelectedCategories';
 import { shownCategoriesBasedOnSelectedCategories } from '@/modules/file/components/file-details-dialog/constants/shownCategoriesBasedOnSelectedCategories';
@@ -29,6 +28,7 @@ import {
 	useFileStagingContext
 } from '@/modules/file/contexts/file-staging-provider';
 import { UploadArea } from '@/modules/file/hooks/use-upload-area';
+import { useLayout } from '@/modules/layout/contexts/use-layout';
 
 const FileRow = (file: StagedFile, index: number) => {
 	const { updateFile, openFileDetailsDialog } = useFileStagingContext();
@@ -154,14 +154,14 @@ const FileActions = (file: StagedFile, index: number) => {
 	const { removeFile, openFileDetailsDialog } = useFileStagingContext();
 	const { topicId } = useComposerController();
 
-	const { setPostId } = usePostId();
+	const { setPostId } = useLayout();
 
 	const { data: duplicatesData } =
-		api.subject.hasDocumentOfKindProcedure.useQuery(
+		api.topic.subject.hasDocumentOfKindProcedure.useQuery(
 			{
 				types: file.documentOptions.types,
 				year: file.documentOptions.academicYear!,
-				subjectId: topicId!
+				subjectId: topicId
 			},
 			{
 				enabled:

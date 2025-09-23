@@ -2,10 +2,9 @@ import { z } from 'zod';
 
 import { type Prisma } from '@prisma/client';
 
-import { getFileUrl } from '@/lib/s3';
-import { publicProcedure } from '@/server/api/trpc';
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
+import { publicProcedure } from '@/deps/trpc/trpc';
 import { fileFiltersSchema } from '../../schemas/file-filters';
-import { fileScopeSchema } from '../../schemas/file-scope';
 
 const paginationSchema = z.object({
 	limit: z.number().min(1).max(100).nullish(),
@@ -16,55 +15,20 @@ export const listDocumentsProcedure = publicProcedure
 	.input(
 		z
 			.object({
-				scope: fileScopeSchema,
+				topicId: z.string(),
 				filters: fileFiltersSchema.nullish()
 			})
 			.merge(paginationSchema)
 	)
 	.query(async ({ input, ctx }) => {
 		const { db } = ctx;
-		const { scope, filters, cursor } = input;
+		const { topicId, filters, cursor } = input;
 		const limit = input.limit ?? 10;
 
-		const collegeId = scope.collegeId;
-		const topicId = scope.topicId;
-		const authorId = scope.authorId;
-		const postId = scope.postId;
-
 		const where = {
-			// college scope
-			...(collegeId
-				? {
-						Post: {
-							collegeId
-						}
-					}
-				: {}),
-
-			// topic scope
-			...(topicId
-				? {
-						Post: {
-							topicId: topicId
-						}
-					}
-				: {}),
-
-			// author scope
-			...(authorId
-				? {
-						File: {
-							authorId
-						}
-					}
-				: {}),
-
-			// post scope
-			...(postId
-				? {
-						postId
-					}
-				: {}),
+			Post: {
+				topicId
+			},
 
 			// name filter
 			...(filters?.name
@@ -111,9 +75,11 @@ export const listDocumentsProcedure = publicProcedure
 			cursor: cursor ? { fileId: cursor } : undefined
 		});
 
+		// DTOs
+
 		const files = await Promise.all(
 			documentFilesRaw.map(async (documentFile) => {
-				const downloadUrl = await getFileUrl(documentFile.File.key);
+				const downloadUrl = await getFileDownloadUrl(documentFile.File.key);
 
 				const documentData = {
 					title: documentFile.title,

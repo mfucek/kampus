@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { type FC } from 'react';
 
 import {
@@ -12,21 +13,20 @@ import { Icon } from '@/global/components/icon';
 import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
 import { groupByKey } from '@/utils/group-by-key';
-import Link from 'next/link';
-import { type ListSubjectsOutput } from '../api/procedures/list-subjects';
+import { type ListSubjectsByProgramIdItem } from '../../api/procedures/subject/list-by-program-id';
 
 export const ProgramSubjectsList: FC<{
-	subjects: ListSubjectsOutput[];
+	subjects: ListSubjectsByProgramIdItem[];
 }> = ({ subjects }) => {
 	const uniqueSemesters = [
-		...new Set(subjects.map((subject) => subject.semester))
+		...new Set(subjects.map((subject) => subject.programSubject.semester))
 	]
 		.filter((semester) => semester !== null)
 		.sort();
 
 	const subjectsBySemester = groupByKey(
 		subjects,
-		'semester',
+		'programSubject.semester',
 		'Ostali predmeti'
 	);
 
@@ -49,7 +49,11 @@ export const ProgramSubjectsList: FC<{
 					<TabsContent key={semester} value={`${semester}`}>
 						<div className="flex flex-col gap-6 md:gap-10">
 							{Object.entries(
-								groupByKey(subjects, 'groupName', 'Ostali predmeti')
+								groupByKey(
+									subjects,
+									'programSubject.groupName',
+									'Ostali predmeti'
+								)
 							).map(([group, subjects], index) => (
 								<SectionList
 									key={index}
@@ -59,18 +63,18 @@ export const ProgramSubjectsList: FC<{
 									rows={(subject) => (
 										<>
 											<div className="flex flex-col gap-1">
-												<div>{subject.name}</div>
+												<div>{subject.topic.name}</div>
 												<p className="text-neutral-strong caption">
-													{subject.ects} ECTS
+													{subject.subject.ects} ECTS
 													<span className="text-neutral-medium caption px-2">
 														{'·'}
 													</span>
-													{subject.staffs
+													{/* {subject.staffs
 														.map((s) => {
 															const words = s.split(' ');
 															return `${words[0]![0]}. ${words.slice(1).join(' ')}`;
 														})
-														.join(', ')}
+														.join(', ')} */}
 												</p>
 											</div>
 										</>
@@ -79,13 +83,13 @@ export const ProgramSubjectsList: FC<{
 										<>
 											<Link href={`${subject.link}/staff`}>
 												<Button variant="outline" size="sm">
-													{subject.staffCount}
+													{subject.staffsCount}
 													<Icon icon="users" />
 												</Button>
 											</Link>
 											<Link href={`${subject.link}/`}>
 												<Button variant="outline" size="sm">
-													{subject.topLevelPosts}
+													{subject.postsCount}
 													<Icon icon="chat-single" />
 												</Button>
 											</Link>

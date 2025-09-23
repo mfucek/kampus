@@ -1,17 +1,15 @@
-import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { api } from '@/lib/trpc/react';
+import { api } from '@/deps/trpc/react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export const useProfileImageUpload = () => {
 	const maxSize = 5 * 1024 ** 2;
 
 	const { mutateAsync: getPresignedUrl } =
-		api.account.getUploadUrl.useMutation();
+		api.user.profilePicture.getUploadUrl.useMutation();
 
 	const { mutateAsync: uploadProfilePicture } =
-		api.account.uploadProfilePicture.useMutation();
-
-	const { toast } = useToast();
+		api.user.profilePicture.uploadProfilePicture.useMutation();
 
 	const [uploading, setUploading] = useState(false);
 
@@ -36,11 +34,8 @@ export const useProfileImageUpload = () => {
 
 			await onSuccess(key);
 		} catch (error) {
-			console.error('Error uploading profile picture:', error);
-			toast({
-				title: 'Error uploading profile picture',
-				description: 'Please try again later',
-				variant: 'danger'
+			toast.error('Error uploading profile picture', {
+				description: JSON.stringify(error)
 			});
 		}
 	};
@@ -64,18 +59,14 @@ export const useProfileImageUpload = () => {
 	const onSuccess = async (key: string) => {
 		try {
 			await uploadProfilePicture({ key });
-			await utils.account.getCurrentUserProfilePictureUrl.invalidate();
-			toast({
-				title: 'Success',
-				description: 'Your profile picture has been updated successfully',
-				variant: 'success'
+			await utils.user.profilePicture.sessionUser.getUrl.invalidate();
+			toast.success('Profilna slika ažurirana', {
+				description: 'Tvoja profilna slika je uspješno ažurirana!'
 			});
 		} catch (error) {
 			console.error('Error uploading profile picture:', error);
-			toast({
-				title: 'Error',
-				description: 'An error occurred while updating your profile picture',
-				variant: 'danger'
+			toast.error('Pogreška', {
+				description: 'Pogreška pri ažuriranju profilne slike'
 			});
 		}
 	};

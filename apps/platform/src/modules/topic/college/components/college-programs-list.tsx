@@ -11,16 +11,16 @@ import { SectionList } from '@/global/components/section-list';
 import { Button } from '@/lib/shadcn/ui/button';
 import { groupByKey } from '@/utils/group-by-key';
 import Link from 'next/link';
-import { type ListProgramsItem } from '../api/procedures/list-programs';
+import { type ListProgramsByCollegeIdItem } from '../../api/procedures/program/list-by-college-id';
 
 export const CollegeProgramsList = ({
 	programs
 }: {
-	programs: ListProgramsItem[];
+	programs: ListProgramsByCollegeIdItem[];
 }) => {
 	const programsByDepartment = groupByKey(
 		programs,
-		'department',
+		'program.departments',
 		'Ostali smjerovi'
 	);
 
@@ -47,38 +47,38 @@ export const CollegeProgramsList = ({
 					return (
 						<TabsContent key={department} value={department}>
 							<div className="flex flex-col gap-6 md:gap-10">
-								{Object.entries(groupByKey(programs, 'type', 'Ostalo')).map(
-									([type, programs]) => (
-										<SectionList
-											key={department + type}
-											data={programs}
-											rows={(program) => (
-												<>
-													<div className="text-neutral">{program.name}</div>
-												</>
-											)}
-											actions={(program) => (
-												<>
-													<Link href={`${program.link}/subjects`}>
-														<Button variant="outline" size="sm">
-															{program.subjectsCount}
-															<Icon icon="book-open" />
-														</Button>
-													</Link>
-													<Link href={`${program.link}`}>
-														<Button variant="outline" size="sm">
-															{program.topLevelPosts}
-															<Icon icon="chat-single" />
-														</Button>
-													</Link>
-												</>
-											)}
-											title={type}
-											info={`${programs.length} smjerova`}
-											showAll={true}
-										/>
-									)
-								)}
+								{Object.entries(
+									groupByKey(programs, 'program.type', 'Ostalo')
+								).map(([type, programs]) => (
+									<SectionList
+										key={department + type}
+										data={programs}
+										rows={(program) => (
+											<>
+												<div className="text-neutral">{program.topic.name}</div>
+											</>
+										)}
+										actions={(program) => (
+											<>
+												<Link href={`${program.link}/subjects`}>
+													<Button variant="outline" size="sm">
+														{program.subjectsCount}
+														<Icon icon="book-open" />
+													</Button>
+												</Link>
+												<Link href={`${program.link}`}>
+													<Button variant="outline" size="sm">
+														{program.postsCount}
+														<Icon icon="chat-single" />
+													</Button>
+												</Link>
+											</>
+										)}
+										title={type}
+										info={`${programs.length} smjerova`}
+										showAll={true}
+									/>
+								))}
 							</div>
 						</TabsContent>
 					);

@@ -3,7 +3,7 @@
 import { useEditor } from '@tiptap/react';
 import { useEffect, useState } from 'react';
 
-import { tiptapExtensions } from '@/lib/tiptap/extensions';
+import { tiptapExtensions } from '@/deps/tiptap/extensions';
 import { useComposerBodyContext } from '../contexts/composer-body-provider';
 import { useComposerController } from '../contexts/composer-controller-provider';
 

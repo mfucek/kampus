@@ -1,4 +1,4 @@
-import { createPrismaClient } from '@/lib/prisma/db';
+import { createPrismaClient } from '@/deps/prisma/db';
 
 import { checkCollege } from './handlers/check-college';
 import { createPrograms } from './handlers/create-programs';

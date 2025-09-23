@@ -1,6 +1,6 @@
 import * as p from '@clack/prompts';
 
-import { db } from '@/lib/prisma/db';
+import { db } from '@/deps/prisma/db';
 
 export const checkCollege = async (collegeSlug: string) => {
 	const college = await db.college.findFirst({ where: { slug: collegeSlug } });

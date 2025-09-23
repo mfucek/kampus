@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-// import { hydrateWindowWithUtilFunctions } from '@/lib/puppeteer/utils/hydrate-window-with-util-functions';
+// import { hydrateWindowWithUtilFunctions } from '@/deps/puppeteer/utils/hydrate-window-with-util-functions';
 import type { Driver } from '@/modules/scraper/drivers/types';
 import { shortenList } from '@/utils/shorten-list';
 import { ScraperResult } from '../../result';

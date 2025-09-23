@@ -1,10 +1,10 @@
 import { type FC, type PropsWithChildren } from 'react';
 
+import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
 import { Tab, Tabs } from '@/global/components/route-tabs';
-import { api } from '@/lib/trpc/server';
-import { RuleProtected } from '@/modules/permissions/components/protected';
+import { RuleProtected } from '@/modules/user/permissions/components/protected';
 import { RuleType } from '@prisma/client';
 
 interface LayoutProps {
@@ -19,7 +19,7 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 }) => {
 	const { collegeSlug } = await params;
 
-	const college = await api.college.getBySlug({
+	const college = await api.topic.college.getBySlug({
 		collegeSlug
 	});
 
@@ -27,14 +27,21 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-6 md:pt-10 pb-20">
-			<PageHeader title={college.name} tags={['Fakultet']} />
+			<PageHeader
+				title={college.topic.name}
+				tags={['Fakultet']}
+				breadcrumbs={[{ title: college.topic.name, link: `/${collegeSlug}` }]}
+			/>
 
 			<Tabs>
 				<Tab route={makeRoute('')}>Opca Rasprava</Tab>
 				<Tab route={makeRoute('/programs')}>Smjerovi</Tab>
 				<Tab route={makeRoute('/all-subjects')}>Svi predmeti</Tab>
 				<Tab route={makeRoute('/all-staff')}>Svi nastavnici</Tab>
-				<RuleProtected rule={RuleType.CAN_MASS_UPLOAD} scopeId={college.id}>
+				<RuleProtected
+					rule={RuleType.CAN_MASS_UPLOAD}
+					scopeId={college.topic.id}
+				>
 					<Tab route={makeRoute('/mass-upload')}>
 						Mass Upload (svi smjerovi)
 					</Tab>

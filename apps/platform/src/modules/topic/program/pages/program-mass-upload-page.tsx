@@ -1,5 +1,5 @@
-import { api } from '@/lib/trpc/server';
-import { MassUploader } from '../../../mass-uploader/components/college-mass-uploader';
+import { api } from '@/deps/trpc/server';
+import { MassUploader } from '../../../mass-uploader/components/mass-uploader';
 
 interface PageProps {
 	params: Promise<{
@@ -11,23 +11,16 @@ interface PageProps {
 export const ProgramMassUploadPage = async ({ params }: PageProps) => {
 	const { collegeSlug, programSlug } = await params;
 
-	const program = await api.program.getBySlug({
+	const program = await api.topic.program.getBySlug({
 		collegeSlug,
 		programSlug
 	});
 
 	if (!program) return null;
 
-	const allSubjects = await api.subject.list({
-		scope: {
-			programId: program.id
-		}
+	const allSubjects = await api.topic.subject.listByProgramId({
+		programId: program.topic.id
 	});
 
-	return (
-		<MassUploader
-			collegeId={program.collegeId}
-			subjects={allSubjects.subjects}
-		/>
-	);
+	return <MassUploader subjects={allSubjects.subjects} />;
 };

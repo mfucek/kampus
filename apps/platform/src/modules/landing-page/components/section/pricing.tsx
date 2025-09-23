@@ -3,38 +3,11 @@
 import { Container } from '@/global/components/container';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { useAuth, useClerk } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
+
 import { Card, CardContent, CardHeader, CardTitle } from '../card';
 import { Scribbles } from '../scribbles';
 
 export const PricingSection = () => {
-	const router = useRouter();
-	const { isSignedIn } = useAuth();
-	const { openSignIn } = useClerk();
-
-	const handleGoToSubscriptionCheckoutSessionCheap = async () => {
-		if (!isSignedIn) {
-			openSignIn();
-			return;
-		}
-
-		router.push('/settings/profile#subscription-plan');
-	};
-
-	const handleGoToSubscriptionCheckoutSessionPro = async () => {
-		if (!isSignedIn) {
-			openSignIn();
-			return;
-		}
-
-		router.push('/settings/profile#subscription-plan');
-	};
-
-	const handleCreateAccount = () => {
-		openSignIn();
-	};
-
 	return (
 		<section
 			id="pricing"
@@ -75,12 +48,7 @@ export const PricingSection = () => {
 								</li>
 							</ul>
 						</CardContent>
-						<Button
-							variant={'outline'}
-							className="w-full"
-							theme="neutral"
-							onClick={handleCreateAccount}
-						>
+						<Button variant={'outline'} className="w-full" theme="neutral">
 							Odaberi
 						</Button>
 					</Card>
@@ -109,11 +77,7 @@ export const PricingSection = () => {
 								</li>
 							</ul>
 						</CardContent>
-						<Button
-							className="w-full"
-							theme="accent"
-							onClick={handleGoToSubscriptionCheckoutSessionCheap}
-						>
+						<Button className="w-full" theme="accent">
 							Odaberi
 						</Button>
 					</Card>
@@ -137,12 +101,7 @@ export const PricingSection = () => {
 								</li>
 							</ul>
 						</CardContent>
-						<Button
-							variant={'outline'}
-							className="w-full"
-							theme="neutral"
-							onClick={handleGoToSubscriptionCheckoutSessionPro}
-						>
+						<Button variant={'outline'} className="w-full" theme="neutral">
 							Odaberi
 						</Button>
 					</Card>

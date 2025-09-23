@@ -1,13 +1,29 @@
-import { isDevOrStg } from '@/lib/environment';
+import { isLocal, isProduction, isStaging } from '@/lib/environment';
 import { type Metadata } from 'next';
+
+let faviconUrl = '/favicon.png';
+
+if (isStaging) {
+	if (isLocal) {
+		faviconUrl = '/favicon-stg-local.png';
+	} else {
+		faviconUrl = '/favicon-stg.png';
+	}
+}
+
+if (isProduction) {
+	if (isLocal) {
+		faviconUrl = '/favicon-prod-local.png';
+	} else {
+		faviconUrl = '/favicon-prod.png';
+	}
+}
 
 export const metadata: Metadata = {
 	title: 'Kampus.hr | Platforma za sve studente',
 	description:
 		'Kampus.hr je mjesto za diskusije, dijeljenje materijala i povezivanje s kolegama.',
-	icons: [
-		{ rel: 'icon', url: isDevOrStg ? '/favicon-dev.png' : '/favicon.png' }
-	],
+	icons: [{ rel: 'icon', url: faviconUrl }],
 	openGraph: {
 		title: 'Kampus.hr | Platforma za sve studente',
 		description:

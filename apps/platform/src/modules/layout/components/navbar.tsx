@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { useViewportSize } from '@/deps/viewport-size';
-import { env } from '@/env';
 import { Logo } from '@/global/components/logo';
+import { isLocal, isProduction, isStaging } from '@/lib/environment';
 import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
 import {
@@ -27,8 +27,6 @@ import { Icon } from '../../../global/components/icon';
 import { ActionsGroup } from '../../../global/molecules/navbar/actions-group';
 import { Divider } from '../../../global/molecules/navbar/divider';
 import { useLayout } from '../contexts/use-layout';
-
-const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
 	const { isSignedIn } = useAuth();
@@ -211,16 +209,24 @@ export const Navbar = () => {
 							<span className="caption text-danger-contrast">STG</span>
 						</div>
 					)}
-					{!isStaging && (
+
+					{isProduction && (
 						<div className="ml-1 px-2 flex items-center gap-2 bg-accent caption rounded-md">
 							<div className="shrink-0 h-[20px] w-[70px]">
 								<Logo className="bg-accent-contrast shrink-0" />
 							</div>
 						</div>
 					)}
+
 					<div className="ml-1 px-2 flex items-center gap-2 bg-neutral-weak caption rounded-md">
 						<span className="caption text-neutral">BETA</span>
 					</div>
+
+					{isLocal && (
+						<div className="ml-1 px-2 flex items-center gap-2 bg-neutral-medium caption rounded-md">
+							<span className="caption text-neutral">LOCAL</span>
+						</div>
+					)}
 				</Link>
 			</div>
 

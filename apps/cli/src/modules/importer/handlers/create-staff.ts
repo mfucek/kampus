@@ -1,5 +1,4 @@
 import * as p from '@clack/prompts';
-import { Prisma } from '@prisma/client';
 
 import { Spinner } from '@/deps/clack/spinner';
 import { db } from '@/deps/prisma/db';
@@ -15,90 +14,71 @@ export const createStaff = async ({
 	collegeId,
 	professorsData
 }: ImportStaffOptions) => {
-	const existingProfessors = await db.topic.findMany({
+	const existingStaffs = await db.staff.findMany({
 		where: {
-			collegeId: collegeId,
-			type: 'STAFF',
-			Staff: {
-				isNot: null
-			}
+			collegeId: collegeId
 		},
 		include: {
-			Staff: true
+			Topic: true
 		}
 	});
 
-	p.log.info(`Existing professors: ${existingProfessors.length}`);
+	p.log.info(`Existing professors: ${existingStaffs.length}`);
 
 	const spinnerProfs = new Spinner('Creating professors');
 
-	const existingProfessorSlugs = new Set(existingProfessors.map((p) => p.slug));
-	const existingProfessorExternalLinks = new Set(
-		existingProfessors
-			.map((p) => p.Staff!.staffExternalLink)
-			.filter(Boolean) as string[]
+	const existingStaffSlugs = new Set(existingStaffs.map((p) => p.Topic.slug));
+	const existingStaffExternalLinks = new Set(
+		existingStaffs.map((p) => p.staffExternalLink).filter(Boolean) as string[]
 	);
 
-	const professorsToCreate = professorsData.filter(
+	const staffsToCreate = professorsData.filter(
 		(p) =>
-			!existingProfessorExternalLinks.has(p.externalLink) &&
-			!existingProfessorSlugs.has(slugify(p.name))
+			!existingStaffExternalLinks.has(p.externalLink) &&
+			!existingStaffSlugs.has(slugify(p.name))
 	);
 
 	let createdProfessors = 0;
 
-	const BATCH_SIZE_PROFESSORS = 25;
+	const BATCH_SIZE_STAFFS = 25;
 
-	for (let i = 0; i < professorsToCreate.length; i += BATCH_SIZE_PROFESSORS) {
-		const chunk = professorsToCreate.slice(i, i + BATCH_SIZE_PROFESSORS);
+	for (let i = 0; i < staffsToCreate.length; i += BATCH_SIZE_STAFFS) {
+		const staffsToCreateChunk = staffsToCreate.slice(i, i + BATCH_SIZE_STAFFS);
 
 		await db.$transaction(
 			async (tx) => {
-				// First create the topics
-				const topicsToCreate: Prisma.TopicCreateManyInput[] = chunk.map(
-					(p) => ({
-						type: 'STAFF',
-						slug: slugify(p.name),
-						name: p.name,
-						collegeId: collegeId,
-						shortName: slugify(p.name)
-					})
-				);
-
-				await tx.topic.createMany({
-					data: topicsToCreate,
-					skipDuplicates: true
-				});
-
-				// Connect staff to topics
-				for (const professor of chunk) {
-					const topic = await tx.topic.findFirst({
-						where: {
-							type: 'STAFF',
-							collegeId: collegeId,
-							slug: slugify(professor.name)
-						}
-					});
-
-					if (topic) {
+				await Promise.all(
+					staffsToCreateChunk.map(async (staffToCreate) => {
 						try {
+							// first create the topic
+							const newTopic = await tx.topic.create({
+								data: {
+									type: 'STAFF',
+									slug: slugify(staffToCreate.name),
+									name: staffToCreate.name,
+									shortName: slugify(staffToCreate.name),
+									externalImageUrl: staffToCreate.imageUrl
+								}
+							});
+
+							// then create the staff
 							await tx.staff.create({
 								data: {
-									topicId: topic.id,
-									imageUrl: professor.imageUrl,
-									staffExternalLink: professor.externalLink
+									topicId: newTopic.id,
+									collegeId: collegeId,
+									staffExternalLink: staffToCreate.externalLink
 								}
 							});
 						} catch (error) {
-							console.log(topic.id, professor.externalLink);
+							console.error(staffToCreate.name, error);
 							throw error;
 						}
-					}
 
-					createdProfessors += 1;
-				}
+						createdProfessors += 1;
+					})
+				);
 
-				spinnerProfs.onProgress(i, professorsToCreate.length, 'Creating staff');
+				spinnerProfs.onProgress(i, staffsToCreate.length, 'Creating staff');
 			},
 			{
 				timeout: 30000

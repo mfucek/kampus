@@ -19,24 +19,20 @@ export const createSubjects = async ({
 
 	const spinnerSubjects = new Spinner('Creating subjects');
 
-	const existingSubjects = await db.topic.findMany({
+	const existingSubjects = await db.subject.findMany({
 		where: {
-			collegeId: collegeId,
-			type: 'SUBJECT',
-			Subject: {
-				isNot: null
-			}
+			collegeId: collegeId
 		},
 		include: {
-			Subject: true
+			Topic: true
 		}
 	});
 
-	const existingSubjectSlugs = new Set(existingSubjects.map((s) => s.slug));
+	const existingSubjectSlugs = new Set(
+		existingSubjects.map((s) => s.Topic.slug)
+	);
 	const existingSubjectExternalLinks = new Set(
-		existingSubjects
-			.flatMap((s) => s.Subject!.externalLinks)
-			.filter(Boolean) as string[]
+		existingSubjects.flatMap((s) => s.externalLinks).filter(Boolean) as string[]
 	);
 
 	const subjectsToCreate = subjectsData.filter(
@@ -48,29 +44,39 @@ export const createSubjects = async ({
 	let createdSubjects = 0;
 
 	for (let i = 0; i < subjectsToCreate.length; i += BATCH_SIZE_SUBJECTS) {
-		const chunk = subjectsToCreate.slice(i, i + BATCH_SIZE_SUBJECTS);
+		const subjectsToCreateChunk = subjectsToCreate.slice(
+			i,
+			i + BATCH_SIZE_SUBJECTS
+		);
 
 		await db.$transaction(
 			async (tx) => {
-				for (const subject of chunk) {
-					const newTopic = await tx.topic.create({
-						data: {
-							type: 'SUBJECT',
-							slug: slugify(subject.name),
-							name: subject.name,
-							collegeId: collegeId,
-							shortName: slugify(subject.name)
-						}
-					});
+				for (const subjectToCreate of subjectsToCreateChunk) {
+					try {
+						// first create the topic
+						const newTopic = await tx.topic.create({
+							data: {
+								type: 'SUBJECT',
+								slug: slugify(subjectToCreate.name),
+								name: subjectToCreate.name,
+								shortName: slugify(subjectToCreate.name)
+							}
+						});
 
-					await tx.subject.create({
-						data: {
-							Topic: { connect: { id: newTopic.id } },
-							ects: subject.ects,
-							externalCodes: [subject.externalCode],
-							externalLinks: [subject.externalLink]
-						}
-					});
+						// then create the subject
+						await tx.subject.create({
+							data: {
+								topicId: newTopic.id,
+								collegeId: collegeId,
+								ects: subjectToCreate.ects,
+								externalCodes: [subjectToCreate.externalCode],
+								externalLinks: [subjectToCreate.externalLink]
+							}
+						});
+					} catch (error) {
+						console.error(subjectToCreate.name, error);
+						throw error;
+					}
 
 					createdSubjects += 1;
 				}

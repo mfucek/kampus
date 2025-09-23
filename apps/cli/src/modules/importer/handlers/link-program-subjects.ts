@@ -22,7 +22,7 @@ export const linkProgramSubjects = async ({
 		{
 			where: {
 				Program: {
-					Topic: { collegeId: collegeId }
+					collegeId: collegeId
 				}
 			}
 		}
@@ -53,58 +53,41 @@ export const linkProgramSubjects = async ({
 
 	// link -> id
 	const programCache = new Map<string, string>();
-	const dbPrograms = await db.topic.findMany({
+	const dbProgramsWithLink = await db.program.findMany({
 		where: {
 			collegeId: collegeId,
-			type: 'PROGRAM',
-			Program: {
-				programExternalLink: {
-					not: null
-				}
+			programExternalLink: {
+				not: null
 			}
 		},
 		select: {
-			id: true,
-			Program: {
-				select: {
-					programExternalLink: true
-				}
-			}
+			topicId: true,
+			programExternalLink: true
 		}
 	});
-	for (const p of dbPrograms) {
-		programCache.set(p.Program!.programExternalLink!, p.id);
+	for (const p of dbProgramsWithLink) {
+		programCache.set(p.programExternalLink!, p.topicId);
 	}
 
 	// link -> id
 	const subjectCache = new Map<string, string>();
-	const dbSubjects = await db.topic.findMany({
+	const dbSubjectsWithLinks = await db.subject.findMany({
 		where: {
 			collegeId: collegeId,
-			type: 'SUBJECT',
-			Subject: {
-				// subjectExternalLink: {
-				// 	not: null
-				// }
-				NOT: {
-					externalLinks: {
-						isEmpty: true
-					}
+			NOT: {
+				externalLinks: {
+					isEmpty: true
 				}
 			}
 		},
 		select: {
-			id: true,
-			Subject: {
-				select: {
-					externalLinks: true
-				}
-			}
+			topicId: true,
+			externalLinks: true
 		}
 	});
-	for (const s of dbSubjects) {
-		for (const link of s.Subject!.externalLinks) {
-			subjectCache.set(link, s.id);
+	for (const s of dbSubjectsWithLinks) {
+		for (const link of s.externalLinks) {
+			subjectCache.set(link, s.topicId);
 		}
 	}
 

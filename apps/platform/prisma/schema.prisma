@@ -439,9 +439,10 @@ model Notification {
   id        String           @id @default(cuid())
   createdAt DateTime         @default(now())
   type      NotificationType
-  read      Boolean          @default(false)
-  postId    String?
-  authorId  String?
+  seen      Boolean          @default(true)
+
+  postId String?
+  // authorId  String?
   // topicId String?
 
   recepientId String
@@ -450,9 +451,9 @@ model Notification {
 
 enum NotificationType {
   POST_REPLY
-  POST_VOTE
+  // POST_VOTE
   // TOPIC_NEW_POST
   // NEW_FEATURE
-  PACKAGE_UPGRADE
-  PACKAGE_DOWNGRADE
+  // PACKAGE_UPGRADE
+  // PACKAGE_DOWNGRADE
 }

@@ -15,7 +15,7 @@ export const GeneralTopicCard: FC<{
 					height={48}
 				/> */}
 			</div>
-			<span className="flex-1 button-md">{generalTopic.name}</span>
+			<span className="flex-1 button-md text-neutral">{generalTopic.name}</span>
 		</div>
 	);
 };

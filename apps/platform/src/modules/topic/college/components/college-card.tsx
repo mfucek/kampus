@@ -13,7 +13,9 @@ export const CollegeCard: FC<{ college: CollegeGetItem }> = ({ college }) => {
 					height={48}
 				/> */}
 			</div>
-			<span className="flex-1 button-md">{college.topic.name}</span>
+			<span className="flex-1 button-md text-neutral">
+				{college.topic.name}
+			</span>
 		</div>
 	);
 };

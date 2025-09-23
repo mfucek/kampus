@@ -6,9 +6,9 @@
 	"scripts": {
 		"build": "next build",
 		"db:generate": "prisma generate",
-		"db:migrate": "prisma migrate dev",
+		"db:migrate:dev": "prisma migrate dev",
 		"db:migrate:reset": "prisma migrate reset",
-		"db:deploy": "prisma migrate deploy",
+		"db:migrate:deploy": "prisma migrate deploy",
 		"db:push": "prisma db push",
 		"db:migrate:init": "mkdir -p prisma/migrations/0_init && prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql && npx prisma migrate resolve --applied 0_init",
 		"db:studio": "prisma studio --browser none",

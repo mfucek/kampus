@@ -2,7 +2,7 @@ import * as p from '@clack/prompts';
 import fs from 'fs';
 import { z } from 'zod';
 
-import { Spinner } from '@/lib/clack/spinner';
+import { Spinner } from '@/deps/clack/spinner';
 import { professorSchema, programSchema, subjectSchema } from '@/types';
 
 interface LoadDataOptions {

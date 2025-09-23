@@ -1,55 +1,47 @@
 'use client';
 
-import { Button } from '@/lib/shadcn/ui/button';
-import { Input } from '@/lib/shadcn/ui/input';
-import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { api } from '@/lib/trpc/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+import { api } from '@/deps/trpc/react';
+import { Button } from '@/lib/shadcn/ui/button';
+import { Input } from '@/lib/shadcn/ui/input';
 import { useProfileImageUpload } from '../../hooks/use-profile-image-upload';
 import { SettingsSubSection } from '../settings-subsection';
 
 export const PublicProfileSection = () => {
-	const { data: user } = api.account.getUser.useQuery();
-	const { data: account } = api.account.getAccount.useQuery();
+	const { data: user } = api.user.get.useQuery();
 
 	const { uploading, openFilePicker } = useProfileImageUpload();
 
 	const { data: profilePictureUrl, isPending: profilePictureUrlPending } =
-		api.account.getCurrentUserProfilePictureUrl.useQuery();
+		api.user.profilePicture.sessionUser.getUrl.useQuery();
 
-	const {
-		mutateAsync: updateDisplayName,
-		isPending: updateDisplayNamePending
-	} = api.account.updateDisplayName.useMutation();
+	const { mutateAsync: updateName, isPending: updateNamePending } =
+		api.user.name.update.useMutation();
 
 	const { mutateAsync: updateBadge, isPending: updateBadgePending } =
-		api.account.updateBadge.useMutation();
+		api.user.badge.update.useMutation();
 
-	const [displayName, setDisplayName] = useState(user?.displayName ?? '');
+	const [name, setName] = useState(user?.name ?? '');
 	const [badge, setBadge] = useState(user?.badge ?? '');
 
-	const { toast } = useToast();
-
 	useEffect(() => {
-		setDisplayName(user?.displayName ?? '');
+		setName(user?.name ?? '');
 		setBadge(user?.badge ?? '');
 	}, [user]);
 
-	const handleUpdateDisplayName = async () => {
+	const handleUpdateName = async () => {
 		try {
-			await updateDisplayName({ displayName });
+			await updateName({ name });
 
-			toast({
-				title: 'Success',
-				description: 'Your display name has been updated successfully',
-				variant: 'success'
+			toast.success('Ime ažurirano', {
+				description: `Od sada ste poznati kao ${name} 🥳`
 			});
 		} catch (error) {
-			toast({
-				title: 'Error',
-				description: 'An error occurred while updating your display name',
-				variant: 'danger'
+			toast.error('Pogreška', {
+				description: 'Pogreška pri ažuriranju imena'
 			});
 			console.error(error);
 		}
@@ -58,19 +50,17 @@ export const PublicProfileSection = () => {
 	const handleUpdateBadge = async () => {
 		try {
 			await updateBadge({ badge: badge || null });
-		} catch (error) {
-			console.error('Error updating badge:', error);
-			toast({
-				title: 'Error',
-				description: 'An error occurred while updating your badge',
-				variant: 'danger'
+
+			toast.success('Badge ažuriran', {
+				description: `Službeno imaš titulu ${badge} 😎`
 			});
+		} catch (error) {
+			toast.error('Pogreška pri ažuriranju badge-a', {
+				description: 'Pogreška pri ažuriranju badge-a'
+			});
+			console.error(error);
 		}
 	};
-
-	const isLegendPlan = ['MONTHLY_PRO', 'LIFETIME'].includes(
-		account?.package ?? ''
-	);
 
 	return (
 		<>
@@ -112,14 +102,11 @@ export const PublicProfileSection = () => {
 				description="Set your display name."
 			>
 				<div className="flex flex-row gap-2">
-					<Input
-						value={displayName}
-						onChange={(e) => setDisplayName(e.target.value)}
-					/>
+					<Input value={name} onChange={(e) => setName(e.target.value)} />
 					<Button
 						variant="solid-weak"
-						onClick={handleUpdateDisplayName}
-						loading={updateDisplayNamePending}
+						onClick={handleUpdateName}
+						loading={updateNamePending}
 					>
 						Save
 					</Button>
@@ -141,13 +128,13 @@ export const PublicProfileSection = () => {
 					<Input
 						value={badge}
 						onChange={(e) => setBadge(e.target.value)}
-						disabled={!isLegendPlan}
+						disabled={true}
 					/>
 					<Button
 						variant="solid-weak"
 						onClick={handleUpdateBadge}
 						loading={updateBadgePending}
-						disabled={!isLegendPlan}
+						disabled={true}
 					>
 						Save
 					</Button>

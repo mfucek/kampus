@@ -1,5 +1,5 @@
+import { api } from '@/deps/trpc/server';
 import { CacheHelper } from '@/global/components/cache-helper';
-import { api } from '@/lib/trpc/server';
 import { SubjectStaffList } from '../components/subject-staff-list';
 
 interface PageProps {
@@ -11,13 +11,13 @@ interface PageProps {
 export const SubjectStaffPage = async ({ params }: PageProps) => {
 	const { subjectSlug, collegeSlug } = await params;
 
-	const subject = await api.subject.getBySlug({
+	const subject = await api.topic.subject.getBySlug({
 		subjectSlug,
 		collegeSlug
 	});
 
-	const staffs = await api.subject.listStaff({
-		subjectId: subject.id
+	const { staffs } = await api.topic.staff.listBySubjectId({
+		subjectId: subject.topic.id
 	});
 
 	return (

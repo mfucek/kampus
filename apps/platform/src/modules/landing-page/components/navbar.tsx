@@ -1,34 +1,28 @@
 'use client';
 
-import { useAuth, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
 
-import { env } from '@/env';
-
+import { useAuth } from '@/deps/better-auth/use-auth';
+import { api } from '@/deps/trpc/react';
+import { useViewportSize } from '@/deps/viewport-size';
 import { Logo } from '@/global/components/logo';
 import { ActionsGroup } from '@/global/molecules/navbar/actions-group';
 import { Divider } from '@/global/molecules/navbar/divider';
+import { isStaging } from '@/lib/environment';
+import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
-import { api } from '@/lib/trpc/react';
-import { ThemeToggler } from '@/modules/theme/components/theme-toggler';
-import { useIsPWA } from '@/utils/use-is-pwa';
-import { useIsMobile } from '@/utils/useMediaQuery';
+import { ThemeToggler } from '@/lib/theme/components/theme-toggler';
+import { useOnboarding } from '@/modules/onboarding/context/use-onboarding';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-
-const isStaging = env.NEXT_PUBLIC_DEPLOYMENT === 'staging';
 
 export const Navbar = () => {
 	const { isSignedIn } = useAuth();
-	const { openSignIn, openSignUp } = useClerk();
 
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 	const { isPWA } = useIsPWA();
 
-	const pathname = usePathname();
-
 	const { data: profilePictureUrl } =
-		api.account.getCurrentUserProfilePictureUrl.useQuery(void {}, {
+		api.user.profilePicture.sessionUser.getUrl.useQuery(void {}, {
 			enabled: !!isSignedIn
 		});
 
@@ -78,6 +72,8 @@ export const Navbar = () => {
 	};
 
 	const Actions = () => {
+		const { showSignIn } = useOnboarding();
+
 		if (isSignedIn) {
 			return (
 				<>
@@ -108,7 +104,7 @@ export const Navbar = () => {
 				<ThemeToggler size="sm" />
 				<div className="hidden md:block">
 					<Button
-						onClick={() => openSignUp({ forceRedirectUrl: pathname })}
+						// onClick={() => openSignUp({ forceRedirectUrl: pathname })}
 						theme="neutral"
 						size="sm"
 						variant="solid-weak"
@@ -117,7 +113,7 @@ export const Navbar = () => {
 					</Button>
 				</div>
 				<Button
-					onClick={() => openSignIn({ forceRedirectUrl: pathname })}
+					onClick={() => showSignIn()}
 					theme="accent"
 					size="sm"
 					variant="solid"

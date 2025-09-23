@@ -2,6 +2,7 @@
 
 import { type FC, type ReactNode } from 'react';
 
+import { useAuth } from '@/deps/better-auth/use-auth';
 import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
 import { useFileStagingContext } from '@/modules/file/contexts/file-staging-provider';
@@ -9,7 +10,6 @@ import {
 	UploadAreaOverlay,
 	useUploadArea
 } from '@/modules/file/hooks/use-upload-area';
-import { useAuth } from '@clerk/nextjs';
 
 export const ComposerWrapper: FC<{
 	children: ReactNode;

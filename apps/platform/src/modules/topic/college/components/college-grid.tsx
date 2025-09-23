@@ -3,14 +3,13 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { Input } from '@/lib/shadcn/ui/input';
-import { type College } from '@prisma/client';
-
 import { Container } from '@/global/components/container';
 import { ContentPadding } from '@/global/layouts/content-padding';
+import { Input } from '@/lib/shadcn/ui/input';
+import { type CollegeGetItem } from '../../api/procedures/college/get-by-id';
 import { CollegeCard } from './college-card';
 
-export const CollegeGrid = ({ colleges }: { colleges: College[] }) => {
+export const CollegeGrid = ({ colleges }: { colleges: CollegeGetItem[] }) => {
 	const [search, setSearch] = useState('');
 
 	return (
@@ -37,11 +36,18 @@ export const CollegeGrid = ({ colleges }: { colleges: College[] }) => {
 							{colleges
 								.filter(
 									(college) =>
-										college.name.toLowerCase().includes(search.toLowerCase()) ||
-										college.slug.toLowerCase().includes(search.toLowerCase())
+										college.topic.name
+											.toLowerCase()
+											.includes(search.toLowerCase()) ||
+										college.topic.slug
+											.toLowerCase()
+											.includes(search.toLowerCase())
 								)
 								.map((college) => (
-									<Link href={`/${college.slug}`} key={college.slug}>
+									<Link
+										href={`/${college.topic.slug}`}
+										key={college.topic.slug}
+									>
 										<CollegeCard college={college} />
 									</Link>
 								))}

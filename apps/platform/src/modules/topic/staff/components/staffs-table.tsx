@@ -7,36 +7,29 @@ import { type FC } from 'react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
+import { type StaffGetItem } from '../../api/procedures/staff/get-by-id';
 
-type Staff = {
-	slug: string;
-	college: {
-		slug: string;
-	};
-	_count: {
-		posts: number;
-	};
-};
-
-export const columns: ColumnDef<Staff>[] = [
+export const columns: ColumnDef<StaffGetItem>[] = [
 	{
-		accessorKey: 'name',
+		accessorKey: 'topic.name',
 		header: 'Ime'
 	},
 	{
 		id: 'actions-open',
 		cell: ({ row }) => {
 			const {
-				slug: staffSlug,
-				college: { slug: collegeSlug },
-				_count: { posts: postCount }
+				topic: { slug: staffSlug },
+				college: {
+					topic: { slug: collegeSlug }
+				},
+				postsCount
 			} = row.original;
 
 			return (
 				<div className="flex flex-row gap-1 justify-end">
 					<Link href={`/${collegeSlug}/staff/${staffSlug}`}>
 						<Button theme="neutral" variant="solid-weak" size="sm">
-							{postCount}
+							{postsCount}
 							<Icon icon="chat-single" />
 						</Button>
 					</Link>
@@ -47,7 +40,7 @@ export const columns: ColumnDef<Staff>[] = [
 ];
 
 export const StaffsTable: FC<{
-	staffs: Staff[];
+	staffs: StaffGetItem[];
 	loading?: boolean;
 }> = ({ staffs, loading = false }) => {
 	return <DataTable columns={columns} data={staffs} loading={loading} />;

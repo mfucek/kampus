@@ -36,6 +36,13 @@ export const PostActionsList: FC<{ post: PostListByTopicIdItem }> = ({
 
 	const handleDeletePost = async () => {
 		await deletePost.mutateAsync({ postId: post.post.id });
+
+		// invalidate replies cache
+		if (post.post.replyToId) {
+			await utils.post.listReplies.invalidate({ postId: post.post.replyToId });
+		}
+
+		// invalidate topic cache (replies counter on top-level posts)
 		await utils.post.listByTopicId.invalidate();
 	};
 

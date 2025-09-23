@@ -111,6 +111,8 @@ model Topic {
   name      String
   shortName String?
 
+  externalImageUrl String?
+
   type TopicType
 
   College      College?

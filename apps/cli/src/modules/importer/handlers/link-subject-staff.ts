@@ -25,9 +25,7 @@ export const linkSubjectStaff = async ({
 	const removedSubjectStaffRelationships = await db.subjectStaff.deleteMany({
 		where: {
 			Subject: {
-				Topic: {
-					collegeId: collegeId
-				}
+				collegeId: collegeId
 			}
 		}
 	});
@@ -57,48 +55,44 @@ export const linkSubjectStaff = async ({
 
 	// link -> id
 	const subjectCache = new Map<string, string>();
-	const dbSubjects = await db.topic.findMany({
+	const dbSubjectsWithLink = await db.subject.findMany({
 		where: {
 			collegeId: collegeId,
-			type: 'SUBJECT',
 			NOT: {
-				Subject: {
-					externalLinks: {
-						isEmpty: true
-					}
+				externalLinks: {
+					isEmpty: true
 				}
 			}
 		},
 		select: {
-			id: true,
-			Subject: { select: { externalLinks: true } }
+			topicId: true,
+			externalLinks: true
 		}
 	});
-	for (const s of dbSubjects) {
-		for (const link of s.Subject!.externalLinks) {
-			subjectCache.set(link, s.id);
+
+	// store subjects in (link -> id) map
+	for (const s of dbSubjectsWithLink) {
+		for (const link of s.externalLinks) {
+			subjectCache.set(link, s.topicId);
 		}
 	}
 
 	// link -> id
 	const staffCache = new Map<string, string>();
-	const dbStaff = await db.topic.findMany({
+	const dbStaffWithLink = await db.staff.findMany({
 		where: {
 			collegeId: collegeId,
-			type: 'STAFF',
-			Staff: {
-				staffExternalLink: {
-					not: null
-				}
+			staffExternalLink: {
+				not: null
 			}
 		},
 		select: {
-			id: true,
-			Staff: { select: { staffExternalLink: true } }
+			topicId: true,
+			staffExternalLink: true
 		}
 	});
-	for (const s of dbStaff) {
-		staffCache.set(s.Staff!.staffExternalLink!, s.id);
+	for (const s of dbStaffWithLink) {
+		staffCache.set(s.staffExternalLink!, s.topicId);
 	}
 
 	// ------------------
@@ -108,11 +102,18 @@ export const linkSubjectStaff = async ({
 		i < subjectStaffToCreate.length;
 		i += BATCH_SIZE_SUBJECT_STAFF
 	) {
-		const chunk = subjectStaffToCreate.slice(i, i + BATCH_SIZE_SUBJECT_STAFF);
+		const subjectStaffToCreateChunk = subjectStaffToCreate.slice(
+			i,
+			i + BATCH_SIZE_SUBJECT_STAFF
+		);
 
 		await db.$transaction(
 			async (tx) => {
-				for (const [subjectLink, staffLink, role] of chunk) {
+				for (const [
+					subjectLink,
+					staffLink,
+					role
+				] of subjectStaffToCreateChunk) {
 					const subjectId = subjectCache.get(subjectLink);
 					const staffId = staffCache.get(staffLink);
 

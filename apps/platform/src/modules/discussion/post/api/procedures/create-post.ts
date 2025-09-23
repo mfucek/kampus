@@ -27,8 +27,26 @@ export const createPostProcedure = protectedProcedure
 				topicId: input.topicId,
 				replyToId: input.replyToId,
 				authorId: user.id
+			},
+			include: {
+				replyTo: true
 			}
 		});
+
+		// if post is a reply, notify the author
+		if (input.replyToId && post.replyTo) {
+			const isSameUser = post.replyTo.authorId === user.id;
+
+			if (!isSameUser) {
+				await db.notification.create({
+					data: {
+						type: 'POST_REPLY',
+						postId: post.id,
+						recepientId: post.replyTo?.authorId
+					}
+				});
+			}
+		}
 
 		return post;
 	});

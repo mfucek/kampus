@@ -29,7 +29,7 @@ export const EndOfPosts = () => {
 };
 
 export const TopLevelPostsLoader: FC<{ topicId: string }> = ({ topicId }) => {
-	const POST_COUNT = 2;
+	const POST_COUNT = 10;
 
 	const query = api.post.listByTopicId.useInfiniteQuery(
 		{ topicId, limit: POST_COUNT },

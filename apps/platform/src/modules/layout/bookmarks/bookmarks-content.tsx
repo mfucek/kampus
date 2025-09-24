@@ -63,8 +63,8 @@ const BookmarkItem: FC<{
 	return (
 		<Link href={link}>
 			<Button
-				variant={isActive ? 'solid-weak' : 'ghost-weak'}
-				theme={isActive ? 'accent' : 'neutral'}
+				variant={isActive ? 'outline' : 'ghost-weak'}
+				theme={isActive ? 'neutral' : 'neutral'}
 				size="sm"
 				className="w-full justify-start px-2"
 			>

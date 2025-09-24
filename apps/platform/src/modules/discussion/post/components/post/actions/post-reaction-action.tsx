@@ -123,13 +123,13 @@ export const PostReactionAction: FC<{
 					<TooltipTrigger>
 						<span
 							className={cn(
-								'button-sm',
+								'button-sm text-neutral',
 								!reaction &&
 									(count < 0
-										? 'text-danger'
+										? 'text-danger!'
 										: count > 0
-											? 'text-success'
-											: 'text-neutral')
+											? 'text-success!'
+											: 'text-neutral!')
 							)}
 						>
 							{count}

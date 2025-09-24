@@ -1,7 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { type FC, type PropsWithChildren, useRef, useState } from 'react';
+import {
+	type FC,
+	type PropsWithChildren,
+	useEffect,
+	useRef,
+	useState
+} from 'react';
 import {
 	type ImperativePanelGroupHandle,
 	type ImperativePanelHandle,
@@ -12,6 +18,7 @@ import {
 import { Icon } from '@/global/components/icon';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
+import { cn } from '@/lib/shadcn/utils';
 import { BookmarksContent } from '../bookmarks/bookmarks-content';
 import { useLayout } from '../contexts/use-layout';
 import { PostContent } from '../post-panel-content';
@@ -25,6 +32,14 @@ export const DesktopPanelsLayout: FC<PropsWithChildren> = ({ children }) => {
 
 	const panelGroupRef = useRef<ImperativePanelGroupHandle>(null);
 	const postPanelRef = useRef<ImperativePanelHandle>(null);
+
+	// When post panel is opened, set the layout to 50/50
+	useEffect(() => {
+		if (panelGroupRef.current && postId) {
+			// @TODO: fix this
+			// panelGroupRef.current.setLayout([50, 50]);
+		}
+	}, [postId]);
 
 	const [willPostPanelClose, setWillPostPanelClose] = useState(false);
 
@@ -101,7 +116,13 @@ export const DesktopPanelsLayout: FC<PropsWithChildren> = ({ children }) => {
 								</Button>
 							</div>
 
-							<ContentPadding size="sm">
+							<ContentPadding
+								size="sm"
+								className={cn(
+									'duration-200',
+									willPostPanelClose && 'blur-xs opacity-50'
+								)}
+							>
 								<PostContent postId={postId} />
 							</ContentPadding>
 						</Panel>

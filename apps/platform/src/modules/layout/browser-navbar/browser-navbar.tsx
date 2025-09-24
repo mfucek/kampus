@@ -12,6 +12,7 @@ import { useIsPWA } from '@/lib/pwa/use-is-pwa';
 import { Button } from '@/lib/shadcn/ui/button';
 import { ThemeToggler } from '@/lib/theme/components/theme-toggler';
 import { feedbackFormURL } from '@/modules/feedback/constants';
+import { NotificationsButton } from '@/modules/notifications/components/notifications-button';
 import { useOnboarding } from '@/modules/onboarding/context/use-onboarding';
 import { Icon } from '../../../global/components/icon';
 import { ActionsGroup } from '../../../global/molecules/navbar/actions-group';
@@ -40,9 +41,6 @@ export const BrowserNavbar = () => {
 			return (
 				<>
 					<ActionsGroup className="hidden md:flex">
-						{/* <Button size="sm" variant="solid-weak" theme="accent">
-							Podrzi nas
-						</Button> */}
 						<a
 							href={feedbackFormURL}
 							className="hidden md:block"
@@ -58,7 +56,7 @@ export const BrowserNavbar = () => {
 					<Divider className="hidden md:block" />
 					<ActionsGroup>
 						<ThemeToggler size="sm" />
-						{/* <NotificationsButton /> */}
+						<NotificationsButton />
 					</ActionsGroup>
 					<Divider />
 					<Link href="/settings/profile">

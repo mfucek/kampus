@@ -31,7 +31,12 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 			<PageHeader
 				title={college.topic.name}
 				tags={['Fakultet']}
-				breadcrumbs={[{ title: college.topic.name, link: `/${collegeSlug}` }]}
+				breadcrumbs={[
+					{
+						title: college.topic.shortName ?? college.topic.name,
+						link: `/${collegeSlug}`
+					}
+				]}
 			/>
 
 			<FollowTopicBar topicId={college.topic.id} />

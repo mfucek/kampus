@@ -14,11 +14,13 @@ import { Icon } from './icon';
 
 export const PageHeader = ({
 	title,
+	description,
 	tags = [],
 	breadcrumbs = [],
 	imageSrc
 }: {
 	title: string;
+	description?: string;
 	tags?: string[];
 	breadcrumbs?: Breadcrumb[];
 	imageSrc?: string;
@@ -64,6 +66,9 @@ export const PageHeader = ({
 						)}
 
 						<div className="display-3 text-neutral">{title}</div>
+						{description && (
+							<div className="body-1 text-neutral-strong">{description}</div>
+						)}
 
 						{tags && tags.length > 0 && (
 							<div className="flex flex-wrap">

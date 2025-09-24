@@ -37,9 +37,13 @@ export const ProgramLayout = async ({
 				title={program.topic.name}
 				tags={['Smjer']}
 				breadcrumbs={[
-					{ title: program.college.topic.name, link: `/${collegeSlug}` },
 					{
-						title: program.topic.name,
+						title:
+							program.college.topic.shortName ?? program.college.topic.name,
+						link: `/${collegeSlug}`
+					},
+					{
+						title: program.topic.shortName ?? program.topic.name,
 						link: `/${collegeSlug}/program/${programSlug}`
 					}
 				]}

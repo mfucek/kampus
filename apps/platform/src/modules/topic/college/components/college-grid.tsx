@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 import { Container } from '@/global/components/container';
 import { ContentPadding } from '@/global/layouts/content-padding';
-import { Input } from '@/lib/shadcn/ui/input';
 import { type CollegeGetItem } from '../../api/procedures/college/get-by-id';
 import { CollegeCard } from './college-card';
 
@@ -15,7 +14,7 @@ export const CollegeGrid = ({ colleges }: { colleges: CollegeGetItem[] }) => {
 	return (
 		<>
 			<div className="flex flex-col items-center gap-10">
-				<Container size="sm">
+				{/* <Container size="sm">
 					<ContentPadding size="sm">
 						<h3 className="title-1 text-neutral text-center mt-10">
 							Koji faks tražiš?
@@ -30,7 +29,7 @@ export const CollegeGrid = ({ colleges }: { colleges: CollegeGetItem[] }) => {
 							onChange={(e) => setSearch(e.target.value)}
 						/>
 					</ContentPadding>
-				</Container>
+				</Container> */}
 
 				<Container>
 					<ContentPadding size="sm">

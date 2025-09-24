@@ -1,8 +1,15 @@
+import { type FC } from 'react';
+
 import { cn } from '@/lib/shadcn/utils';
 
-export const Scribbles = () => {
+export const Scribbles: FC<{ className?: string }> = ({ className }) => {
 	return (
-		<div className="absolute inset-0 overflow-hidden pointer-events-none">
+		<div
+			className={cn(
+				'absolute inset-0 overflow-hidden pointer-events-none',
+				className
+			)}
+		>
 			{/* top left */}
 			<div
 				className={cn(

@@ -1,6 +1,7 @@
 import { api } from '@/deps/trpc/server';
 import { CacheHelper } from '@/global/components/cache-helper';
 import { Container } from '@/global/components/container';
+import { ContentPadding } from '@/global/layouts/content-padding';
 import { FeedPostsLoader } from '@/modules/discussion/post/components/feed/feed-posts-loader';
 import { HeroLogo } from '@/modules/landing-page/components/hero-logo';
 import { Scribbles } from '@/modules/landing-page/components/scribbles';
@@ -15,8 +16,8 @@ export const HomePage = async () => {
 
 	return (
 		<>
-			<div className="relative self-stretch pb-20 z-0 m-2 rounded-xl border border-accent-medium">
-				<div className="max-w-[480px] px-10 mx-auto">
+			<div className="flex flex-col items-center relative self-stretch pb-20 z-0 m-2 rounded-xl border border-accent-medium">
+				<div className="max-w-[480px] px-10 mx-auto mb-4">
 					<HeroLogo />
 				</div>
 
@@ -29,7 +30,9 @@ export const HomePage = async () => {
 			</div>
 
 			<Container>
-				{isSignedIn && <FeedPostsLoader />}
+				<ContentPadding size="sm">
+					{isSignedIn && <FeedPostsLoader />}
+				</ContentPadding>
 
 				<CacheHelper />
 			</Container>

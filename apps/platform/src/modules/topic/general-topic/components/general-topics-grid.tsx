@@ -18,10 +18,7 @@ export const GeneralTopicsGrid = ({
 				<ContentPadding size="sm">
 					<div className="grid grid-cols-1 @xs:grid-cols-2 @sm:grid-cols-3 gap-2">
 						{generalTopics.map((generalTopic) => (
-							<Link
-								href={`/general/${generalTopic.slug}`}
-								key={generalTopic.slug}
-							>
+							<Link href={generalTopic.link} key={generalTopic.topic.slug}>
 								<GeneralTopicCard generalTopic={generalTopic} />
 							</Link>
 						))}

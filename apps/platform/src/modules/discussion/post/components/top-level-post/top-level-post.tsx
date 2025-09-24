@@ -29,9 +29,10 @@ export const TopLevelPost: FC<{ post: PostListByTopicIdItem }> = ({ post }) => {
 	return (
 		<div
 			className={cn(
-				'flex flex-col gap-2 p-4 border border-neutral-medium rounded-xl md:cursor-pointer',
-				'md:hover:border-neutral-strong duration-300',
-				postId === post.post.id && 'border-accent bg-accent-weak'
+				'flex flex-col gap-2 p-4 rounded-xl md:cursor-pointer',
+				'md:border md:border-neutral-medium md:hover:border-neutral-strong duration-300',
+				'bg-section',
+				postId === post.post.id && 'border-neutral!'
 			)}
 			onClick={() => {
 				if (isMobile) router.push(post.link);

@@ -126,7 +126,8 @@ model Topic {
   Image     ImageFile?
   Summaries Summary[]
 
-  TopicFollow TopicFollow[]
+  automaticFollow Boolean       @default(false)
+  TopicFollow     TopicFollow[]
 }
 
 enum TopicType {

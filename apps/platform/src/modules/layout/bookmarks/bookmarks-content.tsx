@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { type FC, type PropsWithChildren } from 'react';
 
+import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { Icon, type IconName } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -63,8 +64,8 @@ const BookmarkItem: FC<{
 	return (
 		<Link href={link}>
 			<Button
-				variant={isActive ? 'solid-weak' : 'ghost-weak'}
-				theme={isActive ? 'accent' : 'neutral'}
+				variant={isActive ? 'outline' : 'ghost-weak'}
+				theme={isActive ? 'neutral' : 'neutral'}
 				size="sm"
 				className="w-full justify-start px-2"
 			>
@@ -113,8 +114,12 @@ const BookmarksSection: FC<
 };
 
 export const BookmarksContent = () => {
+	const { isSignedIn } = useAuth();
+
 	const collegesQuery = api.topic.college.listAll.useQuery();
-	const followedTopicsQuery = api.follow.listFollowedTopics.useQuery();
+	const followedTopicsQuery = api.follow.listFollowedTopics.useQuery(void {}, {
+		enabled: !!isSignedIn
+	});
 
 	return (
 		<div className="flex flex-col w-full">
@@ -134,11 +139,13 @@ export const BookmarksContent = () => {
 				))}
 			</BookmarksSection>
 
-			<BookmarksSection title="Following">
-				{followedTopicsQuery.data?.topics.map((topic) => (
-					<FollowedTopicBookmarkItem key={topic.topic.id} topic={topic} />
-				))}
-			</BookmarksSection>
+			{isSignedIn && (
+				<BookmarksSection title="Following">
+					{followedTopicsQuery.data?.topics.map((topic) => (
+						<FollowedTopicBookmarkItem key={topic.topic.id} topic={topic} />
+					))}
+				</BookmarksSection>
+			)}
 		</div>
 	);
 };

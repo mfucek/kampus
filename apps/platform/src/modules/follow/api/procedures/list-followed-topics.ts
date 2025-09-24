@@ -99,7 +99,7 @@ export const listFollowedTopicsProcedure = protectedProcedure.query(
 			let link = '';
 
 			if (topic.type === 'GENERAL' && topic.GeneralTopic) {
-				link = `/${topic.GeneralTopic.Topic.slug}`;
+				link = `/general/${topic.GeneralTopic.Topic.slug}`;
 			}
 
 			if (topic.type === 'COLLEGE' && topic.College) {

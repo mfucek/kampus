@@ -7,7 +7,6 @@ import { useViewportSize } from '@/deps/viewport-size';
 import { Icon } from '@/global/components/icon';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
-import { cn } from '@/lib/shadcn/utils';
 
 // 2812 -> 2.8k
 const formatNumber = (number: number) => {
@@ -45,7 +44,7 @@ export const FollowTopicBar: FC<{ topicId: string }> = ({ topicId }) => {
 	};
 
 	return (
-		<ContentPadding size="lg" className={cn(isMobile && 'pl-0')}>
+		<ContentPadding size="lg">
 			<div className="flex flex-row items-center justify-between">
 				<div className="flex flex-row gap-3 items-center">
 					<div className="flex flex-row gap-2 items-center">
@@ -69,7 +68,7 @@ export const FollowTopicBar: FC<{ topicId: string }> = ({ topicId }) => {
 
 				{isFollowing && (
 					<Button variant="solid" size="sm" onClick={handleDeactivateFollow}>
-						Pratis
+						Pratiš
 						<Icon icon="checkmark" />
 					</Button>
 				)}

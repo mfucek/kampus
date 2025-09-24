@@ -25,11 +25,26 @@ export const generalTopicsListAllProcedure = publicProcedure.query(
 			}
 		});
 
-		const generalTopics = generalTopicsRaw.map((generalTopicRaw) => ({
-			...generalTopicRaw.Topic,
-			link: `/${generalTopicRaw.Topic.slug}`,
-			postsCount: generalTopicRaw.Topic._count.Posts
-		}));
+		const generalTopics = generalTopicsRaw.map((generalTopicRaw) => {
+			const topic = {
+				name: generalTopicRaw.Topic.name,
+				id: generalTopicRaw.Topic.id,
+				type: generalTopicRaw.Topic.type,
+				slug: generalTopicRaw.Topic.slug,
+				shortName: generalTopicRaw.Topic.shortName
+			};
+
+			const generalTopic = {
+				icon: generalTopicRaw.icon
+			};
+
+			return {
+				topic,
+				generalTopic,
+				link: `/general/${generalTopicRaw.Topic.slug}`,
+				postsCount: generalTopicRaw.Topic._count.Posts
+			};
+		});
 
 		return { generalTopics };
 	}

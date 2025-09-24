@@ -41,6 +41,7 @@ model User {
   Posts         Post[]
   Notifications Notification[]
   // subscriptions Subscription[]
+  TopicFollow   TopicFollow[]
 
   @@unique([email])
   @@map("user")
@@ -124,6 +125,8 @@ model Topic {
   Posts     Post[]
   Image     ImageFile?
   Summaries Summary[]
+
+  TopicFollow TopicFollow[]
 }
 
 enum TopicType {
@@ -456,4 +459,22 @@ enum NotificationType {
   // NEW_FEATURE
   // PACKAGE_UPGRADE
   // PACKAGE_DOWNGRADE
+}
+
+// ------------------
+// Follow
+// ------------------
+
+model TopicFollow {
+  userId String
+  User   User   @relation(fields: [userId], references: [id])
+
+  topicId String
+  Topic   Topic  @relation(fields: [topicId], references: [id])
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, topicId])
 }

@@ -3,6 +3,7 @@ import { type FC, type PropsWithChildren } from 'react';
 import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
+import { FollowTopicBar } from '@/modules/follow/components/follow-bar';
 
 interface LayoutProps {
 	params: Promise<{
@@ -30,6 +31,8 @@ export const GeneralTopicLayout: FC<LayoutProps & PropsWithChildren> = async ({
 					{ title: generalTopic.topic.name, link: `/${generalTopicSlug}` }
 				]}
 			/>
+
+			<FollowTopicBar topicId={generalTopic.topic.id} />
 
 			{children}
 		</Container>

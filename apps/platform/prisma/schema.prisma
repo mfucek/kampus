@@ -439,7 +439,7 @@ model Notification {
   id        String           @id @default(cuid())
   createdAt DateTime         @default(now())
   type      NotificationType
-  seen      Boolean          @default(true)
+  seen      Boolean          @default(false)
 
   postId String?
   // authorId  String?

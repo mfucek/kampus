@@ -3,11 +3,13 @@ import * as p from '@clack/prompts';
 import { db } from '@/deps/prisma/db';
 
 export const checkCollege = async (collegeSlug: string) => {
-	const college = await db.college.findFirst({ where: { slug: collegeSlug } });
+	const college = await db.college.findFirst({
+		where: { Topic: { slug: collegeSlug } }
+	});
 
 	if (college) {
-		p.log.success(`College found: ${college.id}`);
-		return college.id;
+		p.log.success(`College found: ${college.topicId}`);
+		return college.topicId;
 	}
 
 	const shouldCreateCollege = await p.confirm({
@@ -28,10 +30,15 @@ export const checkCollege = async (collegeSlug: string) => {
 
 	const newCollege = await db.college.create({
 		data: {
-			name,
-			slug
+			Topic: {
+				create: {
+					type: 'COLLEGE',
+					name,
+					slug
+				}
+			}
 		}
 	});
 
-	return newCollege.id;
+	return newCollege.topicId;
 };

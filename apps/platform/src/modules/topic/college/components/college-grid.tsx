@@ -17,7 +17,9 @@ export const CollegeGrid = ({ colleges }: { colleges: CollegeGetItem[] }) => {
 			<div className="flex flex-col items-center gap-10">
 				<Container size="sm">
 					<ContentPadding size="sm">
-						<h3 className="title-1 text-center mt-10">Koji faks tražiš?</h3>
+						<h3 className="title-1 text-neutral text-center mt-10">
+							Koji faks tražiš?
+						</h3>
 					</ContentPadding>
 
 					<ContentPadding size="sm">

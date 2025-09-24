@@ -21,7 +21,7 @@ export const GeneralTopicsGrid = ({
 			<div className="flex flex-col items-center gap-10">
 				<Container size="sm">
 					<ContentPadding size="sm">
-						<h3 className="title-1 text-center mt-10">
+						<h3 className="title-1 text-neutral text-center mt-10">
 							Koji generalni topic tražiš?
 						</h3>
 					</ContentPadding>

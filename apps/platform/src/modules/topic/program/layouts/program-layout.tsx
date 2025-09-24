@@ -6,6 +6,7 @@ import { PageHeader } from '@/global/components/page-header';
 import { Tab, Tabs } from '@/global/components/route-tabs';
 import { Spinner } from '@/global/components/spinner';
 import { ContentPadding } from '@/global/layouts/content-padding';
+import { FollowTopicBar } from '@/modules/follow/components/follow-bar';
 import { RuleProtected } from '@/modules/user/permissions/components/protected';
 import { RuleType } from '@prisma/client';
 
@@ -43,6 +44,8 @@ export const ProgramLayout = async ({
 					}
 				]}
 			/>
+
+			<FollowTopicBar topicId={program.topic.id} />
 
 			<ContentPadding size="lg">
 				<Suspense fallback={<Spinner />}>

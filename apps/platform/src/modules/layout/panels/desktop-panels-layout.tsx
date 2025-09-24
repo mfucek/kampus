@@ -13,10 +13,10 @@ import { Icon } from '@/global/components/icon';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
 import { BookmarksContent } from '../bookmarks/bookmarks-content';
-import { PanelCloseWarning } from '../components/panel-close-warning';
-import { ResizeHandle } from '../components/resize-handle';
 import { useLayout } from '../contexts/use-layout';
 import { PostContent } from '../post-panel-content';
+import { PanelCloseWarning } from './panel-close-warning';
+import { ResizeHandle } from './resize-handle';
 
 export const DesktopPanelsLayout: FC<PropsWithChildren> = ({ children }) => {
 	const { postId, showBookmarks, setPostId } = useLayout();

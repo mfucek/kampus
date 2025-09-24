@@ -21,16 +21,12 @@ export const createPrograms = async ({
 	// ------------------
 	// Create programs
 
-	const existingPrograms = await db.topic.findMany({
+	const existingPrograms = await db.program.findMany({
 		where: {
-			collegeId: collegeId,
-			type: 'PROGRAM',
-			Program: {
-				isNot: null
-			}
+			collegeId: collegeId
 		},
 		include: {
-			Program: true
+			Topic: true
 		}
 	});
 
@@ -38,10 +34,12 @@ export const createPrograms = async ({
 
 	const spinnerPrograms = new Spinner('Creating programs');
 
-	const existingProgramSlugs = new Set(existingPrograms.map((p) => p.slug));
+	const existingProgramSlugs = new Set(
+		existingPrograms.map((p) => p.Topic.slug)
+	);
 	const existingProgramExternalLinks = new Set(
 		existingPrograms
-			.map((p) => p.Program!.programExternalLink)
+			.map((p) => p.programExternalLink)
 			.filter(Boolean) as string[]
 	);
 
@@ -54,21 +52,26 @@ export const createPrograms = async ({
 	let createdPrograms = 0;
 
 	for (let i = 0; i < programsToCreate.length; i += BATCH_SIZE_PROGRAMS) {
-		const chunk = programsToCreate.slice(i, i + BATCH_SIZE_PROGRAMS);
+		const programsToCreateChunk = programsToCreate.slice(
+			i,
+			i + BATCH_SIZE_PROGRAMS
+		);
 
 		await db.$transaction(
 			async (tx) => {
-				for (const program of chunk) {
+				for (const programToCreate of programsToCreateChunk) {
 					let topic: Topic | null = null;
-					const wantedSlug = slugify(program.name);
+					const wantedSlug = slugify(programToCreate.name);
 					let suffix = 0;
 
 					while (topic) {
 						topic = await tx.topic.findFirst({
 							where: {
 								type: 'PROGRAM',
-								collegeId: collegeId,
-								slug: wantedSlug + (suffix ? `-${suffix}` : '')
+								slug: wantedSlug + (suffix ? `-${suffix}` : ''),
+								Program: {
+									collegeId: collegeId
+								}
 							}
 						});
 
@@ -77,27 +80,27 @@ export const createPrograms = async ({
 						}
 					}
 
-					const newTopic = await tx.topic.create({
-						data: {
-							type: 'PROGRAM',
-							slug: wantedSlug + (suffix ? `-${suffix}` : ''),
-							name: program.name,
-							collegeId: collegeId,
-							shortName: program.shortName
-						}
-					});
-
 					try {
+						const newTopic = await tx.topic.create({
+							data: {
+								type: 'PROGRAM',
+								slug: wantedSlug + (suffix ? `-${suffix}` : ''),
+								name: programToCreate.name,
+								shortName: programToCreate.shortName
+							}
+						});
+
 						await tx.program.create({
 							data: {
 								topicId: newTopic.id,
-								departments: program.departments,
-								programExternalLink: program.externalLink,
-								type: program.type
+								collegeId: collegeId,
+								departments: programToCreate.departments,
+								programExternalLink: programToCreate.externalLink,
+								type: programToCreate.type
 							}
 						});
 					} catch (error) {
-						console.log('ERRORR!!!!', newTopic.id, program.externalLink);
+						console.error(programToCreate.name, error);
 						throw error;
 					}
 

@@ -3,7 +3,7 @@ import '@/styles/index.css';
 import { GeistSans } from 'geist/font/sans';
 
 import { metadata } from '@/lib/metadata';
-import { PWANavbar } from '@/modules/layout/components/pwa-navbar';
+import { PWANavbar } from '@/modules/layout/pwa-navbar/pwa-navbar';
 import { BodyOverlays } from './body-overlays';
 import { Providers } from './providers';
 

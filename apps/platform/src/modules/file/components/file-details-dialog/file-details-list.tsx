@@ -70,7 +70,7 @@ export const FileDetailsList = () => {
 
 	return (
 		<div className="flex flex-col flex-1 md:border-r border-r-neutral-weak md:max-w-[240px]">
-			<div className="px-4 py-6 md:border-b border-neutral-weak title-3 shrink-0">
+			<div className="px-4 py-6 md:border-b border-neutral-weak title-3 text-neutral shrink-0">
 				Materijali
 			</div>
 

@@ -22,7 +22,7 @@ export const ReplyLoader: FC<{
 	post: PostListRepliesItem;
 	defaultLoadingEnabled?: boolean;
 }> = ({ post, defaultLoadingEnabled = true }) => {
-	const POST_COUNT = 3;
+	const POST_COUNT = 5;
 
 	const [loadingEnabled, setLoadingEnabled] = useState(defaultLoadingEnabled);
 

@@ -1,3 +1,3 @@
-import { NavbarLayout } from '@/modules/layout/layouts/navbar-layout';
+import { NavbarLayout } from '@/modules/layout/browser-navbar/navbar-layout';
 
 export default NavbarLayout;

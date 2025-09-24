@@ -41,6 +41,7 @@ model User {
   Posts         Post[]
   Notifications Notification[]
   // subscriptions Subscription[]
+  TopicFollow   TopicFollow[]
 
   @@unique([email])
   @@map("user")
@@ -111,6 +112,8 @@ model Topic {
   name      String
   shortName String?
 
+  externalImageUrl String?
+
   type TopicType
 
   College      College?
@@ -122,6 +125,8 @@ model Topic {
   Posts     Post[]
   Image     ImageFile?
   Summaries Summary[]
+
+  TopicFollow TopicFollow[]
 }
 
 enum TopicType {
@@ -437,9 +442,10 @@ model Notification {
   id        String           @id @default(cuid())
   createdAt DateTime         @default(now())
   type      NotificationType
-  read      Boolean          @default(false)
-  postId    String?
-  authorId  String?
+  seen      Boolean          @default(false)
+
+  postId String?
+  // authorId  String?
   // topicId String?
 
   recepientId String
@@ -448,9 +454,27 @@ model Notification {
 
 enum NotificationType {
   POST_REPLY
-  POST_VOTE
+  // POST_VOTE
   // TOPIC_NEW_POST
   // NEW_FEATURE
-  PACKAGE_UPGRADE
-  PACKAGE_DOWNGRADE
+  // PACKAGE_UPGRADE
+  // PACKAGE_DOWNGRADE
+}
+
+// ------------------
+// Follow
+// ------------------
+
+model TopicFollow {
+  userId String
+  User   User   @relation(fields: [userId], references: [id])
+
+  topicId String
+  Topic   Topic  @relation(fields: [topicId], references: [id])
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, topicId])
 }

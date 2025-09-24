@@ -4,6 +4,7 @@ import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
 import { Tab, Tabs } from '@/global/components/route-tabs';
+import { FollowTopicBar } from '@/modules/follow/components/follow-bar';
 import { RuleProtected } from '@/modules/user/permissions/components/protected';
 import { RuleType } from '@prisma/client';
 
@@ -32,6 +33,8 @@ export const CollegeLayout: FC<LayoutProps & PropsWithChildren> = async ({
 				tags={['Fakultet']}
 				breadcrumbs={[{ title: college.topic.name, link: `/${collegeSlug}` }]}
 			/>
+
+			<FollowTopicBar topicId={college.topic.id} />
 
 			<Tabs>
 				<Tab route={makeRoute('')}>Opca Rasprava</Tab>

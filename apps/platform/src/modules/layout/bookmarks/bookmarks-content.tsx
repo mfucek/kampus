@@ -1,61 +1,142 @@
-import { api } from '@/deps/trpc/react';
-import { Icon } from '@/global/components/icon';
-import { Button } from '@/lib/shadcn/ui/button';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { PropsWithChildren, type FC } from 'react';
+
+import { api } from '@/deps/trpc/react';
+import { Icon, IconName } from '@/global/components/icon';
+import { Button } from '@/lib/shadcn/ui/button';
+import { type ListFollowedTopicsItem } from '@/modules/follow/api/procedures/list-followed-topics';
+import { TopicType } from '@prisma/client';
+
+const removeFromPathname = (pathname: string) => {
+	const stringsToRemove = [
+		'/all-subjects',
+		'/all-staff',
+		'/programs',
+		'/mass-upload',
+		'/materials',
+		'/staff'
+	];
+
+	// Get the last part of the path
+	const parts = pathname.split('/');
+	const lastPart = parts[parts.length - 1] || '';
+	// Check if the last part matches any of the stringsToRemove (without leading slash)
+	const shouldRemove = stringsToRemove.some(
+		(str) => str.replace(/^\//, '') === lastPart
+	);
+
+	if (shouldRemove) {
+		// Remove the last part
+		return parts.slice(0, -1).join('/') || '/';
+	}
+	return pathname;
+};
+
+const topicTypeToIcon = (type: TopicType) => {
+	if (type === 'COLLEGE') {
+		return 'education';
+	}
+	if (type === 'PROGRAM') {
+		return 'file-textual';
+	}
+	if (type === 'SUBJECT') {
+		return 'book-open';
+	}
+	if (type === 'STAFF') {
+		return 'user';
+	}
+	return 'chat-single';
+};
+
+const BookmarkItem: FC<{
+	icon: IconName;
+	title: string;
+	link: string;
+}> = ({ icon, title, link }) => {
+	const pathname = usePathname();
+
+	const isActive = removeFromPathname(pathname) == link;
+
+	return (
+		<Link href={link}>
+			<Button
+				variant={isActive ? 'solid-weak' : 'ghost-weak'}
+				theme={isActive ? 'accent' : 'neutral'}
+				size="sm"
+				className="w-full justify-start px-2"
+			>
+				<div className="flex items-center justify-center w-6 h-6 rounded-lg bg-neutral-weak shrink-0">
+					<Icon icon={icon} size={12} />
+				</div>
+				<span className="truncate">{title}</span>
+			</Button>
+		</Link>
+	);
+};
+
+const FollowedTopicBookmarkItem: FC<{
+	topic: ListFollowedTopicsItem;
+	iconOverride?: IconName;
+}> = ({ topic, iconOverride }) => {
+	const pathname = usePathname();
+
+	const isActive = removeFromPathname(pathname) == topic.link;
+
+	return (
+		<BookmarkItem
+			icon={iconOverride ?? topicTypeToIcon(topic.topic.type)}
+			title={topic.topic.name}
+			link={topic.link}
+		/>
+	);
+};
+
+const BookmarksSection: FC<
+	{
+		title?: string;
+	} & PropsWithChildren
+> = ({ title, children }) => {
+	return (
+		<div className="flex flex-col w-full px-2 py-6 border-b border-background">
+			{title && (
+				<div className="px-2 mb-3">
+					<p className="caption text-neutral">{title}</p>
+				</div>
+			)}
+
+			{children}
+		</div>
+	);
+};
 
 export const BookmarksContent = () => {
 	const collegesQuery = api.topic.college.listAll.useQuery();
+	const followedTopicsQuery = api.follow.listFollowedTopics.useQuery();
 
 	return (
 		<div className="flex flex-col w-full">
-			<div className="flex flex-col w-full px-2 py-6 border-b border-background">
-				<Link href="/">
-					<Button
-						variant="ghost-weak"
-						size="sm"
-						className="w-full justify-start px-2"
-					>
-						<div className="flex items-center justify-center w-6 h-6 rounded-lg bg-neutral-weak shrink-0">
-							<Icon icon="home" size={12} />
-						</div>
-						<span className="truncate">Početna</span>
-					</Button>
-				</Link>
+			<BookmarksSection>
+				<BookmarkItem icon="home" title="Početna" link="/" />
+				<BookmarkItem icon="layout-mosaic" title="Otkrij" link="/expore" />
+			</BookmarksSection>
 
-				<Link href="/">
-					<Button
-						variant="ghost-weak"
-						size="sm"
-						className="w-full justify-start px-2"
-					>
-						<div className="flex items-center justify-center w-6 h-6 rounded-lg bg-neutral-weak shrink-0">
-							<Icon icon="layout-mosaic" size={12} />
-						</div>
-						<span className="truncate">Otkrij</span>
-					</Button>
-				</Link>
-			</div>
-
-			<div className="flex flex-col w-full px-2 py-6 border-b border-background">
-				<div className="px-2 mb-3">
-					<p className="caption text-neutral">Fakulteti</p>
-				</div>
-
+			<BookmarksSection title="Fakulteti">
 				{collegesQuery.data?.colleges.map((college) => (
-					<Link href={`/${college.topic.slug}`} key={college.topic.id}>
-						<Button
-							variant="ghost-weak"
-							size="sm"
-							className="w-full justify-start px-2"
-						>
-							<div className="flex items-center justify-center w-6 h-6 rounded-lg bg-neutral-weak shrink-0">
-								<Icon icon="book-open" size={12} />
-							</div>
-							<span className="truncate">{college.topic.name}</span>
-						</Button>
-					</Link>
+					<BookmarkItem
+						key={college.topic.id}
+						icon="education"
+						title={college.topic.name}
+						link={college.link}
+					/>
 				))}
-			</div>
+			</BookmarksSection>
+
+			<BookmarksSection title="Following">
+				{followedTopicsQuery.data?.topics.map((topic) => (
+					<FollowedTopicBookmarkItem key={topic.topic.id} topic={topic} />
+				))}
+			</BookmarksSection>
 		</div>
 	);
 };

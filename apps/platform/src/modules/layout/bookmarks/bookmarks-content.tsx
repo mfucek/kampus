@@ -1,12 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { PropsWithChildren, type FC } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 
 import { api } from '@/deps/trpc/react';
-import { Icon, IconName } from '@/global/components/icon';
+import { Icon, type IconName } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { type ListFollowedTopicsItem } from '@/modules/follow/api/procedures/list-followed-topics';
-import { TopicType } from '@prisma/client';
+import { type TopicType } from '@prisma/client';
 
 const removeFromPathname = (pathname: string) => {
 	const stringsToRemove = [

@@ -68,7 +68,7 @@ export const FollowTopicBar: FC<{ topicId: string }> = ({ topicId }) => {
 
 				{isFollowing && (
 					<Button variant="solid" size="sm" onClick={handleDeactivateFollow}>
-						Pratis
+						Pratiš
 						<Icon icon="checkmark" />
 					</Button>
 				)}

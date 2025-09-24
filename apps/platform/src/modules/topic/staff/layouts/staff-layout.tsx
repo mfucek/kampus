@@ -4,6 +4,7 @@ import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
 import { Spinner } from '@/global/components/spinner';
+import { FollowTopicBar } from '@/modules/follow/components/follow-bar';
 
 interface LayoutProps {
 	params: Promise<{
@@ -39,6 +40,9 @@ export const StaffLayout = async ({
 					}
 				]}
 			/>
+
+			<FollowTopicBar topicId={staff.topic.id} />
+
 			<Suspense fallback={<Spinner />}>{children}</Suspense>
 		</Container>
 	);

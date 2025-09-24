@@ -1,11 +1,12 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { useViewportSize } from '@/deps/viewport-size';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { cn } from '@/lib/shadcn/utils';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { ContentPadding } from '../layouts/content-padding';
 import { type Breadcrumb, Breadcrumbs } from '../molecules/navbar/breadcrumbs';

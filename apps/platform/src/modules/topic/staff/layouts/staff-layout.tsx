@@ -31,11 +31,11 @@ export const StaffLayout = async ({
 				tags={['Nastavnik']}
 				breadcrumbs={[
 					{
-						title: staff.college.topic.name,
+						title: staff.college.topic.shortName ?? staff.college.topic.name,
 						link: `/${collegeSlug}`
 					},
 					{
-						title: staff.topic.name,
+						title: staff.topic.shortName ?? staff.topic.name,
 						link: `/${collegeSlug}/staff/${staffSlug}`
 					}
 				]}

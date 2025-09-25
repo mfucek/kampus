@@ -21,9 +21,9 @@ import {
 	PostHeaderSmallSkeleton
 } from '../post/post-header-small';
 import {
-	PostTopicReference,
-	PostTopicReferenceSkeleton
-} from '../post/post-topic-reference';
+	PostReplyReference,
+	PostReplyReferenceSkeleton
+} from '../post/post-reference';
 
 export const FeedPost: FC<{ post: PostFeedListItem }> = ({ post }) => {
 	const { postId, setPostId } = useLayout();
@@ -45,7 +45,14 @@ export const FeedPost: FC<{ post: PostFeedListItem }> = ({ post }) => {
 				}
 			}}
 		>
-			<PostTopicReference topicName={post.topic.name} />
+			<PostReplyReference
+				references={[
+					...(post.reply
+						? [`Odgovor korisniku ${post.reply.author.name}`]
+						: []),
+					post.topic.name
+				]}
+			/>
 
 			<PostHeaderSmall post={post} />
 
@@ -64,7 +71,7 @@ export const FeedPost: FC<{ post: PostFeedListItem }> = ({ post }) => {
 export const FeedPostSkeleton = () => {
 	return (
 		<div className="flex flex-col gap-2 p-4 border border-neutral-medium rounded-xl">
-			<PostTopicReferenceSkeleton />
+			<PostReplyReferenceSkeleton />
 
 			<PostHeaderSmallSkeleton />
 

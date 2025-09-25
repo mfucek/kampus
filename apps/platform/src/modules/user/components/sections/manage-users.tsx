@@ -26,7 +26,7 @@ import { PermissionsTable } from '@/modules/user/permissions/components/permissi
 import { RuleType } from '@prisma/client';
 import { type ListUsersItem } from '../../api/procedures/list';
 
-const UsersSection: FC<{ user: ListUsersItem }> = ({ user }) => {
+export const UsersSection: FC<{ user: ListUsersItem }> = ({ user }) => {
 	const utils = api.useUtils();
 
 	const { data: permissions } = api.user.permissions.list.useQuery({

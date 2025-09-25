@@ -36,11 +36,12 @@ export const SubjectLayout = async ({
 				tags={['Predmet']}
 				breadcrumbs={[
 					{
-						title: subject.college.topic.name,
+						title:
+							subject.college.topic.shortName ?? subject.college.topic.name,
 						link: `/${collegeSlug}`
 					},
 					{
-						title: subject.topic.name,
+						title: subject.topic.shortName ?? subject.topic.name,
 						link: `/${collegeSlug}/subject/${subjectSlug}`
 					}
 				]}

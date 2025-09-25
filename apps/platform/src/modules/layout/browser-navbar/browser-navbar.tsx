@@ -23,7 +23,7 @@ import { SearchBar } from '../search/search-bar';
 export const BrowserNavbar = () => {
 	const { isSignedIn } = useAuth();
 
-	const { isMobile } = useViewportSize();
+	const { isMobile, isDesktop } = useViewportSize();
 	const { isPWA } = useIsPWA();
 	const { showBookmarks, setShowBookmarks } = useLayout();
 
@@ -79,10 +79,10 @@ export const BrowserNavbar = () => {
 
 		return (
 			<>
-				<ThemeToggler />
+				<ThemeToggler size="sm" />
 				<Button
 					theme="accent"
-					size="md"
+					size="sm"
 					variant="solid"
 					onClick={() => showSignIn()}
 				>
@@ -95,15 +95,18 @@ export const BrowserNavbar = () => {
 	return (
 		<div className="bg-section md:border-b md:border-b-neutral-weak h-14 flex flex-row justify-between items-center px-2 shrink-0 relative">
 			<div className="flex flex-row gap-3 items-center">
-				<Button
-					variant={showBookmarks ? 'solid-weak' : 'outline'}
-					theme={showBookmarks ? 'accent' : 'neutral'}
-					size="sm"
-					iconOnly
-					onClick={() => setShowBookmarks((prev) => !prev)}
-				>
-					<Icon icon="bookmark" />
-				</Button>
+				{isDesktop && (
+					<Button
+						variant={showBookmarks ? 'solid-weak' : 'outline'}
+						theme={showBookmarks ? 'accent' : 'neutral'}
+						size="sm"
+						iconOnly
+						onClick={() => setShowBookmarks((prev) => !prev)}
+					>
+						<Icon icon="bookmark" />
+					</Button>
+				)}
+
 				<Link href="/" className="flex flex-row">
 					{isStaging && (
 						<div className="ml-1 px-2 flex items-center gap-2 bg-danger caption rounded-md">

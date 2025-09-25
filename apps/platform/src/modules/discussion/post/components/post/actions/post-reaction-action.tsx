@@ -68,8 +68,6 @@ export const PostReactionAction: FC<{
 	}
 
 	const handleUpvote: MouseEventHandler<HTMLButtonElement> = async (e) => {
-		e.stopPropagation();
-
 		if (!isSignedIn) {
 			// openSignIn();
 			return;
@@ -83,8 +81,6 @@ export const PostReactionAction: FC<{
 	};
 
 	const handleDownvote: MouseEventHandler<HTMLButtonElement> = async (e) => {
-		e.stopPropagation();
-
 		if (!isSignedIn) {
 			// openSignIn();
 			return;
@@ -104,6 +100,9 @@ export const PostReactionAction: FC<{
 				reaction == VoteType.UP && 'bg-success-medium',
 				reaction == VoteType.DOWN && 'bg-danger-medium'
 			)}
+			onClick={(e) => {
+				e.stopPropagation();
+			}}
 		>
 			<Button
 				theme={reactionToTheme(reaction)}

@@ -14,11 +14,13 @@ import { Icon } from './icon';
 
 export const PageHeader = ({
 	title,
+	description,
 	tags = [],
 	breadcrumbs = [],
 	imageSrc
 }: {
 	title: string;
+	description?: string;
 	tags?: string[];
 	breadcrumbs?: Breadcrumb[];
 	imageSrc?: string;
@@ -54,7 +56,7 @@ export const PageHeader = ({
 						<Icon icon="arrow-left" />
 					</Button>
 					{imageSrc && (
-						<div className="w-[72px] h-[96px] md:w-[120px] md:h-[160px] bg-section md:bg-neutral-weak rounded-xl overflow-hidden mr-4 md:mr-6">
+						<div className="w-[72px] h-[96px] md:w-[120px] md:h-[160px] bg-section md:bg-neutral-weak rounded-xl overflow-hidden mr-4 md:mr-6 relative">
 							<Image src={imageSrc} alt={title} fill className="object-cover" />
 						</div>
 					)}
@@ -64,6 +66,9 @@ export const PageHeader = ({
 						)}
 
 						<div className="display-3 text-neutral">{title}</div>
+						{description && (
+							<div className="body-1 text-neutral-strong">{description}</div>
+						)}
 
 						{tags && tags.length > 0 && (
 							<div className="flex flex-wrap">

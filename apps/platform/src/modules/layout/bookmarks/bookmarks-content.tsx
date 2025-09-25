@@ -64,7 +64,7 @@ const BookmarkItem: FC<{
 	return (
 		<Link href={link}>
 			<Button
-				variant={isActive ? 'outline' : 'ghost-weak'}
+				variant={isActive ? 'outline' : 'ghost'}
 				theme={isActive ? 'neutral' : 'neutral'}
 				size="sm"
 				className="w-full justify-start px-2"
@@ -82,10 +82,6 @@ const FollowedTopicBookmarkItem: FC<{
 	topic: ListFollowedTopicsItem;
 	iconOverride?: IconName;
 }> = ({ topic, iconOverride }) => {
-	const pathname = usePathname();
-
-	const isActive = removeFromPathname(pathname) == topic.link;
-
 	return (
 		<BookmarkItem
 			icon={iconOverride ?? topicTypeToIcon(topic.topic.type)}
@@ -104,7 +100,7 @@ const BookmarksSection: FC<
 		<div className="flex flex-col w-full px-2 py-6 border-b border-background">
 			{title && (
 				<div className="px-2 mb-3">
-					<p className="caption text-neutral">{title}</p>
+					<p className="caption text-neutral-strong">{title}</p>
 				</div>
 			)}
 
@@ -125,7 +121,7 @@ export const BookmarksContent = () => {
 		<div className="flex flex-col w-full">
 			<BookmarksSection>
 				<BookmarkItem icon="home" title="Početna" link="/" />
-				<BookmarkItem icon="layout-mosaic" title="Otkrij" link="/expore" />
+				<BookmarkItem icon="layout-mosaic" title="Otkrij" link="/explore" />
 			</BookmarksSection>
 
 			<BookmarksSection title="Fakulteti">

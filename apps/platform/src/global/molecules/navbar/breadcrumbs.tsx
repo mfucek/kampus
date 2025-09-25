@@ -23,7 +23,7 @@ export const Breadcrumbs: FC<{ links: Breadcrumb[] }> = ({ links }) => {
 							href={link.link}
 							className={cn(
 								'title-3 text-neutral-strong md:hover:text-neutral duration-200',
-								'max-w-[96px] truncate'
+								'max-w-[120px] truncate'
 							)}
 						>
 							{link.title}

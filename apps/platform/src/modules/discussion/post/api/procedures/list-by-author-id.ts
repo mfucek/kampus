@@ -3,12 +3,13 @@ import { type JSONContent } from '@tiptap/react';
 import z from 'zod';
 
 import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
-import { protectedProcedure } from '@/deps/trpc/trpc';
-import { type GetPostByIdItem } from './get-by-id';
+import { publicProcedure } from '@/deps/trpc/trpc';
+import { PostFeedListItem } from './feed-list';
 
-export const feedListProcedure = protectedProcedure
+export const listByAuthorIdProcedure = publicProcedure
 	.input(
 		z.object({
+			authorId: z.string(),
 			// optional pagination
 			cursor: z.string().nullish().optional(),
 			limit: z.number().min(1).max(100).nullish().optional()
@@ -16,24 +17,12 @@ export const feedListProcedure = protectedProcedure
 	)
 	.query(async ({ input, ctx }) => {
 		const { db, user } = ctx;
+		const { authorId } = input;
 		const { cursor } = input;
 		const limit = input.limit;
 
-		const followedTopicsRaw = await db.topicFollow.findMany({
-			where: {
-				userId: user.id,
-				active: true
-			}
-		});
-		const topicIds = followedTopicsRaw.map(
-			(followedTopic) => followedTopic.topicId
-		);
-
 		const where: Prisma.PostWhereInput = {
-			topicId: {
-				in: topicIds
-			},
-			replyToId: null
+			authorId: authorId
 		};
 
 		const postsRaw = await db.post.findMany({
@@ -135,12 +124,12 @@ export const feedListProcedure = protectedProcedure
 						updatedAt: postRaw.updatedAt,
 						replyToId: postRaw.replyToId,
 						topicId: postRaw.topicId
-					} satisfies GetPostByIdItem['post'],
+					} satisfies PostFeedListItem['post'],
 					reactions: {
 						up: upVotes,
 						down: downVotes,
 						sessionUserVote
-					} satisfies GetPostByIdItem['reactions'],
+					} satisfies PostFeedListItem['reactions'],
 					documents: (await Promise.all(
 						postRaw.DocumentFiles.map(async (documentRaw) => ({
 							title: documentRaw.title,
@@ -149,13 +138,13 @@ export const feedListProcedure = protectedProcedure
 							size: documentRaw.File.size,
 							downloadUrl: await getFileDownloadUrl(documentRaw.File.key)
 						}))
-					)) satisfies GetPostByIdItem['documents'],
+					)) satisfies PostFeedListItem['documents'],
 					author: {
 						id: postRaw.authorId,
 						name: postRaw.Author.name,
 						imageUrl: profilePictureUrl,
 						badge: postRaw.Author.badge
-					} satisfies GetPostByIdItem['author'],
+					} satisfies PostFeedListItem['author'],
 					topic: {
 						id: postRaw.topicId,
 						name: postRaw.Topic.name
@@ -169,13 +158,13 @@ export const feedListProcedure = protectedProcedure
 						: null,
 					repliesCount: postRaw._count.Replies,
 					link
-				};
+				} satisfies PostFeedListItem;
 			})
 		);
 
 		return { posts, ...(limit ? { nextCursor, totalStaffs } : {}) };
 	});
 
-export type PostFeedListItem = Awaited<
-	ReturnType<typeof feedListProcedure>
+export type PostListByAuthorIdItem = Awaited<
+	ReturnType<typeof listByAuthorIdProcedure>
 >['posts'][number];

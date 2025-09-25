@@ -5,7 +5,9 @@ import { updateNameProcedure } from '@/modules/user/api/procedures/name/update-n
 import { hasPermissionProcedure } from '@/modules/user/api/procedures/permission/has-permission';
 import { getUploadUrlProcedure } from '@/modules/user/api/procedures/profile-picture/get-upload-url';
 import { uploadProfilePictureProcedure } from '@/modules/user/api/procedures/profile-picture/upload-profile-picture';
+import { adminGetUserByIdProcedure } from './procedures/admin-get-by-id';
 import { getUserProcedure } from './procedures/get';
+import { getUserByIdProcedure } from './procedures/get-by-id';
 import { listProcedure } from './procedures/list';
 import { meProcedure } from './procedures/me';
 import { addProcedure as addPermissionsProcedure } from './procedures/permission/add';
@@ -17,6 +19,10 @@ import { getUserProfilePictureUrlProcedure } from './procedures/profile-picture/
 export const userRouter = createTRPCRouter({
 	me: meProcedure,
 	get: getUserProcedure,
+	getById: getUserByIdProcedure,
+	admin: {
+		getById: adminGetUserByIdProcedure
+	},
 	list: listProcedure,
 	profilePicture: createTRPCRouter({
 		sessionUser: createTRPCRouter({

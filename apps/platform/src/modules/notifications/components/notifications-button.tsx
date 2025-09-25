@@ -73,7 +73,7 @@ export const NotificationsButton = () => {
 					<PopoverTrigger className="w-0 h-0 overflow-hidden">
 						&nbsp;
 					</PopoverTrigger>
-					<PopoverContent className="w-[320px]">
+					<PopoverContent className="w-[320px] px-3 py-2">
 						<NotificationsList />
 					</PopoverContent>
 				</Popover>

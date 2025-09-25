@@ -4,6 +4,7 @@ import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
+import Link from 'next/link';
 import { toast } from 'sonner';
 import { type PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
 
@@ -69,6 +70,18 @@ export const PostActionsList: FC<{ post: PostListByTopicIdItem }> = ({
 				<Icon icon="share" />
 				Podijeli
 			</Button>
+
+			<Link href={`/user/${post.author.id}`} className="w-full">
+				<Button
+					variant="ghost"
+					theme="neutral"
+					size="sm"
+					className="justify-start w-full"
+				>
+					<Icon icon="user" />
+					Vidi profil
+				</Button>
+			</Link>
 
 			{isUserAuthor && (
 				<Button

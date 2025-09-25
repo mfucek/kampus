@@ -18,6 +18,9 @@ export const PostFileCard: FC<{
 			target="_blank"
 			rel="noopener noreferrer"
 			className="flex flex-col gap-2 w-[120px] clickable group"
+			onClick={(e) => {
+				e.stopPropagation();
+			}}
 		>
 			<div className="relative">
 				<div

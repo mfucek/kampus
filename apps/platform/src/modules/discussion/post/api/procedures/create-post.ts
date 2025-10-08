@@ -23,7 +23,7 @@ export const createPostProcedure = protectedProcedure
 
 		const post = await db.post.create({
 			data: {
-				body: input.body as JSONContent,
+				body: input.body as JSONContent | null,
 				topicId: input.topicId,
 				replyToId: input.replyToId,
 				authorId: user.id

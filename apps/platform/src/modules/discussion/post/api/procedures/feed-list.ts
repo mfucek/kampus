@@ -130,7 +130,7 @@ export const feedListProcedure = protectedProcedure
 				return {
 					post: {
 						id: postRaw.id,
-						body: postRaw.body as JSONContent,
+						body: postRaw.body as JSONContent | null,
 						createdAt: postRaw.createdAt,
 						updatedAt: postRaw.updatedAt,
 						replyToId: postRaw.replyToId,

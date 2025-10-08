@@ -12,6 +12,7 @@ import {
 	PostReplyActionSkeleton
 } from '../post/actions/post-reply-action';
 import { PostBody, PostBodySkeleton } from '../post/post-body';
+import { PostDeletedBody } from '../post/post-deleted-body';
 import { PostDocuments } from '../post/post-documents';
 import {
 	PostHeaderSmall,
@@ -34,6 +35,7 @@ export const Reply: FC<{ post: PostListByTopicIdItem; depth?: number }> = ({
 				<PostHeaderSmall post={post} />
 
 				{post.post.body && <PostBody body={post.post.body} />}
+				{!post.post.body && <PostDeletedBody />}
 
 				{post.documents && <PostDocuments documents={post.documents} />}
 

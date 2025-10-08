@@ -66,7 +66,7 @@ export const listProcedure = protectedProcedure.query(async ({ ctx }) => {
 							: null,
 						post: {
 							id: replyPostRaw.id,
-							body: extractText(replyPostRaw.body as JSONContent),
+							body: extractText(replyPostRaw.body as JSONContent | null),
 							link: `/post/${replyPostRaw.id}`
 						},
 						author: {

@@ -4,6 +4,7 @@ import { Icon } from '@/global/components/icon';
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
 import { Skeleton } from '@/lib/shadcn/ui/skeleton';
+import { formatRelativeDate } from '@/utils/format-relative-date';
 import Image from 'next/image';
 import { type PostListByTopicIdItem } from '../../api/procedures/list-by-topic-id';
 import { PostActionsListTrigger } from './actions/post-actions-list-trigger';
@@ -29,7 +30,13 @@ export const PostHeaderSmall: FC<{
 				)}
 			</div>
 
-			<PostActionsListTrigger post={post} />
+			<div className="flex flex-row gap-2 items-center">
+				<span className="caption text-neutral-medium">
+					{formatRelativeDate(post.post.createdAt)}
+				</span>
+
+				<PostActionsListTrigger post={post} />
+			</div>
 		</div>
 	);
 };

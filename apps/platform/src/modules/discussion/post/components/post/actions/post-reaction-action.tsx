@@ -1,4 +1,4 @@
-import { type FC, type MouseEventHandler, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import { useAuth } from '@/deps/better-auth/use-auth';
 import { api } from '@/deps/trpc/react';
@@ -12,6 +12,7 @@ import {
 	TooltipTrigger
 } from '@/lib/shadcn/ui/tooltip';
 import { cn } from '@/lib/shadcn/utils';
+import { useOnboarding } from '@/modules/onboarding/context/use-onboarding';
 import { VoteType } from '@prisma/client';
 import { type PostListByTopicIdItem } from '../../../api/procedures/list-by-topic-id';
 
@@ -31,6 +32,7 @@ export const PostReactionAction: FC<{
 	postId: string;
 }> = ({ reactions, postId }) => {
 	const { isSignedIn } = useAuth();
+	const { showSignIn } = useOnboarding();
 
 	const [optimisticVote, setOptimisticVote] = useState<
 		VoteType | null | undefined
@@ -67,9 +69,9 @@ export const PostReactionAction: FC<{
 		count -= 1;
 	}
 
-	const handleUpvote: MouseEventHandler<HTMLButtonElement> = async (e) => {
+	const handleUpvote = async () => {
 		if (!isSignedIn) {
-			// openSignIn();
+			showSignIn();
 			return;
 		}
 		await createVote.mutateAsync({
@@ -80,9 +82,9 @@ export const PostReactionAction: FC<{
 		setOptimisticVote(VoteType.UP);
 	};
 
-	const handleDownvote: MouseEventHandler<HTMLButtonElement> = async (e) => {
+	const handleDownvote = async () => {
 		if (!isSignedIn) {
-			// openSignIn();
+			showSignIn();
 			return;
 		}
 		await createVote.mutateAsync({

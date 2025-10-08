@@ -1,7 +1,8 @@
+import { type JSONContent } from '@tiptap/react';
+
 import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
 import { extractText } from '@/deps/tiptap/extract-text';
 import { protectedProcedure } from '@/deps/trpc/trpc';
-import { JSONContent } from '@tiptap/react';
 
 export const listProcedure = protectedProcedure.query(async ({ ctx }) => {
 	const { db, user } = ctx;
@@ -66,7 +67,9 @@ export const listProcedure = protectedProcedure.query(async ({ ctx }) => {
 							: null,
 						post: {
 							id: replyPostRaw.id,
-							body: extractText(replyPostRaw.body as JSONContent | null),
+							body:
+								extractText(replyPostRaw.body as JSONContent | null) ??
+								'[ Ova objava je obrisana ]',
 							link: `/post/${replyPostRaw.id}`
 						},
 						author: {

@@ -1,8 +1,9 @@
-import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
-import { publicProcedure } from '@/deps/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { ListUsersItem } from './list';
+
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
+import { publicProcedure } from '@/deps/trpc/trpc';
+import { type ListUsersItem } from './list';
 
 export const adminGetUserByIdProcedure = publicProcedure
 	.input(z.object({ userId: z.string() }))

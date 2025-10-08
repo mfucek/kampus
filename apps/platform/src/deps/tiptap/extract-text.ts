@@ -1,6 +1,8 @@
-import { JSONContent } from '@tiptap/react';
+import { type JSONContent } from '@tiptap/react';
 
-export const extractText = (jsonContent: JSONContent) => {
+export const extractText = (jsonContent: JSONContent | null) => {
+	if (!jsonContent) return null;
+
 	// Convert the JSONContent object to a string
 	const jsonString = JSON.stringify(jsonContent);
 
@@ -17,19 +19,4 @@ export const extractText = (jsonContent: JSONContent) => {
 
 	// Join all text values with newlines
 	return textValues.join('\n');
-};
-
-// Example usage:
-const example: JSONContent = {
-	type: 'doc',
-	content: [
-		{
-			type: 'paragraph',
-			content: [{ text: 'asd', type: 'text' }]
-		},
-		{
-			type: 'paragraph',
-			content: [{ text: 'asd', type: 'text' }]
-		}
-	]
 };

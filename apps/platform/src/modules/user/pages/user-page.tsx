@@ -2,7 +2,7 @@ import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
 import { AuthorFeedPostsLoader } from '@/modules/discussion/post/components/feed/author-feed-posts-loader';
-import { ListUsersItem } from '../api/procedures/list';
+import { type ListUsersItem } from '../api/procedures/list';
 import { UsersSection } from '../components/sections/manage-users';
 import { RuleProtected } from '../permissions/components/protected';
 

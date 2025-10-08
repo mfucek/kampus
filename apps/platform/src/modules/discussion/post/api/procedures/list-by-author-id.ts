@@ -4,7 +4,7 @@ import z from 'zod';
 
 import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
 import { publicProcedure } from '@/deps/trpc/trpc';
-import { PostFeedListItem } from './feed-list';
+import { type PostFeedListItem } from './feed-list';
 
 export const listByAuthorIdProcedure = publicProcedure
 	.input(

@@ -3,7 +3,6 @@
 import { type FC } from 'react';
 
 import { api } from '@/deps/trpc/react';
-import { useViewportSize } from '@/deps/viewport-size';
 import { Icon } from '@/global/components/icon';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -20,8 +19,6 @@ const formatNumber = (number: number) => {
 };
 
 export const FollowTopicBar: FC<{ topicId: string }> = ({ topicId }) => {
-	const { isMobile } = useViewportSize();
-
 	const followQuery = api.follow.getByTopicId.useQuery({ topicId });
 	const createFollowMutation = api.follow.create.useMutation();
 	const deactivateFollowMutation = api.follow.deactivate.useMutation();

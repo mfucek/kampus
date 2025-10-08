@@ -1,62 +1,44 @@
 'use client';
 
+import Link from 'next/link';
+import { Fragment, type FC } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { cn } from '@/lib/shadcn/utils';
-import { api } from '@/lib/trpc/react';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
-export const Breadcrumbs = () => {
-	const collegeSlug = useParams().collegeSlug as string;
+export type Breadcrumb = {
+	title: string;
+	link: string;
+};
 
-	const staffSlug = useParams().staffSlug as string;
-	const subjectSlug = useParams().subjectSlug as string;
-	const topicSlug = staffSlug || subjectSlug;
-
-	const college = api.college.getBySlug.useQuery(
-		{ collegeSlug },
-		{ enabled: !!collegeSlug }
-	);
-	const collegeName = college.data?.name;
-
-	const staff = api.staff.getBySlug.useQuery(
-		{ collegeSlug, staffSlug },
-		{ enabled: !!staffSlug && !!collegeSlug }
-	);
-	const staffName = staff.data?.name;
-
-	const subject = api.subject.getBySlug.useQuery(
-		{ collegeSlug, subjectSlug },
-		{ enabled: !!subjectSlug && !!collegeSlug }
-	);
-	const subjectName = subject.data?.name;
-
+export const Breadcrumbs: FC<{ links: Breadcrumb[] }> = ({ links }) => {
 	return (
 		<div className="flex flex-row gap-0 items-center">
-			{collegeSlug && (
-				<>
-					<Link href={`/${collegeSlug}`}>
-						<div
+			{links.map((link, index) => {
+				const isLast = index === links.length - 1;
+
+				return (
+					<Fragment key={index}>
+						<Link
+							href={link.link}
 							className={cn(
-								'title-3',
-								'max-w-[96px] truncate',
-								topicSlug &&
-									'text-neutral-strong hover:text-neutral hover:underline'
+								'title-3 text-neutral-strong md:hover:text-neutral duration-200',
+								'max-w-[120px] truncate'
 							)}
 						>
-							{collegeName ?? collegeSlug}
-						</div>
-					</Link>
-				</>
-			)}
-			{topicSlug && (
-				<>
-					<Icon icon="chevron-right" className="bg-neutral-strong" size={20} />
-					<div className={cn('title-3', 'max-w-[96px] truncate')}>
-						{staffName ?? subjectName ?? topicSlug}
-					</div>
-				</>
-			)}
+							{link.title}
+						</Link>
+
+						{!isLast && (
+							<Icon
+								icon="chevron-right"
+								className="bg-neutral-medium"
+								size={20}
+							/>
+						)}
+					</Fragment>
+				);
+			})}
 		</div>
 	);
 };

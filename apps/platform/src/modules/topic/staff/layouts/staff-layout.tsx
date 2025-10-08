@@ -1,9 +1,10 @@
 import { Suspense, type PropsWithChildren } from 'react';
 
+import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
 import { Spinner } from '@/global/components/spinner';
-import { api } from '@/lib/trpc/server';
+import { FollowTopicBar } from '@/modules/follow/components/follow-bar';
 
 interface LayoutProps {
 	params: Promise<{
@@ -18,14 +19,30 @@ export const StaffLayout = async ({
 }: PropsWithChildren<LayoutProps>) => {
 	const { staffSlug, collegeSlug } = await params;
 
-	const staff = await api.staff.getBySlug({
+	const staff = await api.topic.staff.getBySlug({
 		staffSlug,
 		collegeSlug
 	});
 
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
-			<PageHeader title={staff.name} tags={['Nastavnik']} />
+			<PageHeader
+				title={staff.topic.name}
+				tags={['Nastavnik']}
+				breadcrumbs={[
+					{
+						title: staff.college.topic.shortName ?? staff.college.topic.name,
+						link: `/${collegeSlug}`
+					},
+					{
+						title: staff.topic.shortName ?? staff.topic.name,
+						link: `/${collegeSlug}/staff/${staffSlug}`
+					}
+				]}
+			/>
+
+			<FollowTopicBar topicId={staff.topic.id} />
+
 			<Suspense fallback={<Spinner />}>{children}</Suspense>
 		</Container>
 	);

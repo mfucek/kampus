@@ -1,3 +1,3 @@
-import { PostLayout } from '@/modules/post/layouts/post-layout';
+import { PostLayout } from '@/modules/discussion/post/layouts/post-layout';
 
 export default PostLayout;

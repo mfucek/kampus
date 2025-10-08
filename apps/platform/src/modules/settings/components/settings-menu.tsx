@@ -1,11 +1,11 @@
 'use client';
 
+import { useAuth } from '@/deps/better-auth/use-auth';
+import { useViewportSize } from '@/deps/viewport-size';
 import { env } from '@/env';
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
-import { RuleProtected } from '@/modules/permissions/components/protected';
-import { useIsMobile } from '@/utils/useMediaQuery';
-import { useClerk } from '@clerk/nextjs';
+import { RuleProtected } from '@/modules/user/permissions/components/protected';
 import { cva } from 'class-variance-authority';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -33,7 +33,7 @@ const isActive = (pathname: string, path: string) => {
 
 const UserSection = () => {
 	const pathname = usePathname();
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 
 	return (
 		<div className="flex flex-col bg-section py-1 md:py-0 rounded-xl">
@@ -51,25 +51,13 @@ const UserSection = () => {
 					<span className="w-full text-left">Profil</span>
 				</Button>
 			</Link>
-
-			<Divider visibility="desktop" />
-
-			<Link href="/settings/subscription" replace={!isMobile}>
-				<Button
-					variant={isActive(pathname, '/settings/subscription')}
-					className="w-full md:h-14"
-				>
-					<Icon icon="crown" />
-					<span className="w-full text-left">Pretplata</span>
-				</Button>
-			</Link>
 		</div>
 	);
 };
 
 const AdminSection = () => {
 	const pathname = usePathname();
-	const { isMobile } = useIsMobile();
+	const { isMobile } = useViewportSize();
 
 	return (
 		<div className="flex flex-col bg-section py-1 md:py-0 rounded-xl">
@@ -88,8 +76,8 @@ const AdminSection = () => {
 
 const PreferencesSection = () => {
 	const pathname = usePathname();
-	const { isMobile } = useIsMobile();
-	const { signOut } = useClerk();
+	const { isMobile } = useViewportSize();
+	const { signOut } = useAuth();
 
 	return (
 		<div className="flex flex-col bg-section py-1 md:py-0 rounded-xl">
@@ -109,7 +97,7 @@ const PreferencesSection = () => {
 				variant={isActive(pathname, '/settings/appearance')}
 				className="w-full md:h-14"
 				theme="danger"
-				onClick={() => signOut({ redirectUrl: '/' })}
+				onClick={() => signOut()}
 			>
 				<Icon icon="log-out" />
 				<span className="w-full text-left text-theme">Odjavi se</span>
@@ -122,7 +110,7 @@ const InfoSection = () => {
 	return (
 		<div className="flex flex-col gap-2 text-center items-center pb-10">
 			<p className="body-3 text-neutral-strong">
-				Kampus v{env.NEXT_PUBLIC_VERSION}-beta
+				Kampus Beta v{env.NEXT_PUBLIC_VERSION}
 			</p>
 			<p className="body-3 text-neutral-strong">
 				Made with ❤️ by{' '}
@@ -132,14 +120,6 @@ const InfoSection = () => {
 					target="_blank"
 				>
 					Wireframe Studio{' '}
-				</a>
-				/{' '}
-				<a
-					href="https://mfucek.com"
-					className="button-sm hover:underline underline-offset-4 text-neutral"
-					target="_blank"
-				>
-					Matija Fućek{' '}
 				</a>
 			</p>
 			<p className="body-3 text-neutral-strong">

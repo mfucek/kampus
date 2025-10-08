@@ -1,11 +1,11 @@
 'use client';
 
-import { useToast } from '@/lib/shadcn/ui/use-toast';
-import { api } from '@/lib/trpc/react';
+import { api } from '@/deps/trpc/react';
 import { type JSONContent } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { toast } from 'sonner';
 import {
 	type StagedFile,
 	useFileStagingContext
@@ -16,8 +16,7 @@ import { useComposerController } from '../contexts/composer-controller-provider'
 export const useSubmitPost = () => {
 	const { body, setBody } = useComposerBodyContext();
 	const { files, setFiles } = useFileStagingContext();
-	const { collegeId, topicId, replyToId, setLocked } = useComposerController();
-	const { toast } = useToast();
+	const { topicId, replyToId, setLocked } = useComposerController();
 	const router = useRouter();
 	const utils = api.useUtils();
 
@@ -54,7 +53,6 @@ export const useSubmitPost = () => {
 		setLocked(true);
 		const post = await createPost({
 			body: bodyOverride ?? body,
-			collegeId: collegeId,
 			topicId: topicId,
 			replyToId: replyToIdOverride ?? replyToId
 		});
@@ -84,10 +82,8 @@ export const useSubmitPost = () => {
 				});
 			} catch (error) {
 				console.error(error);
-				toast({
-					title: 'Greška pri uploadanju datoteka',
-					description: 'Molimo pokušajte ponovo',
-					variant: 'danger'
+				toast.error('Greška pri uploadanju datoteka', {
+					description: 'Molimo pokušajte ponovo'
 				});
 				setIsSubmitting(false);
 				setLocked(false);
@@ -96,8 +92,15 @@ export const useSubmitPost = () => {
 		}
 
 		// invalidate queries
-		await utils.post.invalidate();
-		await utils.post.list.invalidate();
+		await utils.post.getPostById.invalidate({ postId: post.id });
+
+		// invalidate replies cache
+		if (replyToId) {
+			await utils.post.listReplies.invalidate({ postId: replyToId });
+		}
+
+		// invalidate topic cache (replies counter on top-level posts)
+		await utils.post.listByTopicId.invalidate({ topicId });
 
 		setIsSubmitting(false);
 

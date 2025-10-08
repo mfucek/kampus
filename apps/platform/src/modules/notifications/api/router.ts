@@ -1,11 +1,10 @@
-import { createTRPCRouter } from '@/server/api/trpc';
-
-import { clearProcedure } from './procedures/clear';
-import { clearAllProcedure } from './procedures/clear-all';
+import { createTRPCRouter } from '@/deps/trpc/trpc';
+import { deleteAllProcedure } from './procedures/delete-all';
+import { deleteByIdProcedure } from './procedures/delete-by-id';
 import { listProcedure } from './procedures/list';
 
-export const notificationsRouter = createTRPCRouter({
+export const notificationRouter = createTRPCRouter({
 	list: listProcedure,
-	clear: clearProcedure,
-	clearAll: clearAllProcedure
+	deleteById: deleteByIdProcedure,
+	deleteAll: deleteAllProcedure
 });

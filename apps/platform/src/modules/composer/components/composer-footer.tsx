@@ -2,8 +2,10 @@
 
 import { Badge } from '@/lib/shadcn/ui/badge';
 import { Button } from '@/lib/shadcn/ui/button';
-import { MAX_CHARACTERS } from '@/modules/discussion/constants/composer';
-import { useAuth, useClerk } from '@clerk/nextjs';
+import { MAX_CHARACTERS } from '@/modules/composer/constants/composer';
+
+import { useAuth } from '@/deps/better-auth/use-auth';
+import { useOnboarding } from '@/modules/onboarding/context/use-onboarding';
 import { useComposerBodyContext } from '../contexts/composer-body-provider';
 import { useSubmitPost } from '../hooks/use-submit-post';
 
@@ -12,11 +14,11 @@ export const ComposerFooter = () => {
 	const { characterCount } = useComposerBodyContext();
 
 	const { isSignedIn } = useAuth();
-	const { openSignIn } = useClerk();
+	const { showSignIn } = useOnboarding();
 
 	const remaining = MAX_CHARACTERS - characterCount;
 
-	// const { isMobile } = useIsMobile();
+	// const { isMobile } = useViewportSize();
 
 	return (
 		<div className="flex flex-row gap-2 items-center">
@@ -52,7 +54,7 @@ export const ComposerFooter = () => {
 					theme="accent"
 					variant="solid"
 					size="sm"
-					onClick={() => openSignIn()}
+					onClick={() => showSignIn()}
 				>
 					Ulogiraj se
 				</Button>

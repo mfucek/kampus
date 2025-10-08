@@ -40,7 +40,7 @@ export const FileDetailsDialogContent = () => {
 				</DialogDescription>
 			</DialogHeader>
 
-			<DialogBody className="w-full h-full overflow-y-scroll md:overflow-hidden relative">
+			<DialogBody className="w-full h-full overflow-y-scroll md:overflow-hidden relative bg-section md:rounded-xl">
 				<div className="flex flex-col w-full h-full">
 					<div className="flex flex-col md:flex-row gap-10 md:gap-0 w-full h-full flex-1">
 						<FileDetailsList />

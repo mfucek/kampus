@@ -1,7 +1,8 @@
+import { api } from '@/deps/trpc/server';
 import { ContentPadding } from '@/global/layouts/content-padding';
-import { api } from '@/lib/trpc/server';
 import { Composer } from '@/modules/composer/components';
-import { InfiniteScrollTopLevelPosts } from '@/modules/post/components/infinite-scroll-top-level-posts';
+import { TopLevelPostsLoader } from '@/modules/discussion/post/components/top-level-post/top-level-posts-loader';
+import { DiscussionTitle } from '../../components/discussion-title';
 
 interface PageProps {
 	params: Promise<{
@@ -13,7 +14,7 @@ interface PageProps {
 export const ProgramDiscussionPage = async ({ params }: PageProps) => {
 	const { programSlug, collegeSlug } = await params;
 
-	const program = await api.program.getBySlug({
+	const program = await api.topic.program.getBySlug({
 		programSlug,
 		collegeSlug
 	});
@@ -21,8 +22,9 @@ export const ProgramDiscussionPage = async ({ params }: PageProps) => {
 	return (
 		<ContentPadding size="sm">
 			<div className="flex flex-col gap-10">
-				<Composer collegeId={program.college.id} topicId={program.id} />
-				<InfiniteScrollTopLevelPosts scope={{ topic: { id: program.id } }} />
+				<Composer topicId={program.topic.id} />
+				<DiscussionTitle />
+				<TopLevelPostsLoader topicId={program.topic.id} />
 			</div>
 		</ContentPadding>
 	);

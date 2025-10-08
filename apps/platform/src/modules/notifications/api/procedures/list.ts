@@ -1,170 +1,97 @@
-import { type Notification, type PackageType } from '@prisma/client';
+import { type JSONContent } from '@tiptap/react';
 
-import { getUserWithAvatarUrl } from '@/modules/user/helpers/get-user-with-avatar-url';
-import { protectedProcedure } from '@/server/api/trpc';
-
-type NotificationReplyIndividual = {
-	id: string;
-	type: 'POST_REPLY';
-	createdAt: Date;
-	post: {
-		id: string;
-		contentShort: string;
-	};
-	aggregate: false;
-	author: {
-		displayName: string;
-		avatarUrl: string;
-	};
-};
-
-type NotificationReplyGrouped = {
-	type: 'POST_REPLY';
-	createdAt: Date;
-	post: {
-		id: string;
-		contentShort: string;
-	};
-	aggregate: true;
-	authors: {
-		count: number;
-		avatarUrls: string[];
-	};
-};
-
-type NotificationVote = {
-	id: string;
-	type: 'POST_VOTE';
-	createdAt: Date;
-	post: {
-		id: string;
-		contentShort: string;
-	};
-} & (
-	| {
-			aggregate: false;
-			author: {
-				displayName: string;
-				avatarUrl: string;
-			};
-	  }
-	| {
-			aggregate: true;
-			authors: {
-				count: number;
-				avatarUrls: string[];
-			};
-	  }
-);
-
-type NotificationPackage = {
-	id: string;
-	type: 'PACKAGE_UPGRADE' | 'PACKAGE_DOWNGRADE';
-	createdAt: Date;
-	package: {
-		name: PackageType;
-	};
-};
+import { getFileDownloadUrl } from '@/deps/s3/get-file-download-url';
+import { extractText } from '@/deps/tiptap/extract-text';
+import { protectedProcedure } from '@/deps/trpc/trpc';
 
 export const listProcedure = protectedProcedure.query(async ({ ctx }) => {
 	const { db, user } = ctx;
 
-	const { id: userId } = user;
-
 	const notificationsRaw = await db.notification.findMany({
 		where: {
-			recepientId: userId
+			recepientId: user.id
+		}
+	});
+
+	// Replies
+	const postIds = notificationsRaw
+		.map((notificationRaw) => notificationRaw.postId)
+		.filter((postId) => postId !== null);
+
+	const postsRaw = await db.post.findMany({
+		where: {
+			id: {
+				in: postIds
+			}
+		},
+		include: {
+			Author: {
+				select: {
+					name: true,
+					badge: true,
+					ImageFile: {
+						select: {
+							File: {
+								select: {
+									key: true
+								}
+							}
+						}
+					}
+				}
+			}
 		},
 		orderBy: {
 			createdAt: 'desc'
 		}
 	});
 
-	const replyByPostId: Record<string, Notification[]> = {};
+	const notifications = await Promise.all(
+		notificationsRaw.map(async (notificationRaw) => {
+			const notification = {
+				id: notificationRaw.id,
+				createdAt: notificationRaw.createdAt,
+				type: notificationRaw.type,
+				seen: notificationRaw.seen,
+				postId: notificationRaw.postId
+			};
 
-	for (const notification of notificationsRaw) {
-		if (notification.type === 'POST_REPLY') {
-			const postId = notification.postId!;
-			if (Object.keys(replyByPostId).includes(postId)) {
-				replyByPostId[postId] = [];
-			} else {
-				replyByPostId[postId] = [...replyByPostId[postId]!, notification];
-			}
-		}
-	}
+			const replyPostRaw = postsRaw.find(
+				(postRaw) => postRaw.id === notificationRaw.postId
+			);
 
-	const individualReplies: NotificationReplyIndividual[] = [];
-	const groupedReplies: NotificationReplyGrouped[] = [];
-
-	await Promise.all(
-		Object.keys(replyByPostId).map(async (postId) => {
-			const replyGroup = replyByPostId[postId]!;
-
-			if (replyGroup.length === 1) {
-				const reply = replyGroup[0]!;
-				const individualReply: NotificationReplyIndividual = {
-					id: reply.id,
-					type: 'POST_REPLY',
-					createdAt: reply.createdAt,
-					post: {
-						id: reply.postId!,
-						contentShort: ''
-					},
-					aggregate: false,
-					author: {
-						displayName: '',
-						avatarUrl: ''
+			const reply = replyPostRaw
+				? {
+						originalPostLink: replyPostRaw.replyToId
+							? `/post/${replyPostRaw.replyToId}`
+							: null,
+						post: {
+							id: replyPostRaw.id,
+							body:
+								extractText(replyPostRaw.body as JSONContent | null) ??
+								'[ Ova objava je obrisana ]',
+							link: `/post/${replyPostRaw.id}`
+						},
+						author: {
+							id: replyPostRaw.authorId,
+							name: replyPostRaw.Author.name,
+							imageUrl: replyPostRaw.Author.ImageFile?.File.key
+								? await getFileDownloadUrl(
+										replyPostRaw.Author.ImageFile.File.key
+									)
+								: null,
+							badge: replyPostRaw.Author.badge
+						}
 					}
-				};
-				individualReplies.push(individualReply);
-			} else {
-				const firstReply = replyGroup[0]!;
+				: null;
 
-				const authorsAvatarUrls = (
-					await Promise.all(
-						replyGroup
-							.filter((reply, i) => {
-								if (i > 2) {
-									return false;
-								}
-								return true;
-							})
-							.map(async (reply) => {
-								const user = await getUserWithAvatarUrl(reply.authorId!);
-								return user?.avatarUrl;
-							})
-					)
-				).filter((url) => url !== null) as string[];
-
-				const replyGrouped: NotificationReplyGrouped = {
-					type: 'POST_REPLY',
-					createdAt: firstReply.createdAt,
-					post: {
-						id: firstReply.postId!,
-						contentShort: ''
-					},
-					aggregate: true,
-					authors: {
-						count: replyGroup.length,
-						avatarUrls: authorsAvatarUrls
-					}
-				};
-				groupedReplies.push(replyGrouped);
-			}
+			return { notification, reply };
 		})
 	);
 
-	const notifications: {
-		POST_REPLY: {
-			individual: NotificationReplyIndividual[];
-			grouped: NotificationReplyGrouped[];
-		};
-	} = {
-		POST_REPLY: {
-			individual: individualReplies,
-			grouped: groupedReplies
-		}
-	};
-
-	return { notifications };
+	return notifications;
 });
+
+export type NotificationListItem = Awaited<
+	ReturnType<typeof listProcedure>
+>[number];

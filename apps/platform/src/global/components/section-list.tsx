@@ -47,7 +47,7 @@ const ItemActions: FC<PropsWithChildren> = ({ children }) => {
 
 const ItemContent: FC<PropsWithChildren> = ({ children }) => {
 	return (
-		<div className="flex flex-row items-center gap-2 pl-3 md:pl-4 py-4">
+		<div className="flex flex-row items-center gap-2 pl-3 md:pl-4 py-4 text-neutral">
 			{children}
 		</div>
 	);

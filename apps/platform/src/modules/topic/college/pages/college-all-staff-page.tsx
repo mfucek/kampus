@@ -1,5 +1,6 @@
+import { api } from '@/deps/trpc/server';
 import { ContentPadding } from '@/global/layouts/content-padding';
-import { StaffsTableAdvanced } from '@/modules/topic/staff/components/staffs-table-advanced';
+import { CollegeStaffsTablePaginated } from '@/modules/topic/staff/components/college-staffs-table-paginated';
 
 interface PageProps {
 	params: Promise<{
@@ -10,10 +11,14 @@ interface PageProps {
 export const CollegeAllStaffPage = async ({ params }: PageProps) => {
 	const { collegeSlug } = await params;
 
+	const college = await api.topic.college.getBySlug({
+		collegeSlug
+	});
+
 	return (
 		<ContentPadding size="sm">
 			<div className="flex flex-col gap-2">
-				<StaffsTableAdvanced scope={{ collegeSlug }} />
+				<CollegeStaffsTablePaginated collegeId={college.topic.id} />
 			</div>
 		</ContentPadding>
 	);

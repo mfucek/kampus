@@ -1,5 +1,5 @@
+import { api } from '@/deps/trpc/server';
 import { CacheHelper } from '@/global/components/cache-helper';
-import { api } from '@/lib/trpc/server';
 import { ProgramSubjectsList } from '../components/program-subjects-list';
 
 interface PageProps {
@@ -12,18 +12,18 @@ interface PageProps {
 export const ProgramSubjectsPage = async ({ params }: PageProps) => {
 	const { programSlug, collegeSlug } = await params;
 
-	const program = await api.program.getBySlug({
+	const program = await api.topic.program.getBySlug({
 		programSlug,
 		collegeSlug
 	});
 
-	const subjects = await api.program.listSubjects({
-		programId: program.id
+	const subjects = await api.topic.subject.listByProgramId({
+		programId: program.topic.id
 	});
 
 	return (
 		<div className="flex flex-col gap-10">
-			<ProgramSubjectsList subjects={subjects} />
+			<ProgramSubjectsList subjects={subjects.subjects} />
 			<CacheHelper />
 		</div>
 	);

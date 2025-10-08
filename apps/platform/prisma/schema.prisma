@@ -4,123 +4,180 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // ------------------
-// Clerk account
-// ------------------
-
-model Account {
-  id               String        @id @default(cuid())
-  clerkUserId      String        @unique
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  stripeCustomerId String?
-  package          PackageType?
-  status           AccountStatus @default(INACTIVE)
-  activeUntil      DateTime?
-
-  user        User?
-  role        RoleType     @default(BASE)
-  Permissions Permission[]
-}
-
-enum PackageType {
-  MONTHLY_CHEAP
-  MONTHLY_PRO
-  LIFETIME
-}
-
-enum AccountStatus {
-  ACTIVE
-  INACTIVE
-  CANCELLED
-}
-
-// ------------------
-// Users
+// Better Auth account
 // ------------------
 
 model User {
-  id          String   @id @default(cuid())
-  displayName String
-  imageUrl    String?
-  badge       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String  @id
+  name          String
+  email         String
+  emailVerified Boolean @default(false)
+  image         String?
 
-  accountId String  @unique
-  Account   Account @relation(fields: [accountId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  sessions  Session[]
+  accounts  Account[]
 
-  votes Vote[]
-  posts Post[]
+  // authorization
+  role        RoleType     @default(BASE)
+  Permissions Permission[]
 
-  image ImageFile?
+  // billing
+  // stripeCustomerId String?
+  // package          PackageType?
 
-  notifications Notification[]
+  // custom fields
+  badge     String?
+  ImageFile ImageFile?
+
+  // relations
+  Votes         Vote[]
+  Posts         Post[]
+  Notifications Notification[]
   // subscriptions Subscription[]
+  TopicFollow   TopicFollow[]
+
+  @@unique([email])
+  @@map("user")
 }
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+// enum PackageType {
+//   MONTHLY_CHEAP
+//   MONTHLY_PRO
+//   LIFETIME
+// }
 
 // ------------------
 // Colleges
 // ------------------
-
-model College {
-  id      String  @id @default(cuid())
-  slug    String  @unique
-  name    String
-  iconSrc String?
-
-  Image  ImageFile?
-  Topics Topic[]
-  Posts  Post[]
-}
 
 // ------------------
 // Topics
 // ------------------
 
 model Topic {
-  id        String    @id @default(cuid())
+  id        String  @id @default(cuid())
   slug      String
   name      String
   shortName String?
-  type      TopicType
 
-  collegeId String
-  College   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  externalImageUrl String?
 
-  Program Program?
-  Subject Subject?
-  Staff   Staff?
+  type TopicType
+
+  College      College?
+  Program      Program?
+  Subject      Subject?
+  Staff        Staff?
+  GeneralTopic GeneralTopic?
 
   Posts     Post[]
   Image     ImageFile?
   Summaries Summary[]
+
+  automaticFollow Boolean       @default(false)
+  TopicFollow     TopicFollow[]
 }
 
 enum TopicType {
+  COLLEGE
+  PROGRAM
   SUBJECT
   STAFF
-  PROGRAM
+  GENERAL
 }
 
-model Staff {
-  topicId           String  @id @unique
-  Topic             Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  imageUrl          String?
-  staffExternalCode String?
-  staffExternalLink String?
+model GeneralTopic {
+  topicId String @id @unique
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
-  Subjects SubjectStaff[]
+  icon String?
+}
+
+model College {
+  topicId String @id @unique
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  Programs Program[]
+  Subjects Subject[]
+  Staffs   Staff[]
+
+  externalLinks String[] @default([])
+}
+
+model Program {
+  topicId String @id @unique
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  collegeId String
+  College   College @relation(fields: [collegeId], references: [topicId], onDelete: Cascade)
+
+  programExternalCode String?
+  programExternalLink String?
+  departments         String[] @default([])
+  type                String?
+
+  Subjects ProgramSubject[]
 }
 
 model Subject {
-  topicId       String   @id @unique
-  Topic         Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId String @id @unique
+  Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  collegeId String
+  College   College @relation(fields: [collegeId], references: [topicId], onDelete: Cascade)
+
   ects          Int?
   externalCodes String[] @default([])
   externalLinks String[] @default([])
@@ -129,16 +186,17 @@ model Subject {
   Programs ProgramSubject[]
 }
 
-model Program {
+model Staff {
   topicId String @id @unique
   Topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
-  programExternalCode String?
-  programExternalLink String?
-  departments         String[] @default([])
-  type                String?
+  collegeId String
+  College   College @relation(fields: [collegeId], references: [topicId], onDelete: Cascade)
 
-  Subjects ProgramSubject[]
+  staffExternalCode String?
+  staffExternalLink String?
+
+  Subjects SubjectStaff[]
 }
 
 // Topic Relationships
@@ -176,19 +234,16 @@ model Post {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  body      Json?
+
+  hidden Boolean @default(false)
+
+  body Json?
 
   authorId String
   Author   User   @relation(fields: [authorId], references: [id])
 
-  // college this post belongs to
-  collegeId String
-  College   College @relation(fields: [collegeId], references: [id])
-
-  // subject or staff this post belongs to
-  // if empty, this is college-specific post
-  topicId String?
-  Topic   Topic?  @relation(fields: [topicId], references: [id])
+  topicId String
+  Topic   Topic  @relation(fields: [topicId], references: [id])
 
   // direct replies
   // if empty, this is top level post
@@ -251,12 +306,11 @@ model ImageFile {
   fileId String @id @unique
   File   File   @relation(fields: [fileId], references: [id])
 
+  // Topic image
   topicId String? @unique
   Topic   Topic?  @relation(fields: [topicId], references: [id])
 
-  collegeId String?  @unique
-  College   College? @relation(fields: [collegeId], references: [id])
-
+  // Profile picture
   userId String? @unique
   User   User?   @relation(fields: [userId], references: [id])
 }
@@ -318,8 +372,8 @@ enum RoleType {
 }
 
 model Permission {
-  accountId String  @id
-  Account   Account @relation(fields: [accountId], references: [id])
+  userId String @id
+  User   User   @relation(fields: [userId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -389,9 +443,10 @@ model Notification {
   id        String           @id @default(cuid())
   createdAt DateTime         @default(now())
   type      NotificationType
-  read      Boolean          @default(false)
-  postId    String?
-  authorId  String?
+  seen      Boolean          @default(false)
+
+  postId String?
+  // authorId  String?
   // topicId String?
 
   recepientId String
@@ -400,9 +455,27 @@ model Notification {
 
 enum NotificationType {
   POST_REPLY
-  POST_VOTE
+  // POST_VOTE
   // TOPIC_NEW_POST
   // NEW_FEATURE
-  PACKAGE_UPGRADE
-  PACKAGE_DOWNGRADE
+  // PACKAGE_UPGRADE
+  // PACKAGE_DOWNGRADE
+}
+
+// ------------------
+// Follow
+// ------------------
+
+model TopicFollow {
+  userId String
+  User   User   @relation(fields: [userId], references: [id])
+
+  topicId String
+  Topic   Topic  @relation(fields: [topicId], references: [id])
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, topicId])
 }

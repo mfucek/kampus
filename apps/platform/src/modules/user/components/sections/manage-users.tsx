@@ -2,6 +2,7 @@
 
 import { type FC, useState } from 'react';
 
+import { api } from '@/deps/trpc/react';
 import { Icon } from '@/global/components/icon';
 import { ContentPadding } from '@/global/layouts/content-padding';
 import { Button } from '@/lib/shadcn/ui/button';
@@ -21,26 +22,24 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/lib/shadcn/ui/select';
-import { api } from '@/lib/trpc/react';
-import { type ListAccountsItem } from '@/modules/account/api/procedures/list';
-import { PermissionsTable } from '@/modules/permissions/components/permissions-table';
+import { PermissionsTable } from '@/modules/user/permissions/components/permissions-table';
 import { RuleType } from '@prisma/client';
+import { type ListUsersItem } from '../../api/procedures/list';
 
-const AccountSection: FC<{ account: ListAccountsItem }> = ({ account }) => {
+export const UsersSection: FC<{ user: ListUsersItem }> = ({ user }) => {
 	const utils = api.useUtils();
 
-	const { data: permissions } = api.account.permissions.list.useQuery({
-		accountId: account.id
+	const { data: permissions } = api.user.permissions.list.useQuery({
+		userId: user.id
 	});
 
-	const { mutateAsync: addPermission } =
-		api.account.permissions.add.useMutation({
-			onSuccess: async () => {
-				await utils.account.permissions.list.invalidate();
-			}
-		});
+	const { mutateAsync: addPermission } = api.user.permissions.add.useMutation({
+		onSuccess: async () => {
+			await utils.user.permissions.list.invalidate();
+		}
+	});
 
-	const { data: colleges } = api.college.listAll.useQuery();
+	const listAllCollegesQuery = api.topic.college.listAll.useQuery();
 
 	const [rule, setRule] = useState<RuleType | null>(null);
 	const [scopeId, setScopeId] = useState<string | null>(null);
@@ -51,7 +50,7 @@ const AccountSection: FC<{ account: ListAccountsItem }> = ({ account }) => {
 		if (!rule || !scopeId) return;
 
 		await addPermission({
-			accountId: account.id,
+			userId: user.id,
 			rule: rule,
 			scopeId: scopeId ?? null,
 			scopeType: scopeId ? 'COLLEGE' : 'GLOBAL',
@@ -69,7 +68,7 @@ const AccountSection: FC<{ account: ListAccountsItem }> = ({ account }) => {
 			<div className="flex flex-col gap-2">
 				<Dialog>
 					<div className="flex flex-row justify-between">
-						{account.user.displayName}
+						{user.name}
 						<DialogTrigger asChild>
 							<Button variant={'solid-weak'}>
 								<Icon icon="add" />
@@ -132,9 +131,9 @@ const AccountSection: FC<{ account: ListAccountsItem }> = ({ account }) => {
 									<SelectValue placeholder="Select Scope" />
 								</SelectTrigger>
 								<SelectContent>
-									{colleges?.map((college) => (
-										<SelectItem value={college.id} key={college.id}>
-											{college.name}
+									{listAllCollegesQuery.data?.colleges.map((college) => (
+										<SelectItem value={college.topic.id} key={college.topic.id}>
+											{college.topic.name}
 										</SelectItem>
 									))}
 								</SelectContent>
@@ -168,12 +167,12 @@ const AccountSection: FC<{ account: ListAccountsItem }> = ({ account }) => {
 };
 
 export const ManageUsersSection: FC = () => {
-	const { data: accounts } = api.account.list.useQuery();
+	const userListQuery = api.user.list.useQuery();
 
 	return (
 		<div className="flex flex-col gap-4">
-			{accounts?.map((account) => (
-				<AccountSection account={account} key={account.id} />
+			{userListQuery.data?.map((user) => (
+				<UsersSection user={user} key={user.id} />
 			))}
 		</div>
 	);

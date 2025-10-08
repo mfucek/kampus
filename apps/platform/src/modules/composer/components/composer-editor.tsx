@@ -14,7 +14,10 @@ export const ComposerEditor = () => {
 	return (
 		<>
 			<EditorToolbar editor={editor} />
-			<EditorContent editor={editor} className={cn(!enabled && 'opacity-50')} />
+			<EditorContent
+				editor={editor}
+				className={cn(!enabled && 'opacity-50', 'text-neutral')}
+			/>
 		</>
 	);
 };

@@ -1,35 +1,19 @@
 'use client';
 
+import Link from 'next/link';
+import { type FC } from 'react';
+
 import { Icon } from '@/global/components/icon';
 import { Button } from '@/lib/shadcn/ui/button';
 import { DataTable } from '@/lib/shadcn/ui/data-table';
 import { type ColumnDef } from '@tanstack/react-table';
-import Link from 'next/link';
-import { type FC } from 'react';
+import { type SubjectGetItem } from '../../api/procedures/subject/get-by-id';
 
-type Subject = {
-	id: string;
-	slug: string;
-	name: string;
-	collegeId: string;
-	college: {
-		id: string;
-		slug: string;
-		name: string;
-		iconSrc: string | null;
-	};
-	subject: {
-		topicId: string;
-		ects: number | null;
-	} | null;
-	_count: {
-		posts: number;
-	};
-};
+interface ISubjectsTableItem extends Omit<SubjectGetItem, 'documentsCount'> {}
 
-export const columns: ColumnDef<Subject>[] = [
+export const columns: ColumnDef<ISubjectsTableItem>[] = [
 	{
-		accessorKey: 'name',
+		accessorKey: 'topic.name',
 		header: 'Predmet'
 	},
 	{
@@ -40,16 +24,18 @@ export const columns: ColumnDef<Subject>[] = [
 		id: 'actions-open',
 		cell: ({ row }) => {
 			const {
-				slug: topicSlug,
-				college: { slug: collegeSlug },
-				_count: { posts: postCount }
+				topic: { slug: topicSlug },
+				college: {
+					topic: { slug: collegeSlug }
+				},
+				postsCount
 			} = row.original;
 
 			return (
 				<div className="flex flex-row gap-1 justify-end">
 					<Link href={`/${collegeSlug}/subject/${topicSlug}`}>
 						<Button theme="neutral" variant="solid-weak" size="sm">
-							{postCount}
+							{postsCount}
 							<Icon icon="chat-single" />
 						</Button>
 					</Link>
@@ -60,7 +46,7 @@ export const columns: ColumnDef<Subject>[] = [
 ];
 
 export const SubjectsTable: FC<{
-	subjects: Subject[];
+	subjects: ISubjectsTableItem[];
 	loading?: boolean;
 }> = ({ subjects, loading = false }) => {
 	return <DataTable columns={columns} data={subjects} loading={loading} />;

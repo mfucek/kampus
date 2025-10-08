@@ -1,11 +1,12 @@
 import { Suspense, type PropsWithChildren } from 'react';
 
+import { api } from '@/deps/trpc/server';
 import { Container } from '@/global/components/container';
 import { PageHeader } from '@/global/components/page-header';
 import { Tab, Tabs } from '@/global/components/route-tabs';
 import { Spinner } from '@/global/components/spinner';
 import { ContentPadding } from '@/global/layouts/content-padding';
-import { api } from '@/lib/trpc/server';
+import { FollowTopicBar } from '@/modules/follow/components/follow-bar';
 
 interface LayoutProps {
 	params: Promise<{
@@ -20,7 +21,7 @@ export const SubjectLayout = async ({
 }: PropsWithChildren<LayoutProps>) => {
 	const { collegeSlug, subjectSlug } = await params;
 
-	const subject = await api.subject.getBySlug({
+	const subject = await api.topic.subject.getBySlug({
 		subjectSlug,
 		collegeSlug
 	});
@@ -30,7 +31,23 @@ export const SubjectLayout = async ({
 
 	return (
 		<Container className="flex flex-col gap-10 pt-10 pb-20">
-			<PageHeader title={subject.name} tags={['Predmet']} />
+			<PageHeader
+				title={subject.topic.name}
+				tags={['Predmet']}
+				breadcrumbs={[
+					{
+						title:
+							subject.college.topic.shortName ?? subject.college.topic.name,
+						link: `/${collegeSlug}`
+					},
+					{
+						title: subject.topic.shortName ?? subject.topic.name,
+						link: `/${collegeSlug}/subject/${subjectSlug}`
+					}
+				]}
+			/>
+
+			<FollowTopicBar topicId={subject.topic.id} />
 
 			<ContentPadding size="lg">
 				<Suspense fallback={<Spinner />}>

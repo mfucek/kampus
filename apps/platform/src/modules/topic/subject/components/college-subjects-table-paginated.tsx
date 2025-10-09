@@ -27,8 +27,8 @@ const SubjectsTableWithData: FC<{
 	const query = api.topic.subject.listByCollegeId.useInfiniteQuery(
 		{
 			collegeId,
-			limit
-			// filters
+			limit,
+			filters
 		},
 		{
 			getNextPageParam: (lastPage) => lastPage.nextCursor

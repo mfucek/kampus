@@ -2,12 +2,15 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { publicProcedure } from '@/deps/trpc/trpc';
+import { subjectFiltersSchema } from '@/modules/topic/subject/schemas/subject-filters';
+import { type Prisma } from '@prisma/client';
 import { type SubjectGetItem } from './get-by-id';
 
 export const subjectsListByCollegeIdProcedure = publicProcedure
 	.input(
 		z.object({
 			collegeId: z.string(),
+			filters: subjectFiltersSchema.optional(),
 			// optional pagination
 			cursor: z.string().nullish().optional(),
 			limit: z.number().min(1).max(100).nullish().optional()
@@ -32,16 +35,38 @@ export const subjectsListByCollegeIdProcedure = publicProcedure
 		if (!collegeRaw) {
 			throw new TRPCError({
 				code: 'NOT_FOUND',
-				message: 'Program not found'
+				message: 'College not found'
 			});
 		}
 
 		// get program's subjects
 
+		const where = {
+			collegeId: input.collegeId,
+			...(input.filters?.name
+				? {
+						Topic: {
+							OR: [
+								{
+									name: { contains: input.filters.name, mode: 'insensitive' }
+								},
+								{
+									shortName: {
+										contains: input.filters.name,
+										mode: 'insensitive'
+									}
+								},
+								{
+									slug: { contains: input.filters.name, mode: 'insensitive' }
+								}
+							]
+						}
+					}
+				: {})
+		} satisfies Prisma.SubjectWhereInput;
+
 		const subjectsRaw = await db.subject.findMany({
-			where: {
-				collegeId: input.collegeId
-			},
+			where,
 			include: {
 				Topic: {
 					include: {
@@ -70,9 +95,7 @@ export const subjectsListByCollegeIdProcedure = publicProcedure
 
 		const totalSubjects = Math.ceil(
 			(await db.subject.count({
-				where: {
-					collegeId: input.collegeId
-				}
+				where
 			})) / (limit ?? 10)
 		);
 

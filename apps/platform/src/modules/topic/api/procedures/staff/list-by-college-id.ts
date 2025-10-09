@@ -2,12 +2,15 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { publicProcedure } from '@/deps/trpc/trpc';
+import { staffFiltersSchema } from '@/modules/topic/staff/schemas/staff-filters';
+import { type Prisma } from '@prisma/client';
 import { type StaffGetItem } from './get-by-id';
 
 export const staffsListByCollegeIdProcedure = publicProcedure
 	.input(
 		z.object({
 			collegeId: z.string(),
+			filters: staffFiltersSchema.optional(),
 			// optional pagination
 			cursor: z.string().nullish().optional(),
 			limit: z.number().min(1).max(100).nullish().optional()
@@ -38,10 +41,32 @@ export const staffsListByCollegeIdProcedure = publicProcedure
 
 		// get college's staffs
 
+		const where = {
+			collegeId: input.collegeId,
+			...(input.filters?.name
+				? {
+						Topic: {
+							OR: [
+								{
+									name: { contains: input.filters.name, mode: 'insensitive' }
+								},
+								{
+									shortName: {
+										contains: input.filters.name,
+										mode: 'insensitive'
+									}
+								},
+								{
+									slug: { contains: input.filters.name, mode: 'insensitive' }
+								}
+							]
+						}
+					}
+				: {})
+		} satisfies Prisma.StaffWhereInput;
+
 		const staffsRaw = await db.staff.findMany({
-			where: {
-				collegeId: input.collegeId
-			},
+			where,
 			include: {
 				Topic: {
 					include: {
@@ -70,9 +95,7 @@ export const staffsListByCollegeIdProcedure = publicProcedure
 
 		const totalStaffs = Math.ceil(
 			(await db.staff.count({
-				where: {
-					collegeId: input.collegeId
-				}
+				where
 			})) / (limit ?? 10)
 		);
 

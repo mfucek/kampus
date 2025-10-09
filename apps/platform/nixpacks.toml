@@ -1,5 +1,5 @@
 [phases.build]
-cmds = ['bun run db:migrate:dev', 'bun run build']
+cmds = ['bun run db:migrate:deploy', 'bun run build']
 
 [start]
 cmd = 'bun run start'

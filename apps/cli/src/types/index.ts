@@ -14,7 +14,7 @@ export const subjectSchema = z.object({
 	externalLink: z.string(),
 	name: z.string(),
 	shortName: z.string().nullable(),
-	externalCode: z.string(),
+	externalCode: z.string().nullable(),
 	ects: z.number().nullable(),
 	professorsLinks: z.array(professorReferenceSchema)
 });

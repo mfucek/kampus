@@ -2,6 +2,7 @@ import { ferDriver } from './fer';
 import { ffzgDriver } from './ffzg';
 import { fkitDriver } from './fkit';
 import { pmfDriver } from './pmf';
+import { ttfDriver } from './ttf';
 import type { Driver } from './types';
 
 export const drivers: Record<
@@ -27,6 +28,11 @@ export const drivers: Record<
 		label: 'FKIT',
 		slug: 'fkit',
 		driver: fkitDriver
+	},
+	ttf: {
+		label: 'TTF',
+		slug: 'ttf',
+		driver: ttfDriver
 	}
 };
 

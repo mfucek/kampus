@@ -69,7 +69,9 @@ export const createSubjects = async ({
 								topicId: newTopic.id,
 								collegeId: collegeId,
 								ects: subjectToCreate.ects,
-								externalCodes: [subjectToCreate.externalCode],
+								externalCodes: subjectToCreate.externalCode
+									? [subjectToCreate.externalCode]
+									: [],
 								externalLinks: [subjectToCreate.externalLink]
 							}
 						});
